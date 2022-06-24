@@ -96,3 +96,4 @@ If you have run out of energy or time for your project, put a note at the top of
 # 오빠 커밋이 안돼ㅠㅠ
 
 # 커밋메시지와 코멘트까지 작성
+# 소스트리에서 커밋하려고
