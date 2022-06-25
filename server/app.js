@@ -21,6 +21,8 @@ app.use('/api/account', accountRouter);
 const testRouter = require('./src/routes/test-route');
 app.use('/api/test', testRouter);
 
+const authorityRouter = require('./src/routes/authority-route');
+app.use('/api/auth', authorityRouter);
 
 app.listen(8888, () => console.log('listening on port 8888...'));
 
