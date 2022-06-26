@@ -4,8 +4,8 @@
 /node_modules
 /.pnp
 .pnp.js
-/src/assets/themes/soho/soho-dark/theme.css
-/src/assets/themes/soho/soho-dark/theme.css.map
+client/src/assets/themes/soho/soho-dark/theme.css
+client/src/assets/themes/soho/soho-dark/theme.css.map
 
 # testing
 /coverage
