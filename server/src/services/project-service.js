@@ -14,3 +14,28 @@ exports.selectProjects = () => {
         resolve(results);
     });
 };
+
+exports.registProject = (projectInfo) => {
+
+    return new Promise(async (resolve, reject) => {
+
+        const connection = getConnection();
+        connection.beginTransaction();
+
+        try {
+            const result = await ProjectRepository.registProject(connection, projectInfo);
+
+            const registedProject = await ProjectRepository.selectProjectWithProjectCode(connection, result.insertId);
+
+            connection.commit();
+
+            resolve(registedProject);
+        } catch (err) {
+            connection.rollback();
+
+            reject(err);
+        } finally {
+            connection.end();
+        }
+    });
+}

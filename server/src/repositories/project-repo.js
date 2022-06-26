@@ -21,3 +21,41 @@ exports.selectProjects = (connection) => {
         });
     });
 };
+
+exports.registProject= (connection, projectInfo) => {
+    return new Promise((resolve, reject) => {
+        connection.query(projectQuery.insertProject(),
+        [ projectInfo.projectName
+        , projectInfo.projectDescription
+        , projectInfo.projectDeletedStatus],
+
+        (err, results, fields) => {
+
+            if(err) {
+                console.log(err);
+                reject(err);
+            }
+            resolve(results);
+        });
+    });
+};
+
+exports.selectProjectWithProjectCode = (connection, projectCode) => {
+
+    return new Promise((resolve, reject) => {
+        connection.query(projectQuery.selectProjectWithProjectCode(), [projectCode], (err, results, fields) => {
+
+            if(err) {
+                console.log(err);
+                reject(err);
+            }
+
+            const project = [];
+            for(let i = 0; i < results.length; i++) {
+                project.push(new ProjectDTO(results[i]));
+            }
+
+            resolve(project);
+        });
+    });
+}
