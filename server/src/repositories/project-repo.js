@@ -66,7 +66,7 @@ exports.registProjectMember = (connection, projectCode, authorityCode) => {
         connection.query(projectQuery.registProjectMember(),
         [ projectCode, authorityCode],
         
-        (err, results, fields) {
+        (err, results, fields) => {
 
             if(err) {
                 console.log(err);
