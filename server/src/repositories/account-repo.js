@@ -53,7 +53,7 @@ exports.registerAccount = (connection, memberInfo) => {
 
         connection.query(accountQuery.insertMember(), 
             [ 
-              memberInfo.memberId
+              memberInfo.id
             , memberInfo.password
             , memberInfo.name
             , memberInfo.email
@@ -90,6 +90,28 @@ exports.selectAccountWithMemberId = (connection, memberId) => {
             }
 
             resolve(member);
+        });
+    });
+}
+
+exports.updateAccountWithToken = (connection, memberCode) => {
+    return new Promise((resolve, reject) => {
+        console.log('repo', memberCode);
+        connection.query(accountQuery.updateAccountWithToken(), [memberCode], (err, results, fields) => {
+
+            if(err) {
+                console.log(err);
+                reject(err);
+            }
+
+            if(results.changedRows < 1){
+                console.log('DB UPDATE FAILED!');
+                reject('DB UPDATE FAILED!');
+            }
+
+            console.log('DB Process', results);
+
+            resolve(results);
         });
     });
 }

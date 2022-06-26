@@ -24,11 +24,32 @@ exports.selectAccounts = async (req, res, next) => {
         });
 };
 
+exports.emailAuth = async (req, res, next) => {
+    
+    console.log(req.query);
+
+    await AccountService.emailAuthWithToken(req.query)
+    .then((result) => {
+
+        res.redirect('http://localhost:3000/');
+
+    })
+    .catch((err) =>{
+        console.log(err);
+        res.status(HttpStatus.BAD_REQUEST).json({
+            status: HttpStatus.BAD_REQUEST,
+            message: err
+        });
+
+    });
+
+}
+
 exports.registerAccount = async (req, res, next) => {
 
-    console.log(req.body);
+    console.log(req.body.data);
 
-    await AccountService.registerAccount(req.body.registerInfo)
+    await AccountService.registerAccount(req.body.data)
         .then((result) => {
 
             res.status(HttpStatus.OK).json({

@@ -1,155 +1,226 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useRef, useState } from 'react';
+import { useNavigate, NavLink } from 'react-router-dom';
 import { useForm, Controller, FieldError } from 'react-hook-form';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import { Password } from 'primereact/password';
 import { Checkbox } from 'primereact/checkbox';
-import { Dialog } from 'primereact/dialog';
 import { Divider } from 'primereact/divider';
 import { classNames } from 'primereact/utils';
+import { Toast } from 'primereact/toast';
 import './Signup.css';
 
 
 function Signup() {
-    
-    // const [id, setId] = useState('');
-    // const [password, setPassword] = useState('');
-    // const [confirmPassword, setConfirmPassword] = useState('');
-    // const [name, setName] = useState('');
-    // const [email, setEmail] = useState('');    
-    // const [phone, setPhone] = useState('');
-    // const [company, setCompany] = useState('');
-    // const [occupation, setOccupation] = useState('');
-    // const [purpose, setPurpose] = useState('');
 
     const navigate = useNavigate();
+    
+    const toast = useRef(null);
+    const showError = () => {
+        toast.current.show({severity:'error', summary: 'Error Message', detail:'패스워드가 일치하지 않습니다.', life: 3000});
+    }
 
-    const [showMessage, setShowMessage] = useState(false);
+    const clear = () => {
+        toast.current.clear();
+    }
+
     const [formData, setFormData] = useState({});
     const defaultValues = {
         id : '',
         password : '',
-        confirmPassword : '',
+        confirmPassword : '',        
         name : '',
         email : '',
         phone : '',
         company : '',
         occupation : '',
-        purpose : '',
+        purpose : ''
     };
 
     const { control, formState: { errors }, handleSubmit, reset } = useForm({ defaultValues });
 
     const onSubmitHandler = (data) => {
-        //event.preventDefault();
-        setFormData(data)
-        setShowMessage(true);
+        
+        console.log(data);
+        
+        if(data.password !== data.confirmPassword) {            
+            showError();
+            return;
+        }
 
-        reset();
-         
         fetch("http://localhost:8888/api/account/register", {
             method: "POST",
             headers: {
               "Content-Type": "application/json"
             },
             body: JSON.stringify({
-              formData
+                data
             })
         })
         .then(response => response.json())
         .then(json => {
-            navigate('/login');
+            navigate('/');
         })
         .catch((err) => {
           console.log('login error: ' + err);
         });
+        reset();
+        navigate('/');
+
     };
 
     const getFormErrorMessage = (name) => {
         return errors[name] && <small className="p-error">{errors[name].message}</small>
     };
 
-    const dialogFooter = <div className="flex justify-content-center"><Button label="OK" className="p-button-text" autoFocus onClick={() => setShowMessage(false)} /></div>;
-    const passwordHeader = <h6>Pick a password</h6>;
+    const passwordHeader = <h6>패스워드 생성 규칙</h6>;
     const passwordFooter = (
         <React.Fragment>
             <Divider />
             <p className="mt-2">Suggestions</p>
             <ul className="pl-2 ml-2 mt-0" style={{ lineHeight: '1.5' }}>
-                <li>At least one lowercase</li>
-                <li>At least one uppercase</li>
-                <li>At least one numeric</li>
-                <li>Minimum 8 characters</li>
+                <li>하나 이상의 영어 소문자</li>
+                <li>하나 이상의 영어 대문자</li>
+                <li>하나 이상의 숫자</li>
+                <li>하나 이상의 특수문자</li>
+                <li>최소 8자 이상</li>
             </ul>
         </React.Fragment>
     );
 
     return (
-      <div className="formDiv">
-          <Dialog visible={showMessage} onHide={() => setShowMessage(false)} position="top" footer={dialogFooter} showHeader={false} breakpoints={{ '960px': '80vw' }} style={{ width: '30vw' }}>
-              <div className="flex justify-content-center flex-column pt-6 px-3">
-                  <i className="pi pi-check-circle" style={{ fontSize: '5rem', color: 'var(--green-500)' }}></i>
-                  <h5>Registration Successful!</h5>
-                  <p style={{ lineHeight: 1.5, textIndent: '1rem' }}>
-                      Your account is registered under name <b>{formData.name}</b> ; it'll be valid next 30 days without activation. Please check <b>{formData.email}</b> for activation instructions.
-                  </p>
-              </div>
-          </Dialog>
+      <div className="formDiv login-center">
+            <Toast ref={toast} position="top-center" />
 
-          <div className="flex justify-content-center">
+           <div className="flex justify-content-center">
               <div className="card">
-                  <h5 className="text-center">Register</h5>
-                  <form onSubmit={handleSubmit(onSubmitHandler)} className="p-fluid">
+                <h5 className="text-center">Register</h5>
+                <form onSubmit={handleSubmit(onSubmitHandler)} className="p-fluid">
+
+                <div className="field">
+                    <span className="p-float-label">
+                        <Controller name="id" control={control} 
+                            rules={{ required: 'ID는 필수 값입니다.' }}
+                            render={({ field, fieldState }) => (
+                                <InputText id={field.name} {...field} autoComplete="off" className={classNames({ 'p-invalid': fieldState.invalid })} />
+                        )} />
+                        <label htmlFor="id" className={classNames({ 'p-error': errors.id })}>아이디*</label>
+                    </span>
+                    {getFormErrorMessage('id')}
+                </div>
+
+                <div className="field">
+                    <span className="p-float-label">
+                        <Controller name="password" control={control}
+                            rules={{ 
+                                required: 'Password는 필수값입니다.'
+                                //, pattern: { value: /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/ , message: '패스워드 규칙이 올바르지 않습니다.' }
+                            }}
+                            render={({ field, fieldState }) => (
+                            <Password id={field.name} {...field} autoComplete="off" toggleMask className={classNames({ 'p-invalid': fieldState.invalid })} header={passwordHeader} footer={passwordFooter} />
+                        )} />
+                        <label htmlFor="password" className={classNames({ 'p-error': errors.password })}>비밀번호*</label>
+                    </span>
+                    {getFormErrorMessage('password')}
+                </div>
+
+                <div className="field">
+                    <span className="p-float-label">
+                        <Controller name="confirmPassword" control={control}  
+                            rules={{ required: '비밀번호 확인은 필수입니다.' }}
+                            render={({ field, fieldState }) => (
+                            <Password id={field.name} {...field} autoComplete="off" toggleMask className={classNames({ 'p-invalid': fieldState.invalid })} />
+                        )} />
+                        <label htmlFor="confirmPassword" className={classNames({ 'p-error': errors.confirmPassword })}>비밀번호 확인*</label>
+                    </span>
+                    {getFormErrorMessage('confirmPassword')}
+                </div>
+
+                <div className="field">
+                    <span className="p-float-label p-input-icon-right">
+                        <i className="pi pi-envelope" />
+                        <Controller name="email" control={control}
+                            rules={{ required: 'Email은 필수값입니다.', 
+                                    pattern: 
+                                    { 
+                                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i, 
+                                        message: '이메일 주소가 올바르지 않습니다. E.g. example@email.com' 
+                                    }
+                                }}
+                            render={({ field, fieldState }) => (
+                                <InputText id={field.name} {...field} autoComplete="off" className={classNames({ 'p-invalid': fieldState.invalid })} />
+                        )} />
+                        <label htmlFor="email" className={classNames({ 'p-error': !!errors.email })}>이메일*</label>
+                    </span>
+                    {getFormErrorMessage('email')}
+                </div>
+
+                <div className="field">
+                    <span className="p-float-label">
+                        <Controller name="name" control={control} rules={{ required: '이름은 필수값입니다.' }} render={({ field, fieldState }) => (
+                            <InputText id={field.name} {...field} autoComplete="off" className={classNames({ 'p-invalid': fieldState.invalid })} />
+                        )} />
+                        <label htmlFor="name" className={classNames({ 'p-error': errors.name })}>이름*</label>
+                    </span>
+                    {getFormErrorMessage('name')}
+                </div>
+
+                <div className="field">
+                    <span className="p-float-label">
+                        <Controller name="phone" control={control} render={({ field, fieldState }) => (
+                            <InputText id={field.name} {...field} autoComplete="off" className={classNames({ 'p-invalid': fieldState.invalid })} />
+                        )} />
+                        <label htmlFor="phone" className={classNames({ 'p-error': errors.phone })}>핸드폰(선택)</label>
+                    </span>
+                    {getFormErrorMessage('phone')}
+                </div>
+
+                <div className="field">
+                    <span className="p-float-label">
+                        <Controller name="company" control={control} render={({ field, fieldState }) => (
+                            <InputText id={field.name} {...field} autoComplete="off" className={classNames({ 'p-invalid': fieldState.invalid })} />
+                        )} />
+                        <label htmlFor="company" className={classNames({ 'p-error': errors.company })}>회사명(선택)</label>
+                    </span>
+                    {getFormErrorMessage('company')}
+                </div>
+
+                <div className="field">
+                    <span className="p-float-label">
+                        <Controller name="occupation" control={control} render={({ field, fieldState }) => (
+                            <InputText id={field.name} {...field} autoComplete="off" className={classNames({ 'p-invalid': fieldState.invalid })} />
+                        )} />
+                        <label htmlFor="occupation" className={classNames({ 'p-error': errors.occupation })}>직업(선택)</label>
+                    </span>
+                    {getFormErrorMessage('occupation')}
+                </div>
+
+                <div className="field">
+                    <span className="p-float-label">
+                        <Controller name="purpose" control={control} render={({ field, fieldState }) => (
+                            <InputText id={field.name} {...field} autoComplete="off" className={classNames({ 'p-invalid': fieldState.invalid })} />
+                        )} />
+                        <label htmlFor="purpose" className={classNames({ 'p-error': errors.purpose })}>가입목적(선택)</label>
+                    </span>
+                    {getFormErrorMessage('purpose')}
+                </div>
 
 
-                      <div className="field">
-                          <span className="p-float-label">
-                              <Controller name="name" control={control} rules={{ required: 'Name is required.' }} render={({ field, fieldState }) => (
-                                  <InputText id={field.name} {...field} autoFocus className={classNames({ 'p-invalid': fieldState.invalid })} />
-                              )} />
-                              <label htmlFor="name" className={classNames({ 'p-error': errors.name })}>Name*</label>
-                          </span>
-                          {getFormErrorMessage('name')}
-                      </div>
+                <div className="field-checkbox">
+                    <Controller name="accept" control={control} rules={{ required: true }} render={({ field, fieldState }) => (
+                        <Checkbox inputId={field.name} onChange={(e) => field.onChange(e.checked)} checked={field.value} className={classNames({ 'p-invalid': fieldState.invalid })} />
+                    )} />
+                    <label htmlFor="accept" className={classNames({ 'p-error': errors.accept })}>  약관동의*</label>
+                </div>
 
+                    <Button 
+                        type="submit" 
+                        label="가입" 
+                        className="p-button-success p-button-sm" 
+                    />
 
-                      <div className="field">
-                          <span className="p-float-label p-input-icon-right">
-                              <i className="pi pi-envelope" />
-                              <Controller name="email" control={control}
-                                  rules={{ required: 'Email is required.', pattern: { value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i, message: 'Invalid email address. E.g. example@email.com' }}}
-                                  render={({ field, fieldState }) => (
-                                      <InputText id={field.name} {...field} className={classNames({ 'p-invalid': fieldState.invalid })} />
-                              )} />
-                              <label htmlFor="email" className={classNames({ 'p-error': !!errors.email })}>Email*</label>
-                          </span>
-                          {getFormErrorMessage('email')}
-                      </div>
-
-
-                      <div className="field">
-                          <span className="p-float-label">
-                              <Controller name="password" control={control} rules={{ required: 'Password is required.' }} render={({ field, fieldState }) => (
-                                  <Password id={field.name} {...field} toggleMask className={classNames({ 'p-invalid': fieldState.invalid })} header={passwordHeader} footer={passwordFooter} />
-                              )} />
-                              <label htmlFor="password" className={classNames({ 'p-error': errors.password })}>Password*</label>
-                          </span>
-                          {getFormErrorMessage('password')}
-                      </div>
-
-
-                      <div className="field-checkbox">
-                          <Controller name="accept" control={control} rules={{ required: true }} render={({ field, fieldState }) => (
-                              <Checkbox inputId={field.name} onChange={(e) => field.onChange(e.checked)} checked={field.value} className={classNames({ 'p-invalid': fieldState.invalid })} />
-                          )} />
-                          <label htmlFor="accept" className={classNames({ 'p-error': errors.accept })}>약관동의*</label>
-                      </div>
-
-
-
-                      <Button type="submit" label="Submit" className="mt-2" />
-                  </form>
+                    <NavLink to="/">로그인페이지로</NavLink>
+                </form>
               </div>
           </div>
       </div>

@@ -6,6 +6,7 @@ router.get('/members', AccountController.selectAccounts);
 router.post('/register', AccountController.registerAccount);
 router.post('/login', AccountController.loginAccount);
 router.post('/logout', AccountController.logoutAccount);
+router.get('/emailAuth', AccountController.emailAuth);
 
 
 module.exports = router;

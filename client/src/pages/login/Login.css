@@ -9,9 +9,8 @@
     justify-content: center;
 }
 
-
 .formDiv .card {
-    min-width: 400px;
+    min-width: 250px;
 }
 .formDiv .card form {
     margin-top: 2rem;
@@ -25,12 +24,12 @@
 }
 
 @media screen and (max-width: 960px) {
-    .form-demo .card {
-        width: 80%;
+    .formDiv .card {
+        width: 100%;
     }
 }
 @media screen and (max-width: 640px) {
-    .form-demo .card {
+    .formDiv .card {
         width: 100%;
         min-width: 0;
     }
