@@ -58,6 +58,15 @@ exports.selectMemberWithMemberId = () => {
   `;
 }
 
+exports.updateAccountWithToken = () => {
+  
+  return `
+      UPDATE TBL_MEMBER
+      SET MEMBER_EMAIL_AUTH = 'Y'  
+      WHERE MEMBER_CODE = ?
+  `;
+}
+
 exports.insertMember = () => {
     
     return `

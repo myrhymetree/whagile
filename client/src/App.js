@@ -4,6 +4,8 @@ import Signup from './pages/login/Signup';
 import MainLayout from './layouts/MainLayout';
 import Main from './pages/main/Main';
 import "./assets/themes/soho/soho-dark/theme.css";  //theme
+// import "./assets/themes/soho/soho-dark/theme.scss"; //theme
+// require('./assets/themes/soho/soho-dark/theme.scss');  //theme
 import "primereact/resources/primereact.min.css";   //core css
 import "primeicons/primeicons.css";                 //icons
 import "./App.css";
