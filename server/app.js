@@ -22,5 +22,8 @@ app.use('/api/test', testRouter);
 const authorityRouter = require('./src/routes/authority-route');
 app.use('/api/auth', authorityRouter);
 
+const backlogRouter = require('./src/routes/backlog-route');
+app.use('/api/backlogs', backlogRouter);
+
 app.listen(8888, () => console.log('listening on port 8888...'));
 
