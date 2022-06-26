@@ -4,14 +4,16 @@ exports.selectMembers = () => {
         SELECT
               A.MEMBER_CODE
             , A.MEMBER_ID
-            , A.EMAIL
-            , A.NAME
-            , A.PHONE
-            , A.COMPANY
-            , A.PURPOSE
-            , A.CREATE_DATE
-            , A.LAST_LOGIN_DATE
-            , A.DORMANT
+            , A.MEMBER_PASSWORD
+            , A.MEMBER_EMAIL
+            , A.MEMBER_PHONE
+            , A.MEMBER_CREATED_DATE
+            , A.MEMBER_ROLE
+            , A.MEMBER_SECESSION_YN
+            , A.MEMBER_COMPANY
+            , A.MEMBER_OCCUPATION
+            , A.MEMBER_PURPOSE
+            , A.MEMBER_NAME
           FROM TBL_MEMBER A
     `;
 };
@@ -21,15 +23,16 @@ exports.selectMemberWithMemberCode = () => {
         SELECT
               A.MEMBER_CODE
             , A.MEMBER_ID
-            , A.PASSWORD
-            , A.EMAIL
-            , A.NAME
-            , A.PHONE
-            , A.COMPANY
-            , A.PURPOSE
-            , A.CREATE_DATE
-            , A.LAST_LOGIN_DATE
-            , A.DORMANT
+            , A.MEMBER_PASSWORD
+            , A.MEMBER_EMAIL
+            , A.MEMBER_PHONE
+            , A.MEMBER_CREATED_DATE
+            , A.MEMBER_ROLE
+            , A.MEMBER_SECESSION_YN
+            , A.MEMBER_COMPANY
+            , A.MEMBER_OCCUPATION
+            , A.MEMBER_PURPOSE
+            , A.MEMBER_NAME
           FROM TBL_MEMBER A
          WHERE A.MEMBER_CODE = ?
     `;
@@ -38,17 +41,18 @@ exports.selectMemberWithMemberCode = () => {
 exports.selectMemberWithMemberId = () => {
   return `
       SELECT
-            A.MEMBER_CODE
-          , A.PASSWORD
-          , A.MEMBER_ID
-          , A.EMAIL
-          , A.NAME
-          , A.PHONE
-          , A.COMPANY
-          , A.PURPOSE
-          , A.CREATE_DATE
-          , A.LAST_LOGIN_DATE
-          , A.DORMANT
+              A.MEMBER_CODE
+            , A.MEMBER_ID
+            , A.MEMBER_PASSWORD
+            , A.MEMBER_EMAIL
+            , A.MEMBER_PHONE
+            , A.MEMBER_CREATED_DATE
+            , A.MEMBER_ROLE
+            , A.MEMBER_SECESSION_YN
+            , A.MEMBER_COMPANY
+            , A.MEMBER_OCCUPATION
+            , A.MEMBER_PURPOSE
+            , A.MEMBER_NAME
         FROM TBL_MEMBER A
        WHERE A.MEMBER_ID = ?
   `;
@@ -58,40 +62,29 @@ exports.insertMember = () => {
     
     return `
         INSERT INTO TBL_MEMBER (
-            MEMBER_ID
-          , PASSWORD
-          , EMAIL
-          , NAME
-          , PHONE
-          , COMPANY
-          , PURPOSE
-          , CREATE_DATE
-          , LAST_LOGIN_DATE
-          , DORMANT
+              MEMBER_ID
+            , MEMBER_PASSWORD
+            , MEMBER_NAME
+            , MEMBER_EMAIL
+            , MEMBER_PHONE
+            , MEMBER_CREATED_DATE
+            , MEMBER_ROLE
+            , MEMBER_COMPANY
+            , MEMBER_OCCUPATION
+            , MEMBER_PURPOSE
         ) VALUES (
-            ?
-          , ?
-          , ?
-          , ?
-          , ?
-          , ?
-          , ?
-          , DATE_FORMAT(NOW(), '%d/%m/%y %T')
-          , DATE_FORMAT(NOW(), '%d/%m/%y %T')
-          , 'N'
+              ?
+            , ?
+            , ?          
+            , ?
+            , ?
+            , DATE_FORMAT(NOW(), '%d/%m/%y %T')
+            , 'ROLE_USER'
+            , ?
+            , ?          
+            , ?
         )    
     `;
 }
 
 
-
-exports.updateLastLogin = () => {
-    
-  return `
-      UPDATE 
-          TBL_MEMBER
-      SET
-          LAST_LOGIN_DATE = DATE_FORMAT(NOW(), '%d/%m/%y %T')
-      WHERE MEMBER_ID = ?
-  `;
-}

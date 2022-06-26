@@ -10,9 +10,7 @@ const app = express();
 app.use(morgan('dev'));
 app.use(cookieParser());
 app.use(express.json());
-app.use(cors({
-    exposedHeaders: ['Authorization'],
-}));
+app.use(cors());
 
 
 const accountRouter = require('./src/routes/account-route');
@@ -24,6 +22,8 @@ app.use('/api/project', projectRouter);
 const testRouter = require('./src/routes/test-route');
 app.use('/api/test', testRouter);
 
+const authorityRouter = require('./src/routes/authority-route');
+app.use('/api/auth', authorityRouter);
 
 app.listen(8888, () => console.log('listening on port 8888...'));
 
