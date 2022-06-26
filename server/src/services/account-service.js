@@ -43,16 +43,18 @@ exports.registerAccount = (memberInfo) => {
         try{
 
             const validationID = await AccountRepository.selectAccountWithMemberId(connection, memberInfo.memberId);
-            console.log('validationID', validationID);
+            console.log('validationID', validationID[0]);
 
-            if(validationID.length > 0){
-                connection.rollback();
+            if(validationID[0]){
                 console.log('Already registered');
+                connection.rollback();
                 return reject("Already registered");
             }
 
+            console.log('registerAccountBefore', memberInfo);
             memberInfo.password = await AccountUtils.setPassword(memberInfo.password);
     
+            console.log('registerAccountAfter', memberInfo);
             const result = await AccountRepository.registerAccount(connection, memberInfo);
 
             const insertedAccount = await AccountRepository.selectAccountWithMemberCode(connection, result.insertId);
@@ -106,13 +108,6 @@ exports.loginAccount = (loginInfo) => {
             } 
 
 
-            //패스워드 일치
-            // const result = await AccountRepository.updateLastLogin(connection, loginInfo.memberId);
-            // if(result.changedRows < 1){
-            //     // 마지막 로그인 수정 실패
-            //     connection.rollback();
-            //     return reject("Failed LastLogin update!!");
-            // }
 
             const account = await AccountRepository.selectAccountWithMemberId(connection, loginInfo.memberId);
 

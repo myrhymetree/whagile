@@ -10,9 +10,7 @@ const app = express();
 app.use(morgan('dev'));
 app.use(cookieParser());
 app.use(express.json());
-app.use(cors({
-    exposedHeaders: ['Authorization'],
-}));
+app.use(cors());
 
 
 const accountRouter = require('./src/routes/account-route');
