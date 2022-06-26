@@ -6,7 +6,7 @@ exports.selectBacklogs = (connection, params) => {
 
     return new Promise((resolve, reject) => {
         
-        connection.query(
+        const query = connection.query(
             backlogQuery.selectBacklogs(params),
             (err, results, fields) => {
                 
@@ -23,5 +23,7 @@ exports.selectBacklogs = (connection, params) => {
                 resolve(backlogs);
             }
         );
+
+        console.log(query.sql)
     });
 };
