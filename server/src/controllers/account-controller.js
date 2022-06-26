@@ -26,7 +26,9 @@ exports.selectAccounts = async (req, res, next) => {
 
 exports.registerAccount = async (req, res, next) => {
 
-    await AccountService.registerAccount(req.body)
+    console.log(req.body);
+
+    await AccountService.registerAccount(req.body.registerInfo)
         .then((result) => {
 
             res.status(HttpStatus.OK).json({

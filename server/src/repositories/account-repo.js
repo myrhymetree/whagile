@@ -45,25 +45,6 @@ exports.selectAccountWithMemberCode = (connection, memberCode) => {
 }
 
 
-exports.updateLastLogin = (connection, memberId) => {
-    console.log('updateLastLogin called');
-
-    return new Promise((resolve, reject) => {
-
-        connection.query(accountQuery.updateLastLogin(), 
-            [memberId],
-        
-        (err, results, fields) => {
-                
-            if(err) {
-                console.log(err);
-                reject(err);
-            }
-            resolve(results);
-        });
-    });
-}
-
 exports.registerAccount = (connection, memberInfo) => {
 
     console.log('registerAccount called');
@@ -71,13 +52,16 @@ exports.registerAccount = (connection, memberInfo) => {
     return new Promise((resolve, reject) => {
 
         connection.query(accountQuery.insertMember(), 
-            [ memberInfo.memberId
+            [ 
+              memberInfo.memberId
             , memberInfo.password
-            , memberInfo.email
             , memberInfo.name
+            , memberInfo.email
             , memberInfo.phone
             , memberInfo.company
-            , memberInfo.purpose],
+            , memberInfo.occupation
+            , memberInfo.purpose            
+        ],
         
         (err, results, fields) => {
                 

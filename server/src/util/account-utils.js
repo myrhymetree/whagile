@@ -25,7 +25,7 @@ exports.generateToken = (memberCode, memberId, memberName, memberEmail) => {
             },
             process.env.JWT_SECRET,
             {
-                expiresIn: '5m'
+                expiresIn: '7d'
             },
             (err, token) => {
                 if(err) {

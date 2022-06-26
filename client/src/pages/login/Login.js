@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import { useNavigate, NavLink } from 'react-router-dom';
 
+import { Button } from 'primereact/button';
+
 function Login() {
 
     const [id, setId] = useState("");
@@ -41,7 +43,7 @@ function Login() {
             window.localStorage.setItem('access_token', json.accessToken);
 
             window.localStorage.getItem('access_token') !== 'undefined' 
-            ? navigate('/') : console.log('login Failed');
+            ? navigate('/main') : console.log('login Failed');
                 
             
         })
@@ -65,13 +67,12 @@ function Login() {
                 <input type="id" value={ id } onChange={ onIdHandler } />
                 <label>Password</label>
                 <input type="password" value={ password } onChange={ onPasswordHandler } />
-
                 <br />
                 <button>
                     Login
                 </button>
             </form>
-
+            <Button>테스트</Button>
             <NavLink to="/signup">회원가입</NavLink>
         </div>
     );
