@@ -59,3 +59,20 @@ exports.selectProjectWithProjectCode = (connection, projectCode) => {
         });
     });
 }
+
+exports.registProjectMember = (connection, projectCode, authorityCode) => {
+
+    return new Promise((resolve, reject) => {
+        connection.query(projectQuery.registProjectMember(),
+        [ projectCode, authorityCode],
+        
+        (err, results, fields) {
+
+            if(err) {
+                console.log(err);
+                reject(err);
+            }
+            resolve(err);
+        });
+    });
+} 

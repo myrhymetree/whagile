@@ -25,6 +25,8 @@ exports.registProject = (projectInfo) => {
         try {
             const result = await ProjectRepository.registProject(connection, projectInfo);
 
+            const registMember = await ProjectRepository.registProjectMember(connection, result.insertId);
+
             const registedProject = await ProjectRepository.selectProjectWithProjectCode(connection, result.insertId);
 
             connection.commit();

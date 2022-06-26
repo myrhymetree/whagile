@@ -25,13 +25,34 @@ exports.insertProject = () => {
     `;
 }
 
+exports.insertProjectMember = () => {
+  return `
+      INSERT
+        INTO TBL_PROJECT_MEMBER
+      (
+        MEMBER_CODE
+      , AUTHORITY_CODE
+      , PROJECT_CODE
+      )
+        VALUES
+      (
+        ?
+      , ?
+      , ?
+      )
+  `;
+}
+
 exports.selectProjectWithProjectCode = () => {
     return `
         SELECT
                A.PROJECT_CODE
              , A.PROJECT_NAME
              , A.PROJECT_DESCRIPTION
+             , C.MEMBER_NAME
           FROM TBL_PROJECT A
+          JOIN TBL_PROJECT_HISTORY B ON (A.PROJECT_CODE = B.PROJECT_CODE)
+          JOIN TBL_MEMBER C ON (B.MEMBER_CODE = C.MEMBER_CODE)
          WHERE A.PROJECT_CODE = ?
            AND A.PROJECT_DELETED_STATUS = 'N'
     `;
