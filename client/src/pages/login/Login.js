@@ -1,8 +1,6 @@
 import React, { useState } from 'react'
 import { useNavigate, NavLink } from 'react-router-dom';
 
-
-
 function Login() {
 
     const [id, setId] = useState("");

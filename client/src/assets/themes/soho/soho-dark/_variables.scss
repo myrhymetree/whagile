@@ -11,7 +11,8 @@ $colors: (
     "purple": #7254F3
 ) !default;
 
-$primaryColor: #b19df7 !default;
+// $primaryColor: #b19df7 !default;
+$primaryColor: #8f2e4d !default;
 $primaryLightColor: scale-color($primaryColor, $lightness: 60%) !default;
 $primaryDarkColor: scale-color($primaryColor, $lightness: -5%) !default;
 $primaryDarkerColor: scale-color($primaryColor, $lightness: -10%) !default;
