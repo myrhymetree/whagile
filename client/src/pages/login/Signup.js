@@ -86,7 +86,7 @@ function Signup() {
     );
 
     return (
-      <div className="form-demo">
+      <div className="formDiv">
           <Dialog visible={showMessage} onHide={() => setShowMessage(false)} position="top" footer={dialogFooter} showHeader={false} breakpoints={{ '960px': '80vw' }} style={{ width: '30vw' }}>
               <div className="flex justify-content-center flex-column pt-6 px-3">
                   <i className="pi pi-check-circle" style={{ fontSize: '5rem', color: 'var(--green-500)' }}></i>
@@ -101,6 +101,8 @@ function Signup() {
               <div className="card">
                   <h5 className="text-center">Register</h5>
                   <form onSubmit={handleSubmit(onSubmitHandler)} className="p-fluid">
+
+
                       <div className="field">
                           <span className="p-float-label">
                               <Controller name="name" control={control} rules={{ required: 'Name is required.' }} render={({ field, fieldState }) => (
@@ -110,6 +112,8 @@ function Signup() {
                           </span>
                           {getFormErrorMessage('name')}
                       </div>
+
+
                       <div className="field">
                           <span className="p-float-label p-input-icon-right">
                               <i className="pi pi-envelope" />
@@ -122,6 +126,8 @@ function Signup() {
                           </span>
                           {getFormErrorMessage('email')}
                       </div>
+
+
                       <div className="field">
                           <span className="p-float-label">
                               <Controller name="password" control={control} rules={{ required: 'Password is required.' }} render={({ field, fieldState }) => (
@@ -131,12 +137,16 @@ function Signup() {
                           </span>
                           {getFormErrorMessage('password')}
                       </div>
+
+
                       <div className="field-checkbox">
                           <Controller name="accept" control={control} rules={{ required: true }} render={({ field, fieldState }) => (
                               <Checkbox inputId={field.name} onChange={(e) => field.onChange(e.checked)} checked={field.value} className={classNames({ 'p-invalid': fieldState.invalid })} />
                           )} />
                           <label htmlFor="accept" className={classNames({ 'p-error': errors.accept })}>약관동의*</label>
                       </div>
+
+
 
                       <Button type="submit" label="Submit" className="mt-2" />
                   </form>

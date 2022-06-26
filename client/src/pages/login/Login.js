@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useNavigate, NavLink } from 'react-router-dom';
 
-import { Button } from 'primereact/button';
+
 
 function Login() {
 
@@ -72,7 +72,7 @@ function Login() {
                     Login
                 </button>
             </form>
-            <Button>테스트</Button>
+
             <NavLink to="/signup">회원가입</NavLink>
         </div>
     );

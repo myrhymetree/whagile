@@ -6,6 +6,7 @@ import Main from './pages/main/Main';
 import "./assets/themes/soho/soho-dark/theme.css";  //theme
 import "primereact/resources/primereact.min.css";   //core css
 import "primeicons/primeicons.css";                 //icons
+import "./App.css";
 
 function App() {
   return (

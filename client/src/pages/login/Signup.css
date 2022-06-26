@@ -1,19 +1,24 @@
 /* FormDemo.css */
 
-.form-demo {
+.formDiv {
     margin: 0 auto;
     width: 40%;
 }
 
-.form-demo .card {
+.formDiv .card {
     min-width: 250px;
 }
-.form-demo .card form {
+.formDiv .card form {
     margin-top: 2rem;
 }
-.form-demo .card .field {
+.formDiv .card .field {
     margin-bottom: 1.5rem;
 }
+
+.formDiv .card .field-checkbox {
+    margin-bottom: 0.5rem;
+}
+
 @media screen and (max-width: 960px) {
     .form-demo .card {
         width: 80%;
