@@ -1,0 +1,36 @@
+nav {
+    width: 240px;
+    height: calc(100vh - 58px);
+    background-color: #282936;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    border-right: 1px solid #333544;
+}
+
+nav>* {
+    margin-top: 16px;
+}
+
+nav>div {
+    width: 198px;
+    height: auto;
+    background-color: #333544;
+    border-radius: 6px;
+    font-size: 16px;
+}
+
+nav>div:nth-child(1) {
+    padding: 20px;
+}
+
+#title {
+    font-size: 15px;
+    color: #F86064;
+}
+
+#title>*:nth-child(1) {
+    margin-right: 8px;
+}
