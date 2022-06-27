@@ -60,11 +60,11 @@ exports.selectProjectWithProjectCode = (connection, projectCode) => {
     });
 }
 
-exports.registProjectMember = (connection, projectCode, authorityCode) => {
+exports.registProjectMember = (connection, projectCode, authorityCode, memberCode ) => {
 
     return new Promise((resolve, reject) => {
         connection.query(projectQuery.registProjectMember(),
-        [ projectCode, authorityCode],
+        [ projectCode, 1, 1 ],
         
         (err, results, fields) => {
 
