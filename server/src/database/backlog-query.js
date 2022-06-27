@@ -1,3 +1,5 @@
+/* 백로그 목록 조회 요청 SQL */
+
 exports.selectBacklogs = (params) => {
   
   console.log('issue: ', params.issue);
@@ -44,4 +46,15 @@ exports.selectBacklogs = (params) => {
      LIMIT ${ params.offset }, ${ params.limit }`;
   
   return query;
+};
+
+/* 백로그 행 삽입 요청 SQL */
+exports.insertNewBacklog = () => {
+
+  return `
+      INSERT INTO TBL_BACKLOG
+      (BACKLOG_TITLE, BACKLOG_DESCRIPTION, BACKLOG_CATEGORY, BACKLOG_PROGRESS_STATUS, BACKLOG_URGENCY, BACKLOG_ISSUE, PROJECT_CODE, BACKLOG_CREATOR_CODE)
+      VALUES
+      (?, ?, ?, ?, ?, ?, ?, ?)
+  `;
 };

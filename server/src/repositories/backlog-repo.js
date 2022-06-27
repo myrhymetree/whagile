@@ -27,3 +27,24 @@ exports.selectBacklogs = (connection, params) => {
         console.log(query.sql)
     });
 };
+
+/* 새로운 백로그 생성 요청 */
+exports.insertNewBacklog = (connection, backlog) => {
+
+    return new Promise((resolve, reject) => {
+
+        connection.query(
+            backlogQuery.insertNewBacklog(),
+            [backlog.title, backlog.description, backlog.category, backlog.progressStatus, backlog.urgency, backlog.issue, backlog.projectCode, backlog.creatorCode],
+            (err, results, fields) => {
+
+                if(err) {
+                    console.log(`repo에서 err확인 : ${ err }`)
+                    reject(err);
+                }
+
+                resolve(results);
+            }
+        );
+    });
+}
