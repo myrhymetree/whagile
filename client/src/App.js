@@ -3,6 +3,7 @@ import Login from './pages/login/Login';
 import Signup from './pages/login/Signup';
 import MainLayout from './layouts/MainLayout';
 import Main from './pages/main/Main';
+
 // admin
 import AdminLayout from './layouts/AdminLayout';
 import AdminDashboard from './pages/admin/dashboard/AdminDashboard';
@@ -12,9 +13,11 @@ import AdminProduct from './pages/admin/product/AdminProduct';
 import AdminInquery from './pages/admin/inquery/AdminInquery';
 import AdminStatistics from './pages/admin/statistics/AdminStatistics';
 
-import "./assets/themes/soho/soho-dark/theme.css";  //theme
+// import "./assets/themes/soho/soho-dark/theme.css";  //theme
+import "./assets/themes/soho/soho-dark/theme.scss"; //theme
 import "primereact/resources/primereact.min.css";   //core css
 import "primeicons/primeicons.css";                 //icons
+import "./App.css";
 
 function App() {
   return (

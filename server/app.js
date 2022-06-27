@@ -16,11 +16,17 @@ app.use(cors());
 const accountRouter = require('./src/routes/account-route');
 app.use('/api/account', accountRouter);
 
+const projectRouter = require('./src/routes/project-route');
+app.use('/api/project', projectRouter);
+
 const testRouter = require('./src/routes/test-route');
 app.use('/api/test', testRouter);
 
 const authorityRouter = require('./src/routes/authority-route');
 app.use('/api/auth', authorityRouter);
+
+const backlogRouter = require('./src/routes/backlog-route');
+app.use('/api/backlogs', backlogRouter);
 
 app.listen(8888, () => console.log('listening on port 8888...'));
 

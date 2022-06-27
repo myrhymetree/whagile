@@ -1,7 +1,9 @@
 const getConnection = require('../database/connection');
 const AccountRepository = require('../repositories/account-repo');
 const AccountUtils = require('../util/account-utils');
-
+const EmailUtils = require('../util/email-utils');
+const jwt = require('jsonwebtoken');
+const { JWT_SECRET } = process.env;
 
 
 exports.selectAccounts = () => {
@@ -42,7 +44,7 @@ exports.registerAccount = (memberInfo) => {
 
         try{
 
-            const validationID = await AccountRepository.selectAccountWithMemberId(connection, memberInfo.memberId);
+            const validationID = await AccountRepository.selectAccountWithMemberId(connection, memberInfo.id);
             console.log('validationID', validationID[0]);
 
             if(validationID[0]){
@@ -59,12 +61,20 @@ exports.registerAccount = (memberInfo) => {
 
             const insertedAccount = await AccountRepository.selectAccountWithMemberCode(connection, result.insertId);
             console.log('insertedAccount', insertedAccount);
-
+            
             connection.commit();
+
+            // 이메일 인증을 위한 토큰 발급
+            const token = await AccountUtils.generateToken(insertedAccount.memberCode, insertedAccount.memberId, insertedAccount.name, insertedAccount.email);
+            
+            
+            //이메일 발송 프로세스
+            await EmailUtils.sendMail(insertedAccount[0], token);
     
             resolve(insertedAccount);
 
         } catch (err) {
+            console.log(err);
             connection.rollback();
             console.log('rooback succeeded');
 
@@ -141,6 +151,29 @@ exports.loginAccount = (loginInfo) => {
 };
 
 
-exports.activationAccount = (memberInfo) => {
-    console.log(memberInfo);
+exports.emailAuthWithToken = (authInfo) => {
+    
+    return new Promise((resolve, reject) => {
+
+        const connection = getConnection();
+                                            
+        if(!authInfo.token) {
+            reject("No token provided!");
+        }
+    
+        jwt.verify(authInfo.token, JWT_SECRET, (err, decodedInfo) => {
+            if (err) {
+                return res.status(401).json({
+                    message: "Unauthorized!"
+                });
+            }     
+        });      
+
+        const results = AccountRepository.updateAccountWithToken(connection, authInfo.id);
+
+        connection.end();
+
+        resolve(results);
+    });
+
 }
