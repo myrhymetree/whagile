@@ -1,7 +1,9 @@
 const getConnection = require('../database/connection');
 const AccountRepository = require('../repositories/account-repo');
 const AccountUtils = require('../util/account-utils');
-
+const EmailUtils = require('../util/email-utils');
+const jwt = require('jsonwebtoken');
+const { JWT_SECRET } = process.env;
 
 
 exports.selectAccounts = () => {
@@ -42,27 +44,37 @@ exports.registerAccount = (memberInfo) => {
 
         try{
 
-            const validationID = await AccountRepository.selectAccountWithMemberId(connection, memberInfo.memberId);
-            console.log('validationID', validationID);
+            const validationID = await AccountRepository.selectAccountWithMemberId(connection, memberInfo.id);
+            console.log('validationID', validationID[0]);
 
-            if(validationID.length > 0){
-                connection.rollback();
+            if(validationID[0]){
                 console.log('Already registered');
+                connection.rollback();
                 return reject("Already registered");
             }
 
+            console.log('registerAccountBefore', memberInfo);
             memberInfo.password = await AccountUtils.setPassword(memberInfo.password);
     
+            console.log('registerAccountAfter', memberInfo);
             const result = await AccountRepository.registerAccount(connection, memberInfo);
 
             const insertedAccount = await AccountRepository.selectAccountWithMemberCode(connection, result.insertId);
             console.log('insertedAccount', insertedAccount);
-
+            
             connection.commit();
+
+            // 이메일 인증을 위한 토큰 발급
+            const token = await AccountUtils.generateToken(insertedAccount.memberCode, insertedAccount.memberId, insertedAccount.name, insertedAccount.email);
+            
+            
+            //이메일 발송 프로세스
+            await EmailUtils.sendMail(insertedAccount[0], token);
     
             resolve(insertedAccount);
 
         } catch (err) {
+            console.log(err);
             connection.rollback();
             console.log('rooback succeeded');
 
@@ -106,13 +118,6 @@ exports.loginAccount = (loginInfo) => {
             } 
 
 
-            //패스워드 일치
-            // const result = await AccountRepository.updateLastLogin(connection, loginInfo.memberId);
-            // if(result.changedRows < 1){
-            //     // 마지막 로그인 수정 실패
-            //     connection.rollback();
-            //     return reject("Failed LastLogin update!!");
-            // }
 
             const account = await AccountRepository.selectAccountWithMemberId(connection, loginInfo.memberId);
 
@@ -146,6 +151,29 @@ exports.loginAccount = (loginInfo) => {
 };
 
 
-exports.activationAccount = (memberInfo) => {
-    console.log(memberInfo);
+exports.emailAuthWithToken = (authInfo) => {
+    
+    return new Promise((resolve, reject) => {
+
+        const connection = getConnection();
+                                            
+        if(!authInfo.token) {
+            reject("No token provided!");
+        }
+    
+        jwt.verify(authInfo.token, JWT_SECRET, (err, decodedInfo) => {
+            if (err) {
+                return res.status(401).json({
+                    message: "Unauthorized!"
+                });
+            }     
+        });      
+
+        const results = AccountRepository.updateAccountWithToken(connection, authInfo.id);
+
+        connection.end();
+
+        resolve(results);
+    });
+
 }

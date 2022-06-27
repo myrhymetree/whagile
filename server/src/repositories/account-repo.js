@@ -45,25 +45,6 @@ exports.selectAccountWithMemberCode = (connection, memberCode) => {
 }
 
 
-exports.updateLastLogin = (connection, memberId) => {
-    console.log('updateLastLogin called');
-
-    return new Promise((resolve, reject) => {
-
-        connection.query(accountQuery.updateLastLogin(), 
-            [memberId],
-        
-        (err, results, fields) => {
-                
-            if(err) {
-                console.log(err);
-                reject(err);
-            }
-            resolve(results);
-        });
-    });
-}
-
 exports.registerAccount = (connection, memberInfo) => {
 
     console.log('registerAccount called');
@@ -71,13 +52,16 @@ exports.registerAccount = (connection, memberInfo) => {
     return new Promise((resolve, reject) => {
 
         connection.query(accountQuery.insertMember(), 
-            [ memberInfo.memberId
+            [ 
+              memberInfo.id
             , memberInfo.password
-            , memberInfo.email
             , memberInfo.name
+            , memberInfo.email
             , memberInfo.phone
             , memberInfo.company
-            , memberInfo.purpose],
+            , memberInfo.occupation
+            , memberInfo.purpose            
+        ],
         
         (err, results, fields) => {
                 
@@ -106,6 +90,28 @@ exports.selectAccountWithMemberId = (connection, memberId) => {
             }
 
             resolve(member);
+        });
+    });
+}
+
+exports.updateAccountWithToken = (connection, memberCode) => {
+    return new Promise((resolve, reject) => {
+        console.log('repo', memberCode);
+        connection.query(accountQuery.updateAccountWithToken(), [memberCode], (err, results, fields) => {
+
+            if(err) {
+                console.log(err);
+                reject(err);
+            }
+
+            if(results.changedRows < 1){
+                console.log('DB UPDATE FAILED!');
+                reject('DB UPDATE FAILED!');
+            }
+
+            console.log('DB Process', results);
+
+            resolve(results);
         });
     });
 }

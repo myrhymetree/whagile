@@ -25,7 +25,7 @@ exports.generateToken = (memberCode, memberId, memberName, memberEmail) => {
             },
             process.env.JWT_SECRET,
             {
-                expiresIn: '5m'
+                expiresIn: '48h'
             },
             (err, token) => {
                 if(err) {
@@ -38,7 +38,6 @@ exports.generateToken = (memberCode, memberId, memberName, memberEmail) => {
             }
         );    
     });
-
 }
 
 exports.decodedToken = (token) => {

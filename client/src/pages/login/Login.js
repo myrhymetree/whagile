@@ -1,78 +1,128 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import { useNavigate, NavLink } from 'react-router-dom';
+import { useForm, Controller, FieldError } from 'react-hook-form';
+import { InputText } from 'primereact/inputtext';
+import { Button } from 'primereact/button';
+import { Password } from 'primereact/password';
+import { Dialog } from 'primereact/dialog';
+import { Divider } from 'primereact/divider';
+import { classNames } from 'primereact/utils';
+import { Toast } from 'primereact/toast';
+import './Login.css';
 
 function Login() {
 
-    const [id, setId] = useState("");
-    const [password, setPassword] = useState("");
+    // const [id, setId] = useState("");
+    // const [password, setPassword] = useState("");
+
     const navigate = useNavigate();
-
-    const onIdHandler = (event) => {
-        setId(event.currentTarget.value)
+    const defaultValues = {
+        memberId : '',
+        password : ''
     };
 
-    const onPasswordHandler = (event) => {
-        setPassword(event.currentTarget.value)
-    };
+    const toast = useRef(null);
+    const showError = (msg) => {
+        toast.current.show({severity:'error', summary: 'Error Message', detail:msg, life: 3000});
+    }
 
-    const onSubmitHandler = (event) => {
-        event.preventDefault();
+    const clear = () => {
+        toast.current.clear();
+    }
 
-        console.log('id', id);
-        console.log('Password', password);    
 
-        const loginInfo = {
-            id: id,
-            password: password
-        }
+    const { control, formState: { errors }, handleSubmit } = useForm({ defaultValues });
 
+    const onSubmitHandler = (data) => {
+        
         fetch("http://localhost:8888/api/account/login", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify({
-              memberId: loginInfo.id,
-              password: loginInfo.password
-            })
+            body: JSON.stringify(data)
         })
         .then(response => response.json())
         .then(json => {
             window.localStorage.setItem('access_token', json.accessToken);
 
             window.localStorage.getItem('access_token') !== 'undefined' 
-            ? navigate('/') : console.log('login Failed');
-                
+            ? ((data.memberId === 'admin')? navigate('/admin') : navigate('/main'))
+            : console.log('login Failed');         
+
             
         })
         .catch((err) => {
           console.log('login error: ' + err);
+          showError('로그인에 실패하였습니다.');
         });
     };
 
-
+    const getFormErrorMessage = (name) => {
+        return errors[name] && <small className="p-error">{errors[name].message}</small>
+    };
 
     return (
-        <div style={{
-            display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column',
-            width: '100%', height: '50vh'
-        }}>
-            <form 
-                style={{display: 'flex', flexDirection: 'column' }}
-                onSubmit={onSubmitHandler}
-            >
-                <label>ID</label>
-                <input type="id" value={ id } onChange={ onIdHandler } />
-                <label>Password</label>
-                <input type="password" value={ password } onChange={ onPasswordHandler } />
+        <div className="flex justify-content-center login-center">
+            <Toast ref={toast} position="top-center" />
 
-                <br />
-                <button>
-                    Login
-                </button>
-            </form>
+            <div className='formDiv'>
+                <div className='card'>
+                    <h5 className="text-center">로그인</h5>
+                    <form 
+                        style={{display: 'flex', flexDirection: 'column' }}
+                        onSubmit={handleSubmit(onSubmitHandler)}
+                        className="p-fluid"
+                    >
+                        <div className="field">
+                            <span className="p-float-label">
+                                <Controller 
+                                    name="memberId" 
+                                    control={control} 
+                                    rules={{ required: '아이디는 필수값입니다.' }} 
+                                    render={({ field, fieldState }) => (
+                                        <InputText 
+                                            id={field.name} 
+                                            {...field} 
+                                            autoFocus 
+                                            className={classNames({ 'p-invalid': fieldState.invalid })} 
+                                        />
+                                )} />
+                                <label htmlFor="memberId" className={classNames({ 'p-error': errors.memberId })}>ID*</label>
+                            </span>
+                            {getFormErrorMessage('memberId')}
+                        </div>
 
-            <NavLink to="/signup">회원가입</NavLink>
+                        <div className="field">
+                            <span className="p-float-label">
+                                <Controller 
+                                    name="password" 
+                                    control={control} 
+                                    rules={{ required: '비밀번호는 필수값입니다.' }} 
+                                    render={({ field, fieldState }) => (
+                                        <Password 
+                                            id={field.name} 
+                                            {...field} 
+                                            toggleMask 
+                                            autoComplete="off"
+                                            className={classNames({ 'p-invalid': fieldState.invalid })} 
+                                        />
+                                )} />
+                                <label htmlFor="password" className={classNames({ 'p-error': errors.password })}>Password*</label>
+                            </span>
+                            {getFormErrorMessage('password')}
+                        </div>
+
+                        <Button 
+                            type="submit"
+                            label="로그인"  
+                            className="p-button-success p-button-sm"  
+                        />
+                    </form>
+
+                    <NavLink to="/signup">회원가입</NavLink>
+                </div>
+            </div>
         </div>
     );
 }
