@@ -1,22 +1,47 @@
 exports.selectBacklogs = (params) => {
-
-  return `
-      SELECT 
-            A.BACKLOG_CODE
-          , A.BACKLOG_TITLE
-          , A.BACKLOG_CATEGORY
-          , A.BACKLOG_PROGRESS_STATUS
-          , A.BACKLOG_URGENCY
-          , A.BACKLOG_ISSUE
-          , A.PROJECT_CODE
-          , A.BACKLOG_CREATOR_CODE
-          , C.MEMBER_NAME
-        FROM TBL_BACKLOG A
-        JOIN TBL_PROJECT_MEMBER B ON (A.PROJECT_CODE = B.PROJECT_CODE) AND (A.BACKLOG_CREATOR_CODE = B.MEMBER_CODE)
-        JOIN TBL_MEMBER C ON (B.MEMBER_CODE = C.MEMBER_CODE)
-      WHERE A.BACKLOG_DELETED_YN = 'N'
-        AND A.BACKLOG_CATEGORY = '백로그'
-      ORDER BY A.BACKLOG_CODE DESC
-      LIMIT ${ params.offset }, ${ params.limit }
+  
+  console.log('issue: ', params.issue);
+  console.log('progressStatus: ', params.progressStatus);
+  console.log('urgency: ', params.urgency);
+  
+  let query = `
+    SELECT 
+           A.BACKLOG_CODE
+         , A.BACKLOG_TITLE
+         , A.BACKLOG_CATEGORY
+         , A.BACKLOG_PROGRESS_STATUS
+         , A.BACKLOG_URGENCY
+         , A.BACKLOG_ISSUE
+         , A.PROJECT_CODE
+         , A.BACKLOG_CREATOR_CODE
+         , C.MEMBER_NAME
+      FROM TBL_BACKLOG A
+      JOIN TBL_PROJECT_MEMBER B ON (A.PROJECT_CODE = B.PROJECT_CODE) AND (A.BACKLOG_CREATOR_CODE = B.MEMBER_CODE)
+      JOIN TBL_MEMBER C ON (B.MEMBER_CODE = C.MEMBER_CODE)
+     WHERE A.BACKLOG_DELETED_YN = 'N'
+       AND A.BACKLOG_CATEGORY = '백로그'
   `;
+  
+  if(!Number.isNaN(params.issue)) {
+    console.log('issue가 숫자면 동작')
+    query += `     AND A.BACKLOG_ISSUE = ${ params.issue }
+    `;
+  }
+  
+  if(params.progressStatus !== undefined) {
+    query += `     AND A.BACKLOG_PROGRESS_STATUS = '${ params.progressStatus }'
+    `;
+    console.log('progressStatus가 undefined가 아니면 동작')
+  }
+  
+  if(params.urgency !== undefined) {
+    query += `   AND A.BACKLOG_URGENCY = '${ params.urgency }'
+    `;
+    console.log('urgency가 undefined가 아니면 동작')
+  }
+  
+  query += ` ORDER BY A.BACKLOG_CODE DESC
+     LIMIT ${ params.offset }, ${ params.limit }`;
+  
+  return query;
 };

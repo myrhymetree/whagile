@@ -4721,7 +4721,7 @@
   color: rgba(255, 255, 255, 0.87);
   border: 1px solid #3e4053;
   border-radius: 6px;
-  width: 12.5rem;
+  /* width: 12.5rem; */
 }
 .p-menu .p-menuitem-link {
   padding: 0.75rem 1.25rem;

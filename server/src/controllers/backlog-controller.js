@@ -1,4 +1,3 @@
-const { urlencoded } = require('express');
 const HttpStatus = require('http-status');
 const BacklogService = require('../services/backlog-service');
 
@@ -10,14 +9,14 @@ exports.findAllBacklogs = async (req, res, next) => {
     console.log(req.query.limit);
     console.log(req.query.issue);
     console.log(req.query.progressStatus);
-    console.log(req.query.uegency);
+    console.log(req.query.urgency);
 
     const params = {
         offset: Number(req.query.offset),
         limit: Number(req.query.limit),
         issue: Number(req.query.issue),
         progressStatus: req.query.progressStatus,
-        urgency: req.query.uegency
+        urgency: req.query.urgency
     };
 
     console.log(typeof(params.offset));
