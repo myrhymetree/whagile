@@ -1,5 +1,6 @@
 import MainHeaderCSS from './MainHeader.module.css';
 import { Button } from 'primereact/button';
+import { useSelector } from 'redux';
 
 function MainHeader() {
 
@@ -17,11 +18,13 @@ function MainHeader() {
                 </div>
             </div>
             <div>
-                요금제사용중
+                <label className={ MainHeaderCSS.leftDateCount }>20일 남음</label> 
+                <span>무료체험 프로모션 사용 중</span>
+                <Button id={ MainHeaderCSS.payBtn} label="결제하기" className="p-button-outlined p-button-info" />
             </div>
             <div>
                 <div id={ MainHeaderCSS.welcome }>
-                    <span>{ }님 환영합니다</span>
+                    <span>akswlswnfafs님 환영합니다</span>
                     <div>
                         <Button 
                             icon="pi pi-user" 
