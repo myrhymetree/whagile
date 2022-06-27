@@ -16,6 +16,7 @@ nav>* {
 
 nav>div {
     width: 198px;
+    height: auto;
     background-color: #333544;
     border-radius: 6px;
     font-size: 16px;
@@ -23,11 +24,6 @@ nav>div {
 
 nav>div:nth-child(1) {
     padding: 20px;
-    height: auto;
-}
-
-nav>div:nth-child(2) {
-    height: auto;
 }
 
 #title {

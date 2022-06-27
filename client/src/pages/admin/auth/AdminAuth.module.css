@@ -11,50 +11,31 @@ section {
 section>div {
     width: 96%;
     border-radius: 10px;
-    margin-top: 20px;
     padding-left: 20px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
 }
 
-#title {
+#search, #paginator {
     height: 58px;
-    background-color: #1D1E27;
-    border: 1px solid #333544;
-    flex-direction: row;
-    justify-content: start;
-    align-items: center;
-}
-
-#title>* {
-    margin-right: 10px;
-    font-size: 25px;
-}
-
-#search {
-    height: 58px;
-    background-color: #1D1E27;
-    border: 1px solid #333544;
-    display: flex;
-    flex-direction: row;
-    justify-content: start;
-    align-items: center;
     background-color: #282936;
+    border: 1px solid #333544;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 0 20px;
 }
 
-#search>* {
-    margin-right: 30px;
-}
-
-#search>div>* {
+#search>div>* { /* search condition */
     width: 200px;
 }
 
-#search>span>* {
-    width: calc(100vw - 680px);
+#search>span>* { /* search value */
+    width: calc(100vw - 720px);
 }
 
 #table {
     padding: 0;
+    height: calc(100vh - 420px);
+    margin-bottom: 20px;
 }

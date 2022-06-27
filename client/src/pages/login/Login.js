@@ -34,7 +34,7 @@ function Login() {
     const { control, formState: { errors }, handleSubmit } = useForm({ defaultValues });
 
     const onSubmitHandler = (data) => {
-                
+        
         fetch("http://localhost:8888/api/account/login", {
             method: "POST",
             headers: {
@@ -47,7 +47,7 @@ function Login() {
             window.localStorage.setItem('access_token', json.accessToken);
 
             window.localStorage.getItem('access_token') !== 'undefined' 
-            ? navigate('/main') 
+            ? ((data.memberId === 'admin')? navigate('/admin') : navigate('/main'))
             : console.log('login Failed');         
 
             

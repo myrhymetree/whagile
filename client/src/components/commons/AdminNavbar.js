@@ -1,6 +1,6 @@
 import AdminNavbarCss from './AdminNavbar.module.css';
 import { Menu } from 'primereact/menu';
-import { useNavigate } from 'react-router-dom'; /* 페이지 강제 이동 */
+import { useNavigate } from 'react-router-dom';
 
 function AdminNavbar() {
 
@@ -21,8 +21,7 @@ function AdminNavbar() {
                 <i className="pi pi-fw pi-chart-line"/>
                 <span>WHY-AGILE 관리자</span>
             </div>
-
-            <Menu model={items} />
+            <Menu model={items} style={{width: '198px'}}/>
         </nav>
     );
 }

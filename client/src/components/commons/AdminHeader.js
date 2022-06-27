@@ -1,7 +1,12 @@
 import AdminHeaderCss from './AdminHeader.module.css';
 import { Button } from 'primereact/button';
+import { useNavigate } from 'react-router-dom';
 
 function AdminHeader() {
+
+    const navigate = useNavigate();
+
+    const onClickHandler = () => navigate(`/admin`)
 
     return (
         <header>
@@ -11,6 +16,7 @@ function AdminHeader() {
                         src={process.env.PUBLIC_URL + '/logo_admin.png'} 
                         alt="logo_admin"
                         width="160"
+                        onClick={ onClickHandler }
                     />
                 </div>
             </div>

@@ -4,7 +4,7 @@ const AuthorityController = require('../controllers/authority-controller');
 
 router.post('/', AuthorityController.addAuth);
 router.get('/', AuthorityController.viewAuths);
-router.get('/:authorityCode', AuthorityController.viewAuth);    // 수정필요
+router.get('/:authorityCode', AuthorityController.viewAuth);
 router.put('/', AuthorityController.editAuth);
 router.delete('/', AuthorityController.deleteAuth);
 
