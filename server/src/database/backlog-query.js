@@ -1,7 +1,6 @@
 /* 백로그 목록 조회 요청 SQL */
 
 exports.selectBacklogs = (params) => {
-  
   let query = `
     SELECT 
            A.BACKLOG_CODE
@@ -19,31 +18,30 @@ exports.selectBacklogs = (params) => {
      WHERE A.BACKLOG_DELETED_YN = 'N'
        AND A.BACKLOG_CATEGORY = '백로그'
   `;
-  
-  if(!Number.isNaN(params.issue)) {
-    query += `     AND A.BACKLOG_ISSUE = ${ params.issue }
+
+  if (!Number.isNaN(params.issue)) {
+    query += `     AND A.BACKLOG_ISSUE = ${params.issue}
     `;
   }
-  
-  if(params.progressStatus !== undefined) {
-    query += `     AND A.BACKLOG_PROGRESS_STATUS = '${ params.progressStatus }'
+
+  if (params.progressStatus !== undefined) {
+    query += `     AND A.BACKLOG_PROGRESS_STATUS = '${params.progressStatus}'
     `;
   }
-  
-  if(params.urgency !== undefined) {
-    query += `   AND A.BACKLOG_URGENCY = '${ params.urgency }'
+
+  if (params.urgency !== undefined) {
+    query += `   AND A.BACKLOG_URGENCY = '${params.urgency}'
     `;
   }
-  
+
   query += ` ORDER BY A.BACKLOG_CODE DESC
-     LIMIT ${ params.offset }, ${ params.limit }`;
-  
+     LIMIT ${params.offset}, ${params.limit}`;
+
   return query;
 };
 
 /* 백로그 상세조회 요청 SQL */
 exports.selectBacklogByBacklogCode = () => {
-
   return `
       SELECT
              A.BACKLOG_CODE
@@ -66,7 +64,6 @@ exports.selectBacklogByBacklogCode = () => {
 
 /* 백로그 행 삽입 요청 SQL */
 exports.insertNewBacklog = () => {
-
   return `
       INSERT INTO TBL_BACKLOG
       (BACKLOG_TITLE, BACKLOG_DESCRIPTION, BACKLOG_CATEGORY, BACKLOG_PROGRESS_STATUS, 

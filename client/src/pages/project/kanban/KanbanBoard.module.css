@@ -50,15 +50,6 @@
   align-items: center;
 }
 
-input {
-  background-color: #282936;
-  color: #fff;
-  text-align: center;
-}
-
-input::placeholder {
-  color: #fff;
-}
 
 .subTitle {
   border: 3px solid #00aa9c;

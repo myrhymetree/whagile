@@ -12,7 +12,7 @@ import ProjectLayout from './layouts/ProjectLayout';
 import Main from './pages/main/Main';
 import Dashboard from './pages/project/Dashboard';
 import BacklogAndSprint from './pages/project/BacklogAndSprint';
-import Kanban from './pages/kanban/Kanban';
+import KanbanBoard from "./pages/project/kanban/KanbanBoard";
 import History from './pages/project/History';
 import Management from './pages/project/Management';
 
@@ -36,7 +36,7 @@ function App() {
             <Route path="dashboard" element={ <Dashboard/> }/>
             <Route path="backlog-and-sprint" element={ <BacklogAndSprint/> }/>
             {/* <Route path=":projectId/sprint" element={ <Sprint/> }/> */}
-            <Route path="kanban" element={ <Kanban/> }/>
+            <Route path="kanban-board" element={ <KanbanBoard/> }/>
             <Route path="history" element={ <History/> }/>
             <Route path="management" element={ <Management/> }/>
           </Route>
