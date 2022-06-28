@@ -1,11 +1,11 @@
 import MainNavbarCSS from "./MainNavbar.module.css";
+
 import { Menu } from "primereact/menu";
-import { useNavigate } from "react-router-dom"; /* 페이지 강제 이동 */
-import { NavLink } from "react-router-dom";
+import { Button } from "primereact/button";
 import Icon from "@mdi/react";
 import { mdiMonitorDashboard } from "@mdi/js";
-import { Button } from "primereact/button";
-import { mdiChartGantt } from "@mdi/js";
+
+import { useNavigate } from "react-router-dom"; /* 페이지 강제 이동 */
 
 function MainNavbar() {
   const navigate = useNavigate();
@@ -15,49 +15,49 @@ function MainNavbar() {
       label: "대시보드",
       icon: "pi pi-fw pi-chart-pie",
       command: () => {
-        navigate(`/dashboard`);
+        navigate(`/project/dashboard`);
       },
     },
     {
       label: "백로그 및 스프린트",
       icon: "pi pi-fw pi-inbox",
       command: () => {
-        navigate(`/backlogs`);
+        navigate(`/project/backlog-and-sprint`);
       },
     },
     {
       label: "간트차트",
       icon: "pi pi-fw pi-chart-bar",
       command: () => {
-        navigate(`/gantt`);
+        navigate(`/project/gantt`);
       },
     },
     {
       label: "칸반보드",
       icon: "pi pi-fw pi-th-large",
       command: () => {
-        navigate(`/main/kanban`);
+        navigate(`/project/kanban`);
       },
     },
     {
       label: "히스토리",
       icon: "pi pi-fw pi-history",
       command: () => {
-        navigate(`/history`);
+        navigate(`/project/history`);
       },
     },
     {
       label: "프로젝트 관리",
       icon: "pi pi-fw pi-cog",
       command: () => {
-        navigate(`/management`);
+        navigate(`/project/management`);
       },
     },
   ];
 
   return (
-    <nav>
-      <div className={MainNavbarCSS.projectName}>
+    <nav id={ MainNavbarCSS.navbar }>
+      <div className={ MainNavbarCSS.projectName }>
         <Icon
           path={mdiMonitorDashboard}
           title="User Profile"
@@ -67,7 +67,7 @@ function MainNavbar() {
         <span style={{ marginLeft: "8px" }}>프로젝트 명</span>
       </div>
       <div>
-        <Menu model={items} />
+        <Menu model={ items }/>
       </div>
       <div>
         <Button
