@@ -16,8 +16,8 @@ function AdminNavbar() {
     ];
 
     return (
-        <nav>
-            <div id={ AdminNavbarCss.title }>
+        <nav id={AdminNavbarCss.admin}>
+            <div id={AdminNavbarCss.title}>
                 <i className="pi pi-fw pi-chart-line"/>
                 <span>WHY-AGILE 관리자</span>
             </div>

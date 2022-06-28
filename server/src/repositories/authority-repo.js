@@ -23,14 +23,7 @@ exports.selectAuths = (connection, params) => {
     
     return new Promise((resolve, reject) => {
 
-        const queryParams = [
-            parseInt(params.offset)
-            , parseInt(params.limit)
-        ];
-
-        const whereClause = params.searchCondition && `WHERE ${'AUTHORITY_' + params.searchCondition.toUpperCase()} LIKE '%${params.searchValue}%'`;
-
-        connection.query(authorityQuery.selectAuths(whereClause), queryParams, (err, results, fields) => {
+        connection.query(authorityQuery.selectAuths(params), (err, results, fields) => {
 
             if(err) {
                 reject(err);
