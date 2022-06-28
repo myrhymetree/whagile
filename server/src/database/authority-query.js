@@ -18,20 +18,29 @@ exports.insertAuth = () => {
     `;
 };
 
-exports.selectAuths = (whereClause) => {
+exports.selectAuths = (params) => {
 
-    return `
+    let query = `
         SELECT
-              AUTHORITY_CODE
+            AUTHORITY_CODE
             , AUTHORITY_NAME
             , AUTHORITY_DESCRIPTION
             , AUTHORITY_ACTIVATED_YN
             , AUTHORITY_DATE
             , AUTHORITY_EXPOSURE_ORDER
         FROM TBL_AUTHORITY
-        ${whereClause}
-        LIMIT ?, ?
+        WHERE 0 = 0
     `;
+    
+    if(params.searchValue !== undefined && params.searchCondition !== undefined) {
+        query += `AND ${'AUTHORITY_' + params.searchCondition.toUpperCase()} LIKE '%${params.searchValue}%'`;
+    }
+
+    if(params.offset !== undefined && params.limit !== undefined) {
+        query += `LIMIT ${params.offset}, ${params.limit}`;
+    }
+
+    return query;
 };
 
 exports.selectAuth = () => {
@@ -60,7 +69,6 @@ exports.updateAuth = () => {
             , AUTHORITY_DESCRIPTION =?
         WHERE
             AUTHORITY_CODE = ?
-
     `;
 };
 
@@ -70,6 +78,5 @@ exports.deleteAuth = () => {
         DELETE FROM TBL_AUTHORITY
         WHERE
             AUTHORITY_CODE = ?
-
     `;
 };
