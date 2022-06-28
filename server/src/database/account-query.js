@@ -53,6 +53,7 @@ exports.selectMemberWithMemberId = () => {
             , A.MEMBER_OCCUPATION
             , A.MEMBER_PURPOSE
             , A.MEMBER_NAME
+            , A.MEMBER_EMAIL_AUTH
         FROM TBL_MEMBER A
        WHERE A.MEMBER_ID = ?
   `;
