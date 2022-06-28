@@ -4,6 +4,7 @@ const router = express.Router();
 const BacklogController = require('../controllers/backlog-controller');
 
 router.get('/', BacklogController.findAllBacklogs);
-// router.get('/:backlogCode', BacklogController.findBacklogsByBacklogCode);
+router.get('/:backlogCode', BacklogController.findBacklogsByBacklogCode);
+router.post('/', BacklogController.registNewBacklog);
 
 module.exports = router;

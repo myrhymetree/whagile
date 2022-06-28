@@ -3,7 +3,7 @@ import MainHeader from '../components/commons/MainHeader';
 import MainNavbar from '../components/commons/MainNavbar';
 import MainLayoutCSS from './MainLayout.module.css';
 
-function MainLayout() {
+function ProjectLayout() {
 
     return (
         <div>
@@ -16,4 +16,4 @@ function MainLayout() {
     );
 }
 
-export default MainLayout;
+export default ProjectLayout;
