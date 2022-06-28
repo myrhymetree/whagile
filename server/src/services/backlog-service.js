@@ -35,28 +35,42 @@ exports.findBacklogsByBacklogCode = (backlogCode) => {
 /* 새로운 백로그 생성 요청 */
 exports.registNewBacklog = (backlog) => {
 
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
 
         const connection = getConnection();
         connection.beginTransaction();
 
         try {
-            const result = BacklogRepository.insertNewBacklog(connection, backlog);
+            /* 백로그 데이터 삽입 */
+            const insertNewBacklogResult = await BacklogRepository.insertNewBacklog(connection, backlog);
+            console.log(`insertNewBacklogResult 확인 : ${insertNewBacklogResult}`)
+            
+            /* 백로그 히스토리 데이터 삽입 */
+            const insertedBacklog = await BacklogRepository.selectBacklogByBacklogCode(connection, insertNewBacklogResult.insertId);
+            const insertNewHistoryResult = await BacklogRepository.insertBacklogHistory(connection, insertedBacklog.backlogCode);
+            console.log(`insertNewHistoryResult 확인 : ${insertNewHistoryResult}`)
 
-            console.log(`service에서 insert결과 확인 : ${result}`)
+            /* 추가한 백로그 히스토리 행 조회 */
+            const insertedHistory = await BacklogRepository.selectHistoryByBacklogCode(connection, insertNewHistoryResult.insertId);
+            
             connection.commit();
 
-            resolve(result);
+            /* 삽입한 백로그, 백로그 히스토리를 result 객체에 담아 반환한다 */
+            const results = {
+                insertedBacklog: insertedBacklog, 
+                insertedHistory: insertedHistory
+            };
+
+            resolve(results);
 
         } catch(err) {
             console.log(`service에서 err확인 : ${err}`)
             connection.rollback();
+
+            reject(err);
 
         } finally {
             connection.end();
         }
     });
 };
-
-
-

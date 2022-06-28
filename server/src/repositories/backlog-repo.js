@@ -77,3 +77,25 @@ exports.insertNewBacklog = (connection, backlog) => {
     });
 };
 
+/* 백로그 히스토리 생성 요청 */
+exports.insertBacklogHistory = (connection, insertedBacklogCode) => {
+    
+    return new Promise((resolve, reject) => {
+
+        connection.query(
+            backlogQuery.insertBacklogHistory(), 
+            insertedBacklogCode,
+            (err, results, fields) => {
+
+                if(err) {
+                    console.log(`repo에서 err확인 : ${ err }`)
+                    reject(err);
+                }
+
+                resolve(results);
+            }
+        );
+    });
+};
+
+/* 백로그 히스토리 조회 요청 */
