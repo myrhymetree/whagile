@@ -43,7 +43,7 @@ function Login() {
     const { control, formState: { errors }, handleSubmit } = useForm({ defaultValues });
 
     const onSubmitHandler = (data) => {
-                
+        
         fetch("http://localhost:8888/api/account/login", {
             method: "POST",
             headers: {
@@ -60,6 +60,10 @@ function Login() {
             window.localStorage.getItem('access_token') !== 'undefined' 
             ? navigate('/main') 
             : showError('로그인에 실패하였습니다.');
+
+            // ? ((data.memberId === 'admin')? navigate('/admin') : navigate('/main'))
+            // : console.log('login Failed');         
+
         })
         .catch((err) => {
           console.log('login error: ' + err);
