@@ -1,15 +1,7 @@
 /* 백로그 목록 조회 요청 SQL */
 
 exports.selectBacklogs = (params) => {
-<<<<<<< HEAD
-  console.log("issue: ", params.issue);
-  console.log("progressStatus: ", params.progressStatus);
-  console.log("urgency: ", params.urgency);
-
-=======
-  
->>>>>>> da47f1827d974729b36b2e1bab8475e3513acda3
-  let query = `
+ let query = `
     SELECT 
            A.BACKLOG_CODE
          , A.BACKLOG_TITLE
@@ -26,13 +18,7 @@ exports.selectBacklogs = (params) => {
      WHERE A.BACKLOG_DELETED_YN = 'N'
        AND A.BACKLOG_CATEGORY = '백로그'
   `;
-<<<<<<< HEAD
 
-  if (!Number.isNaN(params.issue)) {
-    console.log("issue가 숫자면 동작");
-    query += `     AND A.BACKLOG_ISSUE = ${params.issue}
-=======
-  
   if(!Number.isNaN(params.issue)) {
     query += `     AND A.BACKLOG_ISSUE = ${ params.issue }
 >>>>>>> da47f1827d974729b36b2e1bab8475e3513acda3
@@ -42,19 +28,13 @@ exports.selectBacklogs = (params) => {
   if (params.progressStatus !== undefined) {
     query += `     AND A.BACKLOG_PROGRESS_STATUS = '${params.progressStatus}'
     `;
-<<<<<<< HEAD
-    console.log("progressStatus가 undefined가 아니면 동작");
-=======
->>>>>>> da47f1827d974729b36b2e1bab8475e3513acda3
+
   }
 
   if (params.urgency !== undefined) {
     query += `   AND A.BACKLOG_URGENCY = '${params.urgency}'
     `;
-<<<<<<< HEAD
-    console.log("urgency가 undefined가 아니면 동작");
-=======
->>>>>>> da47f1827d974729b36b2e1bab8475e3513acda3
+
   }
 
   query += ` ORDER BY A.BACKLOG_CODE DESC
