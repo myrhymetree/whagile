@@ -1,5 +1,6 @@
 const getConnection = require('../database/connection');
 const BacklogRepository = require('../repositories/backlog-repo');
+const { get } = require('../routes/backlog-route');
 
 /* 백로그 목록 조회 요청 */
 exports.findBacklogs = (params) => {
@@ -9,6 +10,21 @@ exports.findBacklogs = (params) => {
         const connection = getConnection();
 
         const results = BacklogRepository.selectBacklogs(connection, params);
+
+        connection.end();
+
+        resolve(results);
+    });
+};
+
+/* 개별 백로그 상세 조회 요청 */
+exports.findBacklogsByBacklogCode = (backlogCode) => {
+
+    return new Promise((resolve, reject) => {
+
+        const connection = getConnection();
+
+        const results = BacklogRepository.selectBacklogByBacklogCode(connection, backlogCode);
 
         connection.end();
 
