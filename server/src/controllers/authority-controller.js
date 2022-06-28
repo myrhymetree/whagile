@@ -7,7 +7,7 @@ exports.addAuth = async (req, res, next) => {
     .then((results) => {
 
         res.status(HttpStatus.OK).json({
-            status: HttpStatus.OK,
+            status: HttpStatus.CREATED,
             message: 'successfully add authority',
             results: results
         });
@@ -28,7 +28,7 @@ exports.viewAuths = async (req, res, next) => {
 
         res.status(HttpStatus.OK).json({
             status: HttpStatus.OK,
-            message: 'successfully view authority',
+            message: 'successfully view authorities',
             results: results
         });
     })
