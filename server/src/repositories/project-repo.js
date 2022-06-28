@@ -27,8 +27,8 @@ exports.registProject= (connection, projectInfo) => {
         connection.query(projectQuery.insertProject(),
         [ projectInfo.projectName
         , projectInfo.projectDescription
-        , projectInfo.projectDeletedStatus],
-
+        , projectInfo.projectDeletedStatus
+        ],
         (err, results, fields) => {
 
             if(err) {
@@ -61,10 +61,13 @@ exports.selectProjectWithProjectCode = (connection, projectCode) => {
 }
 
 exports.registProjectMember = (connection, projectCode, authorityCode, memberCode ) => {
-
+ 
     return new Promise((resolve, reject) => {
-        connection.query(projectQuery.registProjectMember(),
-        [ projectCode, 1, 1 ],
+        console.log("프로젝트번호는?", projectCode);
+        console.log("권한번호는?", authorityCode);
+        console.log("멤버번호는?", memberCode);
+        connection.query(projectQuery.insertProjectMember(),
+        [ memberCode, authorityCode, projectCode ],
         
         (err, results, fields) => {
 
@@ -72,7 +75,64 @@ exports.registProjectMember = (connection, projectCode, authorityCode, memberCod
                 console.log(err);
                 reject(err);
             }
-            resolve(err);
+
+            resolve(results);
         });
     });
-} 
+}
+
+exports.updateProject = (connection, projectInfo ) => {
+ 
+    return new Promise((resolve, reject) => {
+        connection.query(projectQuery.updateProject(),
+        [ projectInfo.projectName
+        , projectInfo.projectDescription
+        , projectInfo.projectCode ],
+        
+        (err, results, fields) => {
+
+            if(err) {
+                console.log(err);
+                reject(err);
+            }
+
+            resolve(results);
+        });
+    });
+}
+
+exports.updateManager1 = (connection, projectCode ) => {
+ 
+    return new Promise((resolve, reject) => {
+        connection.query(projectQuery.updateProjectOwner1(),
+        [ projectCode ],
+        
+        (err, results, fields) => {
+
+            if(err) {
+                console.log(err);
+                reject(err);
+            }
+
+            resolve(results);
+        });
+    });
+}
+
+exports.updateManager2 = (connection, projectCode, memberCode ) => {
+ 
+    return new Promise((resolve, reject) => {
+        connection.query(projectQuery.updateProjectOwner2(),
+        [ projectCode, memberCode ],
+
+        (err, results, fields) => {
+
+            if(err) {
+                console.log(err);
+                reject(err);
+            }
+
+            resolve(results);
+        });
+    });
+}

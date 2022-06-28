@@ -42,3 +42,24 @@ exports.registProject = async (req, res, next) => {
             });
         });
 };
+
+exports.modifyProject = async (req, res, next) => {
+
+    await ProjectService.modifyProject(req.body)
+        .then((result) => {
+
+            res.status(HttpStatus.OK).json({
+                status: HttpStatus.OK,
+                message: 'successfully updatedProject!!',
+                results: result
+            });
+        })
+        .catch((err) => {
+            
+            res.status(HttpStatus.BAD_REQUEST).json({
+                status:HttpStatus.BAD_REQUEST,
+                message: err
+            });
+        });
+}
+

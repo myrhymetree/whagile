@@ -3,6 +3,7 @@ const router = express.Router();
 const ProjectController = require('../controllers/project-controllers');
 
 router.get('/projects', ProjectController.selectProjects);
-router.post('/project', ProjectController.registProject);
+router.post('/', ProjectController.registProject);
+router.put('/:projectCode', ProjectController.modifyProject);
 
 module.exports = router;
