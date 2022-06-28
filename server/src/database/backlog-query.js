@@ -1,9 +1,8 @@
 exports.selectBacklogs = (params) => {
-  
-  console.log('issue: ', params.issue);
-  console.log('progressStatus: ', params.progressStatus);
-  console.log('urgency: ', params.urgency);
-  
+  console.log("issue: ", params.issue);
+  console.log("progressStatus: ", params.progressStatus);
+  console.log("urgency: ", params.urgency);
+
   let query = `
     SELECT 
            A.BACKLOG_CODE
@@ -21,27 +20,27 @@ exports.selectBacklogs = (params) => {
      WHERE A.BACKLOG_DELETED_YN = 'N'
        AND A.BACKLOG_CATEGORY = '백로그'
   `;
-  
-  if(!Number.isNaN(params.issue)) {
-    console.log('issue가 숫자면 동작')
-    query += `     AND A.BACKLOG_ISSUE = ${ params.issue }
+
+  if (!Number.isNaN(params.issue)) {
+    console.log("issue가 숫자면 동작");
+    query += `     AND A.BACKLOG_ISSUE = ${params.issue}
     `;
   }
-  
-  if(params.progressStatus !== undefined) {
-    query += `     AND A.BACKLOG_PROGRESS_STATUS = '${ params.progressStatus }'
+
+  if (params.progressStatus !== undefined) {
+    query += `     AND A.BACKLOG_PROGRESS_STATUS = '${params.progressStatus}'
     `;
-    console.log('progressStatus가 undefined가 아니면 동작')
+    console.log("progressStatus가 undefined가 아니면 동작");
   }
-  
-  if(params.urgency !== undefined) {
-    query += `   AND A.BACKLOG_URGENCY = '${ params.urgency }'
+
+  if (params.urgency !== undefined) {
+    query += `   AND A.BACKLOG_URGENCY = '${params.urgency}'
     `;
-    console.log('urgency가 undefined가 아니면 동작')
+    console.log("urgency가 undefined가 아니면 동작");
   }
-  
+
   query += ` ORDER BY A.BACKLOG_CODE DESC
-     LIMIT ${ params.offset }, ${ params.limit }`;
-  
+     LIMIT ${params.offset}, ${params.limit}`;
+
   return query;
 };
