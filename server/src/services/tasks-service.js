@@ -1,6 +1,7 @@
 const getConnection = require("../database/connection");
 const TasksRepository = require("../repositories/tasks-repo");
 
+// 전체 일감 목록 조회
 exports.getTasks = (params) => {
   return new Promise((resolve, reject) => {
     const connection = getConnection();
@@ -13,8 +14,7 @@ exports.getTasks = (params) => {
   });
 };
 
-
-
+// 개별 일감 조회
 exports.findTaskByTaskCode = (taskCode) => {
   return new Promise((resolve, reject) => {
     const connection = getConnection();
@@ -29,28 +29,52 @@ exports.findTaskByTaskCode = (taskCode) => {
 
 
 
+// 개별 일감 생성
 exports.registNewTask = (task) => {
+  return new Promise(async (resolve, reject) => {
+    const connection = getConnection();
+    connection.beginTransaction();
 
-    return new Promise(async (resolve, reject) => {
+    try {
+      const insertedNewTask = await TasksRepository.insertNewTask(
+        connection,
+        task
+      );
 
-        const connection = getConnection();
-        connection.beginTransaction();
+      connection.commit();
+      const result = insertedNewTask;
 
-        try {
-            const insertedNewTask = await TasksRepository.insertNewTask(connection, task);
-            console.log(insertedNewTask)
-          
-            connection.commit();
-            const result = insertedNewTask
+      resolve(result);
+    } catch (err) {
+      connection.rollback();
 
-            resolve(result);
+      reject(err);
+    } finally {
+      connection.end();
+    }
+  });
+};
 
-        } catch (err) {
-          connection.rollback();
 
-          reject(err);
-        } finally {
-            connection.end();
-        }
-    });
+
+// 개별 일감 수정
+exports.editTask = (params) => {
+  return new Promise(async (resolve, reject) => {
+    const connection = getConnection();
+    connection.beginTransaction();
+
+    try {
+      const results = await TasksRepository.updateTask(connection, params);
+
+      connection.commit();
+
+      resolve(results);
+    } catch (err) {
+      connection.rollback();
+
+      reject(err);
+    } finally {
+      connection.end();
+    }
+  });
 };
