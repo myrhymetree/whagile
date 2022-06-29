@@ -62,6 +62,4 @@ exports.registNewBacklog = async (req, res, next) => {
         results: results,
         url: 'localhost:8888/api/backlogs?offset=0&limit=10'
     });
-
-    // next(this.findAllBacklogs);
 };

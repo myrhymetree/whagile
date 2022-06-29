@@ -43,32 +43,60 @@ exports.selectBacklogs = (params) => {
 /* 백로그 상세조회 요청 SQL */
 exports.selectBacklogByBacklogCode = () => {
   return `
-      SELECT
-             A.BACKLOG_CODE
-           , A.BACKLOG_TITLE
-           , A.BACKLOG_DESCRIPTION
-           , A.BACKLOG_PROGRESS_STATUS
-           , A.BACKLOG_URGENCY
-           , A.BACKLOG_CATEGORY
-           , A.PROJECT_CODE
-           , A.BACKLOG_ISSUE
-           , A.BACKLOG_CREATOR_CODE
-           , C.MEMBER_NAME
-        FROM TBL_BACKLOG A
-        JOIN TBL_PROJECT_MEMBER B ON (A.PROJECT_CODE = B.PROJECT_CODE) AND (A.BACKLOG_CREATOR_CODE = B.MEMBER_CODE)
-        JOIN TBL_MEMBER C ON (B.MEMBER_CODE = C.MEMBER_CODE)
-       WHERE A.BACKLOG_CODE = ?
-       ORDER BY A.BACKLOG_CODE DESC
+    SELECT
+            A.BACKLOG_CODE
+          , A.BACKLOG_TITLE
+          , A.BACKLOG_DESCRIPTION
+          , A.BACKLOG_PROGRESS_STATUS
+          , A.BACKLOG_URGENCY
+          , A.BACKLOG_CATEGORY
+          , A.PROJECT_CODE
+          , A.BACKLOG_ISSUE
+          , A.BACKLOG_CREATOR_CODE
+          , C.MEMBER_NAME
+      FROM TBL_BACKLOG A
+      JOIN TBL_PROJECT_MEMBER B ON (A.PROJECT_CODE = B.PROJECT_CODE) AND (A.BACKLOG_CREATOR_CODE = B.MEMBER_CODE)
+      JOIN TBL_MEMBER C ON (B.MEMBER_CODE = C.MEMBER_CODE)
+      WHERE A.BACKLOG_CODE = ?
+      ORDER BY A.BACKLOG_CODE DESC
   `;
 };
 
 /* 백로그 행 삽입 요청 SQL */
 exports.insertNewBacklog = () => {
   return `
-      INSERT INTO TBL_BACKLOG
-      (BACKLOG_TITLE, BACKLOG_DESCRIPTION, BACKLOG_CATEGORY, BACKLOG_PROGRESS_STATUS, 
-       BACKLOG_URGENCY, BACKLOG_ISSUE, PROJECT_CODE, BACKLOG_CREATOR_CODE)
-      VALUES
-      (?, ?, ?, ?, ?, ?, ?, ?)
+    INSERT INTO TBL_BACKLOG
+    (BACKLOG_TITLE, BACKLOG_DESCRIPTION, BACKLOG_CATEGORY, BACKLOG_PROGRESS_STATUS, 
+      BACKLOG_URGENCY, BACKLOG_ISSUE, PROJECT_CODE, BACKLOG_CREATOR_CODE)
+    VALUES
+    (?, ?, ?, ?, ?, ?, ?, ?)
+  `;
+};
+
+/* 백로그 히스토리 행 삽입 요청 SQL */
+exports.insertBacklogHistory = () => {
+
+  return `
+    INSERT INTO TBL_BACKLOG_HISTORY
+    (BACKLOG_HISTORY_ITEM, BACKLOG_HISTORY_CONTENT, BACKLOG_HISTORY_DATE, BACKLOG_CODE, PROJECT_CODE, MEMBER_CODE)
+    VALUES
+    (?, ?, ?, ?, ?, ?)
+  `;
+};
+
+/* 백로그 히스토리 1개 행 조회 요청 SQL */
+exports.selectHistoryByHistoryCode = () => {
+
+  return `
+    SELECT
+           A.BACKLOG_HISTORY_CODE
+         , A.BACKLOG_HISTORY_ITEM
+         , A.BACKLOG_HISTORY_CONTENT
+         , A.BACKLOG_HISTORY_DATE
+         , A.BACKLOG_CODE
+         , A.PROJECT_CODE
+         , A.MEMBER_CODE
+      FROM TBL_BACKLOG_HISTORY A
+     WHERE A.BACKLOG_HISTORY_CODE = ?
   `;
 };

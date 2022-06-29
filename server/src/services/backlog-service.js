@@ -1,6 +1,25 @@
 const getConnection = require('../database/connection');
 const BacklogRepository = require('../repositories/backlog-repo');
-const { get } = require('../routes/backlog-route');
+
+/* 히스토리 생성 함수 */
+createNewHistory = () => {
+    
+    const newHistory = {
+        historyItem: '',    
+        historyContent: '',  
+        historyDate: '',  
+        backlogCode: 0,   
+        projectCode: 0,   
+        memberCode: 0
+    };
+    
+    /* 히스토리 발생일 정보 생성 */
+    const insertDate = new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString();    //히스토리 발생일
+
+    newHistory.historyDate = insertDate;
+
+    return newHistory;
+};
 
 /* 백로그 목록 조회 요청 */
 exports.findBacklogs = (params) => {
@@ -43,15 +62,24 @@ exports.registNewBacklog = (backlog) => {
         try {
             /* 백로그 데이터 삽입 */
             const insertNewBacklogResult = await BacklogRepository.insertNewBacklog(connection, backlog);
-            console.log(`insertNewBacklogResult 확인 : ${insertNewBacklogResult}`)
+            console.log(`insertNewBacklogResult 확인 : ${insertNewBacklogResult.insertId}`)
             
-            /* 백로그 히스토리 데이터 삽입 */
+            /* 백로그 히스토리 데이터 생성 */
+            const newHistory = createNewHistory();
+            newHistory.historyItem = '백로그';
+            newHistory.historyContent = '생성';
+            newHistory.backlogCode = insertNewBacklogResult.insertId;
+            newHistory.projectCode = backlog.projectCode;
+            newHistory.memberCode = backlog.creatorCode;
+            
+            /* 추가한 백로그 행 조회 */
             const insertedBacklog = await BacklogRepository.selectBacklogByBacklogCode(connection, insertNewBacklogResult.insertId);
-            const insertNewHistoryResult = await BacklogRepository.insertBacklogHistory(connection, insertedBacklog.backlogCode);
-            console.log(`insertNewHistoryResult 확인 : ${insertNewHistoryResult}`)
+
+            /* 백로그 히스토리 데이터 삽입 */
+            const insertNewHistoryResult = await BacklogRepository.insertBacklogHistory(connection, newHistory);
 
             /* 추가한 백로그 히스토리 행 조회 */
-            const insertedHistory = await BacklogRepository.selectHistoryByBacklogCode(connection, insertNewHistoryResult.insertId);
+            const insertedHistory = await BacklogRepository.selectHistoryByHistoryCode(connection, insertNewHistoryResult.insertId);
             
             connection.commit();
 
