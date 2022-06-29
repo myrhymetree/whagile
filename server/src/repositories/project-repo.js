@@ -1,9 +1,9 @@
 const projectQuery = require('../database/project-qurery');
 const ProjectDTO = require('../dto/project/project-response-dto');
 
-exports.selectProjects = (connection) => {
+exports.selectProjects = (connection, params) => {
     return new Promise((resolve, reject) => {
-        connection.query(projectQuery.selectProjects(), (err, results, fields) => {
+        connection.query(projectQuery.selectProjects(params), (err, results, fields) => {
 
             if(err) {
                 console.log(err);
@@ -18,6 +18,20 @@ exports.selectProjects = (connection) => {
             console.log('project', project);
 
             resolve(project);
+        });
+    });
+};
+
+exports.selectProject = function(projectCode) {
+    return new Promise((resolve, reject) => {
+        connection.query(projectQuery.selectProjectWithProjectCode(projectCode), (err, result, fields) => {
+
+            if(err) {
+                console.log(err);
+                reject(err);
+            }
+
+            resolve(result);
         });
     });
 };

@@ -1,8 +1,9 @@
 /* 프로젝트 목록 조회 */
 
-exports.selectProjects = () => {
+exports.selectProjects = (params) => {
 
-    return `
+    let query = 
+      `
        SELECT
               A.*
             , C.MEMBER_NAME 
@@ -11,9 +12,16 @@ exports.selectProjects = () => {
          JOIN TBL_MEMBER C ON (B.MEMBER_CODE = C.MEMBER_CODE)
         WHERE A.PROJECT_DELETED_STATUS = 'N'
           AND B.AUTHORITY_CODE = 1
-        ORDER BY A.PROJECT_CODE ASC
-    `
-}
+      `;
+
+    if(params.searchValue !== undefined) {
+       query += ` AND ${'A.PROJECT_NAME'} LIKE '%${params.searchValue}%'`;
+    }
+
+    query += `ORDER BY A.PROJECT_CODE DESC
+              LIMIT ${params.offset}, ${params.limit} `;
+    return query;
+};
 
 /* 프로젝트 추가 */
 exports.insertProject = () => {
