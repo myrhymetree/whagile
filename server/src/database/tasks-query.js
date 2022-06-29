@@ -26,6 +26,39 @@ exports.selectTasks = (params) => {
         ORDER BY BACKLOG_CODE ASC
     `;
 
+  // if (!Number.isNaN(params.issue)) {
+  //   query += `     AND A.BACKLOG_ISSUE = ${params.issue}
+  //   `;
+  // }
+
+  // if (params.progressStatus !== undefined) {
+  //   query += `     AND A.BACKLOG_PROGRESS_STATUS = '${params.progressStatus}'
+  //   `;
+  // }
+
+  // if (params.progressStatus === '진행 전') {
+  //   query += `     AND A.BACKLOG_PROGRESS_STATUS = '${params.progressStatus}'
+  // `;
+  // }
+  
+  // if (params.progressStatus === '진행 중') {
+  //   query += `     AND A.BACKLOG_PROGRESS_STATUS = '${params.progressStatus}'
+  // `;
+  // }
+    
+  // if (params.progressStatus === '완료') {
+  //     query += `     AND A.BACKLOG_PROGRESS_STATUS = '${params.progressStatus}'
+  // `;
+  //   }
+
+  // if (params.urgency !== undefined) {
+  //   query += `   AND A.BACKLOG_URGENCY = '${params.urgency}'
+  //   `;
+  // }
+
+  // query += ` ORDER BY A.BACKLOG_CODE DESC
+  //    LIMIT ${params.offset}, ${params.limit}`;
+
   return query;
 };
 

@@ -19,7 +19,7 @@
   background: #282936;
   padding: 4px;
   width: 250px;
-  min-height: 800px;
+  min-height: 600px;
   border-radius: 15px;
   display: flex;
   flex-direction: column;
@@ -41,14 +41,6 @@
   margin: 10px;
 }
 
-.title {
-  width: 200px;
-  height: 60px;
-  background-color: #333544;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
 
 
 .subTitle {

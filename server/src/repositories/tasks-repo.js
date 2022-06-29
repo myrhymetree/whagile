@@ -57,7 +57,7 @@ exports.insertNewTask = (connection, params) => {
       tasksQuery.insertNewTask(),
       [
         params.backlogTitle,
-        params.backlogDiscription,
+        params.backlogDescription,
         params.progressStatus,
         params.urgency,
         params.backlogChargerCode,
@@ -89,7 +89,7 @@ exports.updateTask = (connection, params) => {
       tasksQuery.updateTask(),
       [
         params.backlogTitle,
-        params.backlogDiscription,
+        params.backlogDescription,
         params.progressStatus,
         params.urgency,
         params.backlogChargerCode,

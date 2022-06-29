@@ -9,18 +9,17 @@ exports.findAllTasks = async (req, res, next) => {
     issue: Number(req.query.issue),
     progressStatus: req.query.progressStatus,
     urgency: req.query.urgency,
-    backlogChargerCode: Number(req.query.backlogChargerCode),
+    sprintCode: Number(req.query.sprintCode),
+    category: req.query.category
   };
-
+  console.log(params);
   const results = await TasksService.getTasks(params);
-
-  console.log("findAllTasks :", results);
 
   if (results && results.length > 0) {
     res.status(HttpStatus.OK).json({
       status: HttpStatus.OK,
       message: "정상적으로 일감 목록을 조회했습니다.",
-      results: results,
+      data: results,
     });
   } else {
     res.status(HttpStatus.BAD_REQUEST).json({
@@ -38,7 +37,7 @@ exports.findTaskByTaskCode = async (req, res, next) => {
     res.status(HttpStatus.OK).json({
       status: HttpStatus.OK,
       message: "정상적으로 개별 일감을 조회했습니다.",
-      results: results,
+      data: results,
     });
   } else {
     res.status(HttpStatus.BAD_REQUEST).json({
@@ -56,7 +55,7 @@ exports.registNewTask = async (req, res, next) => {
         res.status(HttpStatus.CREATED).json({
           status: HttpStatus.CREATED,
           message: "정상적으로 일감을 생성했습니다.",
-          results: results,
+          data: results,
         });
 };
 
@@ -68,6 +67,6 @@ exports.editTask = async (req, res, next) => {
     res.status(HttpStatus.OK).json({
       status: HttpStatus.OK,
       message: "개별 일감 수정을 완료했습니다.",
-      results: results,
+      data: results,
     });
 };

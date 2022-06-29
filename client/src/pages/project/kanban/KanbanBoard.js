@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import uuid from "uuid/v4";
 import kanbanStyle from "./KanbanBoard.module.css";
+import PageTitle from "../../../components/items/PageTitle";
+import { Dialog } from "primereact/dialog";
 
 const tasksFromKanban = [
   { id: uuid(), content: "일감 생성" },
@@ -31,15 +33,6 @@ const boardsFromKanban = {
   },
 };
 
-function KanbanSprintTitle() {
-  return (
-    <>
-      <div className={kanbanStyle.title}>
-        <input placeholder="스프린트 제목을 입력하세요"></input>
-      </div>
-    </>
-  );
-}
 
 const onDragEnd = (result, boards, setBoards) => {
   if (!result.destination) return;
@@ -49,11 +42,13 @@ const onDragEnd = (result, boards, setBoards) => {
     // 다른 board로 이동
     const sourceBoard = boards[source.droppableId];
     const destinationBoard = boards[destination.droppableId];
+
     const sourceTasks = [...sourceBoard.tasks];
     const destinationTasks = [...destinationBoard.tasks];
-    // const [copied] = Object.assign(sourceTasks, );
+
     const [removed] = sourceTasks.splice(source.index, 1);
     destinationTasks.splice(destination.index, 0, removed);
+
     setBoards({
       ...boards,
       [source.droppableId]: {
@@ -85,7 +80,12 @@ function KanbanBoard() {
   const [boards, setBoards] = useState(boardsFromKanban);
   return (
     <div className={kanbanStyle.container}>
-      <KanbanSprintTitle />
+      <div>
+        <PageTitle
+          icon={<i className="pi pi-fw pi-th-large"></i>}
+          text="칸반보드"
+        />
+      </div>
       <div className={kanbanStyle.mainDiv}>
         <DragDropContext
           onDragEnd={(result) => onDragEnd(result, boards, setBoards)}
