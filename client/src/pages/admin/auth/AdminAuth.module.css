@@ -20,7 +20,7 @@
 
 #table {
     padding: 0;
-    height: calc(100vh - 420px);
+    /* height: calc(100vh - 420px); */
     margin-bottom: 20px;
 }
 

@@ -7,7 +7,12 @@ exports.insertAuth = (connection, params) => {
 
         connection.query(
             authorityQuery.insertAuth(),
-            [params.authorityName, params.authorityActivatedYn, parseInt(params.authorityExposureOrder), params.authorityDescription],
+            [
+                params.authorityName, 
+                params.authorityActivatedYn, 
+                params.authorityExposureOrder && parseInt(params.authorityExposureOrder), 
+                params.authorityDescription
+            ],
             (err, results, fields) => {
                 if(err) {
                     reject(err);
