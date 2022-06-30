@@ -133,6 +133,24 @@ exports.editBacklog = (connection, modifyingContent) => {
                 resolve(results);
             }
         );
+    });
+};
 
+/* 백로그 삭제 요청 */
+exports.deleteBacklog = (connection, backlogCode) => {
+
+    return new Promise((resolve, reject) => {
+        connection.query(
+            backlogQuery.deleteBacklog(),
+            backlogCode,
+            (err, results, fields) => {
+
+                if(err) {
+                    reject(err);
+                }
+
+                resolve(results);
+            }
+        );
     });
 };

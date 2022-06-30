@@ -176,3 +176,55 @@ exports.editBacklog = (modifyingContent) => {
         }
     });
 };
+
+/* 백로그 삭제 요청 */
+exports.removeRequest = (removeRequest) => {
+
+    return new Promise(async (resolve, reject) => {
+
+        const connection = getConnection();
+        connection.beginTransaction();
+
+        try {
+
+            /* 백로그 데이터 삭제 */
+            const deleteResult = await BacklogRepository.deleteBacklog(connection, removeRequest.backlogCode);
+
+            /* 변경된 백로그 행 조회 */
+            const changedBacklog = await BacklogRepository.selectBacklogByBacklogCode(connection, removeRequest.backlogCode);
+
+            /* 백로그 히스토리 데이터 생성 */
+            const newHistory = createNewHistory();
+            
+            newHistory.historyContent = '삭제';
+            newHistory.backlogCode = removeRequest.backlogCode;
+            newHistory.projectCode = removeRequest.projectCode;
+            newHistory.memberCode = removeRequest.memberCode;
+            console.log(`newHistory: ${newHistory}`);
+
+            /* 백로그 히스토리 추가 */
+            const newHistoryInseted = await BacklogRepository.insertBacklogHistory(connection, newHistory);
+
+            /* 추가한 백로그 히스토리 행 조회 */
+            const insertedHistory = await BacklogRepository.selectHistoryByHistoryCode(connection, newHistoryInseted.insertId);
+
+            /* 수정된 백로그, 추가한 백로그 히스토리를 result 객체에 담아 반환한다 */
+            const results = {
+                changedBacklog: changedBacklog,
+                insertedHistory: insertedHistory
+            };
+
+            connection.commit();
+
+            resolve(results);
+
+        } catch(err) {
+            connection.rollback();
+            
+            reject(err);
+
+        } finally {
+            connection.end();
+        }
+    });
+};

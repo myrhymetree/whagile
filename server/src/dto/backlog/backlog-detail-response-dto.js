@@ -10,6 +10,7 @@ class BacklogDatailDTO {
     creatorCode;
     creatorName;
     projectCode;
+    deletedYN;
 
     constructor(data) {
         this.backlogCode = data.BACKLOG_CODE;
@@ -22,6 +23,7 @@ class BacklogDatailDTO {
         this.creatorCode = data.BACKLOG_CREATOR_CODE;
         this.creatorName = data.MEMBER_NAME;
         this.projectCode = data.PROJECT_CODE;
+        this.deletedYN = data.BACKLOG_DELETED_YN;
     };
 }
 

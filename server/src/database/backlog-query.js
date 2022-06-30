@@ -54,6 +54,7 @@ exports.selectBacklogByBacklogCode = () => {
           , A.BACKLOG_ISSUE
           , A.BACKLOG_CREATOR_CODE
           , C.MEMBER_NAME
+          , A.BACKLOG_DELETED_YN
       FROM TBL_BACKLOG A
       JOIN TBL_PROJECT_MEMBER B ON (A.PROJECT_CODE = B.PROJECT_CODE) AND (A.BACKLOG_CREATOR_CODE = B.MEMBER_CODE)
       JOIN TBL_MEMBER C ON (B.MEMBER_CODE = C.MEMBER_CODE)
@@ -142,4 +143,14 @@ exports.editBacklog = (modifyingContent) => {
   query += ` WHERE A.BACKLOG_CODE = ${ modifyingContent.backlogCode }`;
 
   return query;
+};
+
+/* 백로그 삭제 요청 SQL */
+exports.deleteBacklog = () => {
+
+  return `
+      UPDATE TBL_BACKLOG A
+         SET A.BACKLOG_DELETED_YN = 'Y'
+       WHERE A.BACKLOG_CODE = ?
+  `;
 };
