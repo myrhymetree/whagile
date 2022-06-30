@@ -1,0 +1,66 @@
+.pageDivision {
+    padding: 20px;
+    margin: 10px;
+    border-radius: 10px;
+    background-color: #282936;
+    color: #fff;
+}
+
+.divTitle {
+    font-size: 20px;
+}
+
+.divisionLine {
+    border: 1px solid #333440;
+    margin-top: 7px;
+    margin-bottom: 3px;
+}
+
+#divHeader {
+    background-color: rgba(255, 255, 255, 0.05);
+    height: 30px;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+#divHeader>div {
+    justify-content: center;
+    text-align: center;
+}
+
+#divHeader>div:nth-child(1) {
+    width: 10%;
+}
+
+#divHeader>div:nth-child(2) {
+    width: 45%;
+}
+
+#divHeader>div:nth-child(3) {
+    width: 15%;
+}
+
+#divHeader>div:nth-child(4) {
+    width: 15%;
+}
+
+#divHeader>div:nth-child(5) {
+    width: 15%;
+}
+
+.sprintItem {
+    background-color: #333544;
+    border-radius: 10px;
+    min-height: 50px;
+    padding: 20px;
+    margin-top: 10px;
+}
+
+.sprintSelectBtn {
+    background: none;
+    border: none;
+    color: #fff;
+}

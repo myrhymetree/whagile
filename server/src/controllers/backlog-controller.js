@@ -62,6 +62,43 @@ exports.registNewBacklog = async (req, res, next) => {
         results: results,
         url: 'localhost:8888/api/backlogs?offset=0&limit=10'
     });
+};
 
-    // next(this.findAllBacklogs);
+/* 백로그 수정 요청 */
+exports.editBacklog = async (req, res, next) => {
+
+    const modifyingContent = {
+        backlogCode: Number(req.body.backlogCode),
+        projectCode: Number(req.body.projectCode),
+        memberCode: Number(req.body.memberCode),
+        changedCategory: req.body.changedCategory,
+        changedValue: req.body.changedValue
+    };
+
+    const results = await BacklogService.editBacklog(modifyingContent);
+
+    res.status(httpStatus.OK).json({
+        status: httpStatus.OK,
+        message: '정상적으로 개별 백로그 목록을 수정했습니다.',
+        results: results
+    });
+};
+
+/* 백로그 삭제 요청 */
+exports.removeBacklog = async (req, res, next) => {
+
+    const removeRequest = {
+        backlogCode: Number(req.body.backlogCode),
+        projectCode: Number(req.body.projectCode),
+        memberCode: Number(req.body.memberCode)
+    };
+
+    const results = await BacklogService.removeRequest(removeRequest);
+
+    res.status(httpStatus.OK).json({
+        status: httpStatus.OK,
+        message: '정상적으로 개별 백로그를 삭제했습니다.',
+        results: results,
+        url: 'localhost:8888/api/backlogs?offset=0&limit=10'
+    });
 };
