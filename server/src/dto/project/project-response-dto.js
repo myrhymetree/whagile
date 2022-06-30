@@ -10,6 +10,7 @@ class ProjectDTO {
         this.projectName = data.PROJECT_NAME;
         this.projectDescription = data.PROJECT_DESCRIPTION;
         this.projectDeletedStatus = data.PROJECT_DELETED_STATUS
+        this.projectOwner = data.MEMBER_NAME
     }
 }
 

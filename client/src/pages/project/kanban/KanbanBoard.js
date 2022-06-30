@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import uuid from "uuid/v4";
-import kanbanStyle from "./Kanban.module.css";
+import kanbanStyle from "./KanbanBoard.module.css";
 
 const tasksFromKanban = [
   { id: uuid(), content: "일감 생성" },
@@ -81,7 +81,7 @@ const onDragEnd = (result, boards, setBoards) => {
   }
 };
 
-function Kanban() {
+function KanbanBoard() {
   const [boards, setBoards] = useState(boardsFromKanban);
   return (
     <div className={kanbanStyle.container}>
@@ -146,4 +146,4 @@ function Kanban() {
   );
 }
 
-export default Kanban;
+export default KanbanBoard;

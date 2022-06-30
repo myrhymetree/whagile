@@ -1,21 +1,47 @@
-import { GET_AUTHS } from "../modules/AuthModule";
+import { GET_AUTHS } from "../modules/AuthsModule";
+import { GET_AUTH } from "../modules/AuthModule";
+import { GET_AUTH_ORDER } from "../modules/AuthOrderModule";
 
 export function callGetAuthsAPI(params) {
 
-    let requestURL = `http://localhost:8888/api/auth?offset=${params.offset}&limit=${params.limit}`;
+    let requestURL = `http://localhost:8888/api/auth`;
 
-    if(params.searchValue) {
-        requestURL += `&searchValue=${params.searchValue}`
-        if(params.searchCondition) {
-            requestURL += `&searchCondition=${params.searchCondition}`
-        }
+    if(Object.keys(params).length !== 0) {
+        requestURL += `?${Object.entries(params).map(param => param.join('=')).join('&')}`;
     }
 
     return async function getAuths(dispatch, getState) {
         
         const result = await fetch(requestURL).then(res => res.json());
 
-        console.log('result : ', result.results);
         dispatch({ type: GET_AUTHS, payload: result.results });
+    }
+}
+
+export function callGetAuthAPI(params) {
+
+    let requestURL = `http://localhost:8888/api/auth/${params.authorityCode}`;
+
+    return async function getAuths(dispatch, getState) {
+        
+        const result = await fetch(requestURL).then(res => res.json());
+        
+        dispatch({ type: GET_AUTH, payload: result.results[0] });
+    }
+}
+
+export function callGetAuthOrderAPI(params) {
+
+    let requestURL = `http://localhost:8888/api/auth`;
+
+    if(Object.keys(params).length !== 0) {
+        requestURL += `?${Object.entries(params).map(param => param.join('=')).join('&')}`;
+    }
+
+    return async function getAuths(dispatch, getState) {
+        
+        const result = await fetch(requestURL).then(res => res.json());
+
+        dispatch({ type: GET_AUTH_ORDER, payload: result.results });
     }
 }

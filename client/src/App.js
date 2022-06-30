@@ -1,11 +1,23 @@
+// import "./assets/themes/soho/soho-dark/theme.css";  //theme
+import "./assets/themes/soho/soho-dark/theme.scss"; //theme
+// require('./assets/themes/soho/soho-dark/theme.scss');  //theme
+import "primereact/resources/primereact.min.css";   //core css
+import "primeicons/primeicons.css";                 //icons
+import "./App.css";
+
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Navigate } from "react-router-dom";
 import Login from './pages/login/Login';
 import Signup from './pages/login/Signup';
-import MainLayout from './layouts/MainLayout';
+import ProjectLayout from './layouts/ProjectLayout';
 import Main from './pages/main/Main';
-import Kanban from "./pages/kanban/Kanban";
 import Profile from "./pages/profile/Profile";
+import Dashboard from './pages/project/Dashboard';
+import BacklogAndSprint from './pages/project/BacklogAndSprint';
+import KanbanBoard from "./pages/project/kanban/KanbanBoard";
+import History from './pages/project/History';
+import Management from './pages/project/Management';
+import List  from './pages/list/List';
 
 // admin
 import AdminLayout from './layouts/AdminLayout';
@@ -15,13 +27,6 @@ import AdminAuth from './pages/admin/auth/AdminAuth';
 import AdminProduct from './pages/admin/product/AdminProduct';
 import AdminInquery from './pages/admin/inquery/AdminInquery';
 import AdminStatistics from './pages/admin/statistics/AdminStatistics';
-
-// import "./assets/themes/soho/soho-dark/theme.css";  //theme
-import "./assets/themes/soho/soho-dark/theme.scss"; //theme
-// require('./assets/themes/soho/soho-dark/theme.scss');  //theme
-import "primereact/resources/primereact.min.css"; //core css
-import "primeicons/primeicons.css"; //icons
-import "./App.css";
 
 function App() {
 
@@ -37,11 +42,16 @@ function App() {
               : <Navigate replace to ="/main" />
             } />
           {/* { isLogin ? <Navigate replace to ="/main" /> : <Login/>} */}
+          <Route path="/main" element={ <Main/> } />
           <Route path="/signup" element={ <Signup/> } />
-          <Route path="/main" element={ <MainLayout/>} >
-            <Route index element={ <Main/> } />
-            <Route path="kanban" element={<Kanban />} />
-            <Route path="profile" element={ <Profile/> } />
+          <Route path="/list" element={ <List/> } />
+          <Route path="/project" element={ <ProjectLayout/>} >
+            <Route path="dashboard" element={ <Dashboard/> }/>
+            <Route path="backlog-and-sprint" element={ <BacklogAndSprint/> }/>
+            {/* <Route path=":projectId/sprint" element={ <Sprint/> }/> */}
+            <Route path="kanban-board" element={ <KanbanBoard/> }/>
+            <Route path="history" element={ <History/> }/>
+            <Route path="management" element={ <Management/> }/>
           </Route>
 
           {/* admin */}
