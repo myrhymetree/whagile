@@ -94,9 +94,48 @@ exports.loginAccount = async (req, res, next) => {
 
 };
 
-exports.logoutAccount = async (req, res, next) => {
-    console.log('Logout called');
+exports.searchID = async (req, res, next) => {
 
-    res.cookie('access_token');
-    res.status(HttpStatus.OK).send('로그아웃');
+    console.log('searchID called');
+
+    await AccountService.selectAccountWithMemberCode(req.params.id)
+        .then((resData) => {
+            console.log(resData);
+            res.status(HttpStatus.OK).json({
+                status: HttpStatus.OK,
+                message: 'successfully Search ID!!',
+                result: resData[0]
+            });
+
+        })
+        .catch((err) =>{
+            res.status(HttpStatus.BAD_REQUEST).json({
+                status: HttpStatus.BAD_REQUEST,
+                message: err
+            });
+
+        });
+
 };
+
+exports.updatePwd = async (req, res, next) => {
+
+    console.log('updatePwd called');
+
+    await AccountService.updateAccountWithTempPwd(req.body)
+        .then((resData) => {
+            console.log(resData);
+            res.status(HttpStatus.OK).json({
+                status: HttpStatus.OK,
+                message: 'successfully Update PWD!!'
+            });
+
+        })
+        .catch((err) =>{
+            res.status(HttpStatus.BAD_REQUEST).json({
+                status: HttpStatus.BAD_REQUEST,
+                message: err
+            });
+
+        });   
+}
