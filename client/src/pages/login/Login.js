@@ -14,14 +14,15 @@ function Login() {
 
     // const [id, setId] = useState("");
     // const [password, setPassword] = useState("");
-    const [isLogin, setIsLogin] = useState(window.sessionStorage.getItem('isLogin'));
+    const [isLogin, setIsLogin] = useState('');
 
     useEffect(() => {
-        console.log("Login", isLogin);
+        console.log("useEffect Login", isLogin);
+        setIsLogin(window.sessionStorage.getItem('isLogin'));       
         if(isLogin) {
-            return navigate('/main');
+            navigate('/main');
         }
-    }, 
+    },
     [isLogin]);
 
     const navigate = useNavigate();
@@ -53,13 +54,19 @@ function Login() {
         })
         .then(response => response.json())
         .then(json => {
-            window.sessionStorage.setItem('isLogin', true);
-            setIsLogin(window.sessionStorage.getItem('isLogin'));
 
-            window.localStorage.setItem('access_token', json.accessToken);
-            window.localStorage.getItem('access_token') !== 'undefined' 
-            ? navigate('/main') 
-            : showError('로그인에 실패하였습니다.');
+            console.log(json);
+            if(json.status == 200){
+                window.sessionStorage.setItem('isLogin', true);
+                setIsLogin(true);
+
+                window.localStorage.setItem('access_token', json.accessToken);
+                window.localStorage.getItem('access_token') !== 'undefined' 
+                ? navigate('/main') 
+                : showError('로그인에 실패하였습니다.');
+            } else {
+                showError('로그인에 실패하였습니다.');
+            }            
 
             // ? ((data.memberId === 'admin')? navigate('/admin') : navigate('/main'))
             // : console.log('login Failed');         

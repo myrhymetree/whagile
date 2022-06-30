@@ -5,6 +5,7 @@ import Signup from './pages/login/Signup';
 import MainLayout from './layouts/MainLayout';
 import Main from './pages/main/Main';
 import Kanban from "./pages/kanban/Kanban";
+import Profile from "./pages/profile/Profile";
 
 // admin
 import AdminLayout from './layouts/AdminLayout';
@@ -25,7 +26,7 @@ import "./App.css";
 function App() {
 
   const isLogin = window.sessionStorage.getItem('isLogin');
-  console.log('APP', isLogin);
+
   return (
       <BrowserRouter>
         <Routes>
@@ -35,10 +36,12 @@ function App() {
               ? <Login/>
               : <Navigate replace to ="/main" />
             } />
+          {/* { isLogin ? <Navigate replace to ="/main" /> : <Login/>} */}
           <Route path="/signup" element={ <Signup/> } />
           <Route path="/main" element={ <MainLayout/>} >
-            <Route path="kanban" element={<Kanban />} />
             <Route index element={ <Main/> } />
+            <Route path="kanban" element={<Kanban />} />
+            <Route path="profile" element={ <Profile/> } />
           </Route>
 
           {/* admin */}

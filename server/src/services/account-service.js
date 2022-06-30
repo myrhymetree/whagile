@@ -5,6 +5,21 @@ const EmailUtils = require('../util/email-utils');
 const jwt = require('jsonwebtoken');
 const { JWT_SECRET } = process.env;
 
+exports.updateAccountWithTempPwd = (tempInfo) => {
+
+    return new Promise(async (resolve, reject) => {
+
+        const connection = getConnection();
+        tempInfo.password = await AccountUtils.setPassword(tempInfo.password);   
+        const results = AccountRepository.updatePwd(connection, tempInfo);
+
+        connection.end();
+
+        resolve(results);
+    });
+
+}
+
 
 exports.selectAccounts = () => {
 
@@ -107,6 +122,7 @@ exports.loginAccount = (loginInfo) => {
                 return reject('Invalid username or password');
             }
 
+            console.log('account', results);
             const passwordCompareResult = await AccountUtils.checkPassword(loginInfo.password, results[0].password);
             console.log('passwordCompareResult',passwordCompareResult);
 

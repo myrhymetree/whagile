@@ -4,7 +4,6 @@ exports.selectMembers = () => {
         SELECT
               A.MEMBER_CODE
             , A.MEMBER_ID
-            , A.MEMBER_PASSWORD
             , A.MEMBER_EMAIL
             , A.MEMBER_PHONE
             , A.MEMBER_CREATED_DATE
@@ -23,7 +22,6 @@ exports.selectMemberWithMemberCode = () => {
         SELECT
               A.MEMBER_CODE
             , A.MEMBER_ID
-            , A.MEMBER_PASSWORD
             , A.MEMBER_EMAIL
             , A.MEMBER_PHONE
             , A.MEMBER_CREATED_DATE
@@ -64,6 +62,15 @@ exports.updateAccountWithToken = () => {
   return `
       UPDATE TBL_MEMBER
       SET MEMBER_EMAIL_AUTH = 'Y'  
+      WHERE MEMBER_CODE = ?
+  `;
+}
+
+exports.updateAccountWithTempPWD = () => {
+
+  return `
+      UPDATE TBL_MEMBER
+      SET MEMBER_PASSWORD = ?
       WHERE MEMBER_CODE = ?
   `;
 }
