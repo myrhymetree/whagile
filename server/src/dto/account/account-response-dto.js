@@ -11,6 +11,7 @@ class MemberDTO {
     occupation;
     purpose;
     name;
+    emailAuth;
 
     
     constructor(data) {
@@ -26,6 +27,7 @@ class MemberDTO {
         this.occupation = data.MEMBER_OCCUPATION;
         this.purpose = data.MEMBER_PURPOSE;
         this.name = data.MEMBER_NAME;
+        this.emailAuth = data.MEMBER_EMAIL_AUTH;
     }
 }
 

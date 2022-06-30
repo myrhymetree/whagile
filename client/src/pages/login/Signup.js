@@ -64,8 +64,9 @@ function Signup() {
         .catch((err) => {
           console.log('login error: ' + err);
         });
-        reset();
-        navigate('/');
+        
+        // reset();
+        // navigate('/');
 
     };
 

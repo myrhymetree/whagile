@@ -6,15 +6,18 @@ import "primeicons/primeicons.css";                 //icons
 import "./App.css";
 
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { Navigate } from "react-router-dom";
 import Login from './pages/login/Login';
 import Signup from './pages/login/Signup';
 import ProjectLayout from './layouts/ProjectLayout';
 import Main from './pages/main/Main';
+import Profile from "./pages/profile/Profile";
 import Dashboard from './pages/project/Dashboard';
 import BacklogAndSprint from './pages/project/BacklogAndSprint';
 import KanbanBoard from "./pages/project/kanban/KanbanBoard";
 import History from './pages/project/History';
 import Management from './pages/project/Management';
+import List  from './pages/list/List';
 
 // admin
 import AdminLayout from './layouts/AdminLayout';
@@ -26,12 +29,22 @@ import AdminInquery from './pages/admin/inquery/AdminInquery';
 import AdminStatistics from './pages/admin/statistics/AdminStatistics';
 
 function App() {
+
+  const isLogin = window.sessionStorage.getItem('isLogin');
+
   return (
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={ <Login/>} />
+          <Route path="/" 
+            element={ 
+              (!isLogin)
+              ? <Login/>
+              : <Navigate replace to ="/main" />
+            } />
+          {/* { isLogin ? <Navigate replace to ="/main" /> : <Login/>} */}
           <Route path="/main" element={ <Main/> } />
           <Route path="/signup" element={ <Signup/> } />
+          <Route path="/list" element={ <List/> } />
           <Route path="/project" element={ <ProjectLayout/>} >
             <Route path="dashboard" element={ <Dashboard/> }/>
             <Route path="backlog-and-sprint" element={ <BacklogAndSprint/> }/>
@@ -39,6 +52,7 @@ function App() {
             <Route path="kanban-board" element={ <KanbanBoard/> }/>
             <Route path="history" element={ <History/> }/>
             <Route path="management" element={ <Management/> }/>
+            <Route path="profile" element={ <Profile/> } />
           </Route>
 
           {/* admin */}

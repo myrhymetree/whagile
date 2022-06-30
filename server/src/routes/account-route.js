@@ -5,8 +5,9 @@ const AccountController = require('../controllers/account-controller');
 router.get('/members', AccountController.selectAccounts);
 router.post('/register', AccountController.registerAccount);
 router.post('/login', AccountController.loginAccount);
-router.post('/logout', AccountController.logoutAccount);
 router.get('/emailAuth', AccountController.emailAuth);
+router.get('/search/:id', AccountController.searchID);
+router.put('/update-pwd', AccountController.updatePwd);
 
 
 module.exports = router;

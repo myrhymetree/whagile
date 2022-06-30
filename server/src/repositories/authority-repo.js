@@ -7,7 +7,12 @@ exports.insertAuth = (connection, params) => {
 
         connection.query(
             authorityQuery.insertAuth(),
-            [params.authorityName, params.authorityActivatedYn, parseInt(params.authorityExposureOrder), params.authorityDescription],
+            [
+                params.authorityName, 
+                params.authorityActivatedYn, 
+                params.authorityExposureOrder && parseInt(params.authorityExposureOrder), 
+                params.authorityDescription
+            ],
             (err, results, fields) => {
                 if(err) {
                     reject(err);
@@ -23,14 +28,7 @@ exports.selectAuths = (connection, params) => {
     
     return new Promise((resolve, reject) => {
 
-        const queryParams = [
-            parseInt(params.offset)
-            , parseInt(params.limit)
-        ];
-
-        const whereClause = params.searchCondition && `WHERE ${'AUTHORITY_' + params.searchCondition.toUpperCase()} LIKE '%${params.searchValue}%'`;
-
-        connection.query(authorityQuery.selectAuths(whereClause), queryParams, (err, results, fields) => {
+        connection.query(authorityQuery.selectAuths(params), (err, results, fields) => {
 
             if(err) {
                 reject(err);

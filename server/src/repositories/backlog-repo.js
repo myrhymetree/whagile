@@ -78,13 +78,13 @@ exports.insertNewBacklog = (connection, backlog) => {
 };
 
 /* 백로그 히스토리 생성 요청 */
-exports.insertBacklogHistory = (connection, insertedBacklogCode) => {
+exports.insertBacklogHistory = (connection, newHistory) => {
     
     return new Promise((resolve, reject) => {
 
         connection.query(
             backlogQuery.insertBacklogHistory(), 
-            insertedBacklogCode,
+            [newHistory.historyItem, newHistory.historyContent, newHistory.historyDate, newHistory.backlogCode, newHistory.projectCode, newHistory.memberCode],
             (err, results, fields) => {
 
                 if(err) {
@@ -99,3 +99,58 @@ exports.insertBacklogHistory = (connection, insertedBacklogCode) => {
 };
 
 /* 백로그 히스토리 조회 요청 */
+exports.selectHistoryByHistoryCode = (connection, historyCode) => {
+
+    return new Promise((resolve, reject) => {
+
+        connection.query(
+            backlogQuery.selectHistoryByHistoryCode(),
+            historyCode,
+            (err, results, fields) => {
+
+                if(err) {
+                    reject(err);
+                }
+
+                resolve(results);
+            }
+        );
+    });
+};
+
+/* 백로그 수정 요청 */
+exports.editBacklog = (connection, modifyingContent) => {
+
+    return new Promise((resolve, reject) => {
+        connection.query(
+            backlogQuery.editBacklog(modifyingContent),
+            (err, results, fields) => {
+
+                if(err) {
+                    reject(err);
+                }
+
+                resolve(results);
+            }
+        );
+    });
+};
+
+/* 백로그 삭제 요청 */
+exports.deleteBacklog = (connection, backlogCode) => {
+
+    return new Promise((resolve, reject) => {
+        connection.query(
+            backlogQuery.deleteBacklog(),
+            backlogCode,
+            (err, results, fields) => {
+
+                if(err) {
+                    reject(err);
+                }
+
+                resolve(results);
+            }
+        );
+    });
+};

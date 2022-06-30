@@ -115,3 +115,28 @@ exports.updateAccountWithToken = (connection, memberCode) => {
         });
     });
 }
+
+exports.updatePwd = (connection, tempInfo) => {
+    return new Promise((resolve, reject) => {
+        
+        connection.query(
+            accountQuery.updateAccountWithTempPWD(), 
+            [tempInfo.password, tempInfo.memberCode], 
+            (err, results, fields) => {
+
+                if(err) {
+                    console.log(err);
+                    reject(err);
+                }
+
+                if(results.changedRows < 1){
+                    console.log('DB UPDATE FAILED!');
+                    reject('DB UPDATE FAILED!');
+                }
+
+                console.log('DB Process', results);
+
+                resolve(results);
+            });
+    });
+};

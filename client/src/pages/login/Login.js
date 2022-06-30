@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { useNavigate, NavLink } from 'react-router-dom';
 import { useForm, Controller, FieldError } from 'react-hook-form';
 import { InputText } from 'primereact/inputtext';
@@ -14,6 +14,16 @@ function Login() {
 
     // const [id, setId] = useState("");
     // const [password, setPassword] = useState("");
+    const [isLogin, setIsLogin] = useState('');
+
+    useEffect(() => {
+        console.log("useEffect Login", isLogin);
+        setIsLogin(window.sessionStorage.getItem('isLogin'));       
+        if(isLogin) {
+            navigate('/main');
+        }
+    },
+    [isLogin]);
 
     const navigate = useNavigate();
     const defaultValues = {
@@ -44,13 +54,23 @@ function Login() {
         })
         .then(response => response.json())
         .then(json => {
-            window.localStorage.setItem('access_token', json.accessToken);
 
-            window.localStorage.getItem('access_token') !== 'undefined' 
-            ? ((data.memberId === 'admin')? navigate('/admin') : navigate('/main'))
-            : console.log('login Failed');         
+            console.log(json);
+            if(json.status == 200){
+                window.sessionStorage.setItem('isLogin', true);
+                setIsLogin(true);
 
-            
+                window.localStorage.setItem('access_token', json.accessToken);
+                window.localStorage.getItem('access_token') !== 'undefined' 
+                ? navigate('/project') 
+                : showError('로그인에 실패하였습니다.');
+            } else {
+                showError('로그인에 실패하였습니다.');
+            }            
+
+            // ? ((data.memberId === 'admin')? navigate('/admin') : navigate('/main'))
+            // : console.log('login Failed');         
+
         })
         .catch((err) => {
           console.log('login error: ' + err);
@@ -83,7 +103,8 @@ function Login() {
                                     render={({ field, fieldState }) => (
                                         <InputText 
                                             id={field.name} 
-                                            {...field} 
+                                            {...field}
+                                            autoComplete="off" 
                                             autoFocus 
                                             className={classNames({ 'p-invalid': fieldState.invalid })} 
                                         />
