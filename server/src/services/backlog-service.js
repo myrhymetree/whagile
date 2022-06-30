@@ -66,7 +66,7 @@ exports.registNewBacklog = (backlog) => {
             
             /* 백로그 히스토리 데이터 생성 */
             const newHistory = createNewHistory();
-            newHistory.historyItem = '백로그';
+            newHistory.historyItem = '';
             newHistory.historyContent = '생성';
             newHistory.backlogCode = insertNewBacklogResult.insertId;
             newHistory.projectCode = backlog.projectCode;
@@ -93,6 +93,80 @@ exports.registNewBacklog = (backlog) => {
 
         } catch(err) {
             console.log(`service에서 err확인 : ${err}`)
+            connection.rollback();
+
+            reject(err);
+
+        } finally {
+            connection.end();
+        }
+    });
+};
+
+/* 백로그 수정 요청 */
+exports.editBacklog = (modifyingContent) => {
+
+    return new Promise(async (resolve, reject) => {
+        
+        const connection = getConnection();
+        connection.beginTransaction();
+
+        try {
+            /* 백로그 데이터 수정 */
+            const editResult = await BacklogRepository.editBacklog(connection, modifyingContent);
+
+            /* 변경된 백로그 행 조회 */
+            const changedBacklog = await BacklogRepository.selectBacklogByBacklogCode(connection, modifyingContent.backlogCode);
+            
+            /* 백로그 히스토리 데이터 생성 */
+            const newHistory = createNewHistory();
+            
+            newHistory.historyContent = modifyingContent.changedValue;
+            newHistory.backlogCode = modifyingContent.backlogCode;
+            newHistory.projectCode = modifyingContent.projectCode;
+            newHistory.memberCode = modifyingContent.memberCode;
+            switch(modifyingContent.changedCategory) {
+                case 'title': 
+                    newHistory.historyItem = '백로그 제목';
+                    break;
+                case 'description': 
+                    newHistory.historyItem = '백로그 설명';
+                    break;
+                case 'category':
+                    newHistory.historyItem = '분류';
+                    break;
+                case 'progressStatus': 
+                    newHistory.historyItem = '진행 상태';
+                    break;
+                case 'urgency': 
+                    newHistory.historyItem = '긴급도';
+                    break;
+                case 'issue': 
+                    newHistory.historyItem = '이슈 여부';
+                    break;
+                default: 
+                    newHistory.historyItem = '';
+                    break;
+            }
+            console.log(`newHistory: ${newHistory}`);
+
+            /* 백로그 히스토리 추가 */
+            const newHistoryInseted = await BacklogRepository.insertBacklogHistory(connection, newHistory);
+            
+            /* 추가한 백로그 히스토리 행 조회 */
+            const insertedHistory = await BacklogRepository.selectHistoryByHistoryCode(connection, newHistoryInseted.insertId);
+
+            /* 수정된 백로그, 추가한 백로그 히스토리를 result 객체에 담아 반환한다 */
+            const results = {
+                changedBacklog: changedBacklog,
+                insertedHistory: insertedHistory
+            };
+
+            connection.commit();
+
+            resolve(results);
+
+        } catch(err) {
             connection.rollback();
 
             reject(err);

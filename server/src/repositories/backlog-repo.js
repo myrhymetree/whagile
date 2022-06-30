@@ -117,3 +117,22 @@ exports.selectHistoryByHistoryCode = (connection, historyCode) => {
         );
     });
 };
+
+/* 백로그 수정 요청 */
+exports.editBacklog = (connection, modifyingContent) => {
+
+    return new Promise((resolve, reject) => {
+        connection.query(
+            backlogQuery.editBacklog(modifyingContent),
+            (err, results, fields) => {
+
+                if(err) {
+                    reject(err);
+                }
+
+                resolve(results);
+            }
+        );
+
+    });
+};

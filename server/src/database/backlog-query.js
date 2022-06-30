@@ -100,3 +100,46 @@ exports.selectHistoryByHistoryCode = () => {
      WHERE A.BACKLOG_HISTORY_CODE = ?
   `;
 };
+
+/* 백로그 수정 요청 SQL */
+exports.editBacklog = (modifyingContent) => {
+
+  console.log(`query로 넘어온 modifyingContent: `);
+  console.log(modifyingContent.changedCategory);
+  console.log(modifyingContent.changedValue);
+
+  let query = `
+    UPDATE TBL_BACKLOG A
+  `;
+
+  switch(modifyingContent.changedCategory) {
+    case 'title' : 
+      query += `  SET A.BACKLOG_TITLE = '${ modifyingContent.changedValue }'
+      `;
+      break;
+    case 'description' : 
+      query += `  SET A.BACKLOG_DESCRIPTION = '${ modifyingContent.changedValue }'
+      `;
+      break;
+    case 'category' :
+      query += `  SET A.BACKLOG_CATEGORY = '${ modifyingContent.changedValue }'
+      `;
+      break;
+    case 'progressStatus' : 
+      query += `  SET A.BACKLOG_PROGRESS_STATUS = '${ modifyingContent.changedValue }'
+      `;
+      break;
+    case 'urgency' : 
+      query += `  SET A.BACKLOG_URGENCY = '${ modifyingContent.changedValue }'
+      `;
+      break;
+    case 'issue' : 
+      query += `  SET A.BACKLOG_ISSUE = '${ Number(modifyingContent.changedValue) }'
+      `;
+      break;
+  }
+
+  query += ` WHERE A.BACKLOG_CODE = ${ modifyingContent.backlogCode }`;
+
+  return query;
+};

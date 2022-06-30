@@ -63,3 +63,23 @@ exports.registNewBacklog = async (req, res, next) => {
         url: 'localhost:8888/api/backlogs?offset=0&limit=10'
     });
 };
+
+/* 백로그 수정 요청 */
+exports.editBacklog = async (req, res, next) => {
+
+    const modifyingContent = {
+        backlogCode: Number(req.body.backlogCode),
+        projectCode: Number(req.body.projectCode),
+        memberCode: Number(req.body.memberCode),
+        changedCategory: req.body.changedCategory,
+        changedValue: req.body.changedValue
+    };
+
+    const results = await BacklogService.editBacklog(modifyingContent);
+
+    res.status(httpStatus.OK).json({
+        status: httpStatus.OK,
+        message: '정상적으로 개별 백로그 목록을 수정했습니다.',
+        results: results
+    });
+};
