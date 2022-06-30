@@ -86,7 +86,7 @@ exports.updateProject = () => {
   `;
 }
 
-/* 프로젝트 매니저 변경 */
+/* 기존 프로젝트 매니저 강등 */
 exports.updateProjectOwner1 = () => {
   return `
      UPDATE 
@@ -97,7 +97,7 @@ exports.updateProjectOwner1 = () => {
         AND AUTHORITY_CODE = 1
   `;
 }
-
+/* 프로젝트 매니저 변경 */
 exports.updateProjectOwner2 = () => {
   return `
     UPDATE TBL_PROJECT_MEMBER B
@@ -105,5 +105,14 @@ exports.updateProjectOwner2 = () => {
            B.AUTHORITY_CODE = 1
      WHERE B.PROJECT_CODE = ?
        AND B.MEMBER_CODE = ?
+  `;
+}
+
+exports.deleteProject = () => {
+  return `
+    UPDATE TBL_PROJECT A
+       SET
+           A.PROJECT_DELETED_STATUS = 'Y'
+     WHERE A.PROJECT_CODE = ?
   `;
 }

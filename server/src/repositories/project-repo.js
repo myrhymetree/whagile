@@ -22,16 +22,19 @@ exports.selectProjects = (connection, params) => {
     });
 };
 
-exports.selectProject = function(projectCode) {
+exports.selectProject = (connection, projectCode) => {
     return new Promise((resolve, reject) => {
-        connection.query(projectQuery.selectProjectWithProjectCode(projectCode), (err, result, fields) => {
+        connection.query(projectQuery.selectProjectWithProjectCode(),
+        [ projectCode ], 
+        
+        (err, results, fields) => {
 
             if(err) {
                 console.log(err);
                 reject(err);
             }
 
-            resolve(result);
+            resolve(results);
         });
     });
 };
@@ -64,6 +67,7 @@ exports.selectProjectWithProjectCode = (connection, projectCode) => {
                 reject(err);
             }
 
+            console.log(projectCode);
             const project = [];
             for(let i = 0; i < results.length; i++) {
                 project.push(new ProjectDTO(results[i]));
@@ -139,6 +143,23 @@ exports.updateManager2 = (connection, projectCode, memberCode ) => {
         connection.query(projectQuery.updateProjectOwner2(),
         [ projectCode, memberCode ],
 
+        (err, results, fields) => {
+
+            if(err) {
+                console.log(err);
+                reject(err);
+            }
+
+            resolve(results);
+        });
+    });
+}
+
+exports.deleteProject = (connection, projectCode) => {
+
+    return new Promise((resolve, reject) => {
+        connection.query(projectQuery.deleteProject(),
+        [ projectCode ],
         (err, results, fields) => {
 
             if(err) {

@@ -88,3 +88,28 @@ exports.modifyProject = (projectInfo) => {
         }
     });
 }
+
+exports.removeProject = (projectCode) => {
+
+    return new Promise(async (resolve, reject) => {
+
+        const connection = getConnection();
+        connection.beginTransaction();
+        
+        try {
+            await ProjectRepository.deleteProject(connection, projectCode);
+            
+            const removedProject = await ProjectRepository.selectProjectWithProjectCode(connection, projectCode);
+
+            connection.commit();
+
+            resolve(removedProject);
+        } catch (err) {
+            connection.rollback();
+
+            reject(err);
+        } finally {
+            connection.end();
+        }
+    });
+}

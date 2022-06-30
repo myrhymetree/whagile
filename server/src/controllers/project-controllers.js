@@ -24,8 +24,8 @@ exports.selectProjects = async (req, res, next) => {
 };
 
 exports.selectProject = async (req, res, next) => {
-
-    await ProjectService.selectProject()
+    console.log("req.params",req.params.projectCode);
+    await ProjectService.selectProject(req.params.projectCode)
         .then((result) => {
 
             res.status(HttpStatus.OK).json({
@@ -79,6 +79,26 @@ exports.modifyProject = async (req, res, next) => {
             
             res.status(HttpStatus.BAD_REQUEST).json({
                 status:HttpStatus.BAD_REQUEST,
+                message: err
+            });
+        });
+}
+
+exports.removeProject = async (req, res, next) => {
+    console.log("req.params",req.params.projectCode);
+    await ProjectService.removeProject(req.params.projectCode)
+        .then((result) => {
+
+            res.status(HttpStatus.OK).json({
+                status: HttpStatus.OK,
+                message: 'successfully removedProject!!',
+                results: result
+            });
+        })
+        .catch((err) => {
+
+            res.status(HttpStatus.BAD_REQUEST).json({
+                status: HttpStatus.BAD_REQUEST,
                 message: err
             });
         });
