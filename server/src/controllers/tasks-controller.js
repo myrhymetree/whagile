@@ -9,8 +9,7 @@ exports.findAllTasks = async (req, res, next) => {
     issue: Number(req.query.issue),
     progressStatus: req.query.progressStatus,
     urgency: req.query.urgency,
-    sprintCode: Number(req.query.sprintCode),
-    category: req.query.category
+    backlogChargerCode: Number(req.query.backlogChargerCode),
   };
   console.log(params);
   const results = await TasksService.getTasks(params);
