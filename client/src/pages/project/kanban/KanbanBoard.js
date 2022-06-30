@@ -3,9 +3,11 @@ import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import uuid from "uuid/v4";
 import kanbanStyle from "./KanbanBoard.module.css";
 import PageTitle from "../../../components/items/PageTitle";
-import { useEffect } from "react";
-import callGetTaskAPI from "../../../apis/TaskAPICalls";
-import { useSelector, useDispatch } from "react-redux";
+// import { useEffect } from "react";
+// import callGetTaskAPI from "../../../apis/TaskAPICalls";
+// import { useSelector, useDispatch } from "react-redux";
+import Tasks from "../../../components/items/kanban/Tasks"
+
 
 const backlogFromKanban = [
   { id: uuid(), content: "일감 생성" },
@@ -136,6 +138,7 @@ function KanbanBoard() {
                               );
                             })}
                             {provided.placeholder}
+                            <Tasks />
                           </div>
                         </>
                       );
