@@ -1,4 +1,4 @@
-const projectQuery = require('../database/project-qurery');
+const projectQuery = require('../database/project-query');
 const ProjectDTO = require('../dto/project/project-response-dto');
 
 exports.selectProjects = (connection, params) => {

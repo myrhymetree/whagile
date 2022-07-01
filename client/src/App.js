@@ -44,7 +44,7 @@ function App() {
           {/* { isLogin ? <Navigate replace to ="/main" /> : <Login/>} */}
           <Route path="/main" element={ <Main/> } />
           <Route path="/signup" element={ <Signup/> } />
-          <Route path="/list" element={ <List/> } />
+          <Route path="/projects" element={ <List/> } />
           <Route path="/project" element={ <ProjectLayout/>} >
             <Route path="dashboard" element={ <Dashboard/> }/>
             <Route path="backlog-and-sprint" element={ <BacklogAndSprint/> }/>
