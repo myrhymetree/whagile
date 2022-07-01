@@ -18,3 +18,25 @@ exports.findBacklogComments = async (req, res, next) => {
         results: results
     });
 };
+
+/* 백로그 댓글 생성 요청 */
+exports.registComment = async (req, res, next) => {
+
+    const newComment = {
+        content: req.body.content,
+        createdDate: req.body.createdDate,
+        backlogCode: Number(req.body.backlogCode),
+        projectCode: Number(req.body.projectCode),
+        memberCode: Number(req.body.memberCode)
+    };
+    console.log('newComment: ', newComment);
+
+    const results = await BacklogCommentService.registComment(newComment);
+
+    res.status(HttpStatus.CREATED).json({
+        status: HttpStatus.CREATED,
+        message: '댓글 추가에 성공했습니다.',
+        results: results,
+        url: 'localhost:8888/api/backlog-comments/:backlogCode?offset=0&limit=5'
+    });
+};

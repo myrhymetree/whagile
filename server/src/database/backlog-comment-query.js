@@ -1,3 +1,4 @@
+/* 백로그 댓글 조회 요청 SQL */
 exports.selectBacklogComments = () => {
 
     return `
@@ -15,5 +16,61 @@ exports.selectBacklogComments = () => {
          WHERE A.BACKLOG_COMMENT_DELETED_YN = 'N'
            AND A.BACKLOG_CODE = ?
           LIMIT ?, ?
+    `;
+};
+
+/* 백로그 댓글 삽입 요청 SQL */
+exports.insertComment = () => {
+
+    return `
+        INSERT INTO TBL_BACKLOG_COMMENT
+        (BACKLOG_COMMENT_CONTENT, BACKLOG_COMMENT_CREATED_DATE, BACKLOG_CODE, PROJECT_CODE, MEMBER_CODE)
+        VALUES
+        (?, ?, ?, ?, ?)
+    `;
+};
+
+/* 백로그 댓글 히스토리 삽입 요청 SQL */
+exports.insertBacklogCommentHistory = (newHistory) => {
+
+    let query = '';
+
+    if(newHistory.modifiedComment != null) {
+        query = `
+            INSERT INTO TBL_BACKLOG_COMMENT_HISTORY
+            (BACKLOG_COMMENT_HISTORY_CONTENT, BACKLOG_HISTORY_DATE, BACKLOG_MODIFIED_COMMENT_DETAIL, 
+            BACKLOG_COMMENT_CODE, PROJECT_CODE, MEMBER_CODE)
+            VALUES
+            ('${newHistory.historyType}', '${newHistory.historyDate}', '${newHistory.modifiedComment}', 
+             ${newHistory.backlogCommentCode}, ${newHistory.projectCode}, ${newHistory.memberCode})
+             `;
+    } else {
+        query = `
+            INSERT INTO TBL_BACKLOG_COMMENT_HISTORY
+            (BACKLOG_COMMENT_HISTORY_CONTENT, BACKLOG_HISTORY_DATE,  
+             BACKLOG_COMMENT_CODE, PROJECT_CODE, MEMBER_CODE)
+            VALUES
+            ('${newHistory.historyType}', '${newHistory.historyDate}', 
+             ${newHistory.backlogCommentCode}, ${newHistory.projectCode}, ${newHistory.memberCode})
+        `;
+    }
+    
+    return query;
+};
+
+/* 백로그 댓글 히스토리 조회 요청 SQL */
+exports.selectHistory = () => {
+
+    return `
+        SELECT 
+               A.BACKLOG_COMMENT_HISTORY_CODE
+             , A.BACKLOG_COMMENT_HISTORY_CONTENT
+             , A.BACKLOG_HISTORY_DATE
+             , A.BACKLOG_MODIFIED_COMMENT_DETAIL
+             , A.BACKLOG_COMMENT_CODE
+             , A.PROJECT_CODE
+             , A.MEMBER_CODE
+          FROM TBL_BACKLOG_COMMENT_HISTORY A
+         WHERE A.BACKLOG_COMMENT_CODE = ?
     `;
 };
