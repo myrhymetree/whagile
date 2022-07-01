@@ -1,10 +1,11 @@
 const HttpStatus = require('http-status');
 const BacklogCommentService = require('../services/backlog-comment-service');
 
+/* 백로그 댓글 조회 요청 */
 exports.findBacklogComments = async (req, res, next) => {
 
     const params = {
-        backlogCode: Number(req.query.backlogCode),
+        backlogCode: Number(req.params.backlogCode),
         offset: Number(req.query.offset),
         limit: Number(req.query.limit)
     };
