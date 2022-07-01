@@ -52,6 +52,7 @@ function App() {
             <Route path="kanban-board" element={ <KanbanBoard/> }/>
             <Route path="history" element={ <History/> }/>
             <Route path="management" element={ <Management/> }/>
+            <Route path="profile" element={ <Profile/> } />
           </Route>
 
           {/* admin */}
