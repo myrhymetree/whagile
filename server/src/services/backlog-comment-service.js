@@ -1,5 +1,6 @@
 const getConnection = require("../database/connection");
 const BacklogCommentRepository = require('../repositories/backlog-comment-repo');
+const { removeRequest } = require("./backlog-service");
 
 /* 히스토리 생성 함수 */
 createNewHistory = () => {
@@ -111,6 +112,55 @@ exports.editComment = (modifyingContent) => {
             };
 
             resolve(results);
+
+        } catch(err) {
+            connection.rollback();
+
+            reject(err);
+
+        } finally {
+            connection.end();
+        }
+    });
+};
+
+/* 백로그 댓글 삭제 요청 */
+exports.removeComment = (removeRequest) => {
+
+    return new Promise(async (resolve, reject) => {
+
+        const connection = getConnection();
+        connection.beginTransaction();
+
+        try {
+           /* 백로그 댓글 데이터 삭제 */
+           await BacklogCommentRepository.deleteComment(connection, removeRequest);
+
+           /* 삭제된 댓글 조회 */
+           const deletedComment = await BacklogCommentRepository.selectBacklogComment(connection, removeRequest.backlogCommentCode);
+
+           /* 백로그 댓글 히스토리 데이터 생성 */
+           const newHistory = createNewHistory();
+           newHistory.historyType = '삭제';
+           newHistory.historyDate = removeRequest.deletedDate;
+           newHistory.backlogCommentCode = removeRequest.backlogCommentCode;
+           newHistory.projectCode = removeRequest.projectCode;
+           newHistory.memberCode = removeRequest.memberCode;
+
+           /* 백로그 댓글 히스토리 행 삽입 */
+           const newHistoryInserted = await BacklogCommentRepository.insertBacklogCommentHistory(connection, newHistory);
+
+           /* 추가한 백로그 히스토리 조회 */
+           const insertedHistory = await BacklogCommentRepository.selectHistory(connection, newHistoryInserted.insertId);
+
+           connection.commit();
+
+           const results = {
+               deletedComment: deletedComment,
+               insertedHistory: insertedHistory
+           };
+
+           resolve(results);
 
         } catch(err) {
             connection.rollback();

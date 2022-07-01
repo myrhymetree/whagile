@@ -61,6 +61,16 @@ exports.updateComment = () => {
     `;
 };
 
+/* 백로그 댓글 삭제 요청 SQL */
+exports.deleteComment = () => {
+
+    return `
+        UPDATE TBL_BACKLOG_COMMENT A
+           SET A.BACKLOG_COMMENT_DELETED_YN = 'Y'
+         WHERE A.BACKLOG_COMMENT_CODE = ?        
+    `;
+};
+
 /* 백로그 댓글 히스토리 삽입 요청 SQL */
 exports.insertBacklogCommentHistory = (newHistory) => {
 

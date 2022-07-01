@@ -1,6 +1,7 @@
 const backlogCommentQuery = require('../database/backlog-comment-query');
 const BacklogCommentDTO = require('../dto/backlog-comment/backlog-comment-response-dto');
 const BacklogCommentHistoryDTO = require('../dto/backlog-comment/backlog-comment-history-response-dto');
+const { removeRequest } = require('../services/backlog-service');
 
 /* 백로그 댓글 조회 요청 */
 exports.selectBacklogComments = (connection, params) => {
@@ -93,6 +94,27 @@ exports.updateComment = (connection, modifyingContent) => {
                 resolve(result);
             }
         );
+    });
+};
+
+/* 백로그  댓글 삭제 요청 */
+exports.deleteComment = (connection, removeRequest) => {
+
+    return new Promise((resolve, reject) => {
+
+        const query = connection.query(
+            backlogCommentQuery.deleteComment(),
+            removeRequest.backlogCommentCode,
+            (err, result, fields) => {
+
+                if(err) {
+                    reject(err);
+                }
+
+                resolve(result);
+            }
+        );
+        console.log(query.sql);
     });
 };
 

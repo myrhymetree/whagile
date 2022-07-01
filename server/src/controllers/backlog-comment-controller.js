@@ -60,3 +60,23 @@ exports.editComment = async (req, res, next) => {
         results: results
     });
 };
+
+/* 백로그 댓글 삭제 요청 */
+exports.removeComment = async (req, res, next) => {
+
+    const removeRequest = {
+        backlogCommentCode: Number(req.body.backlogCommentCode),
+        deletedDate: req.body.deletedDate,
+        projectCode: Number(req.body.projectCode),
+        memberCode: Number(req.body.memberCode)
+    };
+
+    const results = await BacklogCommentService.removeComment(removeRequest);
+
+    res.status(HttpStatus.OK).json({
+        status: HttpStatus.OK,
+        message: '댓글 삭제에 성공했습니다.',
+        results: results,
+        url: 'localhost:8888/api/backlog-comments/:backlogCode?offset=0&limit=5'
+    });
+};
