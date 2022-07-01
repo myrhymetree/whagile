@@ -4,5 +4,6 @@ const BacklogCommentController = require('../controllers/backlog-comment-control
 
 router.get('/:backlogCode', BacklogCommentController.findBacklogComments);
 router.post('/', BacklogCommentController.registComment);
+router.put('/', BacklogCommentController.editComment);
 
 module.exports = router;

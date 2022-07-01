@@ -28,6 +28,31 @@ exports.selectBacklogComments = (connection, params) => {
     });
 };
 
+/* 백로그 댓글 1개 행 조회 요청 */
+exports.selectBacklogComment = (connection, backlogCommentCode) => {
+
+    return new Promise((resolve, reject) => {
+        const query = connection.query(
+            backlogCommentQuery.selectBacklogComment(),
+            backlogCommentCode,
+            (err, result, fields) => {
+
+                if(err) {
+                    reject(err);
+                }
+
+                const backlogComment = [];
+                for(let i = 0; i < result.length; i++) {
+                    backlogComment.push(new BacklogCommentDTO(result[i]));
+                }
+
+                resolve(backlogComment);
+            }
+        );
+        console.log(query.sql);
+    });
+};
+
 /* 백로그 댓글 생성 요청 */
 exports.insertComment = (connection, newComment) => {
 
@@ -37,17 +62,37 @@ exports.insertComment = (connection, newComment) => {
             backlogCommentQuery.insertComment(),
             [newComment.content, newComment.createdDate, newComment.backlogCode, 
              newComment.projectCode, newComment.memberCode],
-            (err, results, fields) => {
+            (err, result, fields) => {
 
                 if(err) {
                     reject(err);
                 }
 
-                resolve(results);
+                resolve(result);
             }
         );
 
         console.log(query.sql)
+    });
+};
+
+/* 백로그 댓글 수정 요청 */
+exports.updateComment = (connection, modifyingContent) => {
+
+    return new Promise((resolve, reject) => {
+
+        const query = connection.query(
+            backlogCommentQuery.updateComment(),
+            [modifyingContent.content, modifyingContent.modifiedDate, modifyingContent.backlogCommentCode],
+            (err, result, fields) => {
+
+                if(err) {
+                    reject(err);
+                }
+
+                resolve(result);
+            }
+        );
     });
 };
 
@@ -79,19 +124,20 @@ exports.selectHistory = (connection, historyCode) => {
         const query = connection.query(
             backlogCommentQuery.selectHistory(),
             historyCode, 
-            (err, results, fields) => {
+            (err, result, fields) => {
 
                 if(err) {
                     reject(err);
                 }
 
-                const backlogHistory = [];
-                for(let i = 0; i < results.length; i++) {
-                    backlogHistory.push(new BacklogCommentHistoryDTO(results[i]));
+                const backlogCommentHistory = [];
+                for(let i = 0; i < result.length; i++) {
+                    backlogCommentHistory.push(new BacklogCommentHistoryDTO(result[i]));
                 }
 
-                resolve(backlogHistory);
+                resolve(backlogCommentHistory);
             }
         );
+        console.log(query.sql);
     });
 };

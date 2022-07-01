@@ -19,6 +19,25 @@ exports.selectBacklogComments = () => {
     `;
 };
 
+/* 백로그 댓글 1개 행 조회 요청 SQL */
+exports.selectBacklogComment = () => {
+
+    return `
+        SELECT
+               A.BACKLOG_COMMENT_CODE
+             , A.BACKLOG_COMMENT_CONTENT
+             , A.BACKLOG_COMMENT_CREATED_DATE
+             , A.BACKLOG_COMMENT_MODIFIED_DATE
+             , A.BACKLOG_COMMENT_MODIFIED_YN
+             , A.BACKLOG_COMMENT_DELETED_YN
+             , A.BACKLOG_CODE
+             , A.PROJECT_CODE
+             , A.MEMBER_CODE
+          FROM TBL_BACKLOG_COMMENT A
+         WHERE A.BACKLOG_COMMENT_CODE = ?
+    `;
+}
+
 /* 백로그 댓글 삽입 요청 SQL */
 exports.insertComment = () => {
 
@@ -27,6 +46,18 @@ exports.insertComment = () => {
         (BACKLOG_COMMENT_CONTENT, BACKLOG_COMMENT_CREATED_DATE, BACKLOG_CODE, PROJECT_CODE, MEMBER_CODE)
         VALUES
         (?, ?, ?, ?, ?)
+    `;
+};
+
+/* 백로그 댓글 수정 요청 SQL */
+exports.updateComment = () => {
+
+    return `
+        UPDATE TBL_BACKLOG_COMMENT A
+           SET A.BACKLOG_COMMENT_CONTENT = ?
+             , A.BACKLOG_COMMENT_MODIFIED_DATE = ?
+             , A.BACKLOG_COMMENT_MODIFIED_YN = 'Y'
+         WHERE A.BACKLOG_COMMENT_CODE = ?
     `;
 };
 
@@ -71,6 +102,6 @@ exports.selectHistory = () => {
              , A.PROJECT_CODE
              , A.MEMBER_CODE
           FROM TBL_BACKLOG_COMMENT_HISTORY A
-         WHERE A.BACKLOG_COMMENT_CODE = ?
+         WHERE A.BACKLOG_COMMENT_HISTORY_CODE = ?
     `;
 };

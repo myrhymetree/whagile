@@ -40,3 +40,23 @@ exports.registComment = async (req, res, next) => {
         url: 'localhost:8888/api/backlog-comments/:backlogCode?offset=0&limit=5'
     });
 };
+
+/* 백로그 댓글 수정 요청 */
+exports.editComment = async (req, res, next) => {
+
+    const modifyingContent = {
+        backlogCommentCode: Number(req.body.backlogCommentCode),
+        content: req.body.content,
+        modifiedDate: req.body.modifiedDate,
+        projectCode : Number(req.body.projectCode),
+        memberCode: Number(req.body.memberCode)
+    };
+
+    const results = await BacklogCommentService.editComment(modifyingContent);
+
+    res.status(HttpStatus.OK).json({
+        status: HttpStatus.OK,
+        message: '댓글 수정에 성공했습니다.',
+        results: results
+    });
+};

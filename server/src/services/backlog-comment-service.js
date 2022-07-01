@@ -72,3 +72,53 @@ exports.registComment = (newComment) => {
         }
     });
 };
+
+/* 백로그 댓글 수정 요청 */
+exports.editComment = (modifyingContent) => {
+
+    return new Promise(async (resolve, reject) => {
+
+        const connection = getConnection();
+        connection.beginTransaction();
+
+        try {
+            /* 백로그 댓글 데이터 수정 */
+            await BacklogCommentRepository.updateComment(connection, modifyingContent);
+
+            /* 수정된 댓글 조회 */
+            const modifiedComment = await BacklogCommentRepository.selectBacklogComment(connection, modifyingContent.backlogCommentCode);
+
+            /* 백로그 댓글 히스토리 데이터 생성 */
+            const newHistory = createNewHistory();
+            newHistory.historyType = '수정';
+            newHistory.historyDate = modifyingContent.modifiedDate;
+            newHistory.modifiedComment = modifyingContent.content;
+            newHistory.backlogCommentCode = modifyingContent.backlogCommentCode;
+            newHistory.projectCode = modifyingContent.projectCode;
+            newHistory.memberCode = modifyingContent.memberCode;
+
+            /* 백로그 댓글 히스토리 행 삽입 */
+            const newHistoryInserted = await BacklogCommentRepository.insertBacklogCommentHistory(connection, newHistory);
+
+            /* 추가한 백로그 히스토리 조회 */
+            const insertedHistory = await BacklogCommentRepository.selectHistory(connection, newHistoryInserted.insertId);
+
+            connection.commit();
+
+            const results = {
+                modifiedComment: modifiedComment,
+                insertedHistory: insertedHistory
+            };
+
+            resolve(results);
+
+        } catch(err) {
+            connection.rollback();
+
+            reject(err);
+
+        } finally {
+            connection.end();
+        }
+    });
+};
