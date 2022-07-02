@@ -32,6 +32,8 @@ const spec = {
       description: droppedItem.description,
       status: props.status,
       person: droppedItem.person,
+      category: droppedItem.category,
+      urgency: droppedItem.urgency,
     });
   },
 };

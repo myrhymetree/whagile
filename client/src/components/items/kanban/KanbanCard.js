@@ -15,6 +15,7 @@ const KanbanCardContainer = styled.div`
   align-items: center;
   justify-content: center;
   margin: 10px;
+  padding-top: 10px;
 `;
 
 const Title = styled.h4`
@@ -29,6 +30,8 @@ const spec = {
       title: props.card.get("title"),
       description: props.card.get("description"),
       person: props.card.get("person"),
+      category: props.card.get("category"),
+      urgency: props.card.get("urgency"),
     };
   },
 };

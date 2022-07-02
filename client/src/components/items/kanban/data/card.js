@@ -7,6 +7,8 @@ const CardRecord = Immutable.Record({
   description: undefined,
   status: undefined,
   person: undefined,
+  category: undefined,
+  urgency: undefined,
 });
 
 export class Card extends CardRecord {}

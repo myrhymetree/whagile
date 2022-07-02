@@ -6,6 +6,8 @@ const DraftRecord = Immutable.Record({
   description: "",
   status: "backlog",
   person: "NONE",
+  category: "basic",
+  urgenct: "lowGrade",
 });
 
 export class Draft extends DraftRecord {}

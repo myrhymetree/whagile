@@ -2,15 +2,13 @@
 // import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 // import uuid from "uuid/v4";
 // import kanbanStyle from "./KanbanBoard.module.css";
-// import PageTitle from "../../../components/items/PageTitle";
+import PageTitle from "../../../components/items/PageTitle";
 // // import { useEffect } from "react";
 // // import callGetTaskAPI from "../../../apis/TaskAPICalls";
 // // import { useSelector, useDispatch } from "react-redux";
 // import Tasks from "../../../components/items/kanban/Tasks"
-//         <PageTitle
-//           icon={<i className="pi pi-fw pi-th-large"></i>}
-//           text="칸반보드"
-//   <Tasks />;
+// <Tasks />;
+  
 
 
 import React from "react";
@@ -45,24 +43,30 @@ function KanbanBoards({
   closeAddCardModal,
 }) {
   return (
-    <MainContainer>
-      <KanbanBoard
-        cards={cards}
-        updateCard={updateCard}
-        deleteCard={deleteCard}
-        openAddCardModal={openAddCardModal}
-        openDraft={openDraft}
-      />
-      {modal.addCardModalIsOpen ? (
-        <AddCardModal
-          draft={draft}
+    <div>
+      <PageTitle
+        icon={<i className="pi pi-fw pi-th-large"></i>}
+        text="칸반보드"
+      />;
+      <MainContainer>
+        <KanbanBoard
+          cards={cards}
           updateCard={updateCard}
-          updateDraft={updateDraft}
-          clearDraft={clearDraft}
-          closeAddCardModal={closeAddCardModal}
+          deleteCard={deleteCard}
+          openAddCardModal={openAddCardModal}
+          openDraft={openDraft}
         />
-      ) : null}
-    </MainContainer>
+        {modal.addCardModalIsOpen ? (
+          <AddCardModal
+            draft={draft}
+            updateCard={updateCard}
+            updateDraft={updateDraft}
+            clearDraft={clearDraft}
+            closeAddCardModal={closeAddCardModal}
+          />
+        ) : null}
+      </MainContainer>
+    </div>
   );
 }
 
