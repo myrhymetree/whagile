@@ -12,11 +12,11 @@ import Signup from './pages/login/Signup';
 import ProjectLayout from './layouts/ProjectLayout';
 import Main from './pages/main/Main';
 import Profile from "./pages/profile/Profile";
-import Dashboard from './pages/project/Dashboard';
-import BacklogAndSprint from './pages/project/BacklogAndSprint';
+import Dashboard from './pages/project/dashboard/Dashboard';
+import BacklogAndSprint from './pages/project/backlog-and-sprint/BacklogAndSprint';
 import KanbanBoard from "./pages/project/kanban/KanbanBoard";
-import History from './pages/project/History';
-import Management from './pages/project/Management';
+import History from './pages/project/history/History';
+import Management from './pages/project/management/Management';
 import List  from './pages/list/List';
 
 // admin

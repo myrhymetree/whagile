@@ -26,6 +26,9 @@ app.use("/api/auth", authorityRouter);
 const backlogRouter = require("./src/routes/backlog-route");
 app.use("/api/backlogs", backlogRouter);
 
+const backlogCommentRouter = require('./src/routes/backlog-comment-route');
+app.use('/api/backlog-comments', backlogCommentRouter);
+
 const tasksRouter = require("./src/routes/tasks-route");
 app.use("/api/tasks", tasksRouter);
 

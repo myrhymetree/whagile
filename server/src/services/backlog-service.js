@@ -228,3 +228,18 @@ exports.removeRequest = (removeRequest) => {
         }
     });
 };
+
+/* 백로그 히스토리 조회 요청 */
+exports.findBacklogHistories = (params) => {
+
+    return new Promise((resolve, reject) => {
+
+        const connection = getConnection();
+
+        const results = BacklogRepository.selectBacklogHistories(connection, params);
+
+        connection.end();
+
+        resolve(results);
+    });
+};
