@@ -37,7 +37,7 @@ function TaskCreateModal() {
           autoFocus
         />
         <Button
-          id={TasksCreateModal.TaskCanlcelBtn}
+          id={TasksCreateModal.TaskCancelBtn}
           label="취소"
           icon="pi pi-times"
           onClick={() => onHide(name)}

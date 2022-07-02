@@ -36,7 +36,7 @@ function MainNavbar() {
       label: "칸반보드",
       icon: "pi pi-fw pi-th-large",
       command: () => {
-        navigate(`/project/kanban-board`);
+        navigate(`/project/kanban-boards`);
       },
     },
     {
