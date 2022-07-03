@@ -12,8 +12,14 @@ import Signup from './pages/login/Signup';
 import ProjectLayout from './layouts/ProjectLayout';
 import Main from './pages/main/Main';
 import Profile from "./pages/profile/Profile";
+<<<<<<< HEAD
+import Dashboard from './pages/project/Dashboard';
+import BacklogAndSprint from './pages/project/BacklogAndSprint';
+import GanttChart from './pages/project/GanttChart';
+=======
 import Dashboard from './pages/project/dashboard/Dashboard';
 import BacklogAndSprint from './pages/project/backlog-and-sprint/BacklogAndSprint';
+>>>>>>> 94a979d147a76432f91303d1d86f1bedb57cbcaf
 import KanbanBoard from "./pages/project/kanban/KanbanBoard";
 import List  from './pages/projects/List';
 import Regist  from './pages/projects/Regist';
@@ -48,7 +54,7 @@ function App() {
           <Route path="/project/:projectCode" element={ <ProjectLayout/>} >
             <Route path="dashboard" element={ <Dashboard/> }/>
             <Route path="backlog-and-sprint" element={ <BacklogAndSprint/> }/>
-            {/* <Route path=":projectId/sprint" element={ <Sprint/> }/> */}
+            <Route path="gantt" element={ <GanttChart/> }/>
             <Route path="kanban-board" element={ <KanbanBoard/> }/>
             <Route path="history" element={ <History/> }/>
             <Route path="management" element={ <Management/> }/>
