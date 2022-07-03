@@ -1,4 +1,3 @@
-import { GET_AUTHS } from "../modules/AuthsModule";
 import { GET_PROJECT, GET_PROJECTS } from "../modules/ProjectModules";
 
 export function callGetProjectsAPI(params) {
@@ -17,9 +16,11 @@ export function callGetProjectsAPI(params) {
     }
 }
 
-export function callGetProjectAPI(projectCode) {
+export function callGetProjectAPI(params) {
 
-    let requestURL = `http://localhost:8888/api/project/${ projectCode }`;
+    let requestURL = `http://localhost:8888/api/projects/`;
+
+    requestURL += `${Object.entries(params).map(param => param.slice(1))}`;
 
     return async function getProject(dispatch, getState) {
 

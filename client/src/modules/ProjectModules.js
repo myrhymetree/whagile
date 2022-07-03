@@ -3,9 +3,11 @@ import { createActions, handleActions } from 'redux-actions';
 /* 초기 값 */
 const initialState = [];
 
+const initialState1 = {};
+
 /* 액션 */
-export const GET_PROJECTS = 'project/GET_PROJECTS';
-export const GET_PROJECT = 'project/GET_PROJECT';
+export const GET_PROJECTS = 'projects/GET_PROJECTS';
+export const GET_PROJECT = 'projects/GET_PROJECT';
 
 const actions = createActions({
     [GET_PROJECTS]: () => {},
@@ -16,6 +18,9 @@ const actions = createActions({
 const projectsReducer = handleActions(
     {
         [GET_PROJECTS]: (state, { payload }) => {
+            return payload;
+        },
+        [GET_PROJECT]: (state, { payload }) => {
             return payload;
         }
     },

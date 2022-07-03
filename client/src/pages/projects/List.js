@@ -1,4 +1,5 @@
 import PageTitle from '../../components/items/PageTitle';
+import MainHeader from '../../components/commons/MainHeader';
 import React, { useEffect, useState, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { callGetProjectsAPI } from '../../apis/ProjectAPICalls';
@@ -93,46 +94,48 @@ function List() {
     };
 
     return (
-        <main>
-            <section>
-                <PageTitle 
-                    icon={ <i className="pi pi-fw pi-inbox"></i>}
-                    text="프로젝트 목록"
-                />
-            </section>
-            <div>
-                <span className="p-input-icon-left">
-                    <i className="pi pi-search" />
-                    <InputText type="search" className="p-inputtext-lg block" value={ searchValue } onChange={ onChangeHandler } placeholder="Search" />
-                </span>
-                <span>
-                    <Button label="프로젝트 생성" icon="pi pi-plus" onClick={ () => { navigate(`/projects/regist`) }} />
-                </span>
-            </div>
-            <div>
-                <DataTable
-                    value={projects} 
-                    paginator responsiveLayout="scroll"
-                    selectionMode="single"
-                    dataKey="projectCode"
-                    paginatorTemplate="CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
-                    currentPageReportTemplate="Showing {first} to {last} of {totalRecords}" 
-                    rows={10}
-                    rowsPerPageOptions={[10,20,50]}
-                    paginatorLeft={paginatorLeft} 
-                    paginatorRight={paginatorRight}
-                    selection={selectedProduct1} 
-                    onSelectionChange={e => setSelectedProduct1(e.value)}
-                    onRowSelect={onRowSelect} onRowUnselect={onRowUnselect}
-                >
-                    <Column field="projectCode" header="코드" style={{ width: '25%' }} onClick={ () => { navigate(`/project/`+this.value) }  }></Column>
-                    <Column field="projectName" header="이름" style={{ width: '25%' }} sortable></Column>
-                    <Column field="projectDescription" header="설명" style={{ width: '35%' }}></Column>
-                    <Column field="remainedTask" header="내 일감"></Column>
-                    <Column field="projectOwner" header="프로젝트 소유자" sortable></Column>
-                </DataTable>
-            </div>
-        </main>
+        <>
+            <MainHeader/>
+            <main>
+                <section>
+                    <PageTitle 
+                        icon={ <i className="pi pi-fw pi-inbox"></i>}
+                        text="프로젝트 목록"
+                    />
+                </section>
+                <div>
+                    <span className="p-input-icon-left">
+                        <i className="pi pi-search" />
+                        <InputText type="search" className="p-inputtext-lg block" value={ searchValue } onChange={ onChangeHandler } placeholder="Search" />
+                    </span>
+                    <span>
+                        <Button label="프로젝트 생성" icon="pi pi-plus" onClick={ () => { navigate(`/projects/regist`) }} />
+                    </span>
+                </div>
+                <div>
+                    <DataTable
+                        value={projects} 
+                        paginator responsiveLayout="scroll"
+                        selectionMode="single"
+                        dataKey="projectCode"
+                        paginatorTemplate="CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
+                        currentPageReportTemplate="Showing {first} to {last} of {totalRecords}" 
+                        rows={10}
+                        rowsPerPageOptions={[10,20,50]}
+                        paginatorLeft={paginatorLeft} 
+                        paginatorRight={paginatorRight}
+                        selection={selectedProduct1} 
+                        onSelectionChange={e => setSelectedProduct1(e.value)}
+                        onRowSelect={onRowSelect} onRowUnselect={onRowUnselect}
+                    >
+                        <Column field="projectName" header="이름" style={{ width: '25%' }} sortable></Column>
+                        <Column field="projectDescription" header="설명" style={{ width: '35%' }}></Column>
+                        <Column field="remainedTask" header="내 일감"></Column>
+                        <Column field="projectOwner" header="프로젝트 소유자" sortable></Column>
+                    </DataTable>
+                </div>
+            </main>
+        </>
     );
 }
 

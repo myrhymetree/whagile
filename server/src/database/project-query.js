@@ -46,6 +46,26 @@ exports.selectProjects = (params) => {
     return query;
 };
 
+/* 프로젝트 상세 조회 */
+exports.selectProjectWithProjectCode = (projectCode) => {
+    return `
+        SELECT
+               A.PROJECT_CODE
+             , A.PROJECT_NAME
+             , A.PROJECT_DESCRIPTION
+             , (SELECT
+                       M.MEMBER_NAME
+                  FROM TBL_PROJECT_MEMBER PM
+                  JOIN TBL_MEMBER M ON(PM.MEMBER_CODE = M.MEMBER_CODE)
+                 WHERE PM.PROJECT_CODE = A.PROJECT_CODE
+                   AND PM.AUTHORITY_CODE = 1
+                ) PROJECT_OWNER
+          FROM TBL_PROJECT A
+         WHERE A.PROJECT_CODE = ${ projectCode }
+           AND A.PROJECT_DELETED_STATUS = 'N'
+    `;
+}
+
 /* 프로젝트 추가 */
 exports.insertProject = () => {
     return `
@@ -81,22 +101,6 @@ exports.insertProjectMember = () => {
   `;
 }
 
-/* 프로젝트 상세 조회 */
-exports.selectProjectWithProjectCode = () => {
-    return `
-        SELECT
-               A.PROJECT_CODE
-             , A.PROJECT_NAME
-             , A.PROJECT_DESCRIPTION
-             , C.MEMBER_NAME
-          FROM TBL_PROJECT A
-          LEFT JOIN TBL_PROJECT_MEMBER B ON (A.PROJECT_CODE = B.PROJECT_CODE)
-          LEFT JOIN TBL_MEMBER C ON (B.MEMBER_CODE = C.MEMBER_CODE)
-         WHERE A.PROJECT_CODE = ?
-           AND A.PROJECT_DELETED_STATUS = 'N'
-           AND B.AUTHORITY_CODE = 1;
-    `;
-}
 
 /* 프로젝트 수정 */
 exports.updateProject = () => {

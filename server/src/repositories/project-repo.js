@@ -26,8 +26,7 @@ exports.selectProjects = (connection, params) => {
 
 exports.selectProject = (connection, projectCode) => {
     return new Promise((resolve, reject) => {
-        connection.query(projectQuery.selectProjectWithProjectCode(),
-        [ projectCode ], 
+        connection.query(projectQuery.selectProjectWithProjectCode(projectCode), 
         
         (err, results, fields) => {
 
@@ -36,25 +35,12 @@ exports.selectProject = (connection, projectCode) => {
                 reject(err);
             }
 
-            resolve(results);
-        });
-    });
-};
+            const project = [];
+            project.push(new ProjectDTO(results[0]));
 
-exports.registProject= (connection, projectInfo) => {
-    return new Promise((resolve, reject) => {
-        connection.query(projectQuery.insertProject(),
-        [ projectInfo.projectName
-        , projectInfo.projectDescription
-        , projectInfo.projectDeletedStatus
-        ],
-        (err, results, fields) => {
 
-            if(err) {
-                console.log(err);
-                reject(err);
-            }
-            resolve(results);
+
+            resolve(project);
         });
     });
 };
@@ -79,6 +65,25 @@ exports.selectProjectWithProjectCode = (connection, projectCode) => {
         });
     });
 }
+
+exports.registProject= (connection, projectInfo) => {
+    return new Promise((resolve, reject) => {
+        connection.query(projectQuery.insertProject(),
+        [ projectInfo.projectName
+        , projectInfo.projectDescription
+        , projectInfo.projectDeletedStatus
+        ],
+        (err, results, fields) => {
+
+            if(err) {
+                console.log(err);
+                reject(err);
+            }
+            
+            resolve(results);
+        });
+    });
+};
 
 exports.registProjectMember = (connection, projectCode, authorityCode, memberCode ) => {
  
