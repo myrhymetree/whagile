@@ -5,9 +5,11 @@ const initialState = [];
 
 /* 액션 */
 export const GET_PROJECTS = 'project/GET_PROJECTS';
+export const GET_PROJECT = 'project/GET_PROJECT';
 
 const actions = createActions({
-    [GET_PROJECTS]: () => {}
+    [GET_PROJECTS]: () => {},
+    [GET_PROJECT]: () => {}
 });
 
 /* 리듀서 */

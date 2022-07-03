@@ -1,9 +1,11 @@
 const projectQuery = require('../database/project-query');
 const ProjectDTO = require('../dto/project/project-response-dto');
+const ProjectMemberDTO  = require('../dto/project/project-member-response-dto');
 
 exports.selectProjects = (connection, params) => {
     return new Promise((resolve, reject) => {
-        connection.query(projectQuery.selectProjects(params), (err, results, fields) => {
+        connection.query(projectQuery.selectProjects(params), 
+        (err, results, fields) => {
 
             if(err) {
                 console.log(err);
@@ -168,6 +170,26 @@ exports.deleteProject = (connection, projectCode) => {
             }
 
             resolve(results);
+        });
+    });
+}
+
+exports.selectProjectMember = (connection, projectCode) => {
+    return new Promise((resolve, reject) => {
+        connection.query(projectQuery.selectProjectMember(projectCode),
+        (err, results, fields) => {
+
+            if(err) {
+                console.log(err);
+                reject(err);
+            }
+
+            const projectMember = [];
+            for(let i = 0; i < results.length; i++) {
+                projectMember.push(new ProjectMemberDTO(results[i]));
+            }
+
+            resolve(projectMember);
         });
     });
 }

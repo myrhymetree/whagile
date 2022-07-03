@@ -11,10 +11,10 @@ exports.selectProjects = (params) => {
                  FROM TBL_BACKLOG BK
                 WHERE BK.BACKLOG_CATEGORY = '일감'
                   AND BK.BACKLOG_DELETED_YN = 'N'
-                  AND BK.BACKLOG_PROGRESS_STATUS != '완료'
+                  AND BK.BACKLOG_PROGRESS_STATUS = '완료'
                   AND BK.PROJECT_CODE = B.PROJECT_CODE
                   AND BK.BACKLOG_CHARGER_CODE = ${ params.loginMember }
-              ) TODO_TASK
+              ) COMPLETED_TASK
             , (SELECT 
                       COUNT(BK.BACKLOG_CODE)
                  FROM TBL_BACKLOG BK
@@ -138,4 +138,18 @@ exports.deleteProject = () => {
            A.PROJECT_DELETED_STATUS = 'Y'
      WHERE A.PROJECT_CODE = ?
   `;
+}
+
+exports.selectProjectMember = (projectCode) => {
+  return `
+    SELECT
+           A.MEMBER_CODE
+         , B.MEMBER_NAME
+         , A.AUTHORITY_CODE
+         , C.AUTHORITY_NAME
+      FROM TBL_PROJECT_MEMBER A
+      JOIN TBL_MEMBER B ON (A.MEMBER_CODE = B.MEMBER_CODE)
+      JOIN TBL_AUTHORITY C ON (A.AUTHORITY_CODE = C.AUTHORITY_CODE)
+     WHERE A.PROJECT_CODE = ${ projectCode }
+  `
 }

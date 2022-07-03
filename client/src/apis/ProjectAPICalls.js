@@ -1,5 +1,5 @@
 import { GET_AUTHS } from "../modules/AuthsModule";
-import { GET_PROJECTS } from "../modules/ProjectModules";
+import { GET_PROJECT, GET_PROJECTS } from "../modules/ProjectModules";
 
 export function callGetProjectsAPI(params) {
     
@@ -14,5 +14,17 @@ export function callGetProjectsAPI(params) {
         const result = await fetch(requestURL).then(res => res.json());
 
         dispatch({ type: GET_PROJECTS, payload: result.results });
+    }
+}
+
+export function callGetProjectAPI(projectCode) {
+
+    let requestURL = `http://localhost:8888/api/project/${ projectCode }`;
+
+    return async function getProject(dispatch, getState) {
+
+        const result = await fetch(requestURL).then(res => res.json());
+
+        dispatch({ type: GET_PROJECT, payload: result.results});
     }
 }

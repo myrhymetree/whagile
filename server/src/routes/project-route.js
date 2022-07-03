@@ -7,5 +7,6 @@ router.get('/:projectCode', ProjectController.selectProject);
 router.post('/', ProjectController.registProject);
 router.put('/:projectCode', ProjectController.modifyProject);
 router.delete('/:projectCode', ProjectController.removeProject);
+router.get('/:projectCode/member', ProjectController.findProjectMember);
 
 module.exports = router;
