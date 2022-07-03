@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate, NavLink } from 'react-router-dom';
+import { callPostProjectAPI } from '../../apis/ProjectAPICalls';
 import EmailItems from '../../components/items/projects/Emails';
 
 import { InputText } from 'primereact/inputtext';
@@ -8,15 +9,16 @@ import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 import { render } from 'react-dom';
 
+
 function Regist() {
-    const [name, setName ] = useState('');
+    const [projectName, setProjectName ] = useState('');
+    const [projectDescription, setProjectDescription ] = useState('');
     const [emails, setEmails ] = useState([
     //    {id: 0, address: ''} 
     ]);
     const [inputEmail, setInputEmail] = useState('');
     const [nextId, setNextId] = useState(1);
 
-    const [description, setDescription ] = useState('');
     const [displayBasic, setDisplayBasic] = useState(false);
     const [displayBasic2, setDisplayBasic2] = useState(false);
     const [displayModal, setDisplayModal] = useState(false);
@@ -35,6 +37,7 @@ function Regist() {
     }
     
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const onClick = (name, position) => {
         dialogFuncMap[`${name}`](true);
@@ -57,6 +60,10 @@ function Regist() {
         );
     }
 
+    const addProject = () => {
+        dispatch(callPostProjectAPI(projectName, projectDescription));
+    }
+
     const addEmail = () => {
 
         const changeEmails = emails.concat({
@@ -69,16 +76,21 @@ function Regist() {
         setEmails(changeEmails);
     }
 
+    const submitHandler = () => {
+
+        addProject();
+    }
+
     return(
         <>
             <div className="p-fluid grid">
                 <div className="field col-12 md:col-4">
                     <label htmlFor="inputtext">프로젝트 이름</label>
-                    <InputText id="inputtext1" value={name} onChange={(e) => setName(e.target.value)} className="p-invalid" />
+                    <InputText id="inputtext1" value={projectName} onChange={(e) => setProjectName(e.target.value)} className="p-invalid" />
                 </div>
                 <div className="field col-12 md:col-4">
                     <label htmlFor="inputtext">프로젝트 설명</label>
-                    <InputText id="inputtext2" value={description} onChange={(e) => setDescription(e.target.value)} className="p-invalid" />
+                    <InputText id="inputtext2" value={projectDescription} onChange={(e) => setProjectDescription(e.target.value)} className="p-invalid" />
                 </div>
             </div>
 
@@ -93,6 +105,7 @@ function Regist() {
                 type="submit" 
                 label="등록" 
                 className="p-button-sm" 
+                onClick={ () => submitHandler() }
             />
              <Button 
                 type="click" 

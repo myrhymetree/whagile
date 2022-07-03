@@ -1,4 +1,5 @@
-import { GET_PROJECT, GET_PROJECTS } from "../modules/ProjectModules";
+import { GET_PROJECT, GET_PROJECTS, POST_PROJECT } from "../modules/ProjectModules";
+import { decodeJwt } from '../utils/tokenUtils';
 
 export function callGetProjectsAPI(params) {
     
@@ -27,5 +28,30 @@ export function callGetProjectAPI(params) {
         const result = await fetch(requestURL).then(res => res.json());
 
         dispatch({ type: GET_PROJECT, payload: result.results});
+    }
+}
+
+export const  callPostProjectAPI = (projectName, projectDescription) => {
+
+    let requestURL = 'https://localhost:8888/api/projects';
+    const decoded = decodeJwt(window.localStorage.getItem("access_token"));
+
+    console.log('decoded', decoded.code);
+
+    return async (dispatch, getState) => {
+
+        const result = await fetch(requestURL, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                projectName: projectName,
+                projectDescription: projectDescription,
+                loginMember: decoded.code
+            })
+        })
+        .then(() => dispatch({ type: POST_PROJECT, payload: result.results }))
     }
 }
