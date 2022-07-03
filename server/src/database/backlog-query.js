@@ -59,7 +59,6 @@ exports.selectBacklogByBacklogCode = () => {
       JOIN TBL_PROJECT_MEMBER B ON (A.PROJECT_CODE = B.PROJECT_CODE) AND (A.BACKLOG_CREATOR_CODE = B.MEMBER_CODE)
       JOIN TBL_MEMBER C ON (B.MEMBER_CODE = C.MEMBER_CODE)
       WHERE A.BACKLOG_CODE = ?
-      ORDER BY A.BACKLOG_CODE DESC
   `;
 };
 
@@ -152,5 +151,23 @@ exports.deleteBacklog = () => {
       UPDATE TBL_BACKLOG A
          SET A.BACKLOG_DELETED_YN = 'Y'
        WHERE A.BACKLOG_CODE = ?
+  `;
+};
+
+/* 백로그 히스토리 조회 요청 SQL */
+exports.selectBacklogHistories = () => {
+
+  return `
+    SELECT
+           A.BACKLOG_HISTORY_CODE
+         , A.BACKLOG_HISTORY_ITEM
+         , A.BACKLOG_HISTORY_CONTENT
+         , A.BACKLOG_HISTORY_DATE
+         , A.BACKLOG_CODE
+         , A.PROJECT_CODE
+         , A.MEMBER_CODE
+      FROM TBL_BACKLOG_HISTORY A
+     ORDER BY A.BACKLOG_HISTORY_CODE DESC
+     LIMIT ?, ?
   `;
 };
