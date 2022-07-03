@@ -2,40 +2,54 @@ import { useEffect, useState } from 'react';
 
 import BacklogAndSprintCSS from './BacklogAndSprint.module.css';
 import DivHeader from "./DivHeader";
-import { Button } from 'primereact/button';
+import BacklogItem from './BacklogItem';
+import SprintEditingModal from './SprintEditingModal';
+import SprintStartModal from './SprintStartModal';
+import SprintEndModal from './SprintEndModal';
 
 function SprintItem() {
 
-    // combineReducer 사용해서 백로그 앤 스프린트 페이지에서 선언해주기?
-    const [sprintItems, setSprintItems] = useState([{
-        sprintCode: '',
-        isSelected: false
-    }]);
+    const [isSelected, setIsSelected] = useState(false);    //스프린트 영역 선택
 
-    useEffect(
-        () => {
-            console.log('sprintItems updated');
-        },
-        [sprintItems]
-    );
+    //fake data
+    const sprintInfo = {
+        sprintProgressStatus: '진행 중' //스프린트 진행 상태
+      , startDate: '2022-01-27'         //스프린트 시작 가능 여부
+      , endDate: '2023-01-27'           //스프린트 종료일
+    };
+
+    const { sprintProgressStatus, startDate, endDate } = sprintInfo;
+
+    const styles = {
+        div: {display: isSelected? 'block' : 'none'},
+        startBtn: {display: startDate != null && endDate && sprintProgressStatus == '진행 전'? 'block' : 'none'},
+        endBtn: {display: sprintProgressStatus == '진행 중'? 'block' : 'none'}
+    };
 
     return (
         <div className={ BacklogAndSprintCSS.sprintItem }>
-            <button
-                className={ BacklogAndSprintCSS.sprintSelectBtn }
-                onClick={ () => setSprintItems(!sprintItems.isSelected) }
+            <div className={ BacklogAndSprintCSS.sprintItemHeader }>
+                <button
+                    className={ BacklogAndSprintCSS.sprintSelectBtn }
+                    onClick={ () => setIsSelected(!isSelected) }
+                >
+                    <i className="pi pi-chevron-right"/>
+                </button>
+                <label> 스프린트제목</label>
+                <label> 스프린트 기간</label>
+                <SprintEditingModal/>
+                <div style={ styles.startBtn }>
+                    <SprintStartModal/>
+                </div>
+                <div style={ styles.endBtn }>
+                    <SprintEndModal/>
+                </div>
+            </div>
+            <div
+                style={ styles.div }
             >
-                <i className="pi pi-chevron-right"></i>
-            </button>
-            <label> 스프린트제목</label>
-            <label> 스프린트 기간</label>
-            <button>편집</button>
-            <Button
-                label="스프린트 생성"
-            />
-            <div>
                 <DivHeader/>
-                <h6>스프린트에 포함된 백로그행</h6>
+                <BacklogItem/>
             </div>
         </div>
     );
