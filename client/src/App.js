@@ -12,14 +12,10 @@ import Signup from './pages/login/Signup';
 import ProjectLayout from './layouts/ProjectLayout';
 import Main from './pages/main/Main';
 import Profile from "./pages/profile/Profile";
-<<<<<<< HEAD
-import Dashboard from './pages/project/Dashboard';
-import BacklogAndSprint from './pages/project/BacklogAndSprint';
-import GanttChart from './pages/project/GanttChart';
-=======
+
 import Dashboard from './pages/project/dashboard/Dashboard';
 import BacklogAndSprint from './pages/project/backlog-and-sprint/BacklogAndSprint';
->>>>>>> 94a979d147a76432f91303d1d86f1bedb57cbcaf
+import GanttChart from './pages/project/gantt/GanttChart';
 import KanbanBoard from "./pages/project/kanban/KanbanBoard";
 import List  from './pages/projects/List';
 import Regist  from './pages/projects/Regist';
