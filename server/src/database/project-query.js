@@ -6,12 +6,35 @@ exports.selectProjects = (params) => {
       `
        SELECT
               A.*
-            , C.MEMBER_NAME 
+            , (SELECT
+                      COUNT(BK.BACKLOG_CODE)
+                 FROM TBL_BACKLOG BK
+                WHERE BK.BACKLOG_CATEGORY = '일감'
+                  AND BK.BACKLOG_DELETED_YN = 'N'
+                  AND BK.BACKLOG_PROGRESS_STATUS = '완료'
+                  AND BK.PROJECT_CODE = B.PROJECT_CODE
+                  AND BK.BACKLOG_CHARGER_CODE = ${ params.loginMember }
+              ) COMPLETED_TASK
+            , (SELECT 
+                      COUNT(BK.BACKLOG_CODE)
+                 FROM TBL_BACKLOG BK
+                WHERE BK.BACKLOG_CATEGORY = '일감'
+                  AND BK.BACKLOG_DELETED_YN = 'N'
+                  AND BK.PROJECT_CODE = B.PROJECT_CODE
+                  AND BK.BACKLOG_CHARGER_CODE = ${ params.loginMember }
+              ) TOTAL_TASK
+            , (SELECT
+                      M.MEMBER_NAME
+                 FROM TBL_PROJECT_MEMBER PM
+                 JOIN TBL_MEMBER M ON(PM.MEMBER_CODE = M.MEMBER_CODE)
+                WHERE PM.PROJECT_CODE = B.PROJECT_CODE
+                  AND PM.AUTHORITY_CODE = 1
+              ) PROJECT_OWNER
          FROM TBL_PROJECT A
          JOIN TBL_PROJECT_MEMBER B ON (A.PROJECT_CODE = B.PROJECT_CODE)
          JOIN TBL_MEMBER C ON (B.MEMBER_CODE = C.MEMBER_CODE)
         WHERE A.PROJECT_DELETED_STATUS = 'N'
-          AND B.AUTHORITY_CODE = 1
+          AND C.MEMBER_CODE = ${ params.loginMember }
       `;
 
     if(params.searchValue !== undefined) {
@@ -115,4 +138,18 @@ exports.deleteProject = () => {
            A.PROJECT_DELETED_STATUS = 'Y'
      WHERE A.PROJECT_CODE = ?
   `;
+}
+
+exports.selectProjectMember = (projectCode) => {
+  return `
+    SELECT
+           A.MEMBER_CODE
+         , B.MEMBER_NAME
+         , A.AUTHORITY_CODE
+         , C.AUTHORITY_NAME
+      FROM TBL_PROJECT_MEMBER A
+      JOIN TBL_MEMBER B ON (A.MEMBER_CODE = B.MEMBER_CODE)
+      JOIN TBL_AUTHORITY C ON (A.AUTHORITY_CODE = C.AUTHORITY_CODE)
+     WHERE A.PROJECT_CODE = ${ projectCode }
+  `
 }

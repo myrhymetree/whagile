@@ -113,3 +113,18 @@ exports.removeProject = (projectCode) => {
         }
     });
 }
+
+exports.findProjectMember = (projectCode) => {
+
+    return new Promise(async (resolve, reject) => {
+
+        const connection = getConnection();
+
+        const results = ProjectRepository.selectProjectMember(connection, projectCode);
+
+        connection.end();
+
+        resolve(results);
+
+    });
+}

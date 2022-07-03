@@ -1,5 +1,5 @@
 import GanttCss from './GanttChart.module.css';
-import PageTitle from '../../components/items/PageTitle';
+import PageTitle from '../../../components/items/PageTitle';
 import { Gantt, Task, EventOption, StylingOption, ViewMode, DisplayOption } from 'gantt-task-react';
 import "gantt-task-react/dist/index.css";
 
