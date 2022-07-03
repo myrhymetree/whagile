@@ -7,7 +7,7 @@ import { mdiMonitorDashboard } from "@mdi/js";
 
 import { useNavigate } from "react-router-dom"; /* 페이지 강제 이동 */
 
-function MainNavbar() {
+function MainNavbar({projectCode}) {
   const navigate = useNavigate();
 
   let items = [
@@ -15,42 +15,42 @@ function MainNavbar() {
       label: "대시보드",
       icon: "pi pi-fw pi-chart-pie",
       command: () => {
-        navigate(`/project/dashboard`);
+        navigate(`/project/${ projectCode }/dashboard`);
       },
     },
     {
       label: "백로그 및 스프린트",
       icon: "pi pi-fw pi-inbox",
       command: () => {
-        navigate(`/project/backlog-and-sprint`);
+        navigate(`/project/${ projectCode }/backlog-and-sprint`);
       },
     },
     {
       label: "간트차트",
       icon: "pi pi-fw pi-chart-bar",
       command: () => {
-        navigate(`/project/gantt`);
+        navigate(`/project/${ projectCode }/gantt`);
       },
     },
     {
       label: "칸반보드",
       icon: "pi pi-fw pi-th-large",
       command: () => {
-        navigate(`/project/kanban-board`);
+        navigate(`/project/${ projectCode }/kanban-board`);
       },
     },
     {
       label: "히스토리",
       icon: "pi pi-fw pi-history",
       command: () => {
-        navigate(`/project/history`);
+        navigate(`/project/${ projectCode }/history`);
       },
     },
     {
       label: "프로젝트 관리",
       icon: "pi pi-fw pi-cog",
       command: () => {
-        navigate(`/project/management`);
+        navigate(`/project/${ projectCode }/management`);
       },
     },
   ];
