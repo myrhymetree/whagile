@@ -15,9 +15,12 @@ import Profile from "./pages/profile/Profile";
 import Dashboard from './pages/project/dashboard/Dashboard';
 import BacklogAndSprint from './pages/project/backlog-and-sprint/BacklogAndSprint';
 import KanbanBoard from "./pages/project/kanban/KanbanBoard";
+import History from './pages/project/History';
+import Management from './pages/project/Management';
+import List  from './pages/projects/List';
+import Regist  from './pages/projects/Regist';
 import History from './pages/project/history/History';
 import Management from './pages/project/management/Management';
-import List  from './pages/list/List';
 
 // admin
 import AdminLayout from './layouts/AdminLayout';
@@ -44,8 +47,7 @@ function App() {
           {/* { isLogin ? <Navigate replace to ="/main" /> : <Login/>} */}
           <Route path="/main" element={ <Main/> } />
           <Route path="/signup" element={ <Signup/> } />
-          <Route path="/list" element={ <List/> } />
-          <Route path="/project" element={ <ProjectLayout/>} >
+          <Route path="/project/:projectCode" element={ <ProjectLayout/>} >
             <Route path="dashboard" element={ <Dashboard/> }/>
             <Route path="backlog-and-sprint" element={ <BacklogAndSprint/> }/>
             {/* <Route path=":projectId/sprint" element={ <Sprint/> }/> */}
@@ -64,6 +66,9 @@ function App() {
             <Route path="inquery" element={ <AdminInquery/> }/>
             <Route path="statistics" element={ <AdminStatistics/> }/>
           </Route>
+
+          <Route path="/projects" element={ <List/> }/>
+          <Route path="/projects/regist" element={ <Regist/> }/>
         </Routes>
       </BrowserRouter>
   );
