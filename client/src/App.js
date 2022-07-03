@@ -14,6 +14,7 @@ import Main from './pages/main/Main';
 import Profile from "./pages/profile/Profile";
 import Dashboard from './pages/project/Dashboard';
 import BacklogAndSprint from './pages/project/BacklogAndSprint';
+import GanttChart from './pages/project/GanttChart';
 import KanbanBoard from "./pages/project/kanban/KanbanBoard";
 import History from './pages/project/History';
 import Management from './pages/project/Management';
@@ -48,7 +49,7 @@ function App() {
           <Route path="/project" element={ <ProjectLayout/>} >
             <Route path="dashboard" element={ <Dashboard/> }/>
             <Route path="backlog-and-sprint" element={ <BacklogAndSprint/> }/>
-            {/* <Route path=":projectId/sprint" element={ <Sprint/> }/> */}
+            <Route path="gantt" element={ <GanttChart/> }/>
             <Route path="kanban-board" element={ <KanbanBoard/> }/>
             <Route path="history" element={ <History/> }/>
             <Route path="management" element={ <Management/> }/>

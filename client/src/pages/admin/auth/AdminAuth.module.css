@@ -72,6 +72,18 @@
 }
 
 /* 임시(다른사람들 고치면 지울 것, !important도) */
-input#input {
-    text-align: left;
+.activatedY {
+    width: 80px;
+    background-color: #00AA9C;
+    text-align: center;
+    border-radius: 5px;
+    padding: 3px;
+}
+
+.activatedN {
+    width: 80px;
+    background-color: #333544;
+    text-align: center;
+    border-radius: 5px;
+    padding: 5px;
 }

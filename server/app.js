@@ -26,6 +26,9 @@ app.use("/api/auth", authorityRouter);
 const backlogRouter = require("./src/routes/backlog-route");
 app.use("/api/backlogs", backlogRouter);
 
+const sprintRouter = require("./src/routes/sprint-route");
+app.use("/api/sprints", sprintRouter);
+
 const tasksRouter = require("./src/routes/tasks-route");
 app.use("/api/tasks", tasksRouter);
 
