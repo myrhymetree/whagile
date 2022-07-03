@@ -29,6 +29,9 @@ app.use("/api/backlogs", backlogRouter);
 const backlogCommentRouter = require('./src/routes/backlog-comment-route');
 app.use('/api/backlog-comments', backlogCommentRouter);
 
+const sprintRouter = require("./src/routes/sprint-route");
+app.use("/api/sprints", sprintRouter);
+
 const tasksRouter = require("./src/routes/tasks-route");
 app.use("/api/tasks", tasksRouter);
 

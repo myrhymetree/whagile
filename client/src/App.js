@@ -12,8 +12,10 @@ import Signup from './pages/login/Signup';
 import ProjectLayout from './layouts/ProjectLayout';
 import Main from './pages/main/Main';
 import Profile from "./pages/profile/Profile";
+
 import Dashboard from './pages/project/dashboard/Dashboard';
 import BacklogAndSprint from './pages/project/backlog-and-sprint/BacklogAndSprint';
+import GanttChart from './pages/project/gantt/GanttChart';
 import KanbanBoard from "./pages/project/kanban/KanbanBoard";
 import List  from './pages/projects/List';
 import Regist  from './pages/projects/Regist';
@@ -45,16 +47,14 @@ function App() {
           {/* { isLogin ? <Navigate replace to ="/main" /> : <Login/>} */}
           <Route path="/main" element={ <Main/> } />
           <Route path="/signup" element={ <Signup/> } />
-          <Route path="/project">
-            <Route path=":projectCode" element={ <ProjectLayout />} >
-              <Route path="dashboard" element={ <Dashboard/> }/>
-              <Route path="backlog-and-sprint" element={ <BacklogAndSprint/> }/>
-              {/* <Route path=":projectId/sprint" element={ <Sprint/> }/> */}
-              <Route path="kanban-board" element={ <KanbanBoard/> }/>
-              <Route path="history" element={ <History/> }/>
-              <Route path="management" element={ <Management/> }/>
-              <Route path="profile" element={ <Profile/> } />
-            </Route>
+          <Route path="/project/:projectCode" element={ <ProjectLayout/>} >
+            <Route path="dashboard" element={ <Dashboard/> }/>
+            <Route path="backlog-and-sprint" element={ <BacklogAndSprint/> }/>
+            <Route path="gantt" element={ <GanttChart/> }/>
+            <Route path="kanban-board" element={ <KanbanBoard/> }/>
+            <Route path="history" element={ <History/> }/>
+            <Route path="management" element={ <Management/> }/>
+            <Route path="profile" element={ <Profile/> } />
           </Route>
 
           {/* admin */}

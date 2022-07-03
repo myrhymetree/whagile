@@ -1,8 +1,16 @@
+import { 
+      callGetAuthsAPI
+    , callGetAuthAPI
+    , callGetAuthOrderAPI
+    , callPostAuthAPI
+    , callPutAuthAPI
+    , callDeleteAuthAPI
+} from '../../../apis/AuthAPICalls';
 import AdminAuthCss from './AdminAuth.module.css';
 import '../AdminStyle.css';
 import React, { useState, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { callGetAuthsAPI, callGetAuthAPI, callGetAuthOrderAPI } from '../../../apis/AuthAPICalls';
+
 import { SET_AUTH, INIT_AUTH, UPDATE_AUTH } from "../../../modules/AuthModule";
 import { INSERT_AUTH_ORDER, DELETE_AUTH_ORDER, SET_AUTH_ORDER, SET_AUTH_ORDER_UPDATE } from "../../../modules/AuthOrderModule";
 
@@ -43,27 +51,55 @@ function AdminAuth() {
         () => {
             setCondition('name'); // 검색 조건 초기화
 
-            dispatch(callGetAuthsAPI({ // 권한 관리 목록 
-                'offset': 0,
-                'limit': 10
-            }));
+            getAuths();
 
-            dispatch(callGetAuthOrderAPI({ // 권한 노출 순서 목록
-                'orderCondition': 'exposure_order',
-                'orderValue': 'asc'
-            }))
+            getAuthOrder();
         },
         []
     );
+    
+    /* API 호출 */
+    const getAuths = () => { // 권한 관리 목록 API 호출
+        
+        dispatch(callGetAuthsAPI({ 
+            'offset': 0,
+            'limit': 30,
+            'orderCondition': 'code',
+            'orderValue': 'desc'
+        }));
+    }
+
+    const getAuthOrder = () => { // 권한 노출 순서 목록 API 호출
+
+        dispatch(callGetAuthOrderAPI({ 
+            'searchCondition': 'activated_yn',
+            'searchValue': 'Y',
+            'orderCondition': 'exposure_order',
+            'orderValue': 'asc'
+        }));
+    }
+
+    const addAuth = () => {
+
+        dispatch(callPostAuthAPI(auth, authOrder));
+    }
+
+    const editAuth = () => {
+        console.log('edit auth 1:', auth);
+        console.log('edit auth 2:', authOrder);
+        dispatch(callPutAuthAPI(auth, authOrder));
+    }
 
     /* 검색 */
     const onClickSearch = () => { // 검색 버튼 클릭
 
         dispatch(callGetAuthsAPI({
             'offset': 0,
-            'limit': 10,
+            'limit': 30,
             'searchCondition': condition,
-            'searchValue': value
+            'searchValue': value,
+            'orderCondition': 'code',
+            'orderValue': 'desc'
         }));
 
         toast.current.show({severity: 'success', summary: `검색완료`, detail: value? `${value}을(를) 포함한 검색결과입니다.`: `모든 권한을 조회합니다.`, life: 2400});
@@ -99,11 +135,24 @@ function AdminAuth() {
 
     /* 권한 등록/수정 모달창(dialogShow) */
     const confirmInsertAuth = () => { // 등록 확인 버튼
+        
+        addAuth();
 
+        //TODO: api에서 중복 사용인데 없으면 안나옴
+        getAuths();
+        getAuthOrder();
+        
         setDialogShow(false);
+
+        toast.current.show({severity: 'success', summary: `새 권한 생성 완료`, detail: `새 권한 '${auth.authorityName}'이(가) 생성되었습니다.`, life: 2400});
     }
 
     const confirmUpdateAuth = () => { // 수정 확인 버튼
+
+        editAuth();
+
+        getAuths();
+        getAuthOrder();
 
         setDialogShow(false);
     }
@@ -130,7 +179,7 @@ function AdminAuth() {
                 authorityExposureOrder: ''
             }
         } 
-        //////////////////////////////// 여기가 문제인거 같음
+        //TODO: 여기가 문제인거 같음
         dispatch({ 
             type: SET_AUTH, 
             payload: payload
@@ -200,8 +249,27 @@ function AdminAuth() {
     }
 
     const onTest = () => {
+        console.log('auth:', auth);
         console.log('authOrder:', authOrder);
         console.log('snapshotOrder:', snapshotOrder);
+    }
+
+    const activatedStyle = (rowData) => {
+
+        return (
+            <div className={
+                    (rowData.authorityActivatedYn === 'Y')
+                    ? AdminAuthCss.activatedY
+                    : AdminAuthCss.activatedN
+                } 
+            >
+                { 
+                    (rowData.authorityActivatedYn === 'Y')
+                    ? '사용 중'
+                    : '미사용'
+                }
+            </div>
+        );
     }
 
     return (
@@ -265,7 +333,7 @@ function AdminAuth() {
                     <Column field="authorityName" header="권한명" sortable></Column>
                     <Column field="authorityDescription" header="권한 설명" sortable></Column>
                     <Column field="authorityExposureOrder" header="노출 순서" sortable></Column>
-                    <Column field="authorityActivatedYn" header="활성화 여부" sortable></Column>
+                    <Column field="authorityActivatedYn" header="활성화 여부" body={activatedStyle} sortable></Column>
                 </DataTable>
             </div>
             
@@ -439,7 +507,6 @@ function AdminAuth() {
                     <div style={{width: '100%', height: '100%'}}>
                         <AdminAuthOrder 
                             selectedCode={auth.authorityCode}
-                            snapshot={snapshotOrder}
                         />
                     </div>
                 </Dialog>

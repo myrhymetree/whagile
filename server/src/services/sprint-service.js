@@ -1,28 +1,25 @@
 const getConnection = require('../database/connection');
-const AuthorityRepository = require('../repositories/authority-repo');
+const SprintRepository = require('../repositories/sprint-repo');
 
-exports.editAuthOrder = (params) => {
+exports.addSprint = (params) => {
 
     return new Promise((resolve, reject) => {
         
         const connection = getConnection();
-
+    
         connection.beginTransaction();
 
         try {
 
-            const results = {};
-
-            const newParams = params.filter(params => { return typeof(params.authorityCode) === 'number' }); // 새로 생성된 권한을 제외한 권한들
-            newParams.map((param, index) => {
-                AuthorityRepository.updateAuth(connection, param);
-            })
+            const results = SprintRepository.insertSprint(connection, params);
 
             connection.commit();
             
             resolve(results);
         } catch(err) {
+
             connection.rollback();
+
             reject(err);
         } finally {
             connection.end();
@@ -30,13 +27,13 @@ exports.editAuthOrder = (params) => {
     });
 }
 
-exports.getAuthHistory = (params) => {
+exports.viewSprints = (params) => {
 
     return new Promise((resolve, reject) => {
         
         const connection = getConnection();
 
-        const results = AuthorityRepository.selectAuthHistory(connection, params);
+        const results = SprintRepository.selectSprints(connection, params);
 
         connection.end();
 
@@ -44,7 +41,35 @@ exports.getAuthHistory = (params) => {
     });
 }
 
-exports.addAuth = (params) => {
+exports.viewSprintHistory = (params) => {
+
+    return new Promise((resolve, reject) => {
+        
+        const connection = getConnection();
+
+        const results = SprintRepository.selectSprintHistory(connection, params);
+
+        connection.end();
+
+        resolve(results);
+    });
+}
+
+exports.viewSprint = (sprintCode) => {
+
+    return new Promise((resolve, reject) => {
+        
+        const connection = getConnection();
+
+        const results = SprintRepository.selectSprint(connection, sprintCode);
+
+        connection.end();
+
+        resolve(results);
+    });
+}
+
+exports.editSprint = (params) => {
 
     return new Promise((resolve, reject) => {
         
@@ -54,51 +79,24 @@ exports.addAuth = (params) => {
 
         try {
 
-            const results = AuthorityRepository.insertAuth(connection, params);
+            const results = SprintRepository.updateSprint(connection, params);
 
             connection.commit();
 
             resolve(results);
-        } catch(err) {
+        } catch (err) {
 
             connection.rollback();
 
             reject(err);
         } finally {
+            
             connection.end();
         }
-    });
-}
-
-exports.viewAuths = (params) => {
-
-    return new Promise((resolve, reject) => {
-        
-        const connection = getConnection();
-
-        const results = AuthorityRepository.selectAuths(connection, params);
-
-        connection.end();
-
-        resolve(results);
-    });
-}
-
-exports.viewAuth = (authorityCode) => {
-
-    return new Promise((resolve, reject) => {
-        
-        const connection = getConnection();
-
-        const results = AuthorityRepository.selectAuth(connection, authorityCode);
-
-        connection.end();
-
-        resolve(results);
     })
 }
 
-exports.editAuth = (params) => {
+exports.deleteSprint = (params) => {
 
     return new Promise((resolve, reject) => {
         
@@ -108,44 +106,19 @@ exports.editAuth = (params) => {
 
         try {
 
-            const results = AuthorityRepository.updateAuth(connection, params);
+            const results = SprintRepository.deleteSprint(connection, params);
 
             connection.commit();
 
             resolve(results);
-        } catch(err) {
+        } catch (err) {
 
             connection.rollback();
 
             reject(err);
         } finally {
+            
             connection.end();
         }
-    });
-}
-
-exports.deleteAuth = (authorityCode) => {
-
-    return new Promise((resolve, reject) => {
-        
-        const connection = getConnection();
-
-        connection.beginTransaction();
-
-        try {
-
-            const results = AuthorityRepository.deleteAuth(connection, authorityCode);
-
-            connection.commit();
-
-            resolve(results);
-        } catch(err) {
-
-            connection.rollback();
-
-            reject(err);
-        } finally {
-            connection.end();
-        }
-    });
+    })
 }
