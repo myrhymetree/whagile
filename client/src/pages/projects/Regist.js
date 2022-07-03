@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate, NavLink } from 'react-router-dom';
-import InvitingModal from '../../components/items/projects/InvitingModal';
 import EmailItems from '../../components/items/projects/Emails';
 
 import { InputText } from 'primereact/inputtext';

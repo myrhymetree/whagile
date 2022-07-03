@@ -15,8 +15,6 @@ import Profile from "./pages/profile/Profile";
 import Dashboard from './pages/project/dashboard/Dashboard';
 import BacklogAndSprint from './pages/project/backlog-and-sprint/BacklogAndSprint';
 import KanbanBoard from "./pages/project/kanban/KanbanBoard";
-import History from './pages/project/History';
-import Management from './pages/project/Management';
 import List  from './pages/projects/List';
 import Regist  from './pages/projects/Regist';
 import History from './pages/project/history/History';
