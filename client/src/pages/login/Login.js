@@ -62,7 +62,7 @@ function Login() {
 
                 window.localStorage.setItem('access_token', json.accessToken);
                 window.localStorage.getItem('access_token') !== 'undefined' 
-                ? navigate('/main') 
+                ? navigate('/project') 
                 : showError('로그인에 실패하였습니다.');
             } else {
                 showError('로그인에 실패하였습니다.');

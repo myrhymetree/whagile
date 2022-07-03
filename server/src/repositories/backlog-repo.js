@@ -1,6 +1,7 @@
 const backlogQuery = require('../database/backlog-query');
 const BacklogDTO = require('../dto/backlog/backlog-response-dto');
 const BacklogDetailDTO = require('../dto/backlog/backlog-detail-response-dto');
+const BacklogHistoryDTO = require('../dto/backlog/backlog-history-response-dto');
 
 /* 백로그 목록 조회를 요청하는 레파지토리 메소드 */
 exports.selectBacklogs = (connection, params) => {
@@ -152,5 +153,31 @@ exports.deleteBacklog = (connection, backlogCode) => {
                 resolve(results);
             }
         );
+    });
+};
+
+/* 백로그 히스토리 조회 요청 */
+exports.selectBacklogHistories = (connection, params) => {
+
+    return new Promise((resolve, reject) => {
+
+        const query = connection.query(
+            backlogQuery.selectBacklogHistories(),
+            [params.offset, params.limit],
+            (err, results, fields) => {
+
+                if(err) {
+                    reject(err);
+                }
+
+                const backlogHistories = [];
+                for(let i = 0; i < results.length; i++) {
+                    backlogHistories.push(new BacklogHistoryDTO(results[i]));
+                }
+
+                resolve(backlogHistories);
+            }
+        );
+        console.log(query.sql);
     });
 };

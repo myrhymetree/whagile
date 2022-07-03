@@ -12,13 +12,15 @@ import Signup from './pages/login/Signup';
 import ProjectLayout from './layouts/ProjectLayout';
 import Main from './pages/main/Main';
 import Profile from "./pages/profile/Profile";
-import Dashboard from './pages/project/Dashboard';
-import BacklogAndSprint from './pages/project/BacklogAndSprint';
+import Dashboard from './pages/project/dashboard/Dashboard';
+import BacklogAndSprint from './pages/project/backlog-and-sprint/BacklogAndSprint';
 import KanbanBoard from "./pages/project/kanban/KanbanBoard";
 import History from './pages/project/History';
 import Management from './pages/project/Management';
 import List  from './pages/projects/List';
 import Regist  from './pages/projects/Regist';
+import History from './pages/project/history/History';
+import Management from './pages/project/management/Management';
 
 // admin
 import AdminLayout from './layouts/AdminLayout';
@@ -52,6 +54,7 @@ function App() {
             <Route path="kanban-board" element={ <KanbanBoard/> }/>
             <Route path="history" element={ <History/> }/>
             <Route path="management" element={ <Management/> }/>
+            <Route path="profile" element={ <Profile/> } />
           </Route>
 
           {/* admin */}
