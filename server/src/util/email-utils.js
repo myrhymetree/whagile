@@ -1,5 +1,90 @@
 const nodemailer = require('nodemailer');
 
+exports.sendSearchPWMail = async (email, pw) => {
+  return new Promise((resolve, reject) => {
+    console.log('sendMail', pw);
+
+    const transporter = nodemailer.createTransport({
+      host: 'smtp.gmail.com',
+      port: 587,
+      secure: false,
+      auth: {
+        user: "whagile99",
+        pass: "rgipfmgcrxrvbzej"
+      }
+    });
+
+    const info = transporter.sendMail({
+      from: `"Whagile Team" <whagile99@gmail.com>"`,
+      to: email,
+      subject: 'Whagile 임시 비밀번호 발급',
+      html: 
+      `<h1>안녕하세요 웨자일 팀입니다.</h1><br/>      
+      <br/>
+      임시 비밀번호는 ${pw} 입니다.
+      <br/>
+      <br/>
+      <br/>
+      <br/>
+      Whagile Team 올림
+      `
+    }, (err, info) => {
+      if(err){
+        console.log(err);
+        reject(err);
+      } else {
+        resolve(info.messageId);
+      }
+    });
+
+  });
+}
+
+
+exports.sendSearchIDMail = async (memberInfo) => {
+
+  return new Promise((resolve, reject) => {
+    console.log('sendMail', memberInfo.email);
+
+    const transporter = nodemailer.createTransport({
+      host: 'smtp.gmail.com',
+      port: 587,
+      secure: false,
+      auth: {
+        user: "whagile99",
+        pass: "rgipfmgcrxrvbzej"
+      }
+    });
+
+    const info = transporter.sendMail({
+      from: `"Whagile Team" <whagile99@gmail.com>"`,
+      to: memberInfo.email,
+      subject: 'Whagile 아이디 찾기',
+      html: 
+      `<h1>안녕하세요 웨자일 팀입니다.</h1><br/>      
+      <br/>
+      요청하신 아이디는 ${memberInfo.memberId} 입니다.
+      <br/>
+      <br/>
+      <br/>
+      <br/>
+      Whagile Team 올림
+      `
+    }, (err, info) => {
+      if(err){
+        console.log(err);
+        reject(err);
+      } else {
+        resolve(info.messageId);
+      }
+    });
+
+  });
+
+
+  
+}
+
 
 exports.sendMail = async (memberInfo, token) => {
   return new Promise((resolve, reject) => {
