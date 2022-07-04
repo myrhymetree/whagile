@@ -49,6 +49,7 @@ const authReducer = handleActions(
             };
         },
         [SET_AUTH]: (state, { payload }) => {
+            console.log('SET_AUTH', payload)
             return payload;
         }
     },
