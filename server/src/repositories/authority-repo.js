@@ -88,7 +88,7 @@ exports.selectAuth = (connection, authorityCode) => {
 }
 
 exports.updateAuth = (connection, params) => {
-
+    
     return new Promise((resolve, reject) => {
 
         connection.query(

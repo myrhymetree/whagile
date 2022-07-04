@@ -45,7 +45,7 @@ exports.addAuth = async (req, res, next) => {
     console.log('addAuth...');
     await AuthorityService.addAuth(req.body)
     .then((results) => {
-
+        
         res.status(HttpStatus.OK).json({
             status: HttpStatus.CREATED,
             message: 'successfully add authority',

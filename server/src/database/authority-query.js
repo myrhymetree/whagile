@@ -93,8 +93,6 @@ exports.selectAuths = (params) => {
         query += `\nLIMIT ${params.offset}, ${params.limit}`;
     }
 
-    console.log(query)
-
     return query;
 };
 
@@ -138,7 +136,9 @@ exports.deleteAuth = () => {
     let query = `
         UPDATE TBL_AUTHORITY
         SET
-            AUTHORITY_DELETED_YN = 'Y'
+              AUTHORITY_DELETED_YN = 'Y'
+            , AUTHORITY_ACTIVATED_YN = 'N'
+            , AUTHORITY_EXPOSURE_ORDER = NULL
         WHERE
             AUTHORITY_CODE = ?
     `;
