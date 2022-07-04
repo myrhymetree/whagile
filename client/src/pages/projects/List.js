@@ -37,8 +37,6 @@ function List() {
         () => {
             dispatch(callGetProjectsAPI({
                 'loginMember': decoded.code,
-                'offset': 0,
-                'limit': 10,
                 'searchValue': searchValue
             }));
         },

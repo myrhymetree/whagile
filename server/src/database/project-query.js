@@ -41,8 +41,7 @@ exports.selectProjects = (params) => {
        query += ` AND ${'A.PROJECT_NAME'} LIKE '%${params.searchValue}%'`;
     }
 
-    query += `ORDER BY A.PROJECT_CODE DESC
-              LIMIT ${params.offset}, ${params.limit} `;
+    query += `ORDER BY A.PROJECT_CODE DESC`;
     return query;
 };
 

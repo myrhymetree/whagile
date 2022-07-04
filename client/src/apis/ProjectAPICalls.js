@@ -33,10 +33,8 @@ export function callGetProjectAPI(params) {
 
 export const  callPostProjectAPI = (projectName, projectDescription) => {
 
-    let requestURL = 'https://localhost:8888/api/projects';
+    let requestURL = `http://localhost:8888/api/projects`;
     const decoded = decodeJwt(window.localStorage.getItem("access_token"));
-
-    console.log('decoded', decoded.code);
 
     return async (dispatch, getState) => {
 
@@ -52,6 +50,8 @@ export const  callPostProjectAPI = (projectName, projectDescription) => {
                 loginMember: decoded.code
             })
         })
-        .then(() => dispatch({ type: POST_PROJECT, payload: result.results }))
+        .then(res => res.json());
+        await dispatch({ type: POST_PROJECT, payload: result.results });
+        await console.log(result.results);
     }
 }

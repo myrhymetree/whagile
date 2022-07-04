@@ -45,33 +45,11 @@ exports.selectProject = (connection, projectCode) => {
     });
 };
 
-exports.selectProjectWithProjectCode = (connection, projectCode) => {
-
-    return new Promise((resolve, reject) => {
-        connection.query(projectQuery.selectProjectWithProjectCode(), [projectCode], (err, results, fields) => {
-
-            if(err) {
-                console.log(err);
-                reject(err);
-            }
-
-            console.log(projectCode);
-            const project = [];
-            for(let i = 0; i < results.length; i++) {
-                project.push(new ProjectDTO(results[i]));
-            }
-
-            resolve(project);
-        });
-    });
-}
-
 exports.registProject= (connection, projectInfo) => {
     return new Promise((resolve, reject) => {
         connection.query(projectQuery.insertProject(),
         [ projectInfo.projectName
         , projectInfo.projectDescription
-        , projectInfo.projectDeletedStatus
         ],
         (err, results, fields) => {
 
@@ -85,14 +63,14 @@ exports.registProject= (connection, projectInfo) => {
     });
 };
 
-exports.registProjectMember = (connection, projectCode, authorityCode, memberCode ) => {
+exports.registProjectMember = (connection, projectCode, projectInfo ) => {
  
     return new Promise((resolve, reject) => {
         console.log("프로젝트번호는?", projectCode);
-        console.log("권한번호는?", authorityCode);
-        console.log("멤버번호는?", memberCode);
         connection.query(projectQuery.insertProjectMember(),
-        [ memberCode, authorityCode, projectCode ],
+        [ projectInfo.loginMember, 
+          1, 
+          projectCode ],
         
         (err, results, fields) => {
 
