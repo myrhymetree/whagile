@@ -32,7 +32,6 @@ export function callGetProjectAPI(params) {
 }
 
 export const  callPostProjectAPI = (projectName, projectDescription) => {
-
     let requestURL = `http://localhost:8888/api/projects`;
     const decoded = decodeJwt(window.localStorage.getItem("access_token"));
 
