@@ -26,8 +26,7 @@ exports.selectProjects = (connection, params) => {
 
 exports.selectProject = (connection, projectCode) => {
     return new Promise((resolve, reject) => {
-        connection.query(projectQuery.selectProjectWithProjectCode(),
-        [ projectCode ], 
+        connection.query(projectQuery.selectProjectWithProjectCode(projectCode), 
         
         (err, results, fields) => {
 
@@ -36,7 +35,12 @@ exports.selectProject = (connection, projectCode) => {
                 reject(err);
             }
 
-            resolve(results);
+            const project = [];
+            project.push(new ProjectDTO(results[0]));
+
+
+
+            resolve(project);
         });
     });
 };
@@ -46,7 +50,6 @@ exports.registProject= (connection, projectInfo) => {
         connection.query(projectQuery.insertProject(),
         [ projectInfo.projectName
         , projectInfo.projectDescription
-        , projectInfo.projectDeletedStatus
         ],
         (err, results, fields) => {
 
@@ -54,40 +57,20 @@ exports.registProject= (connection, projectInfo) => {
                 console.log(err);
                 reject(err);
             }
+            
             resolve(results);
         });
     });
 };
 
-exports.selectProjectWithProjectCode = (connection, projectCode) => {
-
-    return new Promise((resolve, reject) => {
-        connection.query(projectQuery.selectProjectWithProjectCode(), [projectCode], (err, results, fields) => {
-
-            if(err) {
-                console.log(err);
-                reject(err);
-            }
-
-            console.log(projectCode);
-            const project = [];
-            for(let i = 0; i < results.length; i++) {
-                project.push(new ProjectDTO(results[i]));
-            }
-
-            resolve(project);
-        });
-    });
-}
-
-exports.registProjectMember = (connection, projectCode, authorityCode, memberCode ) => {
+exports.registProjectMember = (connection, projectCode, projectInfo ) => {
  
     return new Promise((resolve, reject) => {
         console.log("프로젝트번호는?", projectCode);
-        console.log("권한번호는?", authorityCode);
-        console.log("멤버번호는?", memberCode);
         connection.query(projectQuery.insertProjectMember(),
-        [ memberCode, authorityCode, projectCode ],
+        [ projectInfo.loginMember, 
+          1, 
+          projectCode ],
         
         (err, results, fields) => {
 

@@ -36,19 +36,14 @@ exports.registProject = (projectInfo) => {
 
         const connection = getConnection();
         connection.beginTransaction();
+        console.log(projectInfo);
         
         try {
             const result = await ProjectRepository.registProject(connection, projectInfo);
             
-            // const loginMember = AccountUtils.decodedToken;
-            const loginMember = 1;
-            const authorityCode = 1;
-
-            console.log("로그인한 회원", loginMember);
-
-            const registMember = await ProjectRepository.registProjectMember(connection, result.insertId, authorityCode, loginMember);
+            const registMember = await ProjectRepository.registProjectMember(connection, result.insertId, projectInfo);
             
-            const registedProject = await ProjectRepository.selectProjectWithProjectCode(connection, result.insertId);
+            const registedProject = await ProjectRepository.selectProject(connection, result.insertId);
 
             connection.commit();
 
