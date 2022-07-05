@@ -3,128 +3,101 @@ import PageTitle from '../../../components/items/PageTitle';
 import { Gantt, Task, EventOption, StylingOption, ViewMode, DisplayOption } from 'gantt-task-react';
 import "gantt-task-react/dist/index.css";
 
+import { useState } from "react";
+import { initTasks, getStartEndDateForProject } from "./helpers";
+import { ViewSwitcher } from "./ViewSwitcher";
+
+
 function GanttChart() {
 
-    let tasks = [
-        {
-          id: 'Task 1',
-          name: `task 1`,
-          type:'project', // project, milestone, task
-          start: new Date(2020, 1, 1),
-          end: new Date(2020, 1, 31),
-          progress: 20, // 0 ~ 100
-          dependencies: [],
-          styles: { 
-            // backgroundColor: '',
-            // backgroundSelectedColor: '',
-            progressColor: '#ffbb54', 
-            progressSelectedColor: '#ff9e0d' 
-          },
-          isDisabled: false,
-          // fontSize: '12px',
-          project: '',
-          hideChildren: true,
-        },
-        {
-          id: 'Task 1-1',
-          name: 'task 1-1',
-          type:'milestone',
-          start: new Date(2020, 1, 15),
-          end: new Date(2020, 1, 31),
-          progress: 45,
-          dependencies: ['Task 1'],
-          styles: { 
-            // backgroundColor: '',
-            // backgroundSelectedColor: '',
-            progressColor: '#ffbb54', 
-            progressSelectedColor: '#ff9e0d' 
-          },
-          isDisabled: false,
-          // fontSize: '12px',
-          project: '',
-          hideChildren: false,
-        },
-        {
-          id: 'Task 1-2',
-          name: 'task 1-2',
-          type:'task',
-          start: new Date(2020, 1, 15),
-          end: new Date(2020, 1, 31),
-          progress: 45,
-          dependencies: ['Task 1'],
-          styles: { 
-            // backgroundColor: '',
-            // backgroundSelectedColor: '',
-            progressColor: '#ffbb54', 
-            progressSelectedColor: '#ff9e0d',
-          },
-          isDisabled: false,
-          // fontSize: '12px',
-          project: '',
-          hideChildren: false,
-        },
-        {
-          id: 'Task 2',
-          name: `task 2`,
-          type:'project', // project, milestone, task
-          start: new Date(2020, 1, 1),
-          end: new Date(2020, 1, 31),
-          progress: 10, // 0 ~ 100
-          dependencies: [],
-          styles: { 
-            // backgroundColor: '',
-            // backgroundSelectedColor: '',
-            progressColor: '#ffbb54', 
-            progressSelectedColor: '#ff9e0d' 
-          },
-          isDisabled: false,
-          // fontSize: '12px',
-          project: '',
-          hideChildren: true,
-        },
-    ];
+	const [view, setView] = useState(ViewMode.Day);
+	const [tasks, setTasks] = useState(initTasks());
+	const [isChecked, setIsChecked] = useState(true);
+	let columnWidth = 60;
+	if (view === ViewMode.Month) {
+	  columnWidth = 300;
+	} else if (view === ViewMode.Week) {
+	  columnWidth = 250;
+	}
   
-    // let viewDate = '';
-    // let locale = '';
-    // let rtl = false;
+	const handleTaskChange = (task) => {
+	  console.log("On date change Id:" + task.id);
+	  let newTasks = tasks.map((t) => (t.id === task.id ? task : t));
+	  if (task.project) {
+		const [start, end] = getStartEndDateForProject(newTasks, task.project);
+		const project =
+		  newTasks[newTasks.findIndex((t) => t.id === task.project)];
+		if (
+		  project.start.getTime() !== start.getTime() ||
+		  project.end.getTime() !== end.getTime()
+		) {
+		  const changedProject = { ...project, start, end };
+		  newTasks = newTasks.map((t) =>
+			t.id === task.project ? changedProject : t
+		  );
+		}
+	  }
+	  setTasks(newTasks);
+	};
   
-    const onSelect = () => {};
+	const handleTaskDelete = (task) => {
+	  const conf = window.confirm("Are you sure about " + task.name + " ?");
+	  if (conf) {
+		setTasks(tasks.filter((t) => t.id !== task.id));
+	  }
+	  return conf;
+	};
   
-    const onDblClick = () => {
-      alert('onDblClick');
-    };
+	const handleProgressChange = async (task) => {
+	  setTasks(tasks.map((t) => (t.id === task.id ? task : t)));
+	  console.log("On progress change Id:" + task.id);
+	};
   
-    const onDelete = () => {};
+	const handleDblClick = (task) => {
+	  alert("On Double Click event Id:" + task.id);
+	};
   
-    const onTaskChange = () => {};
+	const handleSelect = (task, isSelected) => {
+	  console.log(task.name + " has " + (isSelected ? "selected" : "unselected"));
+	};
   
-    const onTaskDelete = () => {};
-  
-    const onProgressChange = () => {};
-  
-    const timeStep = () => {};
+	const handleExpanderClick = (task) => {
+	  setTasks(tasks.map((t) => (t.id === task.id ? task : t)));
+	  console.log("On expander click Id:" + task.id);
+	};
 
-    return (
-        <section style={{width: '100%'}}>
-            <PageTitle
-                icon={ <i className="pi pi-fw pi-inbox"></i> }
-                text="백로그 및 스프린트"
-            />
-            
-            <Gantt
-                tasks={ tasks }
-                viewMode={ ViewMode.Week } //Hour, Quarter Day, Half Day, Day, Week(ISO-8601, 1st day is Monday), Month.
-                onSelect={ onSelect }
-                onDoubleClick={ onDblClick }
-                onDelete={ onDelete }
-                onDateChange={ onTaskChange }
-                // onTaskDelete={ onTaskDelete }
-                onProgressChange={ onProgressChange }
-                // timeStep={ timeStep }
-            />
+	return (
+		<>
+			<PageTitle
+				icon={ <i className="pi pi-fw pi-inbox"></i> }
+				text="백로그 및 스프린트"
+			/>
+			
+			<ViewSwitcher
+				onViewModeChange={(viewMode) => setView(viewMode)}
+				onViewListChange={setIsChecked}
+				isChecked={isChecked}
+			/>
 
-        </section>
-    );
+			<div style={{width: '1600px', overflow: 'auto'}}>
+				<Gantt
+					tasks={tasks}
+					viewMode={view}
+					onDateChange={handleTaskChange}
+					onDelete={handleTaskDelete}
+					onProgressChange={handleProgressChange}
+					onDoubleClick={handleDblClick}
+					onSelect={handleSelect}
+					onExpanderClick={handleExpanderClick}
+					listCellWidth={isChecked ? "155px" : ""}
+					// ganttHeight={1000}
+					columnWidth={columnWidth}
+					
+					
+				/>
+			</div>
+		</>
+	);
 }
 
 export default GanttChart;
