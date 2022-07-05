@@ -1,9 +1,18 @@
 const httpStatus = require('http-status');
 const HttpStatus = require('http-status');
+const express = require('express');
+const app = express();
+
 const BacklogService = require('../services/backlog-service');
+
+const { decodedToken } = require('../util/account-utils');
+
+app.use(express.json()); 
+app.use(express.urlencoded({ extended: true }));
 
 /* 백로그 목록 조회 요청 */
 exports.findAllBacklogs = async (req, res, next) => {
+
 
     /* querystring parameter로 넘어온 페이징 조건 및 필터링 조건을 추출 */
     const params = {
@@ -42,15 +51,19 @@ exports.findBacklogsByBacklogCode = async (req, res, next) => {
 /* 새로운 백로그 생성 요청 */
 exports.registNewBacklog = async (req, res, next) => {
 
+    const user = decodedToken(req.get('Access-Token'));
+    console.log(user)
+    console.log(req.params.projectId)
+
     const backlog = {
         title: req.body.title,
         description: req.body.description,
-        category: req.body.category,
+        category: '백로그',
         progressStatus: req.body.progressStatus,
         urgency: req.body.urgency,
         issue: req.body.issue,
-        projectCode: req.body.projectCode,
-        creatorCode:  req.body.creatorCode
+        projectCode: req.params.projectCode,
+        creatorCode: user.usercode
     };
     console.log('backlog : ', backlog);
 
