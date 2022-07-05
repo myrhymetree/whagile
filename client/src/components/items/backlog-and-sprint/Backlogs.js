@@ -27,6 +27,7 @@ function Backlogs() {
             <div>
                 <DivHeader/>
                 <div>
+                    
                     <BacklogItem visibleRight={ visibleRight } setVisibleRight={ setVisibleRight }/>
                     <Sidebar 
                         id={ BacklogAndSprintCSS.backlogDetail }
@@ -34,31 +35,27 @@ function Backlogs() {
                         position="right" 
                         onHide={() => setVisibleRight(false)}
                     >
-                        <div id={ BacklogAndSprintCSS.backlogSummary }>
+                        <div>
                         <h3>백로그 제목</h3>
-                            <h5>설명</h5>
+                            <h6 id={ BacklogAndSprintCSS.fontColoring }>설명</h6>
                             <p>설명입니다.</p>
 
-                            <h5>세부정보</h5>
+                            <h6 id={ BacklogAndSprintCSS.fontColoring }>세부정보</h6>
                             <div id={ BacklogAndSprintCSS.detailDiv }>
-                                <label>카테고리</label><label>일반</label><br/>
-                                <label>상위 스프린트</label><Dropdown/><br/>
-                                <label>시작일</label><label>2020 20 20</label><br/>
-                                <label>종료일</label><label>2020 20 20</label><br/>
-                                <label>진행 상태</label><label>진행 전</label><br/>
-                                <label>긴급도</label><label>낮음</label><br/>
-                                <label>담당자</label><Dropdown/><br/>
+                                <p><label>카테고리</label><label>일반</label></p>
+                                <p><label>상위 스프린트</label><Dropdown/></p>
+                                <p><label>시작일</label><label>2020 20 20</label></p>
+                                <p><label>종료일</label><label>2020 20 20</label></p>
+                                <p><label>진행 상태</label><label>진행 전</label></p>
+                                <p><label>긴급도</label><label>낮음</label></p>
+                                <p><label>담당자</label><Dropdown/></p>
                             </div>
-                            <h5>댓글</h5>
+                            <h6 id={ BacklogAndSprintCSS.fontColoring }>댓글</h6>
                             <div>
-                                <BacklogComment/>
-                                <BacklogComment/>
-                                <BacklogComment/>
-                                <BacklogComment/>
                                 <BacklogComment/>
                             </div>
                             <div id={ BacklogAndSprintCSS.newComment }>
-                                <label>댓글 작성</label>
+                                <h6 id={ BacklogAndSprintCSS.fontColoring }>댓글 작성</h6>
                                 <InputTextarea 
                                     id={ BacklogAndSprintCSS.inputComment }
                                     value={ content } 
