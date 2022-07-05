@@ -12,14 +12,6 @@ import Signup from './pages/login/Signup';
 import ProjectLayout from './layouts/ProjectLayout';
 import Main from './pages/main/Main';
 import Profile from "./pages/profile/Profile";
-<<<<<<< HEAD
-import Dashboard from './pages/project/Dashboard';
-import BacklogAndSprint from './pages/project/BacklogAndSprint';
-import KanbanBoards from "./pages/project/kanban/KanbanBoards";
-import History from './pages/project/History';
-import Management from './pages/project/Management';
-import List  from './pages/list/List';
-=======
 
 import Dashboard from './pages/project/dashboard/Dashboard';
 import BacklogAndSprint from './pages/project/backlog-and-sprint/BacklogAndSprint';
@@ -29,7 +21,6 @@ import List  from './pages/projects/List';
 import Regist  from './pages/projects/Regist';
 import History from './pages/project/history/History';
 import Management from './pages/project/management/Management';
->>>>>>> 04e74ad9854feeea9d740be79f1c036bad550cf0
 
 // admin
 import AdminLayout from './layouts/AdminLayout';
@@ -59,13 +50,8 @@ function App() {
           <Route path="/project/:projectCode" element={ <ProjectLayout/>} >
             <Route path="dashboard" element={ <Dashboard/> }/>
             <Route path="backlog-and-sprint" element={ <BacklogAndSprint/> }/>
-<<<<<<< HEAD
-            {/* <Route path=":projectId/sprint" element={ <Sprint/> }/> */}
-            <Route path="kanban-boards" element={ <KanbanBoards/> }/>
-=======
             <Route path="gantt" element={ <GanttChart/> }/>
             <Route path="kanban-board" element={ <KanbanBoard/> }/>
->>>>>>> 04e74ad9854feeea9d740be79f1c036bad550cf0
             <Route path="history" element={ <History/> }/>
             <Route path="management" element={ <Management/> }/>
             <Route path="profile" element={ <Profile/> } />
