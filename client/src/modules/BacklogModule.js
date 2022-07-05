@@ -4,16 +4,16 @@ import { createActions, handleActions } from 'redux-actions';
 const initialState = [];
 
 /* 액션 */
-export const GET_BACKLOGS = 'backlogs/GET_BACKLOGS';
+export const FIND_BACKLOGS = 'backlog/FIND_BACKLOGS';
 
 const actions = createActions({
-    [GET_BACKLOGS]: () => {}
+    [FIND_BACKLOGS]: () => {}
 });
 
 /* 리듀서 */
 const backlogReducer = handleActions(
     {
-        [GET_BACKLOGS]: (state, { payload }) => {
+        [FIND_BACKLOGS]: (state, { payload }) => {
             return payload;
         }
     },
