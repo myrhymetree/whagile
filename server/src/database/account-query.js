@@ -22,6 +22,7 @@ exports.selectMemberWithMemberCode = () => {
         SELECT
               A.MEMBER_CODE
             , A.MEMBER_ID
+            , A.MEMBER_PASSWORD
             , A.MEMBER_EMAIL
             , A.MEMBER_PHONE
             , A.MEMBER_CREATED_DATE
@@ -33,6 +34,27 @@ exports.selectMemberWithMemberCode = () => {
             , A.MEMBER_NAME
           FROM TBL_MEMBER A
          WHERE A.MEMBER_CODE = ?
+    `;
+}
+
+exports.selectMemberWithEmail = () => {
+  return `
+        SELECT
+              A.MEMBER_CODE
+            , A.MEMBER_ID
+            , A.MEMBER_PASSWORD
+            , A.MEMBER_EMAIL
+            , A.MEMBER_PHONE
+            , A.MEMBER_CREATED_DATE
+            , A.MEMBER_ROLE
+            , A.MEMBER_SECESSION_YN
+            , A.MEMBER_COMPANY
+            , A.MEMBER_OCCUPATION
+            , A.MEMBER_PURPOSE
+            , A.MEMBER_NAME
+            , A.MEMBER_EMAIL_AUTH
+          FROM TBL_MEMBER A
+         WHERE A.MEMBER_EMAIL = ?
     `;
 }
 

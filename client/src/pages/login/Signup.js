@@ -89,6 +89,10 @@ function Signup() {
         </React.Fragment>
     );
 
+    const onClickLoginPage = () => {
+        navigate('/') 
+    }
+
     return (
       <div className="formDiv login-center">
             <Toast ref={toast} position="top-center" />
@@ -219,8 +223,13 @@ function Signup() {
                         label="가입" 
                         className="p-button-success p-button-sm" 
                     />
-
-                    <NavLink to="/">로그인페이지로</NavLink>
+                    <Button 
+                        style={{ width: '100%' }} 
+                        className="p-button-warning p-button-text" 
+                        label="로그인페이지로" 
+                        onClick={ onClickLoginPage }
+                    />     
+                    {/* <NavLink to="/">로그인페이지로</NavLink> */}
                 </form>
               </div>
           </div>

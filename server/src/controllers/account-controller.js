@@ -24,6 +24,28 @@ exports.selectAccounts = async (req, res, next) => {
         });
 };
 
+exports.selectAccount = async (req, res, next) => {
+
+    await AccountService.selectAccountWithMemberCode(req.query.code)
+        .then((results) => {
+
+            res.status(HttpStatus.OK).json({
+                status: HttpStatus.OK,
+                message: 'successfully selectAccount!!',
+                results: results
+            });
+
+        })
+        .catch((err) =>{
+
+            res.status(HttpStatus.BAD_REQUEST).json({
+                status: HttpStatus.BAD_REQUEST,
+                message: err
+            });
+
+        });
+}
+
 exports.emailAuth = async (req, res, next) => {
     
     console.log(req.query);
@@ -97,14 +119,14 @@ exports.loginAccount = async (req, res, next) => {
 exports.searchID = async (req, res, next) => {
 
     console.log('searchID called');
-
-    await AccountService.selectAccountWithMemberCode(req.params.id)
+    const email = req.query.email;
+    await AccountService.selectAccountAndSendEmail(email)
         .then((resData) => {
             console.log(resData);
             res.status(HttpStatus.OK).json({
                 status: HttpStatus.OK,
                 message: 'successfully Search ID!!',
-                result: resData[0]
+                result: resData
             });
 
         })
@@ -118,11 +140,12 @@ exports.searchID = async (req, res, next) => {
 
 };
 
-exports.updatePwd = async (req, res, next) => {
+exports.updateTempPwd = async (req, res, next) => {
 
-    console.log('updatePwd called');
-
-    await AccountService.updateAccountWithTempPwd(req.body)
+    console.log('updateTempPwd called');
+    console.log(req.query);
+    const memberInfo = req.query;
+    await AccountService.updateAccountWithTempPwd(memberInfo)
         .then((resData) => {
             console.log(resData);
             res.status(HttpStatus.OK).json({
@@ -136,6 +159,26 @@ exports.updatePwd = async (req, res, next) => {
                 status: HttpStatus.BAD_REQUEST,
                 message: err
             });
+        });   
+}
 
+exports.updatePwd = async (req, res, next) => {
+    console.log('updatePwd called');    
+    const pwInfo = req.body.pwdUpdateData;
+    
+    await AccountService.updateAccountWithPwd(pwInfo)
+        .then((resData) => {
+            console.log(resData);
+            res.status(HttpStatus.OK).json({
+                status: HttpStatus.OK,
+                message: 'successfully Update PWD!!'
+            });
+
+        })
+        .catch((err) =>{
+            res.status(HttpStatus.BAD_REQUEST).json({
+                status: HttpStatus.BAD_REQUEST,
+                message: err
+            });
         });   
 }
