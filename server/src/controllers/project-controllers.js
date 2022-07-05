@@ -47,7 +47,6 @@ exports.registProject = async (req, res, next) => {
 
     await ProjectService.registProject(req.body)
         .then((result) => {
-
             res.status(HttpStatus.CREATED).json({
                 status: HttpStatus.CREATED,
                 message: 'successfully regist Project',
