@@ -1,11 +1,7 @@
 import BacklogModalsCSS from './BacklogModals.module.css';
 
-import { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { INSERT_BACKLOG } from '../../../modules/BacklogModule';
-
-import { callGetBacklogsAPI } from '../../../apis/BacklogAPICalls';
-/* 스프린트 목록 조회 api도 임포트해야함 */
+import { useState } from 'react';
+import { useParams } from 'react-router-dom';
 
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
@@ -14,8 +10,8 @@ import { InputText } from 'primereact/inputtext';
 import { InputTextarea } from 'primereact/inputtextarea';
 
 function BacklogCreationModal() {
-
-    const dispatch = useDispatch();
+    
+    const { projectCode } = useParams();
 
     /* state 정의 */
     const [displayDialog, setDisplayDialog] = useState(false);
@@ -26,6 +22,8 @@ function BacklogCreationModal() {
     const [selectedProgressStatus, setSelectedProgressStatus] = useState(null);
     const [selectedUrgency, setSelectedUrgency] = useState(null);
     const [selectedIssue, setSelectedIssue] = useState(null);
+
+    const [successfullyRegistered, setsuccessfullyRegistered] = useState(false);
 
     /* dropdown 옵션 정의 */
     const progressStatusOptions = [
@@ -48,7 +46,8 @@ function BacklogCreationModal() {
         description: description,
         progressStatus: selectedProgressStatus,
         urgency: selectedUrgency,
-        issue: selectedIssue
+        issue: selectedIssue,
+        projectCode: projectCode
     };
 
     /* 다이얼로그 표시 */
@@ -63,6 +62,7 @@ function BacklogCreationModal() {
     /* 다이얼로그 닫기 */
     const onHide = (displayDialog) => {
        setDisplayDialog(false);
+       setsuccessfullyRegistered(false);
        /* 다이얼로그 창이 닫힐 때 저장된 input state를 초기화한다. */
        setTitle('');
        setDescription('');
@@ -80,14 +80,20 @@ function BacklogCreationModal() {
         } else {
             fetch('http://localhost:8888/api/backlogs', {
                 method: 'POST',
-
                 headers: {
                     'Content-Type': 'application/json',
                     'Access-Token': window.localStorage.getItem('access_token')
                 },
                 body: JSON.stringify(newBacklog)
             }).then((res) => res.json())
-            .then((result) => console.log(result));
+            .then((result) => { 
+                if(result.status == 201) {
+                    alert(result.message);
+                    setsuccessfullyRegistered(true);
+                } else {
+                    alert(result.status);
+                }
+            }).then(onHide(displayDialog));
         };
     };
 
@@ -98,7 +104,7 @@ function BacklogCreationModal() {
                     id={ BacklogModalsCSS.createBtn }
                     label="만들기" 
                     onClick={ () => registNewBacklog(newBacklog) }
-                    />
+                />
                 <Button 
                     id={ BacklogModalsCSS.cancelBtn }
                     label="취소" 
@@ -179,7 +185,7 @@ function BacklogCreationModal() {
                 >
                     <small 
                         className="p-error block"
-                        >
+                    >
                         *은 필수 입력 사항입니다.
                     </small>
                 </div>
