@@ -3,17 +3,17 @@ const ProjectService = require('../services/project-service');
 
 exports.selectProjects = async (req, res, next) => {
 
+    console.log(req.query)
     await ProjectService.selectProjects(req.query)
         .then((results) => {
 
             res.status(HttpStatus.OK).json({
                 status: HttpStatus.OK,
-                message: 'successfully selectProjects!!',
+                message: '프로젝트 목록을 조회했습니다.',
                 results: results
             });
 
-        })
-        .catch((err) =>{
+        }).catch((err) =>{
 
             res.status(HttpStatus.BAD_REQUEST).json({
                 status: HttpStatus.BAD_REQUEST,
@@ -33,8 +33,7 @@ exports.selectProject = async (req, res, next) => {
                 message: 'successfully selected Project',
                 results: result
             });
-        })
-        .catch((err) => {
+        }).catch((err) => {
 
             res.status(HttpStatus.BAD_REQUEST).json({
                 status: HttpStatus.OK,
@@ -48,14 +47,12 @@ exports.registProject = async (req, res, next) => {
 
     await ProjectService.registProject(req.body)
         .then((result) => {
-
             res.status(HttpStatus.CREATED).json({
                 status: HttpStatus.CREATED,
                 message: 'successfully regist Project',
                 results: result
             });
-        })
-        .catch((err) => {
+        }).catch((err) => {
 
             res.status(HttpStatus.BAD_REQUEST).json({
                 status:HttpStatus.BAD_REQUEST,
@@ -74,8 +71,7 @@ exports.modifyProject = async (req, res, next) => {
                 message: 'successfully updatedProject!!',
                 results: result
             });
-        })
-        .catch((err) => {
+        }).catch((err) => {
             
             res.status(HttpStatus.BAD_REQUEST).json({
                 status:HttpStatus.BAD_REQUEST,
@@ -94,11 +90,29 @@ exports.removeProject = async (req, res, next) => {
                 message: 'successfully removedProject!!',
                 results: result
             });
-        })
-        .catch((err) => {
+        }).catch((err) => {
 
             res.status(HttpStatus.BAD_REQUEST).json({
                 status: HttpStatus.BAD_REQUEST,
+                message: err
+            });
+        });
+}
+
+exports.findProjectMember = async (req, res, next) => {
+    
+    await ProjectService.findProjectMember(req.params.projectCode)
+        .then((results) => {
+
+            res.status(HttpStatus.OK).json({
+                status: HttpStatus.OK,
+                message: '프로젝트 팀원 목록을 조회했습니다.',
+                results: results
+            });
+        }).catch((err) => {
+
+            res.status(HttpStatus.OK).json({
+                status: HttpStatus.OK,
                 message: err
             });
         });

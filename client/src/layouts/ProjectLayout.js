@@ -1,16 +1,20 @@
-import { Outlet } from 'react-router-dom';
+import { Outlet, useParams } from 'react-router-dom';
 import MainHeader from '../components/commons/MainHeader';
 import MainNavbar from '../components/commons/MainNavbar';
-import MainLayoutCSS from './MainLayout.module.css';
+import ProjectLayoutCSS from './ProjectLayout.module.css';
 
 function ProjectLayout() {
+
+    const { projectCode } = useParams();
 
     return (
         <div>
             <MainHeader/>
-            <div className={ MainLayoutCSS.layout }>
-                <MainNavbar/>
-                <Outlet/>
+            <div className={ ProjectLayoutCSS.layout }>
+                <MainNavbar projectCode={ projectCode }/>
+                <main className={ ProjectLayoutCSS.main }>
+                    <Outlet/>
+                </main>
             </div>
         </div>
     );

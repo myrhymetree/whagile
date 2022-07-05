@@ -5,17 +5,82 @@ const EmailUtils = require('../util/email-utils');
 const jwt = require('jsonwebtoken');
 const { JWT_SECRET } = process.env;
 
+exports.updateAccountWithPwd = (pwInfo) => {
+
+    return new Promise(async (resolve, reject) => {
+
+        const connection = getConnection();
+
+        const userInfo = await AccountRepository.selectAccountWithMemberCode(connection, pwInfo.memberCode);
+        console.log('userInfo', userInfo);
+        const passwordCompareResult = await AccountUtils.checkPassword(pwInfo.originPassword, userInfo[0].password);
+        console.log('passwordCompareResult',passwordCompareResult);
+
+        if(!passwordCompareResult){
+            // 패스워드 불일치
+            console.log('Invalid password');
+            return reject("Invalid password");
+        } 
+
+        pwInfo.password = await AccountUtils.setPassword(pwInfo.password);
+
+        const results = await AccountRepository.updatePwd(connection, pwInfo);
+        connection.end();
+
+        resolve(results);
+    });
+
+}
+
+
+
 exports.updateAccountWithTempPwd = (tempInfo) => {
 
     return new Promise(async (resolve, reject) => {
 
         const connection = getConnection();
-        tempInfo.password = await AccountUtils.setPassword(tempInfo.password);   
-        const results = AccountRepository.updatePwd(connection, tempInfo);
+
+        const validID = await AccountRepository.selectAccountWithMemberIdAndEmail(connection, tempInfo);
+
+        if(validID.length < 1) {
+            console.log('Invalid ID or email');
+            return reject('Invalid ID or email');
+        }
+        
+        tempInfo.memberCode = validID[0].memberCode;
+        const tempPwd = await AccountUtils.generateTempPassword(); 
+        tempInfo.password = await AccountUtils.setPassword(tempPwd);
+
+        const results = await AccountRepository.updatePwd(connection, tempInfo);
+        
+        await EmailUtils.sendSearchPWMail(validID[0].email, tempPwd);
 
         connection.end();
 
         resolve(results);
+    });
+
+}
+
+exports.selectAccountAndSendEmail = (email) => {
+    console.log('selectAccountAndSendEmail');
+
+    return new Promise(async (resolve, reject) => {
+
+        const connection = getConnection();
+
+        const results = await AccountRepository.selectAccountWithEmail(connection, email);
+        console.log(results);
+        if(results.length < 1) {
+            console.log('Invalid Email Address');
+            return reject('Invalid Email Address');
+        }
+        console.log(results[0]);
+        await EmailUtils.sendSearchIDMail(results[0]);
+
+        connection.end();
+
+        resolve(results[0]);
     });
 
 }
@@ -35,6 +100,7 @@ exports.selectAccounts = () => {
     });
 };
 
+
 exports.selectAccountWithMemberCode = (memberCode) => {
 
     return new Promise((resolve, reject) => {
@@ -48,6 +114,9 @@ exports.selectAccountWithMemberCode = (memberCode) => {
         resolve(results);
     });
 }
+
+
+
 
 exports.registerAccount = (memberInfo) => {
 

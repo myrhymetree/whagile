@@ -5,13 +5,13 @@ header#admin {
     color: white;
     display: flex;
     flex-direction: row;
-    justify-content: space-between !important;
+    justify-content: space-between;
     align-items: center;
     border-bottom: 1px solid #333544;
 }
 
 header#admin>div {
-    width: auto !important;
+    width: auto;
     height: 100%;
     display: flex;
     flex-direction: row;

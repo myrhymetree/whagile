@@ -116,9 +116,54 @@ exports.updateAccountWithToken = (connection, memberCode) => {
     });
 }
 
-exports.updatePwd = (connection, tempInfo) => {
+
+exports.selectAccountWithEmail = (connection, email) => {
     return new Promise((resolve, reject) => {
         
+        console.log('selectAccountWithEmail', email);
+        connection.query(accountQuery.selectMemberWithEmail(), [email], (err, results, fields) => {
+
+            if(err) {
+                console.log(err);
+                reject(err);
+            }
+
+            const member = [];
+            for(let i = 0; i < results.length; i++) {
+                member.push(new MemberDTO(results[i]));
+            }
+
+            resolve(member);
+        });
+    });
+}
+
+exports.selectAccountWithMemberIdAndEmail = (connection, memberInfo) => {
+    return new Promise((resolve, reject) => {
+        
+        console.log('selectAccountWithEmail', memberInfo);
+        connection.query(accountQuery.selectMemberWithEmail(), [memberInfo.email, memberInfo.id]
+        , (err, results, fields) => {
+
+            if(err) {
+                console.log(err);
+                reject(err);
+            }
+
+            const member = [];
+            for(let i = 0; i < results.length; i++) {
+                member.push(new MemberDTO(results[i]));
+            }
+
+            resolve(member);
+        });
+    });
+}
+
+exports.updatePwd = (connection, tempInfo) => {
+
+    return new Promise((resolve, reject) => {
+        console.log('accountQuery', tempInfo);
         connection.query(
             accountQuery.updateAccountWithTempPWD(), 
             [tempInfo.password, tempInfo.memberCode], 
@@ -139,4 +184,5 @@ exports.updatePwd = (connection, tempInfo) => {
                 resolve(results);
             });
     });
+    
 };

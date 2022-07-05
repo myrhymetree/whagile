@@ -102,3 +102,21 @@ exports.removeBacklog = async (req, res, next) => {
         url: 'localhost:8888/api/backlogs?offset=0&limit=10'
     });
 };
+
+/* 백로그 히스토리 조회 요청 */
+exports.findBacklogHistories = async (req, res, next) => {
+    
+    const params = {
+        offset: Number(req.query.offset),
+        limit: Number(req.query.limit)
+    };
+    
+    const results = await BacklogService.findBacklogHistories(params);
+
+    res.status(HttpStatus.OK).json({
+        status: HttpStatus.OK,
+        message: '정상적으로 백로그 히스토리 조회했습니다.',
+        results: results
+    });
+
+};
