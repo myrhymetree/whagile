@@ -1,4 +1,3 @@
-// 전체 일감 목록 조회
 exports.selectTasks = (params) => {
   console.log("progressStatus: ", params.progressStatus);
   let query = `
@@ -25,10 +24,11 @@ exports.selectTasks = (params) => {
         AND BACKLOG_CATEGORY = '일감'
         ORDER BY BACKLOG_CODE ASC
     `;
+
   return query;
 };
 
-// 개별 일감 조회
+
 exports.selectTaskbyTaskCode = () => {
   let query = `
        SELECT
@@ -56,9 +56,10 @@ exports.selectTaskbyTaskCode = () => {
         ORDER BY BACKLOG_CODE ASC
     `;
   return query;
-};
+}
 
-// 개별 일감 생성
+
+
 exports.insertNewTask = () => {
   return `
       INSERT INTO TBL_BACKLOG 
@@ -78,21 +79,4 @@ exports.insertNewTask = () => {
         VALUES 
       (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `;
-};
-
-// 개별 일감 수정
-
-exports.updateTask = () => {
-  return `
-        UPDATE TBL_BACKLOG
-        SET
-              BACKLOG_TITLE = ?
-            , BACKLOG_DESCRIPTION = ?
-            , BACKLOG_PROGRESS_STATUS = ?
-            , BACKLOG_URGENCY = ?
-            , BACKLOG_CHARGER_CODE = ?
-            , BACKLOG_ISSUE = ?
-        WHERE
-            BACKLOG_CODE = ?
-    `;
 };

@@ -1,7 +1,7 @@
 class TasksDTO {
   backlogCode; //백로그 번호
   backlogTitle; //백로그 제목
-  backlogDescription; //백로그 설명
+  backlogDiscription; //백로그 설명
   issue; //이슈여부
   urgency; //긴급도
   progressStatus; //진행상태
@@ -15,7 +15,7 @@ class TasksDTO {
   constructor(data) {
     this.backlogCode = data.BACKLOG_CODE;
     this.backlogTitle = data.BACKLOG_TITLE;
-    this.backlogDescription = data.BACKLOG_DESCRIPTION;
+    this.backlogDiscription = data.BACKLOG_DESCRIPTION;
     this.issue = data.BACKLOG_ISSUE;
     this.urgency = data.BACKLOG_URGENCY;
     this.progressStatus = data.BACKLOG_PROGRESS_STATUS;
