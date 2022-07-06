@@ -146,9 +146,9 @@ exports.deleteProject = () => {
 exports.selectProjectMember = (projectCode) => {
   return `
     SELECT
-           A.MEMBER_CODE
+           B.MEMBER_ID
          , B.MEMBER_NAME
-         , A.AUTHORITY_CODE
+         , B.MEMBER_EMAIL
          , C.AUTHORITY_NAME
       FROM TBL_PROJECT_MEMBER A
       JOIN TBL_MEMBER B ON (A.MEMBER_CODE = B.MEMBER_CODE)
