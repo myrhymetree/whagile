@@ -6,7 +6,7 @@ import { Button } from "primereact/button";
 import Icon from "@mdi/react";
 import { mdiMonitorDashboard } from "@mdi/js";
 
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from "react-router-dom"; /* 페이지 강제 이동 */
 
@@ -15,10 +15,8 @@ function MainNavbar({projectCode}) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const project = useSelector(state => state.projectsReducer);
-  console.log(project);
 
   const number = parseInt(`${projectCode}`);
-  console.log('project', number);
 
   let items = [
     {
@@ -66,12 +64,14 @@ function MainNavbar({projectCode}) {
   ];
 
   useEffect(
-    () => {
-        dispatch(callGetProjectAPI({
+    () =>
+    {
+         dispatch(callGetProjectAPI({
             'projectCode': number
         }));
     },
     []
+
 );
 
   return (
@@ -83,7 +83,7 @@ function MainNavbar({projectCode}) {
           size={0.8}
           color="#9B9EA3"
         />
-        <span style={{ marginLeft: "8px" }}>{ project[0].projectName }</span>
+        <span style={{ marginLeft: "8px" }}>{ (project.length !== 0)? project[0].projectName: '' }</span>
       </div>
       <div>
         <Menu model={ items }/>

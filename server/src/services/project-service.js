@@ -123,3 +123,26 @@ exports.findProjectMember = (projectCode) => {
 
     });
 }
+
+exports.registProjectMember = (data) => {
+    
+    return new Promise(async (resolve, reject) => {
+
+        const connection = getConnection();
+        connection.beginTransaction();
+        
+        try {
+            const result = await ProjectRepository.insertProjectMember(connection, data);
+            
+            connection.commit();
+
+            resolve(result);
+        } catch (err) {
+            connection.rollback();
+
+            reject(err);
+        } finally {
+            connection.end();
+        }
+    });
+}

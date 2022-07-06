@@ -14,6 +14,8 @@ import { Toast } from 'primereact/toast';
 import { Ripple } from 'primereact/ripple';
 import { Dropdown } from 'primereact/dropdown';
 import { classNames } from 'primereact/utils';
+import { ColumnGroup } from 'primereact/columngroup';
+import { Row } from 'primereact/row';
 
 const decoded = decodeJwt(window.localStorage.getItem("access_token"));
 
@@ -45,7 +47,7 @@ function List() {
 
     const onRowSelect = (event) => {
         // toast.current.show({ severity: 'info', summary: 'Product Selected', detail: `Name: ${event.projects.peojectCode}`, life: 3000 });
-        navigate(`/project/${event.data.projectCode}`)
+        navigate(`/project/${event.rowData.projectCode}`);
     }
 
     const onRowUnselect = (event) => {
@@ -91,6 +93,51 @@ function List() {
 
     };
 
+    const statusBodyTemplate = () => {
+        return <span className={`pi pi-ellipsis-h`}></span>;
+    }
+
+    const items = [
+        {
+            label: 'Update',
+            icon: 'pi pi-refresh',
+            command: (e) => {
+                toast.current.show({severity:'success', summary:'Updated', detail:'Data Updated'});
+            }
+        },
+        {
+            label: 'Delete',
+            icon: 'pi pi-times',
+            command: (e) => {
+                toast.current.show({ severity: 'success', summary: 'Delete', detail: 'Data Deleted' });
+            }
+        },
+        {
+            label: 'React Website',
+            icon: 'pi pi-external-link',
+            command:(e) => {
+                window.location.href = 'https://facebook.github.io/react/'
+            }
+        },
+        {   label: 'Upload',
+            icon: 'pi pi-upload',
+            command:(e) => {
+                window.location.hash = "/fileupload"
+            }
+        }
+    ]
+
+    const footer = `총  ${projects ? projects.length : 0}개의 프로젝트가 있습니다.`;
+
+    let headerGroup = <ColumnGroup>
+                        <Row>
+                            <Column field="projectName" header="이름" style={{ width: '25%' }} sortable></Column>
+                            <Column field="projectDescription" header="설명" style={{ width: '35%' }}></Column>
+                            <Column field="remainedTask" header="내 일감"></Column>
+                            <Column field="projectOwner" header="프로젝트 소유자" sortable></Column>
+                        </Row>
+                    </ColumnGroup>;
+
     return (
         <>
             <MainHeader/>
@@ -114,7 +161,9 @@ function List() {
                     <DataTable
                         value={projects} 
                         paginator responsiveLayout="scroll"
-                        selectionMode="single"
+                        selectionMode="multiple"
+                        cellSelection
+                        selection={selectedProduct1} 
                         dataKey="projectCode"
                         paginatorTemplate="CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
                         currentPageReportTemplate="Showing {first} to {last} of {totalRecords}" 
@@ -122,14 +171,17 @@ function List() {
                         rowsPerPageOptions={[10,20,50]}
                         paginatorLeft={paginatorLeft} 
                         paginatorRight={paginatorRight}
-                        selection={selectedProduct1} 
                         onSelectionChange={e => setSelectedProduct1(e.value)}
-                        onRowSelect={onRowSelect} onRowUnselect={onRowUnselect}
+                        onCellSelect={onRowSelect} 
+                        onCellUnselect={onRowUnselect}
+                        footer={footer}
+                        headerColumnGroup={headerGroup}
                     >
                         <Column field="projectName" header="이름" style={{ width: '25%' }} sortable></Column>
                         <Column field="projectDescription" header="설명" style={{ width: '35%' }}></Column>
                         <Column field="remainedTask" header="내 일감"></Column>
                         <Column field="projectOwner" header="프로젝트 소유자" sortable></Column>
+                        <Column field="" header="dfdd" body={statusBodyTemplate} model={items} onClick={ () => console.log('바보')}></Column>
                     </DataTable>
                 </div>
             </main>
