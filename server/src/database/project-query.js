@@ -53,6 +53,13 @@ exports.selectProjectWithProjectCode = (projectCode) => {
              , A.PROJECT_NAME
              , A.PROJECT_DESCRIPTION
              , (SELECT
+                       M.MEMBER_CODE
+                  FROM TBL_PROJECT_MEMBER PM
+                  JOIN TBL_MEMBER M ON(PM.MEMBER_CODE = M.MEMBER_CODE)
+                 WHERE PM.PROJECT_CODE = A.PROJECT_CODE
+                   AND PM.AUTHORITY_CODE = 1
+              ) PROJECT_OWNER_CODE
+             , (SELECT
                        M.MEMBER_NAME
                   FROM TBL_PROJECT_MEMBER PM
                   JOIN TBL_MEMBER M ON(PM.MEMBER_CODE = M.MEMBER_CODE)
@@ -146,7 +153,8 @@ exports.deleteProject = () => {
 exports.selectProjectMember = (projectCode) => {
   return `
     SELECT
-           B.MEMBER_ID
+           A.MEMBER_CODE
+         , B.MEMBER_ID
          , B.MEMBER_NAME
          , B.MEMBER_EMAIL
          , C.AUTHORITY_NAME
