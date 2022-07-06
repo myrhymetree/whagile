@@ -1,18 +1,45 @@
 import AdminNavbarCss from './AdminNavbar.module.css';
 import { Menu } from 'primereact/menu';
+import { useState, useProps, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 function AdminNavbar() {
 
     const navigate = useNavigate();
+    const [selectedMenu, setSelectedMenu] = useState();
+    const menus = [
+        'dashboard',
+        'member',
+        'auth',
+        'product',
+        'inquery',
+        'statistics'
+    ];
+
+    useEffect(
+        () => {
+            const url = window.location.pathname;
+            const path = url.substring(7);
+            const copyMenus = [...menus];
+
+            copyMenus.filter(
+                (menu) => {
+                    if(path.includes(menu)) {
+                        setSelectedMenu(menu);
+                    }
+                }
+            )
+        },
+        [window.location.pathname]
+    );
 
     let items = [
-        {label: '대시보드', icon: 'pi pi-fw pi-chart-bar', command:()=>{ navigate(`/admin`); }},
-        {label: '회원관리', icon: 'pi pi-fw pi-user', command:()=>{ navigate(`/admin/member`); }},
-        {label: '권한관리', icon: 'pi pi-fw pi-key', command:()=>{ navigate(`/admin/auth`); }},
-        {label: '상품관리', icon: 'pi pi-fw pi-shopping-bag', command:()=>{ navigate(`/admin/product`); }},
-        {label: '고객센터', icon: 'pi pi-fw pi-phone', command:()=>{ navigate(`/admin/inquery`); }},
-        {label: '데이터통계', icon: 'pi pi-fw pi-chart-line', command:()=>{ navigate(`/admin/statistics`); }},
+        {label: '대시보드', icon: 'pi pi-fw pi-chart-bar', command:()=>{ navigate(`/admin/dashboard`); }, style: { backgroundColor: (selectedMenu ==='dashboard')? '#F86064': '' }},
+        {label: '회원관리', icon: 'pi pi-fw pi-user', command:()=>{ navigate(`/admin/member`); }, style: { backgroundColor: (selectedMenu ==='member')? '#F86064': '' }},
+        {label: '권한관리', icon: 'pi pi-fw pi-key', command:()=>{ navigate(`/admin/auth`); }, style: { backgroundColor: (selectedMenu ==='auth')? '#F86064': '' }},
+        {label: '상품관리', icon: 'pi pi-fw pi-shopping-bag', command:()=>{ navigate(`/admin/product`); }, style: { backgroundColor: (selectedMenu ==='product')? '#F86064': '' }},
+        {label: '고객센터', icon: 'pi pi-fw pi-phone', command:()=>{ navigate(`/admin/inquery`); }, style: { backgroundColor: (selectedMenu ==='inquery')? '#F86064': '' }},
+        {label: '데이터통계', icon: 'pi pi-fw pi-chart-line', command:()=>{ navigate(`/admin/statistics`); }, style: { backgroundColor: (selectedMenu ==='statistics')? '#F86064': '' }},
     ];
 
     return (
