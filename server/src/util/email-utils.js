@@ -1,5 +1,47 @@
 const nodemailer = require('nodemailer');
 
+exports.sendAuthNumberMail = async (sendAuthNumberMail) => {
+  return new Promise((resolve, reject) => {
+    console.log('sendAuthNumberMail', sendAuthNumberMail);
+
+    const transporter = nodemailer.createTransport({
+      host: 'smtp.gmail.com',
+      port: 587,
+      secure: false,
+      auth: {
+        user: "whagile99",
+        pass: "rgipfmgcrxrvbzej"
+      }
+    });
+
+    const info = transporter.sendMail({
+      from: `"Whagile Team" <whagile99@gmail.com>"`,
+      to: sendAuthNumberMail.email,
+      subject: 'Whagile 인증번호',
+      html: 
+      `<h1>안녕하세요 웨자일 팀입니다.</h1><br/>      
+      <br/>
+      인증번호는 ${sendAuthNumberMail.authCode} 입니다.
+      <br/>
+      <br/>
+      <br/>
+      <br/>
+      Whagile Team 올림
+      `
+    }, (err, info) => {
+      if(err){
+        console.log(err);
+        reject(err);
+      } else {
+        resolve(info.messageId);
+      }
+    });
+
+  });
+}
+
+
+
 exports.sendSearchPWMail = async (email, pw) => {
   return new Promise((resolve, reject) => {
     console.log('sendMail', pw);

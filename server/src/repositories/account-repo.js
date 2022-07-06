@@ -2,6 +2,54 @@ const accountQuery = require('../database/account-query');
 const MemberDTO = require('../dto/account/account-response-dto');
 
 
+exports.updateAccount = (connection, memberInfo) => {
+    
+    return new Promise((resolve, reject) => {
+        connection.query(accountQuery.updateMember(), 
+        [memberInfo.phone, memberInfo.company, memberInfo.purpose, memberInfo.memberCode], 
+        (err, results, fields) => {
+            if(err) {
+                console.log(err);
+                reject(err);
+            }
+
+            if(results.changedRows < 1){
+                console.log('DB UPDATE FAILED!');
+                reject('DB UPDATE FAILED!');
+            }
+
+            console.log('DB Process', results);
+
+            resolve(results);
+        });
+    });
+
+}
+
+exports.updateEmail = (connection, updateEmail) => {
+
+    return new Promise((resolve, reject) => {
+        connection.query(accountQuery.updateEmail(), 
+        [updateEmail.email, updateEmail.memberCode], 
+        (err, results, fields) => {
+            if(err) {
+                console.log(err);
+                reject(err);
+            }
+
+            if(results.changedRows < 1){
+                console.log('DB UPDATE FAILED!');
+                reject('DB UPDATE FAILED!');
+            }
+
+            console.log('DB Process', results);
+
+            resolve(results);
+        });
+    });
+
+}
+
 exports.selectAccounts = (connection) => {
 
     return new Promise((resolve, reject) => {
