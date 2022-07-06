@@ -58,7 +58,7 @@ exports.decodedToken = (token) => {
     const result = jwt.verify(token, JWT_SECRET);
 
     const decodedToken = {
-        //usercode: result.usercode,
+        usercode: result.code,
         id: result.id,
         username: result.username,
         email: result.email,
