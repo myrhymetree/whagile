@@ -20,7 +20,9 @@ import KanbanBoard from "./pages/project/kanban/KanbanBoard";
 import List  from './pages/projects/List';
 import Regist  from './pages/projects/Regist';
 import History from './pages/project/history/History';
-import Management from './pages/project/management/Management';
+import Information from "./pages/project/management/Information";
+import TeamMateList from "./pages/project/management/TeamMateList";
+import Statistics from "./pages/project/management/Statistics";
 
 // admin
 import AdminLayout from './layouts/AdminLayout';
@@ -54,8 +56,12 @@ function App() {
             <Route path="gantt" element={ <GanttChart/> }/>
             <Route path="kanban-board" element={ <KanbanBoard/> }/>
             <Route path="history" element={ <History/> }/>
-            <Route path="management" element={ <Management/> }/>
             <Route path="profile" element={ <Profile/> } />
+            <Route path="management">
+              <Route path="information" element={ <Information/> }/>
+              <Route path="teamMateList" element={ <TeamMateList/> }/>
+              <Route path="statistics" element={ <Statistics/> }/>
+            </Route>
           </Route>
 
           {/* admin */}

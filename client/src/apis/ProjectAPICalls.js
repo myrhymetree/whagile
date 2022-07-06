@@ -54,3 +54,32 @@ export const  callPostProjectAPI = (projectName, projectDescription) => {
         await console.log(result.results);
     }
 }
+
+export const callPutProjectAPI = (params) => {
+    let requestURL = `http://localhost:8888/api/projects`;
+
+    requestURL += `${Object.entries(params).map(param => param.slice(1))}`;
+
+    return async function getProject(dispatch, getState) {
+
+        const result = await fetch(requestURL).then(res => res.json());
+
+        dispatch({ type: GET_PROJECT, payload: result.results});
+    }
+}
+
+export const callGetProjectMemberAPI = (params) => {
+
+    let requestURL = `http://localhost:8888/api/projects/`;
+
+    requestURL += `${Object.entries(params).map(param => param.slice(1))}`;
+
+    requestURL += `/member`;
+
+    return async function getProject(dispatch, getState) {
+
+        const result = await fetch(requestURL).then(res => res.json());
+
+        dispatch({ type: GET_PROJECT, payload: result.results});
+    }
+}

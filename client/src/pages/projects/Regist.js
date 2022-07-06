@@ -105,7 +105,7 @@ function Regist() {
         });
     }
 
-    const acceptFunc = async () => { await dispatch(callPostProjectAPI(projectName, projectDescription))
+    const acceptFunc = async () => { await dispatch(callPostProjectAPI(projectName, projectDescription));
                                      await toast.current.show({ severity: 'info', summary: 'Confirmed', detail: '프로젝트 생성을 완료했습니다.', life: 3000 })};
 
     return(
@@ -123,7 +123,7 @@ function Regist() {
                     <Controller 
                             name="projectName" 
                             control={control} 
-                            rules={{ required: '프로젝트 이름은 필수값입니다.' }} 
+                            rules={{ required: '프로젝트 이름은 필수입니다.' }} 
                             render={({ field, fieldState }) => (
                                 <InputText 
                                     id={field.name} 
@@ -134,7 +134,6 @@ function Regist() {
                                 />
                         )} />
                         {getFormErrorMessage('projectName')}
-                    {/* <InputText id="inputtext1" value={projectName} onChange={(e) => setProjectName(e.target.value)} className="p-invalid" required /> */}
                 </div>
 
                 <div className="field col-12 md:col-4">
@@ -142,7 +141,7 @@ function Regist() {
                     <Controller 
                             name="projectDescription" 
                             control={control} 
-                            rules={{ required: '프로젝트 설명은 필수값입니다.' }} 
+                            rules={{ required: '프로젝트 설명은 필수입니다.' }} 
                             render={({ field, fieldState }) => (
                                 <InputText 
                                     id={field.name} 
@@ -153,7 +152,6 @@ function Regist() {
                                 />
                         )} />
                     {getFormErrorMessage('projectDescription')}
-                    {/* <InputText id="inputtext2" value={projectDescription} onChange={(e) => setProjectDescription(e.target.value)} className="p-invalid" required /> */}
                 </div>
                 
             </div>
