@@ -437,10 +437,7 @@ function AdminAuth() {
                     }
                 >
                     <div style={{width: '100%', height: '100%'}}>
-                        <AdminAuthOrder 
-                            selectedCode={auth.authorityCode}
-                            snapshot={snapshotOrder}
-                        />
+                        본문
                     </div>
                 </Dialog>
 
