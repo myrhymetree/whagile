@@ -1,12 +1,13 @@
 import GanttCss from './GanttChart.module.css';
 import PageTitle from '../../../components/items/PageTitle';
-import { Gantt, Task, EventOption, StylingOption, ViewMode, DisplayOption } from 'gantt-task-react';
-import "gantt-task-react/dist/index.css";
-
 import { useState } from "react";
+
+import "gantt-task-react/dist/index.css";
+import { Gantt, Task, EventOption, StylingOption, ViewMode, DisplayOption } from 'gantt-task-react';
 import { initTasks, getStartEndDateForProject } from "./helpers";
 import { ViewSwitcher } from "./ViewSwitcher";
-
+import { TaskListHeaderDefault } from "./task-list-header";
+import { TaskListTableDefault } from "./task-list-table";
 
 function GanttChart() {
 
@@ -15,71 +16,76 @@ function GanttChart() {
 	const [isChecked, setIsChecked] = useState(true);
 	let columnWidth = 60;
 	if (view === ViewMode.Month) {
-	  columnWidth = 300;
+	  	columnWidth = 300;
 	} else if (view === ViewMode.Week) {
-	  columnWidth = 250;
+	  	columnWidth = 250;
 	}
   
 	const handleTaskChange = (task) => {
-	  console.log("On date change Id:" + task.id);
-	  let newTasks = tasks.map((t) => (t.id === task.id ? task : t));
-	  if (task.project) {
-		const [start, end] = getStartEndDateForProject(newTasks, task.project);
-		const project =
-		  newTasks[newTasks.findIndex((t) => t.id === task.project)];
-		if (
-		  project.start.getTime() !== start.getTime() ||
-		  project.end.getTime() !== end.getTime()
-		) {
-		  const changedProject = { ...project, start, end };
-		  newTasks = newTasks.map((t) =>
-			t.id === task.project ? changedProject : t
-		  );
+		console.log("On date change Id:" + task.id);
+		let newTasks = tasks.map((t) => (t.id === task.id ? task : t));
+		if (task.project) {
+			const [start, end] = getStartEndDateForProject(newTasks, task.project);
+			const project =
+			newTasks[newTasks.findIndex((t) => t.id === task.project)];
+			if (
+			project.start.getTime() !== start.getTime() ||
+			project.end.getTime() !== end.getTime()
+			) {
+			const changedProject = { ...project, start, end };
+			newTasks = newTasks.map((t) =>
+				t.id === task.project ? changedProject : t
+			);
+			}
 		}
-	  }
-	  setTasks(newTasks);
+		setTasks(newTasks);
 	};
   
 	const handleTaskDelete = (task) => {
-	  const conf = window.confirm("Are you sure about " + task.name + " ?");
-	  if (conf) {
-		setTasks(tasks.filter((t) => t.id !== task.id));
-	  }
-	  return conf;
+		const conf = window.confirm("Are you sure about " + task.name + " ?");
+		if (conf) {
+			setTasks(tasks.filter((t) => t.id !== task.id));
+		}
+		return conf;
 	};
   
 	const handleProgressChange = async (task) => {
-	  setTasks(tasks.map((t) => (t.id === task.id ? task : t)));
-	  console.log("On progress change Id:" + task.id);
+	  	setTasks(tasks.map((t) => (t.id === task.id ? task : t)));
+	 	console.log("On progress change Id:" + task.id);
 	};
   
 	const handleDblClick = (task) => {
-	  alert("On Double Click event Id:" + task.id);
+	 	 alert("On Double Click event Id:" + task.id);
 	};
   
 	const handleSelect = (task, isSelected) => {
-	  console.log(task.name + " has " + (isSelected ? "selected" : "unselected"));
+		console.log(task.name + " has " + (isSelected ? "selected" : "unselected"));
 	};
   
 	const handleExpanderClick = (task) => {
-	  setTasks(tasks.map((t) => (t.id === task.id ? task : t)));
-	  console.log("On expander click Id:" + task.id);
+		setTasks(tasks.map((t) => (t.id === task.id ? task : t)));
+		console.log("On expander click Id:" + task.id);
 	};
 
 	return (
 		<>
 			<PageTitle
-				icon={ <i className="pi pi-fw pi-inbox"></i> }
-				text="백로그 및 스프린트"
+				icon={ <i className="pi pi-fw pi-chart-bar"></i> }
+				text="간트차트"
 			/>
-			
+		
 			<ViewSwitcher
 				onViewModeChange={(viewMode) => setView(viewMode)}
 				onViewListChange={setIsChecked}
 				isChecked={isChecked}
 			/>
 
-			<div style={{width: '1600px', overflow: 'auto'}}>
+			{/* <div style={{
+				width: '1600px', 
+				overflow: 'auto', 
+				backgroundColor: '#282936'
+			}}> */}
+			<div id={GanttCss.ganttContainer}>
 				<Gantt
 					tasks={tasks}
 					viewMode={view}
@@ -90,11 +96,17 @@ function GanttChart() {
 					onSelect={handleSelect}
 					onExpanderClick={handleExpanderClick}
 					listCellWidth={isChecked ? "155px" : ""}
-					// ganttHeight={1000}
 					columnWidth={columnWidth}
-					
-					
+					headerHeight="44"
+					locale="kor"
+					barCornerRadius="5"
+					barProgressColor="skyblue"
+					barProgressSelectedColor="coral"
+					TaskListTable={TaskListTableDefault}
+					TaskListHeader={TaskListHeaderDefault}
+					rowHeight={50}
 				/>
+				
 			</div>
 		</>
 	);

@@ -63,13 +63,26 @@ function MainHeader() {
       </div>
 
       <div className="profile-container" style={ { width:"5%", marginRight:"auto"}}>
-          <Button 
+          {/* <Button 
             type="button" 
             icon="pi pi-user" 
             onClick={(e) => op.current.toggle(e)} 
             aria-haspopup 
             aria-controls="overlay_panel" 
             className="p-button-raised p-button-rounded" 
+          /> */}
+          <Button 
+            icon="pi pi-user" 
+            className="p-button-rounded p-button-outlined" 
+            aria-label="User"
+            aria-haspopup 
+            aria-controls="overlay_panel"
+            onClick={(e) => op.current.toggle(e)} 
+            style={{
+              color: 'white',
+              width: '40px',
+              height: '40px'
+            }}
           />
           <OverlayPanel ref={op} id="overlay_panel" style={{width: '150px'}} className="overlaypanel">              
               <Button label="Profile" className="p-button-text p-button-plain" icon="pi pi-user" onClick={ onClickProfile }/>               

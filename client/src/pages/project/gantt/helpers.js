@@ -24,7 +24,7 @@ export const initTasks = () => {
       ),
       name: "Idea",
       id: "Task 0",
-      progress: 120,
+      progress: 80,
       type: "task",
       project: "ProjectSample"
     },
