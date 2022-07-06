@@ -121,6 +121,8 @@ exports.editAuth = async (req, res, next) => {
     });
 }
 
+const utils = require('../util/account-utils');
+
 exports.deleteAuth = async (req, res, next) => {
     console.log('deleteAuth...');
     await AuthorityService.deleteAuth(req.body.authorityCode)

@@ -3,10 +3,14 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate, NavLink } from 'react-router-dom';
 import { callPostProjectAPI } from '../../apis/ProjectAPICalls';
 import EmailItems from '../../components/items/projects/Emails';
+import { useForm, Controller, FieldError } from 'react-hook-form';
+import { classNames } from 'primereact/utils';
+import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
+import { Toast } from 'primereact/toast';
 import { render } from 'react-dom';
 
 
@@ -26,6 +30,7 @@ function Regist() {
     const [displayPosition, setDisplayPosition] = useState(false);
     const [displayResponsive, setDisplayResponsive] = useState(false);
     const [position, setPosition] = useState('center');
+    const toast = useRef(null);
 
     const dialogFuncMap = {
         'displayBasic': setDisplayBasic,
@@ -35,6 +40,18 @@ function Regist() {
         'displayPosition': setDisplayPosition,
         'displayResponsive': setDisplayResponsive
     }
+
+    const defaultValues = {
+        projectName : '',
+        projectDescription : ''
+    };
+
+    const { control, formState: { errors }, handleSubmit } = useForm({ defaultValues });
+
+    
+    const getFormErrorMessage = (name) => {
+        return errors[name] && <small className="p-error">{errors[name].message}</small>
+    };
     
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -60,9 +77,9 @@ function Regist() {
         );
     }
 
-    const addProject = () => {
-        dispatch(callPostProjectAPI(projectName, projectDescription));
-    }
+    // const addProject = () => {
+    //     dispatch(callPostProjectAPI(projectName, projectDescription));
+    // }
 
     const addEmail = () => {
 
@@ -76,22 +93,69 @@ function Regist() {
         setEmails(changeEmails);
     }
 
-    const submitHandler = () => {
-
-        addProject();
+    const submitHandler = async (data) => {
+        await setProjectDescription(data.projectDescription);
+        await setProjectName(data.projectName);
+        await confirmDialog({
+            message: '정말 프로젝트 생성을 하시겠습니까?',
+            header: '프로젝트 생성',
+            icon: 'pi pi-exclamation-triangle',
+            accept: () => acceptFunc(),
+            reject: () => toast.current.show({ severity: 'warn', summary: '취소', detail: '취소했습니다.', life: 3000 })
+        });
     }
+
+    const acceptFunc = async () => { await dispatch(callPostProjectAPI(projectName, projectDescription))
+                                     await toast.current.show({ severity: 'info', summary: 'Confirmed', detail: '프로젝트 생성을 완료했습니다.', life: 3000 })};
 
     return(
         <>
+        <Toast ref={toast} />
+
+        <form 
+            style={{display: 'flex', flexDirection: 'column' }}
+            onSubmit={handleSubmit(submitHandler)}
+            className="p-fluid"
+        >
             <div className="p-fluid grid">
                 <div className="field col-12 md:col-4">
                     <label htmlFor="inputtext">프로젝트 이름</label>
-                    <InputText id="inputtext1" value={projectName} onChange={(e) => setProjectName(e.target.value)} className="p-invalid" />
+                    <Controller 
+                            name="projectName" 
+                            control={control} 
+                            rules={{ required: '프로젝트 이름은 필수값입니다.' }} 
+                            render={({ field, fieldState }) => (
+                                <InputText 
+                                    id={field.name} 
+                                    {...field}
+                                    autoComplete="off" 
+                                    autoFocus 
+                                    className={classNames({ 'p-invalid': fieldState.invalid })} 
+                                />
+                        )} />
+                        {getFormErrorMessage('projectName')}
+                    {/* <InputText id="inputtext1" value={projectName} onChange={(e) => setProjectName(e.target.value)} className="p-invalid" required /> */}
                 </div>
+
                 <div className="field col-12 md:col-4">
                     <label htmlFor="inputtext">프로젝트 설명</label>
-                    <InputText id="inputtext2" value={projectDescription} onChange={(e) => setProjectDescription(e.target.value)} className="p-invalid" />
+                    <Controller 
+                            name="projectDescription" 
+                            control={control} 
+                            rules={{ required: '프로젝트 설명은 필수값입니다.' }} 
+                            render={({ field, fieldState }) => (
+                                <InputText 
+                                    id={field.name} 
+                                    {...field}
+                                    autoComplete="off" 
+                                    autoFocus 
+                                    className={classNames({ 'p-invalid': fieldState.invalid })} 
+                                />
+                        )} />
+                    {getFormErrorMessage('projectDescription')}
+                    {/* <InputText id="inputtext2" value={projectDescription} onChange={(e) => setProjectDescription(e.target.value)} className="p-invalid" required /> */}
                 </div>
+                
             </div>
 
             <Button 
@@ -104,8 +168,7 @@ function Regist() {
             <Button 
                 type="submit" 
                 label="등록" 
-                className="p-button-sm" 
-                onClick={ () => submitHandler() }
+                className="p-button-sm"
             />
              <Button 
                 type="click" 
@@ -113,6 +176,7 @@ function Regist() {
                 className="p-button-sm"
                 onClick={ () => { navigate(`/projects`) }}
             />
+        </form>
 
             <Dialog 
                 header="팀원 초대" 
@@ -131,6 +195,7 @@ function Regist() {
                     setEmails={ setEmails } 
                 />   
             </Dialog>
+            <ConfirmDialog />
         </>
     );
 }

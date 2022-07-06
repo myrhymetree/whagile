@@ -1,4 +1,4 @@
-#search, #paginator {
+#search {
     height: 58px;
     background-color: #282936;
     border: 1px solid #333544;
@@ -7,7 +7,7 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
-    padding: 0 20px;
+    padding: 10px 20px;
 }
 
 #search>div>* { /* search condition */

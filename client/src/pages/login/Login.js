@@ -98,7 +98,7 @@ function Login() {
 
                 window.localStorage.setItem('access_token', json.accessToken);
                 window.localStorage.getItem('access_token') !== 'undefined' 
-                ? ((json.result[0].role == 'ROLE_ADMIN')? navigate('/admin') : navigate('/projects'))
+                ? ((json.result[0].role == 'ROLE_ADMIN')? navigate('/admin/dashboard') : navigate('/projects'))
                 : showError('로그인에 실패하였습니다.');
             } else {
                 showError('로그인에 실패하였습니다.');

@@ -153,8 +153,10 @@
             }
 
             &:focus {
-                outline: .15rem solid $focusOutlineColor;
-                outline-offset: -.15rem;
+                outline: 0 solid $focusOutlineColor;
+                outline-offset: 0;
+                // outline: .15rem solid $focusOutlineColor;
+                // outline-offset: -.15rem;
             }
         }
     }

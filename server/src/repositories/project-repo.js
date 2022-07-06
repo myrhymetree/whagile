@@ -176,3 +176,22 @@ exports.selectProjectMember = (connection, projectCode) => {
         });
     });
 }
+
+exports.insertProjectMember = (connection, data) => {
+    return new Promise((resolve, reject) => {
+        connection.query(projectQuery.insertProjectMember(),
+        [ data.memberCode
+        , data.authorityCode
+        , data.projectCode
+        ],
+        (err, results, fields) => {
+
+            if(err) {
+                console.log(err);
+                reject(err);
+            }
+            
+            resolve(results);
+        });
+    });
+};

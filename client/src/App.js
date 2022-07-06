@@ -42,7 +42,8 @@ function App() {
             element={ 
               (!isLogin)
               ? <Login/>
-              : <Navigate replace to ="/main" />
+              : <Navigate replace to ="/projects" />
+              // : <Navigate replace to ="/main" />
             } />
           {/* { isLogin ? <Navigate replace to ="/main" /> : <Login/>} */}
           <Route path="/main" element={ <Main/> } />
@@ -59,7 +60,7 @@ function App() {
 
           {/* admin */}
           <Route path="/admin" element={ <AdminLayout/>}>
-            <Route index element={ <AdminDashboard/> }/>
+            <Route path="dashboard" element={ <AdminDashboard/> }/>
             <Route path="member" element={ <AdminMember/> }/>
             <Route path="auth" element={ <AdminAuth/> }/>
             <Route path="product" element={ <AdminProduct/> }/>
