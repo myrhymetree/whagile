@@ -23,14 +23,18 @@ function Profile() {
 
     const [modifyEmail, setModifyEmail] = useState('');
     const [emailAuthCode, setEmailAuthCode] = useState('');
-
+    const [authCode, setAuthCode] = useState('');
+    const [authBtn, setAuthBtn] = useState('');
 
     const [profileform, setProfileform] = useState(true);
     const [passwordform, setPasswordform] = useState(false);
     const [emailform, setEmailform] = useState(false);
 
+    const [isLogin, setIsLogin] = useState(window.sessionStorage.getItem('isLogin'));
     const navigate = useNavigate();
+
     const toast = useRef(null);
+    const toastBC = useRef(null);
 
     const decoded = decodeJwt(window.localStorage.getItem("access_token"));
 
@@ -42,22 +46,66 @@ function Profile() {
         toast.current.show({severity:'success', summary: 'Success Message', detail:msg, life: 3000});
     }
 
+
+    const showConfirm = () => {
+        toastBC.current.show({ severity: 'warn', sticky: true, content: (
+            <div className="flex flex-column" style={{flex: '1'}}>
+                <div className="text-center">
+                    <i className="pi pi-exclamation-triangle" style={{fontSize: '3rem'}}></i>
+                    <h4>정보 변경 완료</h4>     
+                    <p>다시 로그인 해주시기 바랍니다.</p>               
+                </div>
+                <div className="grid p-fluid">
+                    <div className="col-6">
+                        <Button 
+                            type="button" 
+                            label="Yes" 
+                            className="p-button-success" 
+                            onClick={ goMain } 
+                        />
+                    </div>
+                </div>
+            </div>
+        ) });
+    }
+
+    const goMain = () => {
+        console.log('logout process finished');
+        sessionStorage.clear();
+        setIsLogin(false);          
+        navigate('/');
+    }
+
+
+    const init = () => {
+        setOriginPassword('');
+        setPassword('');
+        setConfirmPassword('');
+        setModifyEmail('');
+        setEmailAuthCode('');
+        setAuthCode('');
+        setAuthBtn('');
+    }
+
     const onClickMypage = () => {
         setProfileform(true);
         setPasswordform(false);
         setEmailform(false);
+        init();
     }
 
     const onClickModifyEmail = () => {
         setProfileform(false);
         setPasswordform(false);
-        setEmailform(true);
+        setEmailform(true);        
+        init();
     }
 
     const onClickModifyPW = () => {
         setProfileform(false);
         setPasswordform(true);
         setEmailform(false);
+        init();
     }
 
     const header = (
@@ -107,24 +155,168 @@ function Profile() {
         })
         .then(response => response.json())
         .then(json => {
-            console.log(json);           
-            showSuccess("비밀번호 변경에 성공하였습니다.");
-
-            onClickMypage();
-            setOriginPassword('');
-            setPassword('');
-            setConfirmPassword('');
-        
+            showConfirm();
+            //console.log(json);           
+            // showSuccess("비밀번호 변경에 성공하였습니다. 다시 로그인 해주세요.");
+            // console.log('logout process finished');
+            // sessionStorage.clear();
+            // setIsLogin(false);           
+            // navigate('/');
+           
         })
         .catch((err) => {
             showError('비밀번호 변경에 실패하였습니다.');
         });
     };
 
-    
+
     const onClickModifyEmailSubmit = () => {
         console.log('onClickModifyEmailSubmit');
+
+
+        if(emailAuthCode == ''){
+            showError('인증번호를 입력해주세요');
+            return;
+        }
+        if(emailAuthCode !== authCode){
+            showError('인증번호가 일치하지 않습니다.');
+            return;
+        }
+
+        const emailInfo = {
+            memberCode: decoded.code,
+            email: modifyEmail
+        }
+      
+        fetch(`http://localhost:8888/api/account/email`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              "Access_token": window.localStorage.getItem("access_token")
+            },
+            body: JSON.stringify({
+                emailInfo
+            })
+
+        })
+        .then(response => response.json())
+        .then(json => {
+            console.log(json);
+            if(json.status == 200){
+                showConfirm();
+
+                // showSuccess('이메일 변경에 성공하였습니다. 다시 로그인 해주세요.');
+                // console.log('logout process finished');
+                // sessionStorage.clear();
+                // setIsLogin(false);               
+                // navigate('/');
+    
+            }
+        })
+        .catch((err) => {
+            showError('이메일 변경에 실패하였습니다.');
+        });
+
     };
+
+    
+    const onClickMemberInfo = () => {
+        console.log('정보 변경 눌림');
+
+        const memberInfo = {
+            memberCode: decoded.code,
+            phone: phone,
+            company: company,
+            purpose: purpose
+        };
+
+
+
+        fetch(`http://localhost:8888/api/account/member`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              "Access_token": window.localStorage.getItem("access_token")
+            },
+            body: JSON.stringify({
+                memberInfo
+            })
+
+        })
+        .then(json => {
+            console.log(json);           
+            //showSuccess("정보 변경에 성공하였습니다. 다시 로그인 해주세요.");
+            showConfirm();
+            // console.log('logout process finished');
+            // sessionStorage.clear();
+            // setIsLogin(false);
+           
+            // navigate('/');
+           
+        })
+        .catch((err) => {
+            showError('정보 변경에 실패하였습니다.');
+        });
+
+
+
+    }
+
+
+    const emailRegex =
+      /^(([^<>()\[\].,;:\s@"]+(\.[^<>()\[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i;
+
+    
+
+    const onClickAuthNumber = () => {
+        console.log('onClickAuthNumber');
+
+        if(modifyEmail == '') {
+            showError('필수값을 입력해주세요.');
+            return;
+        }
+
+        if(!emailRegex.test(modifyEmail)){
+            showError('이메일 주소가 유효하지 않습니다.');
+            return;
+        }
+
+        const random = Math.random().toString(36).substring(2, 11);
+        console.log('random', random);
+        setAuthCode(random);
+        setAuthBtn(true);
+
+
+        const authNumberData = {
+            memberCode: decoded.code,
+            authCode: random,
+            email: modifyEmail
+        };
+
+
+        fetch(`http://localhost:8888/api/account/authsend`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Access_token": window.localStorage.getItem("access_token")
+            },
+            body: JSON.stringify({
+                authNumberData
+            })
+
+        })
+        .then(response => response.json())
+        .then(json => {
+            console.log(json);
+            if(json.status == 200){
+                showSuccess('인증번호 발급이 완료되었습니다. 이메일을 확인해주세요.');
+            }
+        })
+        .catch((err) => {
+            showError('인증 번호 발급이 실패하였습니다.');
+        });
+    }
+    
 
     const footer = (
         <div>
@@ -143,7 +335,11 @@ function Profile() {
                 />
             </div>
             <div className={ ProfileCSS.cardFooter }>
-                <Button style={{ width: '90%' }} label="저장하기" />
+                <Button 
+                    style={{ width: '90%' }} 
+                    label="저장하기" 
+                    onClick={ onClickMemberInfo }
+                />
             </div>
         </div>
     );
@@ -173,6 +369,7 @@ function Profile() {
 
 
     useEffect(() => {
+
         console.log("Profile useEffect");
         console.log(decoded);
         fetch(`http://localhost:8888/api/account/member?code=${decoded.code}`, {
@@ -197,7 +394,7 @@ function Profile() {
             showError('내 정보 불러오기를 실패하였습니다.');
         });
     },
-    []);
+    [isLogin]);
 
 
 
@@ -206,7 +403,7 @@ function Profile() {
         
         <div className={ ProfileCSS.profileContainer }>
             <Toast ref={toast} position="top-center" />
-            
+            <Toast ref={toastBC} position="top-center" />
             {profileform &&
             <Card style={{ width: '30em' }} footer={footer} header={header}>         
                 <span className="p-float-label p-inputtext-sm memberInfo" style={{ margin: '1.4em' }}>
@@ -294,13 +491,31 @@ function Profile() {
 
                 <span className="p-float-label p-inputtext-sm memberInfo" style={{ margin: '1.4em' }}>
                     <InputText 
-                        id="userID" 
+                        id="modifyEmail" 
                         style={{ width: '100%' }} 
-                        value={userID} 
-                        onChange={(e) => setUserID(e.target.value)} 
-                        readOnly
+                        value={modifyEmail} 
+                        onChange={(e) => setModifyEmail(e.target.value)}    
+                        disabled={ authBtn }                      
                     />
-                    <label htmlFor="userID">ID</label>
+                    <label htmlFor="modifyEmail">바꿀 이메일 주소</label>
+                </span>
+
+                <span className="p-float-label p-inputtext-sm memberInfo" style={{ margin: '1.4em' }}>
+                    <InputText 
+                        id="emailAuthCode" 
+                        style={{ width: '60%' }} 
+                        value={emailAuthCode} 
+                        onChange={(e) => setEmailAuthCode(e.target.value)}                         
+                    />
+                    <label htmlFor="emailAuthCode">인증번호</label>
+                    <Button 
+                        id="authNumberBtn"
+                        style={{ width: '35%', marginLeft: '10px' }} 
+                        className="p-button-sm p-button-success p-button-rounded" 
+                        label="인증번호 발급" 
+                        onClick={ onClickAuthNumber }
+                        disabled={ authBtn } 
+                    />
                 </span>
 
 

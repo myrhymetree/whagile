@@ -14,6 +14,7 @@ exports.selectMembers = () => {
             , A.MEMBER_PURPOSE
             , A.MEMBER_NAME
           FROM TBL_MEMBER A
+         WHERE A.MEMBER_ID NOT IN ('admin')
     `;
 };
 
@@ -93,6 +94,26 @@ exports.updateAccountWithTempPWD = () => {
   return `
       UPDATE TBL_MEMBER
       SET MEMBER_PASSWORD = ?
+      WHERE MEMBER_CODE = ?
+  `;
+}
+
+exports.updateMember = () => {
+  
+  return `
+    UPDATE TBL_MEMBER
+    SET MEMBER_PHONE = ?
+      , MEMBER_COMPANY = ?
+      , MEMBER_PURPOSE = ?
+    WHERE MEMBER_CODE = ?
+  `;
+}
+
+exports.updateEmail = () => {
+
+  return `
+      UPDATE TBL_MEMBER
+      SET MEMBER_EMAIL = ?
       WHERE MEMBER_CODE = ?
   `;
 }
