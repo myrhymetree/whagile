@@ -56,9 +56,10 @@ function Information() {
              dispatch(callGetProjectAPI({
                 'projectCode': projectCode
             }));
-            dispatch(callGetProjectMemberAPI({
+            const teamMates = callGetProjectMemberAPI({
                 'projectCode': projectCode
-            }))
+            });
+            console.log('teamMates', teamMates);
         },
         []
       );

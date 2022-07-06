@@ -80,6 +80,6 @@ export const callGetProjectMemberAPI = (params) => {
 
         const result = await fetch(requestURL).then(res => res.json());
 
-        dispatch({ type: GET_PROJECT, payload: result.results});
+        // dispatch({ type: GET_TEAMMATES, payload: result.results});
     }
 }
