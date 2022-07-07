@@ -22,24 +22,36 @@ function Information() {
     console.log(project);
     console.log(memberList);
     const [teamMates, setTeamMates] = useState([]);
-    const [projectName, setProjectName ] = useState((project.length !== 0)? project[0].projectName: '');
-    const [projectDescription, setProjectDescription ] = useState((project.length !== 0)? project[0].projectDescription: '');
-    const [selectedProjectOwner, setSelectedProjectOwner] = useState((project.length !== 0)? project[0].projectOwnerCode: '');
+    const [projectName, setProjectName ] = useState('');
+    const [projectDescription, setProjectDescription ] = useState('');
+    const [selectedProjectOwner, setSelectedProjectOwner] = useState('');
     console.log(selectedProjectOwner);
     
     useEffect(
         () =>
         {
-             dispatch(callGetProjectAPI({
+            dispatch(callGetProjectAPI({
                 'projectCode': projectCode
             }));
             dispatch(callGetProjectMemberAPI({
                 'projectCode': projectCode
             }));
-            setTeamMates(memberList);
-            // setSelectedProjectOwner((memberList.length !== 0)? memberList[0].memberName: '');
         },
         []
+      );
+
+      useEffect(
+        () =>
+        {   
+            if(project.length !== 0) {
+
+                setProjectName(project[0].projectName);
+                setProjectDescription(project[0].projectDescription);
+                setSelectedProjectOwner(project[0].projectOwnerCode);
+                setTeamMates(memberList);
+            }
+        },
+        [project]
       );
 
     const defaultValues = {
