@@ -156,7 +156,7 @@ export const callGetAuthOrderAPI = (params) => { // 권한 순서 조회
     return async (dispatch, getState) => {
         
         const result = await fetch(requestURL).then(res => res.json());
-        console.log(111, result)
+        
         dispatch({ type: GET_AUTH_ORDER, payload: result.results });
     }
 }
@@ -164,7 +164,7 @@ export const callGetAuthOrderAPI = (params) => { // 권한 순서 조회
 export const callPutAuthOrderAPI = (params) => { // 권한 순서 변경
     
     let requestURL = `http://localhost:8888/api/auth/order`;
-    console.log(222, params)
+    
     return async (dispatch, getState) => {
         
         await fetch(requestURL, {

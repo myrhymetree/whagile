@@ -6,7 +6,7 @@ function AdminHeader() {
 
     const navigate = useNavigate();
 
-    const onClickHandler = () => navigate(`/admin`)
+    const onClickHandler = () => navigate(`/admin/dashboard`)
 
     return (
         <header id={AdminHeaderCss.admin}>

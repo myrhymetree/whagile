@@ -5,6 +5,60 @@ const EmailUtils = require('../util/email-utils');
 const jwt = require('jsonwebtoken');
 const { JWT_SECRET } = process.env;
 
+exports.updateAccount = (memberInfo) => {
+
+    return new Promise(async (resolve, reject) => {
+
+        const connection = getConnection();
+
+        console.log('updateAccount', memberInfo);
+
+        const results = await AccountRepository.updateAccount(connection, memberInfo);
+        
+        if(results.length < 1) {
+            console.log('정보 변경 실패');
+            return reject('정보 변경 실패');
+        }
+
+        connection.end();
+
+        resolve(results);
+    });
+}
+
+exports.updateEmail = (emailInfo) => {
+
+    return new Promise(async (resolve, reject) => {
+
+        const connection = getConnection();
+
+        console.log('updateEmail', emailInfo);
+
+        const results = await AccountRepository.updateEmail(connection, emailInfo);
+        
+        if(results.length < 1) {
+            console.log('이메일 변경 실패');
+            return reject('이메일 변경 실패');
+        }
+
+        connection.end();
+
+        resolve(results);
+    });
+}
+
+exports.authNumberSend = (sendMailInfo) => {
+    
+    return new Promise(async (resolve, reject) => {
+        
+        console.log('authNumberSend', sendMailInfo);
+
+        await EmailUtils.sendAuthNumberMail(sendMailInfo);
+
+        resolve(sendMailInfo);
+    });
+}
+
 exports.updateAccountWithPwd = (pwInfo) => {
 
     return new Promise(async (resolve, reject) => {

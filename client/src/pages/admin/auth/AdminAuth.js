@@ -1,3 +1,9 @@
+import AdminAuthCss from './AdminAuth.module.css';
+import '../AdminStyle.css';
+import React, { useState, useEffect, useRef } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+
+// api, redux
 import { 
       callGetAuthsAPI
     , callGetAuthAPI
@@ -7,15 +13,10 @@ import {
     , callDeleteAuthAPI
     , callPutAuthOrderAPI
 } from '../../../apis/AuthAPICalls';
-import AdminAuthCss from './AdminAuth.module.css';
-import '../AdminStyle.css';
-import React, { useState, useEffect, useRef } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-
 import { SET_AUTH, INIT_AUTH, UPDATE_AUTH } from "../../../modules/AuthModule";
-import authOrderReducer, { INSERT_AUTH_ORDER, DELETE_AUTH_ORDER, SET_AUTH_ORDER, SET_AUTH_ORDER_UPDATE } from "../../../modules/AuthOrderModule";
+import { INSERT_AUTH_ORDER, DELETE_AUTH_ORDER, SET_AUTH_ORDER, SET_AUTH_ORDER_UPDATE } from "../../../modules/AuthOrderModule";
 
-import PageTitle from '../../../components/items/PageTitle';
+// primereact
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import { Dropdown } from 'primereact/dropdown';
@@ -26,9 +27,9 @@ import { Dialog } from 'primereact/dialog';
 import { SelectButton } from 'primereact/selectbutton';
 import { InputTextarea } from 'primereact/inputtextarea';
 import { ConfirmDialog } from 'primereact/confirmdialog';
-import { Ripple } from 'primereact/ripple';
-import { classNames } from 'primereact/utils';
 
+// components
+import PageTitle from '../../../components/items/PageTitle';
 import AdminAuthOrder from './AdminAuthOrder';
 
 function AdminAuth() {
@@ -47,9 +48,6 @@ function AdminAuth() {
     const [snapshotOrder, setSnapshotOrder] = useState([]);
     const dispatch = useDispatch();
     const toast = useRef(null);
-    const [currentPage, setCurrentPage] = useState(1);
-    const [pageInputTooltip, setPageInputTooltip] = useState('Press \'Enter\' key to go to this page.');
-    const [first1, setFirst1] = useState(0);
 
     const selectConditions = [
         {label: '권한명', value: 'name'},

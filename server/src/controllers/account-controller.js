@@ -2,6 +2,82 @@ const HttpStatus = require('http-status');
 const AccountService = require('../services/account-service');
 const AccountUtils = require('../util/account-utils');
 
+exports.updateAccount = async (req, res, next) => {
+    console.log('updateAccount');
+    console.log(req.body.memberInfo);
+    const memberInfo = req.body.memberInfo;
+
+    await AccountService.updateAccount(memberInfo)
+        .then((results) => {
+
+            res.status(HttpStatus.OK).json({
+                status: HttpStatus.OK,
+                message: 'successfully memberInfo!!',
+                results: results
+            });
+
+        })
+        .catch((err) =>{
+
+            res.status(HttpStatus.BAD_REQUEST).json({
+                status: HttpStatus.BAD_REQUEST,
+                message: err
+            });
+
+        });
+
+}
+
+exports.updateEmail = async (req, res, next) => {   
+    console.log('updateEmail');
+    console.log(req.body.emailInfo);
+    const emailInfo = req.body.emailInfo;
+
+    await AccountService.updateEmail(emailInfo)
+        .then((results) => {
+
+            res.status(HttpStatus.OK).json({
+                status: HttpStatus.OK,
+                message: 'successfully updateEmail!!',
+                results: results
+            });
+
+        })
+        .catch((err) =>{
+
+            res.status(HttpStatus.BAD_REQUEST).json({
+                status: HttpStatus.BAD_REQUEST,
+                message: err
+            });
+
+        });
+}
+
+
+exports.authNumberSend = async (req, res, next) => {
+    console.log('authNumberSend');
+    console.log(req.body.authNumberData);
+    const sendMailInfo = req.body.authNumberData;
+    await AccountService.authNumberSend(sendMailInfo)
+        .then((results) => {
+
+            res.status(HttpStatus.OK).json({
+                status: HttpStatus.OK,
+                message: 'successfully authNumberSend!!',
+                results: results
+            });
+
+        })
+        .catch((err) =>{
+
+            res.status(HttpStatus.BAD_REQUEST).json({
+                status: HttpStatus.BAD_REQUEST,
+                message: err
+            });
+
+        });
+}
+
 exports.selectAccounts = async (req, res, next) => {
 
     await AccountService.selectAccounts()
@@ -52,9 +128,7 @@ exports.emailAuth = async (req, res, next) => {
 
     await AccountService.emailAuthWithToken(req.query)
     .then((result) => {
-
         res.redirect('http://localhost:3000/');
-
     })
     .catch((err) =>{
         console.log(err);

@@ -118,3 +118,21 @@ exports.findProjectMember = async (req, res, next) => {
         });
 }
 
+exports.registProjectMember = async (req, res, next) => {
+
+    await ProjectService.registProjectMember(req.body)
+        .then((result) => {
+            res.status(HttpStatus.CREATED).json({
+                status: HttpStatus.CREATED,
+                message: 'successfully regist ProjectMember',
+                results: result
+            });
+        }).catch((err) => {
+
+            res.status(HttpStatus.BAD_REQUEST).json({
+                status:HttpStatus.BAD_REQUEST,
+                message: err
+            });
+        });
+}
+
