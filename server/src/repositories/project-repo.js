@@ -122,11 +122,11 @@ exports.updateManager1 = (connection, projectCode ) => {
     });
 }
 
-exports.updateManager2 = (connection, projectCode, memberCode ) => {
+exports.updateManager2 = (connection, projectCode, projectOwner ) => {
  
     return new Promise((resolve, reject) => {
         connection.query(projectQuery.updateProjectOwner2(),
-        [ projectCode, memberCode ],
+        [ projectCode, projectOwner ],
 
         (err, results, fields) => {
 

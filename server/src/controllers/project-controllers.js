@@ -62,7 +62,6 @@ exports.registProject = async (req, res, next) => {
 };
 
 exports.modifyProject = async (req, res, next) => {
-
     await ProjectService.modifyProject(req.body)
         .then((result) => {
 

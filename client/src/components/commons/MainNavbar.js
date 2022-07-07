@@ -5,6 +5,7 @@ import { Menu } from "primereact/menu";
 import { TieredMenu } from 'primereact/tieredmenu';
 import { Button } from "primereact/button";
 import Icon from "@mdi/react";
+import { PrimeIcons } from 'primereact/api';
 import { mdiMonitorDashboard } from "@mdi/js";
 
 import { useState, useEffect } from 'react';
@@ -85,17 +86,16 @@ function MainNavbar({projectCode}) {
     },
     {
       label: "프로젝트 관리",
-      items: [{label: '프로젝트 세부사항', icon: 'pi pi-fw pi-cog', command:()=>{ navigate(`/project/${ projectCode }/management/information`); }},
-              {label: '팀원 목록', icon: 'pi pi-fw pi-power-off', command:()=>{ navigate(`/project/${ projectCode }/management/teamMateList`); }},
-              {label: '프로젝트 통계', icon: 'pi pi-fw pi-power-off', command:()=>{ navigate(`/project/${ projectCode }/management/statistics`); }}],
+      items: [{label: '프로젝트 세부사항', icon: 'pi pi-fw pi-pencil', command:()=>{ navigate(`/project/${ projectCode }/management/information`); }},
+              {label: '팀원 목록', icon: 'pi pi-fw pi-users', command:()=>{ navigate(`/project/${ projectCode }/management/teamMateList`); }},
+              {label: '프로젝트 통계', icon: 'pi pi-fw pi-chart-pie', command:()=>{ navigate(`/project/${ projectCode }/management/statistics`); }}],
       icon: "pi pi-fw pi-cog",
       style: { backgroundColor: (selectedMenu ==='management')? '#00AA9C' : '', color: (selectedMenu ==='management')? '#FFFFFF' : ''}
     }
   ];
 
   useEffect(
-    () =>
-    {
+    () => {
          dispatch(callGetProjectAPI({
             'projectCode': number
         }));

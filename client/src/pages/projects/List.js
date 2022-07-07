@@ -17,10 +17,9 @@ import { classNames } from 'primereact/utils';
 import { ColumnGroup } from 'primereact/columngroup';
 import { Row } from 'primereact/row';
 
-const decoded = decodeJwt(window.localStorage.getItem("access_token"));
-
 function List() {
-
+    
+    const decoded = decodeJwt(window.localStorage.getItem("access_token"));
     const [searchValue, setSearchValue ] = useState('');
     const [first1, setFirst1] = useState(0);
     const [rows1, setRows1] = useState(10);
@@ -38,8 +37,10 @@ function List() {
     useEffect(
         () => {
             dispatch(callGetProjectsAPI({
-                'loginMember': decoded.code,
-                'searchValue': searchValue
+                 
+                    'loginMember': decoded.code,
+                    'searchValue': searchValue
+
             }));
         },
         [searchValue]
@@ -48,7 +49,7 @@ function List() {
     const onRowSelect = (event) => {
         // toast.current.show({ severity: 'info', summary: 'Product Selected', detail: `Name: ${event.projects.peojectCode}`, life: 3000 });
         console.log(event.originalEvent);
-        navigate(`/project/${event.rowData.projectCode}`);
+        navigate(`/project/${event.rowData.projectCode}/dashboard`);
     }
 
     const onRowUnselect = (event) => {
