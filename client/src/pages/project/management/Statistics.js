@@ -1,15 +1,15 @@
 import PageTitle from '../../../components/items/PageTitle';
 
-function Management() {
+function Statistics() {
 
     return (
         <>
             <PageTitle 
                 icon={<i className="pi pi-fw pi-cog"></i>}
-                text="프로젝트 관리"
+                text="프로젝트 통계"
             />
         </>
     );
 }
 
-export default Management;
+export default Statistics;

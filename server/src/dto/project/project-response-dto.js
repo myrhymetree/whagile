@@ -6,6 +6,7 @@ class ProjectDTO {
     projectTotalTask        //전체 할일
     projectDeletedStatus;   //프로젝트 삭제여부
     projectOwner            //프로젝트 매니저
+    projectOwnerCode
     remainedTask            //남은 할일 / 전체 할일
     
     constructor(data) {
@@ -17,6 +18,7 @@ class ProjectDTO {
         this.remainedTask = data.COMPLETED_TASK + ' / ' + data.TOTAL_TASK;
         this.projectDeletedStatus = data.PROJECT_DELETED_STATUS
         this.projectOwner = data.PROJECT_OWNER;
+        this.projectOwnerCode = data.PROJECT_OWNER_CODE;
     }
 }
 

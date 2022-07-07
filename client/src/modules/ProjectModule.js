@@ -3,17 +3,19 @@ import { createActions, handleActions } from 'redux-actions';
 /* 초기 값 */
 const initialState = [];
 
-const initialState1 = {};
-
 /* 액션 */
 export const GET_PROJECTS = 'projects/GET_PROJECTS';
 export const GET_PROJECT = 'projects/GET_PROJECT';
 export const POST_PROJECT = 'projects/POST_PROJECT';
+export const PUT_PROJECT = 'projects/PUT_PROJECT';
+export const GET_MEMBER = 'projects/GET_MEMBER';
 
 const actions = createActions({
     [GET_PROJECTS]: () => {},
     [GET_PROJECT]: () => {},
-    [POST_PROJECT]: () => {}
+    [POST_PROJECT]: () => {},
+    [PUT_PROJECT]: () => {},
+    [GET_MEMBER]: () => {}
 });
 
 /* 리듀서 */
@@ -26,6 +28,9 @@ const projectsReducer = handleActions(
             return payload;
         },
         [POST_PROJECT]: (state, { payload }) => {
+            return payload;
+        },
+        [PUT_PROJECT]: (state, { payload }) => {
             return payload;
         }
     },

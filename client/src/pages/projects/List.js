@@ -17,10 +17,9 @@ import { classNames } from 'primereact/utils';
 import { ColumnGroup } from 'primereact/columngroup';
 import { Row } from 'primereact/row';
 
-const decoded = decodeJwt(window.localStorage.getItem("access_token"));
-
 function List() {
-
+    
+    const decoded = decodeJwt(window.localStorage.getItem("access_token"));
     const [searchValue, setSearchValue ] = useState('');
     const [first1, setFirst1] = useState(0);
     const [rows1, setRows1] = useState(10);
@@ -38,8 +37,10 @@ function List() {
     useEffect(
         () => {
             dispatch(callGetProjectsAPI({
-                'loginMember': decoded.code,
-                'searchValue': searchValue
+                 
+                    'loginMember': decoded.code,
+                    'searchValue': searchValue
+
             }));
         },
         [searchValue]
@@ -47,7 +48,8 @@ function List() {
 
     const onRowSelect = (event) => {
         // toast.current.show({ severity: 'info', summary: 'Product Selected', detail: `Name: ${event.projects.peojectCode}`, life: 3000 });
-        navigate(`/project/${event.rowData.projectCode}`);
+        console.log(event.originalEvent);
+        navigate(`/project/${event.rowData.projectCode}/dashboard`);
     }
 
     const onRowUnselect = (event) => {
@@ -95,6 +97,7 @@ function List() {
 
     const statusBodyTemplate = () => {
         return <span className={`pi pi-ellipsis-h`}></span>;
+        // return <Button icon="pi pi-search" />;
     }
 
     const items = [
@@ -158,31 +161,33 @@ function List() {
                     </span>
                 </div>
                 <div>
-                    <DataTable
-                        value={projects} 
-                        paginator responsiveLayout="scroll"
-                        selectionMode="multiple"
-                        cellSelection
-                        selection={selectedProduct1} 
-                        dataKey="projectCode"
-                        paginatorTemplate="CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
-                        currentPageReportTemplate="Showing {first} to {last} of {totalRecords}" 
-                        rows={10}
-                        rowsPerPageOptions={[10,20,50]}
-                        paginatorLeft={paginatorLeft} 
-                        paginatorRight={paginatorRight}
-                        onSelectionChange={e => setSelectedProduct1(e.value)}
-                        onCellSelect={onRowSelect} 
-                        onCellUnselect={onRowUnselect}
-                        footer={footer}
-                        headerColumnGroup={headerGroup}
-                    >
-                        <Column field="projectName" header="이름" style={{ width: '25%' }} sortable></Column>
-                        <Column field="projectDescription" header="설명" style={{ width: '35%' }}></Column>
-                        <Column field="remainedTask" header="내 일감"></Column>
-                        <Column field="projectOwner" header="프로젝트 소유자" sortable></Column>
-                        <Column field="" header="dfdd" body={statusBodyTemplate} model={items} onClick={ () => console.log('바보')}></Column>
-                    </DataTable>
+                    <div className="card">
+                        <DataTable
+                            value={projects} 
+                            paginator responsiveLayout="scroll"
+                            selectionMode="multiple"
+                            cellSelection
+                            selection={selectedProduct1} 
+                            dataKey="projectCode"
+                            paginatorTemplate="CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
+                            currentPageReportTemplate="Showing {first} to {last} of {totalRecords}" 
+                            rows={10}
+                            rowsPerPageOptions={[10,20,50]}
+                            paginatorLeft={paginatorLeft} 
+                            paginatorRight={paginatorRight}
+                            onSelectionChange={e => setSelectedProduct1(e.value)}
+                            onCellSelect={onRowSelect} 
+                            onCellUnselect={onRowUnselect}
+                            footer={footer}
+                            headerColumnGroup={headerGroup}
+                        >
+                            <Column field="projectName" header="이름" style={{ width: '25%' }} sortable></Column>
+                            <Column field="projectDescription" header="설명" style={{ width: '35%' }}></Column>
+                            <Column field="remainedTask" header="내 일감"></Column>
+                            <Column field="projectOwner" header="프로젝트 소유자" sortable></Column>
+                            <Column  body={statusBodyTemplate} model={items} ></Column>
+                        </DataTable>
+                    </div>
                 </div>
             </main>
         </>

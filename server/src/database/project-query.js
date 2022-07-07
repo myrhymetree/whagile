@@ -53,6 +53,13 @@ exports.selectProjectWithProjectCode = (projectCode) => {
              , A.PROJECT_NAME
              , A.PROJECT_DESCRIPTION
              , (SELECT
+                       M.MEMBER_CODE
+                  FROM TBL_PROJECT_MEMBER PM
+                  JOIN TBL_MEMBER M ON(PM.MEMBER_CODE = M.MEMBER_CODE)
+                 WHERE PM.PROJECT_CODE = A.PROJECT_CODE
+                   AND PM.AUTHORITY_CODE = 1
+              ) PROJECT_OWNER_CODE
+             , (SELECT
                        M.MEMBER_NAME
                   FROM TBL_PROJECT_MEMBER PM
                   JOIN TBL_MEMBER M ON(PM.MEMBER_CODE = M.MEMBER_CODE)
@@ -147,12 +154,40 @@ exports.selectProjectMember = (projectCode) => {
   return `
     SELECT
            A.MEMBER_CODE
+         , B.MEMBER_ID
          , B.MEMBER_NAME
-         , A.AUTHORITY_CODE
+         , B.MEMBER_EMAIL
          , C.AUTHORITY_NAME
       FROM TBL_PROJECT_MEMBER A
       JOIN TBL_MEMBER B ON (A.MEMBER_CODE = B.MEMBER_CODE)
       JOIN TBL_AUTHORITY C ON (A.AUTHORITY_CODE = C.AUTHORITY_CODE)
      WHERE A.PROJECT_CODE = ${ projectCode }
+     
   `
 }
+
+// exports.selectProjectMember = (projectCode) => {
+  
+//   let query =
+//     `
+//     SELECT
+//            A.MEMBER_CODE
+//          , B.MEMBER_ID
+//          , B.MEMBER_NAME
+//          , B.MEMBER_EMAIL
+//          , C.AUTHORITY_NAME
+//       FROM TBL_PROJECT_MEMBER A
+//       JOIN TBL_MEMBER B ON (A.MEMBER_CODE = B.MEMBER_CODE)
+//       JOIN TBL_AUTHORITY C ON (A.AUTHORITY_CODE = C.AUTHORITY_CODE)
+//      WHERE A.PROJECT_CODE = ${ projectCode }
+     
+//   `
+
+//   if(params.searchValue !== undefined) {
+//     query += ` AND ${'B.MEMBER_ID'} LIKE '%${params.searchValue}%'`;
+//  }
+
+//  query += `ORDER BY A.PROJECT_CODE DESC`;
+
+//  return query;
+// }
