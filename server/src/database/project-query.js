@@ -151,9 +151,7 @@ exports.deleteProject = () => {
 }
 
 exports.selectProjectMember = (projectCode) => {
-  
-  let query =
-    `
+  return `
     SELECT
            A.MEMBER_CODE
          , B.MEMBER_ID
@@ -166,12 +164,30 @@ exports.selectProjectMember = (projectCode) => {
      WHERE A.PROJECT_CODE = ${ projectCode }
      
   `
-
-  if(params.searchValue !== undefined) {
-    query += ` AND ${'B.MEMBER_ID'} LIKE '%${params.searchValue}%'`;
- }
-
- query += `ORDER BY A.PROJECT_CODE DESC`;
-
- return query;
 }
+
+// exports.selectProjectMember = (projectCode) => {
+  
+//   let query =
+//     `
+//     SELECT
+//            A.MEMBER_CODE
+//          , B.MEMBER_ID
+//          , B.MEMBER_NAME
+//          , B.MEMBER_EMAIL
+//          , C.AUTHORITY_NAME
+//       FROM TBL_PROJECT_MEMBER A
+//       JOIN TBL_MEMBER B ON (A.MEMBER_CODE = B.MEMBER_CODE)
+//       JOIN TBL_AUTHORITY C ON (A.AUTHORITY_CODE = C.AUTHORITY_CODE)
+//      WHERE A.PROJECT_CODE = ${ projectCode }
+     
+//   `
+
+//   if(params.searchValue !== undefined) {
+//     query += ` AND ${'B.MEMBER_ID'} LIKE '%${params.searchValue}%'`;
+//  }
+
+//  query += `ORDER BY A.PROJECT_CODE DESC`;
+
+//  return query;
+// }
