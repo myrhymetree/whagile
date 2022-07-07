@@ -53,7 +53,7 @@ exports.registNewBacklog = async (req, res, next) => {
 
     const user = decodedToken(req.get('Access-Token'));
     console.log(user)
-    console.log(req.params.projectId)
+    console.log(req.params)
 
     const backlog = {
         title: req.body.title,
@@ -62,7 +62,7 @@ exports.registNewBacklog = async (req, res, next) => {
         progressStatus: req.body.progressStatus,
         urgency: req.body.urgency,
         issue: req.body.issue,
-        projectCode: req.params.projectCode,
+        projectCode: req.body.projectCode,
         creatorCode: user.usercode
     };
     console.log('backlog : ', backlog);

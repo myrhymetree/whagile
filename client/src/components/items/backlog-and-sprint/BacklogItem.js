@@ -1,14 +1,21 @@
 import BacklogAndSprintCSS from './BacklogAndSprint.module.css';
 
-function BacklogItem({visibleRight, setVisibleRight}) {
+function BacklogItem({ visibleRight, setVisibleRight, backlog }) {
+
+    console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+    console.log('backlog : ', backlog)
+    console.log(backlog)
+    // console.log(backlog.backlogCode)
+    // console.log(backlog.backlogTitle)
+    // console.log(backlog.progressStatus)
 
     return (
         <div className={ BacklogAndSprintCSS.backlogItem }>
-            <label>기본</label>
-            <label>백로그 제목제목제목제목</label>
-            <label>진행 전</label>
-            <label>긴급도</label>
-            <label>담당자</label>
+            {/* <label>{ backlog.issue }</label>
+            <label>{ backlog.backlogIitle }</label>
+            <label>{ backlog.progressStatus }</label>
+            <label>{ backlog.urgency }</label>
+            <label>{ backlog.memberName }</label> */}
             <button onClick={() => setVisibleRight(true)}>자세히</button>
         </div>
     );
