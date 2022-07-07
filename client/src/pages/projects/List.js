@@ -17,10 +17,9 @@ import { classNames } from 'primereact/utils';
 import { ColumnGroup } from 'primereact/columngroup';
 import { Row } from 'primereact/row';
 
-const decoded = decodeJwt(window.localStorage.getItem("access_token"));
-
 function List() {
-
+    
+    const decoded = decodeJwt(window.localStorage.getItem("access_token"));
     const [searchValue, setSearchValue ] = useState('');
     const [first1, setFirst1] = useState(0);
     const [rows1, setRows1] = useState(10);
@@ -39,7 +38,7 @@ function List() {
         () => {
             dispatch(callGetProjectsAPI({
                  
-                    'loginMember': (decoded !== 'undefined')? decoded.code: '',
+                    'loginMember': decoded.code,
                     'searchValue': searchValue
 
             }));

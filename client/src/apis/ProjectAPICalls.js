@@ -47,7 +47,7 @@ export const  callPostProjectAPI = (projectName, projectDescription) => {
             body: JSON.stringify({
                 projectName: projectName,
                 projectDescription: projectDescription,
-                loginMember: decoded.code
+                loginMember: (decoded !== 'undefined')? decoded.code: ''
             })
         })
         .then(res => res.json());
