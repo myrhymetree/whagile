@@ -27,7 +27,7 @@ export var Charger;
 (function (Charger) {
   Charger["None"] = "담당자 없음";
   Charger["PM"] = "PM";
-  Charger["회원"] = "회원";
+  Charger["Member"] = "회원";
   Charger["Park"] = "박성준";
   Charger["Lee"] = "이호성";
   Charger["Joo"] = "장민주";

@@ -1,6 +1,7 @@
 import React, { useState, useRef } from "react";
-import { Category, Issue } from "./Types";
+import { Category, Issue, Urgency, Charger } from "./Types";
 import KanbanBoardStyle from "./KanbanBoard.module.css";
+import PageTitle from "../../../components/items/PageTitle";
 
 // 초기 더미 데이터
 const initialData = [
@@ -36,18 +37,21 @@ export default function KanbanBoard() {
     const newData = exampleData.map((u) => (u.id !== id ? u : newField));
     setExampleData(newData);
   };
-  const createTask = (category, title, description, issue) => {
+  const createTask = (category, title, description, issue, urgency, charger) => {
     const newTask = {
       category,
       title,
       description,
       issue,
+      urgency,
+      charger,
       id: lastID.current + 1,
     };
     const newData = exampleData.concat(newTask);
     lastID.current += 1;
     setExampleData(newData);
   };
+  
   const getTask = (id) => {
     for (let i = 0; i < exampleData.length; i++) {
       if (exampleData[i].id === id) {
@@ -185,35 +189,30 @@ export default function KanbanBoard() {
   }
 
   // 일감(백로그) 삭제
-  function ClosedTask(props) {
-    return (
-      <>
-        <div>Delete</div>
-      </>
-    );
-  }
-  function Trash(props) {
-    const { activeTask, deleteTask } = props;
+  function Trash({ activeTask, deleteTask }) {
 
     const onDragOver = (event) => {
       event.preventDefault();
     };
+
     const onDrop = (event) => {
       if (activeTask != null) {
         deleteTask(activeTask);
       }
     };
+
     return (
       <div
         className={KanbanBoardStyle.kanbanBoxDeleteButton}
         onDragOver={onDragOver}
         onDrop={onDrop}
       >
-        <ClosedTask />
+        <div>삭제할 일감을 이곳으로 옮겨주세요</div>
       </div>
     );
   }
 
+  //
   const updateTaskCategory = (id, newCategory) => {
     const taskFromID = getTask(id);
     if (taskFromID != null) {
@@ -224,13 +223,17 @@ export default function KanbanBoard() {
     }
   };
 
-  const updateTask = (id, newCategory, newTitle, newDescription) => {
+  //
+  const updateTask = (id, newCategory, newTitle, newDescription, newIssue, newUrgency, newCharger) => {
     const taskFromID = getTask(id);
     if (taskFromID != null) {
       const updatedTask = Object.assign(Object.assign({}, taskFromID), {
         category: newCategory,
         title: newTitle,
         description: newDescription,
+        issue: newIssue,
+        urgency: newUrgency,
+        charger: newCharger,
       });
       replaceField(id, updatedTask);
     }
@@ -241,11 +244,18 @@ export default function KanbanBoard() {
     setExampleData(newData);
   };
 
+  const [isShow, setIsShow] = useState(false);
+
+  const confirm = () => {
+    setIsShow(false);
+  }
+
   return (
-    <div>
-      <div className={KanbanBoardStyle.kanbanDeleteTaskButtonDiv}>
-        <Trash deleteTask={deleteTask} activeTask={activeTask} />
-      </div>
+    <>
+      <PageTitle
+        icon={<i className="pi pi-fw pi-th-large"></i>}
+        text="칸반 보드"
+      />
       <TaskDisplay
         data={exampleData}
         updateTaskCategory={updateTaskCategory}
@@ -253,9 +263,14 @@ export default function KanbanBoard() {
         setActiveTask={setActiveTask}
         getTask={getTask}
       />
-    </div>
+      <div className={KanbanBoardStyle.kanbanDeleteTaskButtonDiv}>
+        <Trash deleteTask={deleteTask} activeTask={activeTask} />
+      </div>
+    </>
   );
 }
+
+/* --------------------------------------------------------------------- */
 
 // 일감 상세 조회 및 수정버튼
 function EditButton(props) {
@@ -332,18 +347,45 @@ function TaskModal(props) {
       ? _d
       : ""
   );
+  const [issue, setIssue] = useState(
+    (_b =
+      (_a = props.initialData) === null || _a === void 0
+        ? void 0
+        : _a.issue) !== null && _b !== void 0
+      ? _b
+      : Issue.Basic
+  );
+  const [urgency, setUrgency] = useState(
+    (_b =
+      (_a = props.initialData) === null || _a === void 0
+        ? void 0
+        : _a.urgency) !== null && _b !== void 0
+      ? _b
+      : Urgency.LowGrade
+  );
+  const [charger, setCharger] = useState(
+    (_b =
+      (_a = props.initialData) === null || _a === void 0
+        ? void 0
+        : _a.charger) !== null && _b !== void 0
+      ? _b
+      : Charger.None
+  );
 
   const resetForm = () => {
     setTitle("");
     setDescription("");
     setCategory(Category.Backlog);
+    setIssue(Issue.Basic);
+    setUrgency(Urgency.LowGrade);
+    setCharger(Charger.None);
   };
 
   const onSubmit = (event) => {
     if (props.type === "Create") {
-      props.createTask(category, title, description);
+      props.createTask(category, title, description, issue, urgency, charger);
     } else {
-      props.updateTask(props.currentTaskID, category, title, description);
+      props.updateTask(props.currentTaskID, category, title, description, issue, urgency, charger);
     }
     event.preventDefault();
     if (props.type === "Create") {
@@ -363,7 +405,13 @@ function TaskModal(props) {
         currentTitle={title}
         onTitleChange={(ti) => setTitle(ti)}
         currentDescription={description}
-        onDescriptionChange={(ti) => setDescription(ti)}
+        onDescriptionChange={(des) => setDescription(des)}
+        currentIssue={issue}
+        onIssueChange={(iss) => setIssue(iss)}
+        currentUrgency={urgency}
+        onUrgencyChange={(urg) => setUrgency(urg)}
+        currentCharger={charger}
+        onChargerChange={(char) => setCharger(char)}
         onFormSubmit={onSubmit}
       />
     </Modal>
@@ -380,10 +428,19 @@ function EditTaskForm(props) {
     currentTitle,
     onDescriptionChange,
     currentDescription,
+    currentIssue,
+    onIssueChange,
+    currentUrgency,
+    onUrgencyChange,
+    currentCharger,
+    onChargerChange,
   } = props;
   return (
     <div className={KanbanBoardStyle.kanbanModalContent}>
       <form onSubmit={onFormSubmit}>
+        <div className={KanbanBoardStyle.kanbanTitles}>
+          일감 상세 조회 및 수정
+        </div>
         <br />
         <div>
           <label
@@ -391,13 +448,14 @@ function EditTaskForm(props) {
             className={KanbanBoardStyle.kanbanDetailTitle}
           >
             요약 *
-            <textarea
-              className={KanbanBoardStyle.kanbanDetailInputTitle}
-              id="input-title"
-              value={currentTitle}
-              onChange={(event) => onTitleChange(event.target.value)}
-            ></textarea>
           </label>
+          <textarea
+            className={KanbanBoardStyle.kanbanDetailInputTitle}
+            id="input-title"
+            placeholder="필수 입력 사항입니다."
+            value={currentTitle}
+            onChange={(event) => onTitleChange(event.target.value)}
+          ></textarea>
         </div>
         <div>
           <label
@@ -405,50 +463,99 @@ function EditTaskForm(props) {
             className={KanbanBoardStyle.kanbanDetailDescription}
           >
             설명
-            <textarea
-              className={KanbanBoardStyle.kanbanDetailInputDescription}
-              id="input-description"
-              value={currentDescription}
-              onChange={(event) => onDescriptionChange(event.target.value)}
-            ></textarea>
           </label>
+          <textarea
+            className={KanbanBoardStyle.kanbanDetailInputDescription}
+            id="input-description"
+            value={currentDescription}
+            onChange={(event) => onDescriptionChange(event.target.value)}
+          ></textarea>
         </div>
-        <div>
-          <label
-            htmlFor="select-category"
-            className={KanbanBoardStyle.kanbanDetailSelection}
+        <div className={KanbanBoardStyle.TaskOptions}>
+          <select
+            className={KanbanBoardStyle.kanbanDetailInputSelection}
+            id="select-category"
+            value={currentCategory}
+            onChange={(event) => {
+              onCategoryChange(event.target.value);
+            }}
           >
-            <select
-              className={KanbanBoardStyle.kanbanDetailInputSelection}
-              id="select-category"
-              value={currentCategory}
-              onChange={(event) => {
-                onCategoryChange(event.target.value);
-              }}
-            >
-              <option value={Category.Backlog}>백로그</option>
-              <option value={Category.Before}>진행 전</option>
-              <option value={Category.InProgress}>진행 중</option>
-              <option value={Category.Done}>완료</option>
-            </select>
-          </label>
+            <option value={Category.Backlog}>백로그</option>
+            <option value={Category.Before}>진행 전</option>
+            <option value={Category.InProgress}>진행 중</option>
+            <option value={Category.Done}>완료</option>
+          </select>
+          <select
+            className={KanbanBoardStyle.kanbanDetailInputSelection}
+            id="select-issue"
+            value={currentIssue}
+            onChange={(event) => {
+              onIssueChange(event.target.value);
+            }}
+          >
+            <option value={Issue.Basic}>기본</option>
+            <option value={Issue.Issue}>이슈</option>
+          </select>
+
+          <select
+            className={KanbanBoardStyle.kanbanDetailInputSelection}
+            id="select-urgency"
+            value={currentUrgency}
+            onChange={(event) => {
+              onUrgencyChange(event.target.value);
+            }}
+          >
+            <option value={Urgency.LowGrade}>낮음</option>
+            <option value={Urgency.NormalGrade}>보통</option>
+            <option value={Urgency.HighGrade}>긴급</option>
+          </select>
+
+          <select
+            className={KanbanBoardStyle.kanbanDetailInputSelection}
+            id="select-charger"
+            value={currentCharger}
+            onChange={(event) => {
+              onChargerChange(event.target.value);
+            }}
+          >
+            <option value={Charger.None}>담당자 없음</option>
+            <option value={Charger.PM}>PM</option>
+            <option value={Charger.Member}>회원</option>
+            <option value={Charger.Park}>박성준</option>
+            <option value={Charger.Lee}>이호성</option>
+            <option value={Charger.Joo}>장민주</option>
+            <option value={Charger.Sol}>장한솔</option>
+            <option value={Charger.Cha}>차우진</option>
+          </select>
         </div>
 
         <br />
-        <input type="Submit" value="Submit" readOnly={true} />
+        <div className={KanbanBoardStyle.kanbanDetailButton}>
+          <input
+            className={KanbanBoardStyle.saveButton}
+            type="Submit"
+            value="확인"
+            readOnly={true}
+          />
+          <button
+            className={KanbanBoardStyle.cancelButton}
+            onClick={props.onClose}
+          >
+            취소
+          </button>
+        </div>
       </form>
     </div>
   );
 }
 
-// 모달 창
+//모달 창
 function Modal(props) {
   return (
     <>
       <div className={KanbanBoardStyle.kanbanModalScreen} />
       <div role="dialog" className={KanbanBoardStyle.kanbanModal}>
         {props.children}
-        <button onClick={props.onClose}>취소</button>
       </div>
     </>
   );
