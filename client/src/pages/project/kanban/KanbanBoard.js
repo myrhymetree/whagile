@@ -244,11 +244,6 @@ export default function KanbanBoard() {
     setExampleData(newData);
   };
 
-  const [isShow, setIsShow] = useState(false);
-
-  const confirm = () => {
-    setIsShow(false);
-  }
 
   return (
     <>
@@ -452,7 +447,6 @@ function EditTaskForm(props) {
           <textarea
             className={KanbanBoardStyle.kanbanDetailInputTitle}
             id="input-title"
-            placeholder="필수 입력 사항입니다."
             value={currentTitle}
             onChange={(event) => onTitleChange(event.target.value)}
           ></textarea>
@@ -529,7 +523,6 @@ function EditTaskForm(props) {
           </select>
         </div>
 
-        <br />
         <div className={KanbanBoardStyle.kanbanDetailButton}>
           <input
             className={KanbanBoardStyle.saveButton}
