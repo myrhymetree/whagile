@@ -38,8 +38,10 @@ function List() {
     useEffect(
         () => {
             dispatch(callGetProjectsAPI({
-                'loginMember': decoded.code,
-                'searchValue': searchValue
+                 
+                    'loginMember': (decoded !== 'undefined')? decoded.code: '',
+                    'searchValue': searchValue
+
             }));
         },
         [searchValue]

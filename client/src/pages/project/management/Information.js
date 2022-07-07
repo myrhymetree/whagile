@@ -36,6 +36,7 @@ function Information() {
             dispatch(callGetProjectMemberAPI({
                 'projectCode': projectCode
             }));
+            setTeamMates(memberList);
         },
         []
       );

@@ -151,7 +151,9 @@ exports.deleteProject = () => {
 }
 
 exports.selectProjectMember = (projectCode) => {
-  return `
+  
+  let query =
+    `
     SELECT
            A.MEMBER_CODE
          , B.MEMBER_ID
@@ -162,5 +164,14 @@ exports.selectProjectMember = (projectCode) => {
       JOIN TBL_MEMBER B ON (A.MEMBER_CODE = B.MEMBER_CODE)
       JOIN TBL_AUTHORITY C ON (A.AUTHORITY_CODE = C.AUTHORITY_CODE)
      WHERE A.PROJECT_CODE = ${ projectCode }
+     
   `
+
+  if(params.searchValue !== undefined) {
+    query += ` AND ${'B.MEMBER_ID'} LIKE '%${params.searchValue}%'`;
+ }
+
+ query += `ORDER BY A.PROJECT_CODE DESC`;
+
+ return query;
 }
