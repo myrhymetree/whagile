@@ -59,7 +59,6 @@ exports.registProject = (projectInfo) => {
 }
 
 exports.modifyProject = (projectInfo) => {
-    
     return new Promise(async (resolve, reject) => {
         
         const connection = getConnection();
@@ -68,9 +67,8 @@ exports.modifyProject = (projectInfo) => {
         try {
             const updatedproject = await ProjectRepository.updateProject(connection, projectInfo);
             const updatedManager1 = await ProjectRepository.updateManager1(connection, projectInfo.projectCode);
-            const memberCode = 4;
-            const updatedManager2 = await ProjectRepository.updateManager2(connection, projectInfo.projectCode, memberCode);
-            const updatedProject = await ProjectRepository.selectProjectWithProjectCode(connection, projectInfo.projectCode);
+            const updatedManager2 = await ProjectRepository.updateManager2(connection, projectInfo.projectCode, projectInfo.projectOwner);
+            const updatedProject = await ProjectRepository.selectProject(connection, projectInfo.projectCode);
             connection.commit();
 
             resolve(updatedProject);

@@ -14,19 +14,52 @@ import { classNames } from 'primereact/utils';
 import { Dropdown } from 'primereact/dropdown';
 
 function Information() {
-    const [projectName, setProjectName ] = useState('');
-    const [projectDescription, setProjectDescription ] = useState('');
-    const [selectedProjectOwner, setSelectedProjectOwner] = useState('');
-    const [teamMates, setTeamMates] = useState([]);
     const toast = useRef(null);
     const dispatch = useDispatch();
     const { projectCode } = useParams();
     const project = useSelector(state => state.projectsReducer);
+    const memberList = useSelector(state => state.projectMemberReducer);
     console.log(project);
+    console.log(memberList);
+    const [teamMates, setTeamMates] = useState([]);
+    const [projectName, setProjectName ] = useState('');
+    const [projectDescription, setProjectDescription ] = useState('');
+    const [selectedProjectOwner, setSelectedProjectOwner] = useState('');
+    console.log(selectedProjectOwner);
+    
+    useEffect(
+        () =>
+        {
+            dispatch(callGetProjectAPI({
+                'projectCode': projectCode
+            }));
+            dispatch(callGetProjectMemberAPI({
+                'projectCode': projectCode
+            }));
+            setTeamMates(memberList);
+        },
+        []
+      );
+
+      useEffect(
+        () =>
+        {   
+            if(project.length !== 0) {
+
+                setProjectName(project[0].projectName);
+                setProjectDescription(project[0].projectDescription);
+                setSelectedProjectOwner(project[0].projectOwnerCode);
+                setTeamMates(memberList);
+            }
+        },
+        [project]
+      );
 
     const defaultValues = {
-        projectName : '',
-        projectDescription : ''
+        projectCode: projectCode,
+        projectName : projectName,
+        projectDescription : projectDescription,
+        projectOwner: selectedProjectOwner
     };
 
     const { control, formState: { errors }, handleSubmit } = useForm({ defaultValues });
@@ -35,10 +68,11 @@ function Information() {
         return errors[name] && <small className="p-error">{errors[name].message}</small>
     };
 
-    const acceptFunc = async () => { await dispatch(callPutProjectAPI(projectName, projectDescription, selectedProjectOwner));
+    const acceptFunc = async () => { await dispatch(callPutProjectAPI(projectCode, projectName, projectDescription, selectedProjectOwner));
         await toast.current.show({ severity: 'info', summary: 'Confirmed', detail: '프로젝트 수정을 완료했습니다.', life: 3000 })};
 
     const submitHandler = async (data) => {
+        console.log('안녕');
         await setProjectDescription(data.projectDescription);
         await setProjectName(data.projectName);
         await confirmDialog({
@@ -50,24 +84,14 @@ function Information() {
         });
     }
 
-    useEffect(
-        () =>
-        {
-             dispatch(callGetProjectAPI({
-                'projectCode': projectCode
-            }));
-            const teamMates = callGetProjectMemberAPI({
-                'projectCode': projectCode
-            });
-            console.log('teamMates', teamMates);
-        },
-        []
-      );
-      
+    const onProjectMemberChange = (e) => {
+        setSelectedProjectOwner(e.value);
+    }
 
     return (
         <>
             <Toast ref={toast} />
+            <ConfirmDialog />
             <PageTitle 
                 icon={<i className="pi pi-fw pi-cog"></i>}
                 text="프로젝트 상세정보"
@@ -88,7 +112,8 @@ function Information() {
                                     <InputText 
                                         id={field.name} 
                                         {...field}
-                                        value={ (project.length !== 0)? project[0].projectName: '' }
+                                        onChange={ (e) => {setProjectName(e.target.value)}}
+                                        value={ projectName }
                                         autoComplete="off" 
                                         autoFocus 
                                         className={classNames({ 'p-invalid': fieldState.invalid })} 
@@ -107,7 +132,8 @@ function Information() {
                                     <InputText 
                                         id={field.name} 
                                         {...field}
-                                        value={ (project.length !== 0)? project[0].projectDescription: '' }
+                                        onChange={ (e) => {setProjectDescription(e.target.value)}}
+                                        value={ projectDescription }
                                         autoComplete="off" 
                                         autoFocus 
                                         className={classNames({ 'p-invalid': fieldState.invalid })} 
@@ -116,19 +142,21 @@ function Information() {
                         {getFormErrorMessage('projectDescription')}
                     </div>
 
-                    {/* <div>
-                        <Dropdown value={selectedCountry} options={countries} onChange={onCountryChange} optionLabel="name" filter showClear filterBy="name"
-                            valueTemplate={selectedCountryTemplate} itemTemplate={countryOptionTemplate} required/>
-                    </div> */}
                     <div>
-                        <Dropdown value={selectedProjectOwner} options={teamMates} required/>
+                        <Dropdown 
+                            value={selectedProjectOwner} 
+                            options={teamMates} 
+                            onChange={onProjectMemberChange} 
+                            optionValue="memberCode" 
+                            optionLabel="memberName" 
+                        />
                     </div>
                     
                 </div>
 
                 <Button 
                     type="submit" 
-                    label="등록" 
+                    label="수정" 
                     className="p-button-sm"
                 />
             </form>

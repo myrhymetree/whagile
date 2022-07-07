@@ -38,8 +38,10 @@ function List() {
     useEffect(
         () => {
             dispatch(callGetProjectsAPI({
-                'loginMember': decoded.code,
-                'searchValue': searchValue
+                 
+                    'loginMember': (decoded !== 'undefined')? decoded.code: '',
+                    'searchValue': searchValue
+
             }));
         },
         [searchValue]
@@ -48,7 +50,7 @@ function List() {
     const onRowSelect = (event) => {
         // toast.current.show({ severity: 'info', summary: 'Product Selected', detail: `Name: ${event.projects.peojectCode}`, life: 3000 });
         console.log(event.originalEvent);
-        navigate(`/project/${event.rowData.projectCode}`);
+        navigate(`/project/${event.rowData.projectCode}/dashboard`);
     }
 
     const onRowUnselect = (event) => {
