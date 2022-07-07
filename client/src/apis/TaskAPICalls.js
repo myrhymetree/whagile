@@ -1,8 +1,8 @@
 import { GET_TASKS } from "../modules/TaskModule";
 
-function callGetTaskAPI(url) {
+function callGetTasksAPI(url) {
   const requestURL = url || "http://localhost:8888/api/tasks";
-
+  
   return async function getTasks(dispatch, getState) {
     const result = await fetch(requestURL).then((res) => res.json());
 
@@ -11,4 +11,4 @@ function callGetTaskAPI(url) {
   };
 }
 
-export default callGetTaskAPI;
+export default callGetTasksAPI;

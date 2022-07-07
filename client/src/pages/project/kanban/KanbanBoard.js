@@ -1,7 +1,10 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { Category, Issue, Urgency, Charger } from "./Types";
 import KanbanBoardStyle from "./KanbanBoard.module.css";
 import PageTitle from "../../../components/items/PageTitle";
+import callGetTasksAPI from "../../../apis/TaskAPICalls";
+
 
 // 초기 더미 데이터
 const initialData = [
@@ -27,17 +30,55 @@ const initialData = [
   { category: Category.Before, id: 19, title: "백로그 생성" },
 ];
 
-// 칸반 보드
+
+// 일감 목록 조회 (필터?)
+export function KanbanBoardTasks() {
+
+  const tasks = useSelector(state => state.tasksReducer);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(callGetTasksAPI());
+  },[tasks]
+  )
+
+  return (
+    tasks && (
+      <div>
+        <ul>
+          {tasks.map((task) => (
+            <li key={task.backlogCode}>{task.backlogTitle}</li>
+          ))}
+        </ul>
+      </div>
+    )
+  );
+}
+
+
+
+
+// 칸반 보드 전체
 export default function KanbanBoard() {
   const [exampleData, setExampleData] = useState(() => initialData);
   const lastID = useRef(20);
   const [activeTask, setActiveTask] = useState(null);
 
+  // 새로운 데이터를 exampleData에 넣음
   const replaceField = (id, newField) => {
-    const newData = exampleData.map((u) => (u.id !== id ? u : newField));
+    const newData = exampleData.map((ex) => (ex.id !== id ? ex : newField));
     setExampleData(newData);
   };
-  const createTask = (category, title, description, issue, urgency, charger) => {
+
+  // 새로운 일감 만들기 (마지막 ID + 1 ) -  exampleData에 넣음
+  const createTask = (
+    category,
+    title,
+    description,
+    issue,
+    urgency,
+    charger
+  ) => {
     const newTask = {
       category,
       title,
@@ -51,18 +92,18 @@ export default function KanbanBoard() {
     lastID.current += 1;
     setExampleData(newData);
   };
-  
+
+  // 일감 id를 받아서 순회 - exampleData의 id와 같으면 반환 / 같지 않으면 null반환
   const getTask = (id) => {
     for (let i = 0; i < exampleData.length; i++) {
       if (exampleData[i].id === id) {
         return exampleData[i];
       }
     }
-
     return null;
   };
 
-  // 칸반 컬럼
+  // 칸반 컬럼 - 컬럼에 박스(일감)을 뿌려줌
   function KanbanColumn(props) {
     const items = props.data.map((val) => (
       <KanbanBox
@@ -97,48 +138,71 @@ export default function KanbanBoard() {
 
   // drag and drop에 따라 바뀌는 카테고리 업데이트
   function TaskDisplay(props) {
+    // 구조분해 할당
     const { updateTaskCategory, data, setActiveTask, getTask } = props;
 
+    // 드래그하는 특정 DOM(드래그하는 대상, 컬럼)을 선택하기 위해 useRef 사용
     const dragItem = useRef();
     const dragOverKanbanColumn = useRef();
 
+    // id를 받아 드래그 아이템의 현재 값을 id로 지정
+    // activeTask는 null -> id 넣어줌
     const dragItemStart = (id, event) => {
       dragItem.current = id;
       setActiveTask(id);
     };
+
+    // 드래그되는 카테고리에서
     const dragOverCategory = (category, event) => {
+      //category를 받아 드래그 하는 컬럼의 현재 값을 category로 지정
       dragOverKanbanColumn.current = category;
+
+      // 만약 드래그하는 대상의 현재 값이 널이 아니면(id가 있으면)
+      // currentItem에 드래그하는 대상의 현재 값을 getTask(exampleData에 매칭)해서 넣어줌
       if (dragItem.current != null) {
         const currentItem = getTask(dragItem.current);
+
+        // currentItem이 null이거나 0이면,  void(아무일도 하지 않음)
+        // 그렇지 않으면 현재아이템의 카테고리가 됨 ->> 이 값이 category와 다른 경우
         if (
           (currentItem === null || currentItem === void 0
             ? void 0
             : currentItem.category) !== category
         ) {
+          //이런 경우에 이벤트 작동 못하게 막음
           event.preventDefault();
         }
       }
     };
 
+    // drop - 드래그 아이템과 칸반 컬럼의 현재 값이 null이면 카테고리에 값 업데이트
     const drop = () => {
       if (dragItem.current != null && dragOverKanbanColumn.current != null) {
         updateTaskCategory(dragItem.current, dragOverKanbanColumn.current);
       }
     };
+    
+    // filterBy - 카테고리 받아서 반환 ( 아이템 카테고리와 카테고리 같은 것만)
     const filterBy = (category) => {
       return data.filter((item) => item.category === category);
     };
+
+    // 칸반 컬럼 만들기
     const createKanbanColumn = (category) => (
       <KanbanColumn
         category={category}
+        
         data={filterBy(category)}
+
         KanbanBox={{
           onDragStart: dragItemStart,
           updateTask: props.updateTask,
         }}
+
         onDragOver={(event) => {
           dragOverCategory(category, event);
         }}
+
         onDrop={drop}
       />
     );
@@ -190,7 +254,6 @@ export default function KanbanBoard() {
 
   // 일감(백로그) 삭제
   function Trash({ activeTask, deleteTask }) {
-
     const onDragOver = (event) => {
       event.preventDefault();
     };
@@ -207,24 +270,36 @@ export default function KanbanBoard() {
         onDragOver={onDragOver}
         onDrop={onDrop}
       >
-        <div>삭제할 일감을 이곳으로 옮겨주세요</div>
+        <div>삭제할 백로그와 일감을 이곳으로 옮겨주세요</div>
       </div>
     );
   }
 
-  //
+  // 카테고리 업데이트- taskFromID에 getTask(exampleData에 매칭)한 값 넣어줌
+  // 그 값이 null아니면, 일감 카테고리를 업데이트
   const updateTaskCategory = (id, newCategory) => {
     const taskFromID = getTask(id);
     if (taskFromID != null) {
+      // updatedTask - 빈객체에 taskFromID 합친다음 다시 카테고리 새롭게 받아서 합침
       const updatedTask = Object.assign(Object.assign({}, taskFromID), {
         category: newCategory,
       });
+      //그리고 이걸 exampleData에 id와 업데이트된 task를 넣어줌
       replaceField(id, updatedTask);
     }
   };
 
-  //
-  const updateTask = (id, newCategory, newTitle, newDescription, newIssue, newUrgency, newCharger) => {
+
+  //일감 업데이트 (카테고리 설명과 동일)
+  const updateTask = (
+    id,
+    newCategory,
+    newTitle,
+    newDescription,
+    newIssue,
+    newUrgency,
+    newCharger
+  ) => {
     const taskFromID = getTask(id);
     if (taskFromID != null) {
       const updatedTask = Object.assign(Object.assign({}, taskFromID), {
@@ -239,12 +314,31 @@ export default function KanbanBoard() {
     }
   };
 
+
+  // 일감 삭제
   const deleteTask = (id) => {
+    // newData에 아이디값이 일치 하지 않는 것만 담음( 삭제된것 빼고 남음 )
     const newData = exampleData.filter((item) => item.id !== id);
-    setExampleData(newData);
+    // deletedData에 아이디 값이 일치하는 것만 담음 ( 삭제된 아이템 )
+    const deletedData = exampleData.filter((item) => item.id === id);
+
+    if (newData) {
+      // 예제 데이터 삭제되지 않은 아이템을 담음
+      setExampleData(newData);
+    }
+    if (
+      // 삭제된 아이템의 카테고리가 백로그가 아니면
+      deletedData[0].category === "진행 전" ||
+      deletedData[0].category === "진행 중" ||
+      deletedData[0].category === "완료"
+    ) {
+      console.log(deletedData[0].category);
+      // 삭제된 아이템 백로그 카테고리로 이동 ( 미구현 )
+      // updateTaskCategory(deletedData);
+    }
   };
 
-
+  // 전체 Return
   return (
     <>
       <PageTitle
@@ -258,6 +352,7 @@ export default function KanbanBoard() {
         setActiveTask={setActiveTask}
         getTask={getTask}
       />
+      <KanbanBoardTasks />
       <div className={KanbanBoardStyle.kanbanDeleteTaskButtonDiv}>
         <Trash deleteTask={deleteTask} activeTask={activeTask} />
       </div>
@@ -265,7 +360,6 @@ export default function KanbanBoard() {
   );
 }
 
-/* --------------------------------------------------------------------- */
 
 // 일감 상세 조회 및 수정버튼
 function EditButton(props) {
@@ -295,6 +389,7 @@ function KanbanBox(props) {
         {props.data.title}
         <EditButton
           onClick={(event) => {
+            //상위 엘리먼트 이벤트 전파 중단
             event.stopPropagation();
             setShowModal(true);
           }}
@@ -314,6 +409,13 @@ function KanbanBox(props) {
     </>
   );
 }
+
+
+
+
+/* ------------------------------모달-------------------------------- */
+
+
 
 // 일감 모달창 수정 적용
 function TaskModal(props) {
@@ -367,6 +469,7 @@ function TaskModal(props) {
       : Charger.None
   );
 
+  // 초기 폼
   const resetForm = () => {
     setTitle("");
     setDescription("");
@@ -376,22 +479,30 @@ function TaskModal(props) {
     setCharger(Charger.None);
   };
 
+  // submit 동작
   const onSubmit = (event) => {
     if (props.type === "Create") {
+      // 생성
       props.createTask(category, title, description, issue, urgency, charger);
     } else {
+      //수정
       props.updateTask(props.currentTaskID, category, title, description, issue, urgency, charger);
     }
-    event.preventDefault();
-    if (props.type === "Create") {
+    event.preventDefault(); //이벤트 동작 중지
+    // 만약 create면 초기폼
+       if (props.type === "Create") {
       resetForm();
     }
     props.onSubmit();
   };
+
+  //close 동작
   const onClose = (event) => {
     resetForm();
     props.onSubmit();
   };
+
+
   return (
     <Modal onClose={onClose}>
       <EditTaskForm
@@ -436,7 +547,6 @@ function EditTaskForm(props) {
         <div className={KanbanBoardStyle.kanbanTitles}>
           일감 상세 조회 및 수정
         </div>
-        <br />
         <div>
           <label
             htmlFor="input-title"

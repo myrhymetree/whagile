@@ -8,7 +8,7 @@ const actions = createActions({
   [GET_TASKS]: () => {},
 });
 
-const TaskReducer = handleActions(
+const TasksReducer = handleActions(
   {
     [GET_TASKS]: (state, { payload }) => {
       return { payload };
@@ -17,4 +17,4 @@ const TaskReducer = handleActions(
   initialState
 );
 
-export default TaskReducer;
+export default TasksReducer;
