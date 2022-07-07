@@ -2,7 +2,6 @@ import MainNavbarCSS from "./MainNavbar.module.css";
 import { callGetProjectAPI } from "../../apis/ProjectAPICalls";
 
 import { Menu } from "primereact/menu";
-import { TieredMenu } from 'primereact/tieredmenu';
 import { Button } from "primereact/button";
 import Icon from "@mdi/react";
 import { mdiMonitorDashboard } from "@mdi/js";
@@ -17,8 +16,8 @@ function MainNavbar({projectCode}) {
   const dispatch = useDispatch();
   const project = useSelector(state => state.projectsReducer);
 
+  console.log(project);
   const [selectedMenu, setSelectedMenu] = useState();
-  const [isManagement, setIsmanageMent] = useState(false);
   const menus = [
     'dashboard',
     'backlog-and-sprint',
@@ -27,18 +26,6 @@ function MainNavbar({projectCode}) {
     'history',
     'management'
   ];
-
-  const style1 = () => {
-
-    if(selectedMenu ==='management') {
-      setIsmanageMent(true);
-    }
-  }
-
-  const style2 = {
-    backgroundColor: '#00AA9C',
-    color: '#FFFFFF'
-  }
 
   const number = parseInt(`${projectCode}`);
 
@@ -85,12 +72,12 @@ function MainNavbar({projectCode}) {
     },
     {
       label: "프로젝트 관리",
-      items: [{label: '프로젝트 세부사항', icon: 'pi pi-fw pi-cog', command:()=>{ navigate(`/project/${ projectCode }/management/information`); }},
-              {label: '팀원 목록', icon: 'pi pi-fw pi-power-off', command:()=>{ navigate(`/project/${ projectCode }/management/teamMateList`); }},
-              {label: '프로젝트 통계', icon: 'pi pi-fw pi-power-off', command:()=>{ navigate(`/project/${ projectCode }/management/statistics`); }}],
       icon: "pi pi-fw pi-cog",
-      style: { backgroundColor: (selectedMenu ==='management')? '#00AA9C' : '', color: (selectedMenu ==='management')? '#FFFFFF' : ''}
-    }
+      style: { backgroundColor: (selectedMenu ==='management')? '#00AA9C': '' },
+      command: () => {
+        navigate(`/project/${ projectCode }/management`);
+      },
+    },
   ];
 
   useEffect(
@@ -101,7 +88,7 @@ function MainNavbar({projectCode}) {
         }));
     },
     []
-  );
+);
 
   useEffect(
     () => {
@@ -132,7 +119,7 @@ function MainNavbar({projectCode}) {
         <span style={{ marginLeft: "8px" }}>{ (project.length !== 0)? project[0].projectName: '' }</span>
       </div>
       <div>
-        <TieredMenu model={ items } />
+        <Menu model={ items }/>
       </div>
       <div>
         <Button
