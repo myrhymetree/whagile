@@ -19,13 +19,31 @@
   align-items: left;
   -ms-overflow-style: none;
   scrollbar-width: none;
-  overflow-y: scroll; 
+  overflow-y: auto; 
   margin: 10px;
 }
 
 .kanbanColumn::-webkit-scrollbar {
-  display: none;
+  /* display: none; */
+  width:5px;
 }
+
+
+/* 스크롤바 막대 설정*/
+.kanbanColumn::-webkit-scrollbar-thumb{
+    height: 17%;
+    background-color:#8B6AFF;
+    border-radius: 10px;  
+}
+
+/* 스크롤바 뒷 배경 설정*/
+/* .kanbanColumn::-webkit-scrollbar-track{
+    background-color: #282936;
+} */
+
+
+
+
 
 .kanbanColumn {
   height: 500px;
@@ -35,14 +53,17 @@
 
 
 .kanbanColumnTitle{
+  position: sticky;
+  top:0;
   border: 2px solid;
-  border-radius: 15px;
-  width: 100px;
-  height: 30px;
+  border-radius: 10px;
+  width: 230px;
+  height: 33px;
   font-size: 15px;
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: #282936;
 }
 
 
@@ -57,7 +78,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 10px;
+  margin: 11px 7px 11px 7px;
 }
 
 
@@ -115,10 +136,10 @@
 
 
 /* 칸반 카테고리 별 색상 스타일*/
-.kanbanColumnBacklog{color:#00aa9c}
-.kanbanColumnBefore{color:#FFB95F}
-.kanbanColumnInProgress{color:#E676E2}
-.kanbanColumnDone{color:#F86064}
+.kanbanColumnBacklog{color:#00aa9c;}
+.kanbanColumnBefore{color:#FFB95F;}
+.kanbanColumnInProgress{color:#E676E2;}
+.kanbanColumnDone{color:#F86064;}
 
 
 

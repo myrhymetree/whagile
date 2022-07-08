@@ -11,7 +11,8 @@ const actions = createActions({
 const TasksReducer = handleActions(
   {
     [GET_TASKS]: (state, { payload }) => {
-      return { payload };
+
+      return payload;
     },
   },
   initialState

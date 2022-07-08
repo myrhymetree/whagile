@@ -31,31 +31,6 @@ const initialData = [
 ];
 
 
-// 일감 목록 조회 (필터?)
-export function KanbanBoardTasks() {
-
-  const tasks = useSelector(state => state.tasksReducer);
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(callGetTasksAPI());
-  },[tasks]
-  )
-
-  return (
-    tasks && (
-      <div>
-        <ul>
-          {tasks.map((task) => (
-            <li key={task.backlogCode}>{task.backlogTitle}</li>
-          ))}
-        </ul>
-      </div>
-    )
-  );
-}
-
-
 
 
 // 칸반 보드 전체
@@ -103,16 +78,11 @@ export default function KanbanBoard() {
     return null;
   };
 
+
+  
   // 칸반 컬럼 - 컬럼에 박스(일감)을 뿌려줌
   function KanbanColumn(props) {
-    const items = props.data.map((val) => (
-      <KanbanBox
-        key={val.id}
-        data={val}
-        onDragStart={props.KanbanBox.onDragStart}
-        updateTask={props.KanbanBox.updateTask}
-      />
-    ));
+
     return (
       <>
         <div
@@ -121,12 +91,18 @@ export default function KanbanBoard() {
           onDrop={props.onDrop}
         >
           <div>
-            <div>
-              <h2 className={KanbanBoardStyle.kanbanColumnTitle}>
-                {props.category}
-              </h2>
-            </div>
-            {items}
+            <h2 className={KanbanBoardStyle.kanbanColumnTitle}>
+              {props.category}
+            </h2>
+            {props.data &&
+              props.data.map((task) => (
+                <KanbanBox
+                  key={task.backlogCode}
+                  data={task}
+                  onDragStart={props.KanbanBox.onDragStart}
+                  updateTask={props.KanbanBox.updateTask}
+                />
+              ))}
           </div>
           <div className={KanbanBoardStyle.kanbanNewTaskButtonDiv}>
             <CreateNewTaskButton createTask={createTask} />
@@ -181,28 +157,37 @@ export default function KanbanBoard() {
         updateTaskCategory(dragItem.current, dragOverKanbanColumn.current);
       }
     };
+
     
+    const tasks = useSelector((state) => state.TasksReducer);
+    const dispatch = useDispatch();
+    useEffect(
+      () => {
+        dispatch(callGetTasksAPI());
+      },
+      []
+    );
+
     // filterBy - 카테고리 받아서 반환 ( 아이템 카테고리와 카테고리 같은 것만)
     const filterBy = (category) => {
-      return data.filter((item) => item.category === category);
+      
+      if(tasks) {
+        return tasks.filter((item) => item.progressStatus === category);
+      }
     };
 
     // 칸반 컬럼 만들기
     const createKanbanColumn = (category) => (
       <KanbanColumn
         category={category}
-        
         data={filterBy(category)}
-
         KanbanBox={{
           onDragStart: dragItemStart,
           updateTask: props.updateTask,
         }}
-
         onDragOver={(event) => {
           dragOverCategory(category, event);
         }}
-
         onDrop={drop}
       />
     );
@@ -224,6 +209,33 @@ export default function KanbanBoard() {
     );
   }
 
+
+
+
+
+
+
+  // const registNewTask = (newTask) => {
+
+  //   fetch("http://localhost:8888/api/tasks", {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //       "Access-Token": window.localStorage.getItem("access_token"),
+  //     },
+  //     body: JSON.stringify(newTask),
+  //   })
+  //     .then((res) => res.json())
+  //     .then((result) => {
+  //       if (result.status == 201) {
+  //         console.log(result.message);
+  //       } else {
+  //         console.log(result.status);
+  //       }
+  //     })
+
+  // };
+
   // 일감 생성
   function CreateNewTaskButton(props) {
     const [showModal, setShowModal] = useState(false);
@@ -234,6 +246,7 @@ export default function KanbanBoard() {
             className={KanbanBoardStyle.kanbanBoxAddButton}
             onClick={(e) => {
               setShowModal(true);
+              // registNewTask();
             }}
           >
             +
@@ -289,7 +302,6 @@ export default function KanbanBoard() {
     }
   };
 
-
   //일감 업데이트 (카테고리 설명과 동일)
   const updateTask = (
     id,
@@ -313,7 +325,6 @@ export default function KanbanBoard() {
       replaceField(id, updatedTask);
     }
   };
-
 
   // 일감 삭제
   const deleteTask = (id) => {
@@ -352,7 +363,6 @@ export default function KanbanBoard() {
         setActiveTask={setActiveTask}
         getTask={getTask}
       />
-      <KanbanBoardTasks />
       <div className={KanbanBoardStyle.kanbanDeleteTaskButtonDiv}>
         <Trash deleteTask={deleteTask} activeTask={activeTask} />
       </div>
@@ -382,11 +392,11 @@ function KanbanBox(props) {
       <div
         className={KanbanBoardStyle.kanbanBox}
         onDragStart={(event) => {
-          props.onDragStart(props.data.id, event);
+          props.onDragStart(props.data.backlogCode, event);
         }}
         draggable="true"
       >
-        {props.data.title}
+        {props.data.backlogTitle}
         <EditButton
           onClick={(event) => {
             //상위 엘리먼트 이벤트 전파 중단
@@ -402,7 +412,7 @@ function KanbanBox(props) {
             setShowModal(false);
           }}
           updateTask={props.updateTask}
-          currentTaskID={props.data.id}
+          currentTaskID={props.data.backlogCode}
           initialData={props.data}
         />
       )}
@@ -497,14 +507,14 @@ function TaskModal(props) {
   };
 
   //close 동작
-  const onClose = (event) => {
+  const onClose = () => {
     resetForm();
     props.onSubmit();
   };
 
 
   return (
-    <Modal onClose={onClose}>
+    <Modal>
       <EditTaskForm
         currentCategory={category}
         onCategoryChange={(cat) => setCategory(cat)}
@@ -519,6 +529,7 @@ function TaskModal(props) {
         currentCharger={charger}
         onChargerChange={(char) => setCharger(char)}
         onFormSubmit={onSubmit}
+        onClose={onClose}
       />
     </Modal>
   );
@@ -540,13 +551,12 @@ function EditTaskForm(props) {
     onUrgencyChange,
     currentCharger,
     onChargerChange,
+    onClose
   } = props;
   return (
     <div className={KanbanBoardStyle.kanbanModalContent}>
       <form onSubmit={onFormSubmit}>
-        <div className={KanbanBoardStyle.kanbanTitles}>
-          일감 상세 조회 및 수정
-        </div>
+        <div className={KanbanBoardStyle.kanbanTitles}>상세 조회 및 수정</div>
         <div>
           <label
             htmlFor="input-title"
@@ -557,8 +567,10 @@ function EditTaskForm(props) {
           <textarea
             className={KanbanBoardStyle.kanbanDetailInputTitle}
             id="input-title"
+            placeholder="필수 입력 사항입니다."
             value={currentTitle}
             onChange={(event) => onTitleChange(event.target.value)}
+            required
           ></textarea>
         </div>
         <div>
@@ -634,23 +646,27 @@ function EditTaskForm(props) {
         </div>
 
         <div className={KanbanBoardStyle.kanbanDetailButton}>
-          <input
-            className={KanbanBoardStyle.saveButton}
-            type="Submit"
-            value="확인"
-            readOnly={true}
-          />
-          <button
-            className={KanbanBoardStyle.cancelButton}
-            onClick={props.onClose}
-          >
-            취소
-          </button>
+          <div>
+            <input
+              className={KanbanBoardStyle.saveButton}
+              type="Submit"
+              value="확인"
+              readOnly={true}
+            />
+            <button
+              className={KanbanBoardStyle.cancelButton}
+              type="button"
+              onClick={onClose}
+            >
+              취소
+            </button>
+          </div>
         </div>
       </form>
     </div>
   );
 }
+
 
 //모달 창
 function Modal(props) {

@@ -54,3 +54,39 @@ exports.registNewTask = (task) => {
         }
     });
 };
+
+// 삭제 예시
+// exports.deleteNewTask = (backlogCode, category) => {
+//   return new Promise(async (resolve, reject) => {
+//     const connection = getConnection();
+//     connection.beginTransaction();
+
+//     try {
+//       const backlog = TasksRepository.selectTaskbyTaskCode(connection, backlogCode);
+      
+//       if(category === '백로그') {
+//         TasksRepository.deleteBacklog(connection, backlogCode);
+//       }
+
+//       if(category === '일감') {
+//         TasksRepository.deleteTask(connection, backlogCode);
+//       }
+
+//       백로그 삭제 / 일감 삭제
+//       1. backlog_category === '백로그'
+//       update backlog_delete_yn = 'y'
+//       2. backlog_category === '일감'
+//       update backlog_category = '백로그'
+
+//       connection.commit();
+
+//       resolve(result);
+//     } catch (err) {
+//       connection.rollback();
+
+//       reject(err);
+//     } finally {
+//       connection.end();
+//     }
+//   });
+// };
