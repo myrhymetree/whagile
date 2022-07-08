@@ -195,3 +195,20 @@ exports.insertProjectMember = (connection, data) => {
         });
     });
 };
+
+exports.deleteProjectMember = (connection, data) => {
+    console.log(data);
+    return new Promise((resolve, reject) => {
+        connection.query(projectQuery.deleteProjectMember(data),
+        
+        (err,results, fields) => {
+
+            if(err) {
+                console.log(err);
+                reject(err);
+            }
+
+            resolve(results);
+        });
+    });
+}

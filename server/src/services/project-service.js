@@ -144,3 +144,29 @@ exports.registProjectMember = (data) => {
         }
     });
 }
+
+exports.removeProjectMember = (data) => {
+
+    return new Promise(async (resolve, reject) => {
+
+        const connection = getConnection();
+        connection.beginTransaction();
+
+        try {
+            const result = await ProjectRepository.deleteProjectMember(connection, data);
+
+            const projectMember = await ProjectRepository.selectProjectMember(connection, data.projectCode);
+
+            connection.commit();
+
+            resolve(projectMember)
+
+        } catch (err) {
+            connection.rollback();
+
+            reject(err);
+        } finally {
+            connection.end();
+        }
+    });
+}

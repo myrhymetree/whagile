@@ -17,6 +17,7 @@ import { classNames } from 'primereact/utils';
 import { ColumnGroup } from 'primereact/columngroup';
 import { Row } from 'primereact/row';
 
+
 function List() {
     
     const decoded = decodeJwt(window.localStorage.getItem("access_token"));
@@ -38,7 +39,7 @@ function List() {
         () => {
             dispatch(callGetProjectsAPI({
                  
-                    'loginMember': decoded.code,
+                    'loginMember': (decoded !== 'undefined')? decoded.code: '',
                     'searchValue': searchValue
 
             }));

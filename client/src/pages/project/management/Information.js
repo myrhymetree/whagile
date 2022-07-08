@@ -19,8 +19,6 @@ function Information() {
     const { projectCode } = useParams();
     const project = useSelector(state => state.projectsReducer);
     const memberList = useSelector(state => state.projectMemberReducer);
-    console.log(project);
-    console.log(memberList);
     const [teamMates, setTeamMates] = useState([]);
     const [projectName, setProjectName ] = useState('');
     const [projectDescription, setProjectDescription ] = useState('');
@@ -56,9 +54,9 @@ function Information() {
       );
 
     const defaultValues = {
-        projectCode: projectCode,
-        projectName : projectName,
-        projectDescription : projectDescription,
+        projectCode: (project.length !== 0)? project[0].projectCode: '',
+        projectName : (project.length !== 0)? project[0].projectName: '',
+        projectDescription : (project.length !== 0)? project[0].projectDescription: '',
         projectOwner: selectedProjectOwner
     };
 
@@ -103,19 +101,20 @@ function Information() {
             >
                 <div className="p-fluid grid">
                     <div className="field col-12 md:col-4">
-                        <label htmlFor="inputtext">프로젝트 이름</label>
+                        <label htmlFor="projectName">프로젝트 이름</label>
                         <Controller 
                                 name="projectName" 
                                 control={control} 
-                                rules={{ required: '프로젝트 이름은 필수입니다.' }} 
+                                rules={{ required: true }} 
                                 render={({ field, fieldState }) => (
                                     <InputText 
                                         id={field.name} 
                                         {...field}
-                                        onChange={ (e) => {setProjectName(e.target.value)}}
+                                        onChange={ (e) => setProjectName(e.target.value)}
                                         value={ projectName }
+                                        // ref={handleSubmit}
                                         autoComplete="off" 
-                                        autoFocus 
+                                        // autoFocus 
                                         className={classNames({ 'p-invalid': fieldState.invalid })} 
                                     />
                             )} />
@@ -123,23 +122,23 @@ function Information() {
                     </div>
 
                     <div className="field col-12 md:col-4">
-                        <label htmlFor="inputtext">프로젝트 설명</label>
+                        <label htmlFor="projectDescription">프로젝트 설명</label>
                         <Controller 
                                 name="projectDescription" 
                                 control={control} 
-                                rules={{ required: '프로젝트 설명은 필수입니다.' }} 
+                                // rules={{ required: '프로젝트 설명은 필수입니다.' }} 
                                 render={({ field, fieldState }) => (
                                     <InputText 
                                         id={field.name} 
                                         {...field}
-                                        onChange={ (e) => {setProjectDescription(e.target.value)}}
+                                        onChange={ (e) => setProjectDescription(e.target.value)}
                                         value={ projectDescription }
                                         autoComplete="off" 
-                                        autoFocus 
+                                        // autoFocus 
                                         className={classNames({ 'p-invalid': fieldState.invalid })} 
                                     />
                             )} />
-                        {getFormErrorMessage('projectDescription')}
+                        {/* {getFormErrorMessage('projectDescription')} */}
                     </div>
 
                     <div>
@@ -158,6 +157,7 @@ function Information() {
                     type="submit" 
                     label="수정" 
                     className="p-button-sm"
+                    // onSubmit={handleSubmit(submitHandler)}
                 />
             </form>
         </>

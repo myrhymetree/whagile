@@ -135,3 +135,21 @@ exports.registProjectMember = async (req, res, next) => {
         });
 }
 
+exports.removeProjectMember = async (req, res, next) => {
+console.log('이거이거',req.params)
+    await ProjectService.removeProjectMember(req.params)
+        .then((result) => {
+            res.status(HttpStatus.OK).json({
+                stauts: HttpStatus.OK,
+                message: '해당 프로젝트에서 팀원을 제외했습니다.',
+                results: result
+            });
+        }).catch((err) => {
+
+            res.status(HttpStatus.BAD_REQUEST).json({
+                status:HttpStatus.BAD_REQUEST,
+                message: err
+            });
+        });
+}
+
