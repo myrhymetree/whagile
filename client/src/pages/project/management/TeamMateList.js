@@ -34,6 +34,8 @@ function TeamMateList() {
     const [deleteMemberDialog, setDeleteMemberDialog] = useState(false);
     const [ member, setMember ] = useState(emptyMember);
     const [globalFilter, setGlobalFilter] = useState(null);
+    const [submitted, setSubmitted] = useState(false);
+    const [memberDialog, setMemberDialog] = useState(false);
     
 
     // useEffect(
@@ -67,6 +69,12 @@ function TeamMateList() {
             'projectCode': projectCode,
             'memberCode': rowData.memberCode
         }));
+    }
+
+    const openNew = () => {
+        setMember(emptyMember);
+        setSubmitted(false);
+        setMemberDialog(true);
     }
 
     const hideDeleteMemberDialog = () => {
@@ -129,7 +137,7 @@ function TeamMateList() {
     const leftToolbarTemplate = () => {
         return (
             <>
-                <Button label="팀원 초대" icon="pi pi-plus" className="p-button-success mr-2" />
+                <Button label="팀원 초대" icon="pi pi-plus" className="p-button-success mr-2" onClick={openNew}/>
                 {/* <Button label="Delete" icon="pi pi-trash" className="p-button-danger" onClick={confirmDeleteSelected} disabled={!selectedProducts || !selectedProducts.length} /> */}
             </>
         )
@@ -163,7 +171,6 @@ function TeamMateList() {
                     paginatorLeft={paginatorLeft}
                     paginatorRight={paginatorRight}
                     onSelectionChange={e => setSelectedMember(e.value)}
-                    onCellClick={e => console.log(e)}
                     header={header}
                     // onCellUnselect={onRowUnselect}
                     // footer={footer}
@@ -185,6 +192,19 @@ function TeamMateList() {
                     {member && <span><b>      {member.memberName}</b> 팀원을 제외하시겠습니까?</span>}
                 </div>
             </Dialog>
+
+            {/* <Dialog visible={productDialog} style={{ width: '450px' }} header="Product Details" modal className="p-fluid" footer={productDialogFooter} onHide={hideDialog}>
+                {product.image && <img src={`images/product/${product.image}`} onError={(e) => e.target.src='https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} alt={product.image} className="product-image block m-auto pb-3" />}
+                <div className="field">
+                    <label htmlFor="name">Name</label>
+                    <InputText id="name" value={product.name} onChange={(e) => onInputChange(e, 'name')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.name })} />
+                    {submitted && !product.name && <small className="p-error">Name is required.</small>}
+                </div>
+                <div className="field">
+                    <label htmlFor="description">Description</label>
+                    <InputTextarea id="description" value={product.description} onChange={(e) => onInputChange(e, 'description')} required rows={3} cols={20} />
+                </div>
+            </Dialog> */}
         </>
     );
 }
