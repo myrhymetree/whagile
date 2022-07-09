@@ -50,13 +50,13 @@ function App() {
           {/* { isLogin ? <Navigate replace to ="/main" /> : <Login/>} */}
           <Route path="/main" element={ <Main/> } />
           <Route path="/signup" element={ <Signup/> } />
+          <Route path="/profile" element={ <Profile/> } />
           <Route path="/project/:projectCode" element={ <ProjectLayout/>} >
             <Route path="dashboard" element={ <Dashboard/> }/>
             <Route path="backlog-and-sprint" element={ <BacklogAndSprint/> }/>
             <Route path="gantt" element={ <GanttChart/> }/>
             <Route path="kanban-board" element={ <KanbanBoard/> }/>
             <Route path="history" element={ <History/> }/>
-            <Route path="profile" element={ <Profile/> } />
             <Route path="management">
               <Route path="information" element={ <Information/> }/>
               <Route path="teamMateList" element={ <TeamMateList/> }/>

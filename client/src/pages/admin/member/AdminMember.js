@@ -18,7 +18,9 @@ function AdminMember() {
     const [products, setProducts] = useState([]);
     const [first, setFirst] = useState(0);
     const [rows, setRows] = useState(10);
+    const [memberDetail, setMemberDetail] = useState({});
     const [memberDetailShow, setMemberDetailShow] = useState(false); // 상세보기 모달창 ON/OFF
+
 
     const [condition, setCondition] = useState(''); // 조건검색 카테고리    
     const [value, setValue] = useState(''); // 조건검색 키워드
@@ -80,7 +82,25 @@ function AdminMember() {
     const onClickMemberDetailHandler = (memberCode) => {
         console.log(memberCode);
 
-        setMemberDetailShow(true);
+        fetch(`http://localhost:8888/api/account/member?code=${memberCode}`, {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              "Access_token": window.localStorage.getItem("access_token")
+            }
+        })
+        .then(response => response.json())
+        .then(json => {
+            console.log(json.results[0]);
+            const result = json.results[0];
+            setMemberDetail(result);  
+
+            setMemberDetailShow(true);
+        })
+        .catch((err) => {
+            showError('내 정보 불러오기를 실패하였습니다.');
+        });
+
     }
 
     const actionBodyTemplate = (rowData) => {
@@ -128,6 +148,11 @@ function AdminMember() {
 
         
         setMemberDetailShow(false);
+    }
+
+    const onClickTempPwdHandler = () => {
+        
+        console.log('임시비밀번호발급');
     }
 
     return (
@@ -178,7 +203,7 @@ function AdminMember() {
             {/* 권한 순서 수정 모달창 */}
             <Dialog 
                     visible={ memberDetailShow } 
-                    style={{ width: '30vw', height: '60vh' }}
+                    style={{ width: '30vw', height: '75vh' }}
                     onHide={dismissDetail}
                     header={ 
                         <h4>회원 정보 상세 조회</h4>
@@ -195,7 +220,54 @@ function AdminMember() {
                     }
                 >
                     <div style={{width: '100%', height: '100%'}}>
-                        본문
+                    <table id={AdminMemberCSS.vertical}>                        
+                        <tbody>
+                            <tr>
+                                <th>회원 아이디</th>
+                                <td>{memberDetail.memberId || '없음' }</td>
+                            </tr>
+                            <tr>
+                                <th >회원 이메일</th>
+                                <td>{memberDetail.email || '없음' }</td>
+                            </tr>
+                            <tr>
+                                <th >회원 이름</th>
+                                <td>{memberDetail.name || '없음' }</td>
+                            </tr>
+                            <tr>
+                                <th >비밀번호</th>
+                                <td>
+                                    <Button 
+                                        id={AdminMemberCSS.pwdBtn} 
+                                        className="p-button-rounded p-button-danger p-button-sm"
+                                        onClick={ onClickTempPwdHandler}
+                                    >
+                                        임시 비밀번호 발급
+                                    </Button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th >전화번호</th>
+                                <td>{memberDetail.phone || '없음' }</td>
+                            </tr>
+                            <tr>
+                                <th >회사명</th>
+                                <td>{memberDetail.company || '없음' }</td>
+                            </tr>
+                            <tr>
+                                <th >가입 목적</th>
+                                <td>{memberDetail.purpose || '없음' }</td>
+                            </tr>
+                            <tr>
+                                <th >가입일</th>
+                                <td>{memberDetail.createDate || '없음' }</td>
+                            </tr>
+                            <tr>
+                                <th >사용중인 요금제</th>
+                                <td>'요금제'</td>
+                            </tr>
+                        </tbody>
+                    </table>
                     </div>
             </Dialog>
 

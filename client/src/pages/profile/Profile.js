@@ -7,6 +7,7 @@ import { decodeJwt } from '../../utils/tokenUtils';
 import { Toast } from 'primereact/toast';
 import { Password } from 'primereact/password';
 import { useNavigate, NavLink } from 'react-router-dom';
+import MainHeader from '../../components/commons/MainHeader';
 
 function Profile() {
 
@@ -399,135 +400,136 @@ function Profile() {
 
 
     return (
-
+        <>
+        <MainHeader/>
         
-        <div className={ ProfileCSS.profileContainer }>
-            <Toast ref={toast} position="top-center" />
-            <Toast ref={toastBC} position="top-center" />
-            {profileform &&
-            <Card style={{ width: '30em' }} footer={footer} header={header}>         
-                <span className="p-float-label p-inputtext-sm memberInfo" style={{ margin: '1.4em' }}>
-                    <InputText 
-                        id="userID" 
-                        style={{ width: '100%' }} 
-                        value={userID} 
-                        onChange={(e) => setUserID(e.target.value)} 
-                        readOnly
-                    />
-                    <label htmlFor="userID">ID</label>
-                </span>
+            <div className={ ProfileCSS.profileContainer }>
+                <Toast ref={toast} position="top-center" />
+                <Toast ref={toastBC} position="top-center" />
+                {profileform &&
+                <Card style={{ width: '30em' }} footer={footer} header={header}>         
+                    <span className="p-float-label p-inputtext-sm memberInfo" style={{ margin: '1.4em' }}>
+                        <InputText 
+                            id="userID" 
+                            style={{ width: '100%' }} 
+                            value={userID} 
+                            onChange={(e) => setUserID(e.target.value)} 
+                            readOnly
+                        />
+                        <label htmlFor="userID">ID</label>
+                    </span>
 
-                <span className="p-float-label p-inputtext-sm memberInfo" style={{ margin: '1.4em' }}>
-                    <InputText 
-                        id="username" 
-                        style={{ width: '100%' }} 
-                        value={username} 
-                        onChange={(e) => setUsername(e.target.value)} 
-                        readOnly
-                    />
-                    <label htmlFor="username">username</label>
-                </span>
+                    <span className="p-float-label p-inputtext-sm memberInfo" style={{ margin: '1.4em' }}>
+                        <InputText 
+                            id="username" 
+                            style={{ width: '100%' }} 
+                            value={username} 
+                            onChange={(e) => setUsername(e.target.value)} 
+                            readOnly
+                        />
+                        <label htmlFor="username">username</label>
+                    </span>
 
-                <span className="p-float-label p-inputtext-sm memberInfo" style={{ margin: '1.4em' }}>
-                    <InputText 
-                        id="phone" 
-                        style={{ width: '100%' }} 
-                        value={phone} 
-                        onChange={(e) => setPhone(e.target.value)}                         
-                    />
-                    <label htmlFor="phone">phone</label>
-                </span>
+                    <span className="p-float-label p-inputtext-sm memberInfo" style={{ margin: '1.4em' }}>
+                        <InputText 
+                            id="phone" 
+                            style={{ width: '100%' }} 
+                            value={phone} 
+                            onChange={(e) => setPhone(e.target.value)}                         
+                        />
+                        <label htmlFor="phone">phone</label>
+                    </span>
 
-                <span className="p-float-label p-inputtext-sm memberInfo" style={{ margin: '1.4em' }}>
-                    <InputText 
-                        id="email" 
-                        style={{ width: '100%' }} 
-                        value={email} 
-                        onChange={(e) => setEmail(e.target.value)}  
-                        readOnly                       
-                    />
-                    <label htmlFor="email">email</label>
-                </span>
+                    <span className="p-float-label p-inputtext-sm memberInfo" style={{ margin: '1.4em' }}>
+                        <InputText 
+                            id="email" 
+                            style={{ width: '100%' }} 
+                            value={email} 
+                            onChange={(e) => setEmail(e.target.value)}  
+                            readOnly                       
+                        />
+                        <label htmlFor="email">email</label>
+                    </span>
 
-                <span className="p-float-label p-inputtext-sm memberInfo" style={{ margin: '1.4em' }}>
-                    <InputText id="company" style={{ width: '100%' }} value={company} onChange={(e) => setCompany(e.target.value)} />
-                    <label htmlFor="company">company</label>
-                </span>
+                    <span className="p-float-label p-inputtext-sm memberInfo" style={{ margin: '1.4em' }}>
+                        <InputText id="company" style={{ width: '100%' }} value={company} onChange={(e) => setCompany(e.target.value)} />
+                        <label htmlFor="company">company</label>
+                    </span>
 
-                <span className="p-float-label p-inputtext-sm memberInfo" style={{ margin: '1.4em' }}>
-                    <InputText id="purpose" style={{ width: '100%' }} value={purpose} onChange={(e) => setPurpose(e.target.value)} />
-                    <label htmlFor="purpose">purpose</label>
-                </span>
+                    <span className="p-float-label p-inputtext-sm memberInfo" style={{ margin: '1.4em' }}>
+                        <InputText id="purpose" style={{ width: '100%' }} value={purpose} onChange={(e) => setPurpose(e.target.value)} />
+                        <label htmlFor="purpose">purpose</label>
+                    </span>
 
-            </Card>
-            }
-
-
-            
-            {passwordform &&
-            <Card style={{ width: '30em' }} footer={modifyFooter} header={header}>         
-
-                <span className="p-float-label p-inputtext-sm memberInfo" style={{ margin: '1.4em' }}>
-                    <Password id={ProfileCSS.password} value={originPassword} autoComplete="off"  onChange={(e) => setOriginPassword(e.target.value)} />
-                    <label htmlFor="originPassword">원래 비밀번호</label>
-                </span>
-
-                <span className="p-float-label p-inputtext-sm memberInfo" style={{ margin: '1.4em' }}>
-                    <Password id={ProfileCSS.password} value={password} autoComplete="off"  onChange={(e) => setPassword(e.target.value)} />
-                    <label htmlFor="password">바꿀 비밀번호</label>
-                </span>
-
-                <span className="p-float-label p-inputtext-sm memberInfo" style={{ margin: '1.4em' }}>
-                    <Password id={ProfileCSS.confirmPassword}  value={confirmPassword} autoComplete="off"  onChange={(e) => setConfirmPassword(e.target.value)} />
-                    <label htmlFor="confirmPassword">바꿀 비밀번호 확인</label>
-                </span>            
-
-            </Card>
-            }
-
-            {emailform &&
-            <Card style={{ width: '30em' }} footer={modifyFooter} header={header}>         
+                </Card>
+                }
 
 
-                <span className="p-float-label p-inputtext-sm memberInfo" style={{ margin: '1.4em' }}>
-                    <InputText 
-                        id="modifyEmail" 
-                        style={{ width: '100%' }} 
-                        value={modifyEmail} 
-                        onChange={(e) => setModifyEmail(e.target.value)}    
-                        disabled={ authBtn }                      
-                    />
-                    <label htmlFor="modifyEmail">바꿀 이메일 주소</label>
-                </span>
+                
+                {passwordform &&
+                <Card style={{ width: '30em' }} footer={modifyFooter} header={header}>         
 
-                <span className="p-float-label p-inputtext-sm memberInfo" style={{ margin: '1.4em' }}>
-                    <InputText 
-                        id="emailAuthCode" 
-                        style={{ width: '60%' }} 
-                        value={emailAuthCode} 
-                        onChange={(e) => setEmailAuthCode(e.target.value)}                         
-                    />
-                    <label htmlFor="emailAuthCode">인증번호</label>
-                    <Button 
-                        id="authNumberBtn"
-                        style={{ width: '35%', marginLeft: '10px' }} 
-                        className="p-button-sm p-button-success p-button-rounded" 
-                        label="인증번호 발급" 
-                        onClick={ onClickAuthNumber }
-                        disabled={ authBtn } 
-                    />
-                </span>
+                    <span className="p-float-label p-inputtext-sm memberInfo" style={{ margin: '1.4em' }}>
+                        <Password id={ProfileCSS.password} value={originPassword} autoComplete="off"  onChange={(e) => setOriginPassword(e.target.value)} />
+                        <label htmlFor="originPassword">원래 비밀번호</label>
+                    </span>
+
+                    <span className="p-float-label p-inputtext-sm memberInfo" style={{ margin: '1.4em' }}>
+                        <Password id={ProfileCSS.password} value={password} autoComplete="off"  onChange={(e) => setPassword(e.target.value)} />
+                        <label htmlFor="password">바꿀 비밀번호</label>
+                    </span>
+
+                    <span className="p-float-label p-inputtext-sm memberInfo" style={{ margin: '1.4em' }}>
+                        <Password id={ProfileCSS.confirmPassword}  value={confirmPassword} autoComplete="off"  onChange={(e) => setConfirmPassword(e.target.value)} />
+                        <label htmlFor="confirmPassword">바꿀 비밀번호 확인</label>
+                    </span>            
+
+                </Card>
+                }
+
+                {emailform &&
+                <Card style={{ width: '30em' }} footer={modifyFooter} header={header}>         
 
 
+                    <span className="p-float-label p-inputtext-sm memberInfo" style={{ margin: '1.4em' }}>
+                        <InputText 
+                            id="modifyEmail" 
+                            style={{ width: '100%' }} 
+                            value={modifyEmail} 
+                            onChange={(e) => setModifyEmail(e.target.value)}    
+                            disabled={ authBtn }                      
+                        />
+                        <label htmlFor="modifyEmail">바꿀 이메일 주소</label>
+                    </span>
 
-            </Card>
-            }
+                    <span className="p-float-label p-inputtext-sm memberInfo" style={{ margin: '1.4em' }}>
+                        <InputText 
+                            id="emailAuthCode" 
+                            style={{ width: '60%' }} 
+                            value={emailAuthCode} 
+                            onChange={(e) => setEmailAuthCode(e.target.value)}                         
+                        />
+                        <label htmlFor="emailAuthCode">인증번호</label>
+                        <Button 
+                            id="authNumberBtn"
+                            style={{ width: '35%', marginLeft: '10px' }} 
+                            className="p-button-sm p-button-success p-button-rounded" 
+                            label="인증번호 발급" 
+                            onClick={ onClickAuthNumber }
+                            disabled={ authBtn } 
+                        />
+                    </span>
 
 
 
+                </Card>
+                }
 
-        </div>
 
+
+
+            </div>
+        </>
 
 
     );
