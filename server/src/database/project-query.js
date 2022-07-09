@@ -41,7 +41,7 @@ exports.selectProjects = (params) => {
        query += ` AND ${'A.PROJECT_NAME'} LIKE '%${params.searchValue}%'`;
     }
 
-    query += `ORDER BY A.PROJECT_CODE DESC`;
+    // query += `ORDER BY A.PROJECT_CODE DESC`;
     return query;
 };
 

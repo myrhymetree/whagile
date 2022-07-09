@@ -57,12 +57,12 @@ function TeamMateList() {
         []
     );
 
-    useEffect(
-        () => {
-            setMembers(memberList);
-        },
-        [memberList]
-    );
+    // useEffect(
+    //     () => {
+    //         setMembers(memberList);
+    //     },
+    //     [memberList]
+    // );
 
     function removeMember(rowData) {
         dispatch(callDeleteProjectMemberAPI({
@@ -90,8 +90,8 @@ function TeamMateList() {
     // }
 
     const deleteMember = () => {
-        let _members = members.filter(val => val.memberCode !== member.memberCode);
-        setMembers(_members);
+        // let _members = members.filter(val => val.memberCode !== member.memberCode);
+        // setMembers(_members);
         setDeleteMemberDialog(false);
         // setMember(emptyMember);
         removeMember(member);
@@ -118,6 +118,7 @@ function TeamMateList() {
     }
 
     const actionBodyTemplate = (rowData) => {
+        // console.log(rowData);
         return (
             <>
                 <Button icon="pi pi-trash" className="p-button-rounded p-button-danger" onClick={() => confirmDeleteProjectMember(rowData)} />

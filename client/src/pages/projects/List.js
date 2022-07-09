@@ -12,11 +12,22 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { OverlayPanel } from 'primereact/overlaypanel';
 
-
 function List() {
+
+    let emptyProject = {
+        projectCode: null,
+        projectCompletedTask: null,
+        projectDeletedStatus: null,
+        projectDescription: null,
+        projectName: null,
+        projectOwner: null,
+        projectTotalTask: null,
+        remainedTask: null
+    };
     
     const decoded = decodeJwt(window.localStorage.getItem("access_token"));
-    const [searchValue, setSearchValue ] = useState('');
+    const [ searchValue, setSearchValue ] = useState('');
+    const [ project, setProject ] = useState(emptyProject);
     const projects = useSelector(state => state.projectsReducer);
     const dispatch = useDispatch();
     const toast = useRef(null);
@@ -26,11 +37,16 @@ function List() {
 
     useEffect(
         () => {
+
+            console.log();
+
             dispatch(callGetProjectsAPI({
                  
                 'loginMember': (decoded !== 'undefined')? decoded.code: '',
                 'searchValue': searchValue
         }));
+
+
         },
         []
     );
@@ -61,9 +77,16 @@ function List() {
 
     };
 
+    const actionChoiceHandler = (rowData) => {
+        console.log(rowData);
+        setProject(rowData);
+        console.log(project);
+        navigate(`/project/${ project.projectCode }/management/information`)
+    }
+
     const statusBodyTemplate = (rowData) => {
+        // console.log(rowData);
         // return <span className={`pi pi-ellipsis-h`}></span>;
-        console.log('rowData', rowData);
         return (
             <>
                 <Button
@@ -72,7 +95,7 @@ function List() {
                     onClick={(e) => op.current.toggle(e)}  
                 />
                 <OverlayPanel ref={op} id="overlay_panel" style={{width: '200px'}} className="overlaypanel">              
-                    <Button label="프로젝트 수정" className="p-button-text p-button-plain" icon="pi pi-pencil" onClick={ () => { navigate(`/project/${ rowData.projectCode }/management/information`) }} />               
+                    <Button label="프로젝트 수정" className="p-button-text p-button-plain" icon="pi pi-pencil" onClick={ () => { actionChoiceHandler(rowData)}} />               
                     <Button label="프로젝트 삭제" className="p-button-text p-button-plain" icon="pi pi-trash"/>             
                 </OverlayPanel>
             </>
@@ -118,11 +141,12 @@ function List() {
                             onRowSelect={onRowSelect}
                             footer={footer}
                         >
+                            <Column field="projectCode" header="번호" hidden ></Column>
                             <Column field="projectName" header="이름" style={{ width: '25%' }} sortable></Column>
                             <Column field="projectDescription" header="설명" style={{ width: '35%' }}></Column>
                             <Column field="remainedTask" header="내 일감"></Column>
                             <Column field="projectOwner" header="프로젝트 소유자" sortable></Column>
-                            <Column  body={statusBodyTemplate} ></Column>
+                            <Column columnKey="projectCode" body={statusBodyTemplate} exportable={false} style={{ minWidth: '8rem' }}></Column>
                         </DataTable>
                     </div>
                 </div>
