@@ -17,7 +17,7 @@ function MainHeader() {
   const [isLogin, setIsLogin] = useState(window.sessionStorage.getItem('isLogin'));
 
   const onClickProfile = () => {
-    navigate("/project/profile");
+    navigate("/profile");
   }
 
   const onClickLogout = () => {
