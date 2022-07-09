@@ -1,4 +1,5 @@
-import { FIND_BACKLOGS, FIND_BACKLOG_DETAIL } from '../modules/BacklogModule';
+import { FIND_BACKLOGS } from '../modules/BacklogModule';
+import { FIND_BACKLOG_DETAILS } from '../modules/BacklogDetailModule';
 
 export function callGetBacklogsAPI(params) {
 
@@ -25,14 +26,24 @@ export function callGetBacklogsAPI(params) {
         console.log(`requestURL 어떻게 생겼니? ${ requestURL }`)
     }
 
-    return async function getBacklogs(dispatch, getState) {
+    return async function findBacklogs(dispatch, getState) {
 
-        const preState = getState().backlogReducer;
-        console.log('preState: ', preState)
         const result = await fetch(requestURL)
                             .then(res => res.json());
-        const payload = await preState.concat(result.results);
 
-        dispatch({ type: FIND_BACKLOGS,  payload: payload });
+        dispatch({ type: FIND_BACKLOGS,  payload: result.results });
     };
+}
+
+export function callGetBacklogDetailsAPI(backlogCode) {
+
+    let requestURL = 'http://localhost:8888/api/backlogs/' + backlogCode;
+    console.log('requestURL: ' + requestURL);
+
+    return async function findBacklogDetails(dispatch, getState) {
+
+        const result = await fetch(requestURL).then(res => res.json());
+
+        dispatch({ type: FIND_BACKLOG_DETAILS, payload: result.results});
+    }
 }
