@@ -2,28 +2,30 @@ import BacklogAndSprintCSS from './BacklogAndSprint.module.css';
 
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { FIND_BACKLOG } from '../../../modules/BacklogModule';
 
 import DivHeader from './DivHeader';
 import BacklogCreationModal from './BacklogCreationModal';
-import BacklogComment from './BacklogComment';
+import BacklogDetails from './BacklogDetails';
 
 import { Sidebar} from 'primereact/sidebar';
 import { Dropdown } from 'primereact/dropdown';
-import { InputTextarea } from 'primereact/inputtextarea';
-import { Button } from 'primereact/button';
-import { callGetBacklogsAPI } from '../../../apis/BacklogAPICalls';
+import { callGetBacklogDetailsAPI, callGetBacklogsAPI } from '../../../apis/BacklogAPICalls';
+import { callGetBacklogCommentsAPI } from '../../../apis/BacklogCommentAPICalls';
 
 function Backlogs() {
     
     const dispatch = useDispatch();
-    const backlogs = useSelector(state => state.backlogReducer);    //api에서 가져온 백로그 목록
+    const backlogs = useSelector(state => state.backlogReducer);                //api에서 가져온 백로그 목록
+    const backlogDetails = useSelector(state => state.backlogDetailReducer);    //api에서 가져온 백로그 목록
+    const backlogComments = useSelector(state => state.bakclogCommentReducer);  //api에서 가져온 백로그 댓글 목록
     
     const [visibleRight, setVisibleRight] = useState(false);
-    const [content, setContent] = useState('');
+
     /* 페이징 */
-    const [pageNo, setPageNo] = useState(0);
+    const [pageNo, setPageNo] = useState(0);                                    //백로그 목록
     const [backlogList, setBacklogList] = useState([]);
+    const [commentOffset, setCommentOffset] = useState(0);                      //백로그 댓글 목록
+
     /* 필터 조건 */
     const [selectedProgressStatus, setSelectedProgressStatus] = useState(null);
     const [selectedUrgency, setSelectedUrgency] = useState(null);
@@ -47,30 +49,28 @@ function Backlogs() {
 
     useEffect(
         () => {
-            if(selectedProgressStatus === null ) {
-
-                dispatch(callGetBacklogsAPI({
-                    'offset': pageNo,
-                    'limit': 10
-                }));
-            }
-
-            console.log('backlog##########################', backlogs)
+            dispatch(callGetBacklogsAPI({
+                'offset': pageNo,
+                'limit': 10
+            }));
+            setBacklogList(backlogs);
         },
-        [selectedUrgency, selectedProgressStatus, selectedIssue]
+        [backlogList]
     );
 
     /* 목록 행 더보기 요청 onClick Handler fuction */
     const readMoreBacklogs = () => {
         dispatch(callGetBacklogsAPI(
             {
-                'offset': (pageNo + 1) * 10, 
-                'limit': 10
+                'offset': pageNo, 
+                'limit': 10 * (pageNo + 1)
             }
         ));
         console.log('more backlogs@@@@@@@@@@@@', backlogs)
 
         setPageNo(pageNo + 1);
+        setBacklogList([...backlogList].concat(backlogs));
+        console.log(backlogList)
     };
 
     /* 필터 조건을 적용한 목록행 조회 요청 */
@@ -84,6 +84,17 @@ function Backlogs() {
                 issue: selectedIssue
             }
         ));
+    };
+
+    /* 백로그 상세내용 조회 요청 */
+    const seeBacklogDetails = (backlogCode) => {
+        dispatch(callGetBacklogDetailsAPI(backlogCode));
+        dispatch(callGetBacklogCommentsAPI({
+            backlogCode: backlogCode,
+            offset: commentOffset,
+            limit: 5
+        }));
+        setVisibleRight(true);
     };
 
     return (
@@ -118,10 +129,18 @@ function Backlogs() {
                 <button onClick={ () => findFilteredResults() }>적용</button>            
             </div>
             <div>
-                <DivHeader/>
-                { backlogs.map(backlog => 
-                        <div className={ BacklogAndSprintCSS.backlogItem }>
-                            <label>{ backlog.backlogCode }</label>
+                 <DivHeader/>
+                 { 
+                    backlogs === [] || backlogs === undefined? 
+                    <div className={ BacklogAndSprintCSS.backlogItem }>
+                        등록된 백로그가 없습니다.
+                    </div> 
+                    :
+                    backlogs.map(backlog => 
+                        <div 
+                            className={ BacklogAndSprintCSS.backlogItem }
+                            key={ backlog.backlogCode }
+                        >
                             <label>{ backlog.issue === 1? '이슈' : '기본' }</label>
                             <label>{ backlog.backlogTitle }</label>
                             <label>{ backlog.progressStatus }</label>
@@ -129,55 +148,36 @@ function Backlogs() {
                             <label>{ backlog.memberName }</label>
                             <button 
                                 id={ BacklogAndSprintCSS.moreDetailsBtn }
-                                onClick={ () => setVisibleRight(true) }
+                                onClick={ () => seeBacklogDetails(backlog.backlogCode) }
                             >
                                 자세히
                             </button>
-                    </div>
-                )}
-                <div>
-                    <Sidebar 
-                        id={ BacklogAndSprintCSS.backlogDetail }
-                        visible={visibleRight} 
-                        position="right" 
-                        onHide={ () => setVisibleRight(false) }
-                    >
-                        <div>
-                        <h3>백로그 제목</h3>
-                            <h6 id={ BacklogAndSprintCSS.fontColoring }>설명</h6>
-                            <p>설명입니다.</p>
-
-                            <h6 id={ BacklogAndSprintCSS.fontColoring }>세부정보</h6>
-                            <div id={ BacklogAndSprintCSS.detailDiv }>
-                                <p><label>카테고리</label><label>일반</label></p>
-                                <p><label>상위 스프린트</label><Dropdown/></p>
-                                <p><label>시작일</label><label>2020 20 20</label></p>
-                                <p><label>종료일</label><label>2020 20 20</label></p>
-                                <p><label>진행 상태</label><label>진행 전</label></p>
-                                <p><label>긴급도</label><label>낮음</label></p>
-                                <p><label>담당자</label><Dropdown/></p>
-                            </div>
-                            <h6 id={ BacklogAndSprintCSS.fontColoring }>댓글</h6>
-                            <div>
-                                <BacklogComment/>
-                            </div>
-                            <div id={ BacklogAndSprintCSS.newComment }>
-                                <h6 id={ BacklogAndSprintCSS.fontColoring }>댓글 작성</h6>
-                                <InputTextarea 
-                                    id={ BacklogAndSprintCSS.inputComment }
-                                    value={ content } 
-                                    onChange={ (e) => setContent(e.target.value) } 
-                                    rows={ 3 }
-                                /><br/>
-                                <Button 
-                                    id={ BacklogAndSprintCSS.registCommentBtn } 
-                                    label="등록"
-                                    onClick={ () => alert('댓글 추가 api 요청') }
-                                />
-                            </div>
-                        </div>
-                    </Sidebar>
-                </div>
+                        </div>  
+                    )
+                }
+                {/* { backlogList.map(backlog =>  
+                    <div className={ BacklogAndSprintCSS.backlogItem }>
+                        <label>{ backlog.backlogCode }</label>
+                        <label>{ backlog.issue === 1? '이슈' : '기본' }</label>
+                        <label>{ backlog.backlogTitle }</label>
+                        <label>{ backlog.progressStatus }</label>
+                        <label>{ backlog.urgency }</label>
+                        <label>{ backlog.memberName }</label>
+                        <button 
+                            id={ BacklogAndSprintCSS.moreDetailsBtn }
+                            onClick={ () => seeBacklogDetails(backlog.backlogCode) }
+                        >
+                            자세히
+                        </button>
+                    </div>  
+                )} */}
+                <BacklogDetails
+                    visibleRight = { visibleRight }
+                    setVisibleRight = { setVisibleRight }
+                    // backlog = { backlogDetails[0] }
+                    commentOffset = { commentOffset }
+                    setCommentOffset = { setCommentOffset }
+                />
             </div>
             <button id={ BacklogAndSprintCSS.readMoreBtn }
                 onClick={ () => readMoreBacklogs() }
