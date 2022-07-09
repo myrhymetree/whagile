@@ -46,7 +46,7 @@ const authOrderReducer = handleActions(
             let newState = [...state];
             
             newState.push({
-                authorityCode: uuid(),
+                authorityCode: payload.authorityCode? payload.authorityCode: uuid(),
                 authorityName: payload.authorityName,
                 authorityDescription: payload.authorityDescription,
                 authorityActivatedYn: 'Y',
@@ -55,7 +55,7 @@ const authOrderReducer = handleActions(
 
             return newState;
         },
-        [DELETE_AUTH_ORDER]: (state, { payload }) => {
+        [DELETE_AUTH_ORDER]: (state, { payload }) => { // 비활성화 시 authOrder에서 해당 auth를 제거
             
             let newState = [...state];
             
@@ -70,8 +70,8 @@ const authOrderReducer = handleActions(
         [SET_AUTH_ORDER]: (state, { payload }) => { 
             return payload;
         },
-        [SET_AUTH_ORDER_UPDATE]: (state, { payload }) => {
-
+        [SET_AUTH_ORDER_UPDATE]: (state, { payload }) => { // authOrder에서 auth의 변경사항을 적용
+            
             let newState = [...state];
 
             for(let i = 0; i < newState.length; i++) {
@@ -79,7 +79,14 @@ const authOrderReducer = handleActions(
                     newState[i] = payload;
                 }
             }
-
+            
+            if(payload.authorityActivatedYn === 'N') {
+                newState = newState.filter((auth) => auth.authorityCode !== payload.authorityCode);
+                for(let i = 0; i < newState.length; i++) {
+                    newState[i].authorityExposureOrder = i + 1;
+                }
+            }
+            
             return newState;
         }
     },

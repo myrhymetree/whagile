@@ -36,19 +36,14 @@ exports.registProject = (projectInfo) => {
 
         const connection = getConnection();
         connection.beginTransaction();
+        console.log(projectInfo);
         
         try {
             const result = await ProjectRepository.registProject(connection, projectInfo);
             
-            // const loginMember = AccountUtils.decodedToken;
-            const loginMember = 1;
-            const authorityCode = 1;
-
-            console.log("로그인한 회원", loginMember);
-
-            const registMember = await ProjectRepository.registProjectMember(connection, result.insertId, authorityCode, loginMember);
+            const registMember = await ProjectRepository.registProjectMember(connection, result.insertId, projectInfo);
             
-            const registedProject = await ProjectRepository.selectProjectWithProjectCode(connection, result.insertId);
+            const registedProject = await ProjectRepository.selectProject(connection, result.insertId);
 
             connection.commit();
 
@@ -64,7 +59,6 @@ exports.registProject = (projectInfo) => {
 }
 
 exports.modifyProject = (projectInfo) => {
-    
     return new Promise(async (resolve, reject) => {
         
         const connection = getConnection();
@@ -73,9 +67,8 @@ exports.modifyProject = (projectInfo) => {
         try {
             const updatedproject = await ProjectRepository.updateProject(connection, projectInfo);
             const updatedManager1 = await ProjectRepository.updateManager1(connection, projectInfo.projectCode);
-            const memberCode = 4;
-            const updatedManager2 = await ProjectRepository.updateManager2(connection, projectInfo.projectCode, memberCode);
-            const updatedProject = await ProjectRepository.selectProjectWithProjectCode(connection, projectInfo.projectCode);
+            const updatedManager2 = await ProjectRepository.updateManager2(connection, projectInfo.projectCode, projectInfo.projectOwner);
+            const updatedProject = await ProjectRepository.selectProject(connection, projectInfo.projectCode);
             connection.commit();
 
             resolve(updatedProject);
@@ -104,6 +97,44 @@ exports.removeProject = (projectCode) => {
             connection.commit();
 
             resolve(removedProject);
+        } catch (err) {
+            connection.rollback();
+
+            reject(err);
+        } finally {
+            connection.end();
+        }
+    });
+}
+
+exports.findProjectMember = (projectCode) => {
+
+    return new Promise(async (resolve, reject) => {
+
+        const connection = getConnection();
+
+        const results = ProjectRepository.selectProjectMember(connection, projectCode);
+
+        connection.end();
+
+        resolve(results);
+
+    });
+}
+
+exports.registProjectMember = (data) => {
+    
+    return new Promise(async (resolve, reject) => {
+
+        const connection = getConnection();
+        connection.beginTransaction();
+        
+        try {
+            const result = await ProjectRepository.insertProjectMember(connection, data);
+            
+            connection.commit();
+
+            resolve(result);
         } catch (err) {
             connection.rollback();
 

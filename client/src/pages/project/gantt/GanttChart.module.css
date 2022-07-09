@@ -1,0 +1,19 @@
+#ganttContainer {
+    width: 96%;
+    overflow: auto;
+    /* background-color: #282936; */
+}
+
+#ganttContainer div::-webkit-scrollbar {
+    width: 10px;
+}
+#ganttContainer div::-webkit-scrollbar-thumb {
+    background-color: #1D1E27;
+    border-radius: 10px;
+    background-clip: padding-box;
+    border: 2px solid transparent;
+}
+#ganttContainer div::-webkit-scrollbar-track {
+    background-color: grey;
+    border-radius: 10px;
+}
