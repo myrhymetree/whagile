@@ -9,5 +9,6 @@ router.put('/:projectCode', ProjectController.modifyProject);
 router.delete('/:projectCode', ProjectController.removeProject);
 router.get('/:projectCode/member', ProjectController.findProjectMember);
 router.post('/inviteMember', ProjectController.registProjectMember);
+router.delete('/:projectCode/removeProjectMember/:memberCode', ProjectController.removeProjectMember);
 
 module.exports = router;

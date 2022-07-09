@@ -41,7 +41,7 @@ exports.selectProjects = (params) => {
        query += ` AND ${'A.PROJECT_NAME'} LIKE '%${params.searchValue}%'`;
     }
 
-    query += `ORDER BY A.PROJECT_CODE DESC`;
+    // query += `ORDER BY A.PROJECT_CODE DESC`;
     return query;
 };
 
@@ -162,7 +162,7 @@ exports.selectProjectMember = (projectCode) => {
       JOIN TBL_MEMBER B ON (A.MEMBER_CODE = B.MEMBER_CODE)
       JOIN TBL_AUTHORITY C ON (A.AUTHORITY_CODE = C.AUTHORITY_CODE)
      WHERE A.PROJECT_CODE = ${ projectCode }
-     
+       AND A.PROJECT_MEMBER_DELETED_YN = 'N'
   `
 }
 
@@ -191,3 +191,13 @@ exports.selectProjectMember = (projectCode) => {
 
 //  return query;
 // }
+
+/* 프로젝트 멤버 삭제 */
+exports.deleteProjectMember = (params) => {
+
+  return `UPDATE TBL_PROJECT_MEMBER A
+             SET A.PROJECT_MEMBER_DELETED_YN = 'Y'
+           WHERE A.PROJECT_CODE = ${params.projectCode}
+             AND A.MEMBER_CODE = ${params.memberCode}
+         `
+}

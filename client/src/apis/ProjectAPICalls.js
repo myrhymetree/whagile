@@ -1,5 +1,6 @@
 import { GET_PROJECT, GET_PROJECTS, POST_PROJECT, PUT_PROJECT } from "../modules/ProjectModule";
 import { GET_PROJECT_MEMBER } from "../modules/ProjectMemberModule";
+import { DELETE_PROJECT_MEMBER } from "../modules/ProjectMemberModule";
 import { decodeJwt } from '../utils/tokenUtils';
 
 export function callGetProjectsAPI(params) {
@@ -95,5 +96,34 @@ export const callGetProjectMemberAPI = (params) => {
         const result = await fetch(requestURL).then(res => res.json());
 
         dispatch({ type: GET_PROJECT_MEMBER, payload: result.results});
+    }
+}
+
+export const callDeleteProjectMemberAPI = (params) => {
+
+    console.log(params);
+
+    let requestURL =  `http://localhost:8888/api/projects/`
+
+    requestURL += `${ params.projectCode }`;
+
+    requestURL += `/removeProjectMember/`
+
+    requestURL += `${ params.memberCode }`;
+
+    console.log(requestURL);
+
+    return async function getProject(dispatch, getState) {
+
+        const result = await fetch(requestURL,{
+            method: 'DELETE',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        }).then(res => res.json());
+
+        console.log(result);
+        dispatch({ type: DELETE_PROJECT_MEMBER, payload: result.results});
     }
 }

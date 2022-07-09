@@ -42,14 +42,15 @@ function Regist() {
     }
 
     const defaultValues = {
-        projectName : '',
-        projectDescription : ''
+        projectName : projectName,
+        projectDescription : projectDescription
     };
 
     const { control, formState: { errors }, handleSubmit } = useForm({ defaultValues });
 
     
     const getFormErrorMessage = (name) => {
+        console.log('name',name);
         return errors[name] && <small className="p-error">{errors[name].message}</small>
     };
     
@@ -94,6 +95,7 @@ function Regist() {
     }
 
     const submitHandler = async (data) => {
+        console.log(data);
         await setProjectDescription(data.projectDescription);
         await setProjectName(data.projectName);
         await confirmDialog({
@@ -119,21 +121,24 @@ function Regist() {
         >
             <div className="p-fluid grid">
                 <div className="field col-12 md:col-4">
-                    <label htmlFor="inputtext">프로젝트 이름</label>
+                    <label htmlFor="projectName">프로젝트 이름</label>
                     <Controller 
                             name="projectName" 
                             control={control} 
-                            rules={{ required: '프로젝트 이름은 필수입니다.' }} 
+                            // rules={{ required: '프로젝트 이름은 필수입니다.' }} 
                             render={({ field, fieldState }) => (
                                 <InputText 
                                     id={field.name} 
                                     {...field}
+                                    ref={handleSubmit}
+                                    value={ projectName }
+                                    onChange={ (e) => setProjectName(e.target.value)}
                                     autoComplete="off" 
                                     autoFocus 
                                     className={classNames({ 'p-invalid': fieldState.invalid })} 
                                 />
                         )} />
-                        {getFormErrorMessage('projectName')}
+                        {/* {getFormErrorMessage('projectName')} */}
                 </div>
 
                 <div className="field col-12 md:col-4">
@@ -141,17 +146,20 @@ function Regist() {
                     <Controller 
                             name="projectDescription" 
                             control={control} 
-                            rules={{ required: '프로젝트 설명은 필수입니다.' }} 
+                            // rules={{ required: '프로젝트 설명은 필수입니다.' }} 
                             render={({ field, fieldState }) => (
                                 <InputText 
                                     id={field.name} 
                                     {...field}
+                                    ref={handleSubmit}
+                                    onChange={ (e) => setProjectDescription(e.target.value)}
+                                    value={ projectDescription }
                                     autoComplete="off" 
                                     autoFocus 
                                     className={classNames({ 'p-invalid': fieldState.invalid })} 
                                 />
                         )} />
-                    {getFormErrorMessage('projectDescription')}
+                    {/* {getFormErrorMessage('projectDescription')} */}
                 </div>
                 
             </div>
