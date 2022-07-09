@@ -78,10 +78,10 @@ function List() {
     };
 
     const actionChoiceHandler = (rowData) => {
-        console.log(rowData);
-        setProject(rowData);
-        console.log(project);
-        navigate(`/project/${ project.projectCode }/management/information`)
+        console.log(rowData); 
+        // setProject(rowData);
+        // console.log(project);
+        // navigate(`/project/${ project.projectCode }/management/information`)
     }
 
     const statusBodyTemplate = (rowData) => {
