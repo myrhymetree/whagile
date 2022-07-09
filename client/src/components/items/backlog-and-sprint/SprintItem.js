@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 
 import BacklogAndSprintCSS from './BacklogAndSprint.module.css';
 import DivHeader from "./DivHeader";
-import BacklogItem from './BacklogItem';
 import SprintEditingModal from './SprintEditingModal';
 import SprintStartModal from './SprintStartModal';
 import SprintEndModal from './SprintEndModal';
@@ -49,7 +48,6 @@ function SprintItem() {
                 style={ styles.div }
             >
                 <DivHeader/>
-                <BacklogItem/>
             </div>
         </div>
     );
