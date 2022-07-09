@@ -82,7 +82,9 @@ exports.modifyProject = (projectInfo) => {
     });
 }
 
-exports.removeProject = (projectCode) => {
+exports.removeProject = (data) => {
+
+    console.log('service', data);
 
     return new Promise(async (resolve, reject) => {
 
@@ -90,10 +92,8 @@ exports.removeProject = (projectCode) => {
         connection.beginTransaction();
         
         try {
-            await ProjectRepository.deleteProject(connection, projectCode);
-            
-            const removedProject = await ProjectRepository.selectProjectWithProjectCode(connection, projectCode);
-
+            await ProjectRepository.deleteProject(connection, data.projectCode);
+            const removedProject = await ProjectRepository.selectProjects(connection, data);
             connection.commit();
 
             resolve(removedProject);

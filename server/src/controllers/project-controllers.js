@@ -80,8 +80,10 @@ exports.modifyProject = async (req, res, next) => {
 }
 
 exports.removeProject = async (req, res, next) => {
-    console.log("req.params",req.params.projectCode);
-    await ProjectService.removeProject(req.params.projectCode)
+
+    console.log(req.query);
+    
+    await ProjectService.removeProject(req.query)
         .then((result) => {
 
             res.status(HttpStatus.OK).json({

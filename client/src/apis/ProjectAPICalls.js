@@ -1,4 +1,4 @@
-import { GET_PROJECT, GET_PROJECTS, POST_PROJECT, PUT_PROJECT } from "../modules/ProjectModule";
+import { GET_PROJECT, GET_PROJECTS, POST_PROJECT, PUT_PROJECT,  DELETE_PROJECT } from "../modules/ProjectModule";
 import { GET_PROJECT_MEMBER } from "../modules/ProjectMemberModule";
 import { DELETE_PROJECT_MEMBER } from "../modules/ProjectMemberModule";
 import { decodeJwt } from '../utils/tokenUtils';
@@ -80,6 +80,37 @@ export const callPutProjectAPI = (projectCode, projectName, projectDescription, 
         })
         .then(res => res.json());
         await dispatch({ type: PUT_PROJECT, payload: result.results });
+    }
+}
+
+export const callDeleteProjectAPI = (params) => {
+
+    console.log('callDeleteProjectAPI',params);
+    console.log(params.projectCode);
+    console.log(params.loginMember);
+
+    let requestURL =  `http://localhost:8888/api/projects`;
+
+    if(Object.keys(params).length !== 0) {
+        requestURL += `?${Object.entries(params).map(param => param.join('=')).join('&')}`;
+    }
+
+    // requestURL += `${ params.projectCode }`;
+
+    console.log('requestURL: ', requestURL);
+
+    return async function getProject(dispatch, getState) {
+
+        const result = await fetch(requestURL,{
+            method: 'DELETE',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        }).then(res => res.json());
+
+        console.log(result);
+        dispatch({ type: DELETE_PROJECT, payload: result.results});
     }
 }
 

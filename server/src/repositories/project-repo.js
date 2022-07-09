@@ -4,6 +4,7 @@ const ProjectMemberDTO  = require('../dto/project/project-member-response-dto');
 
 exports.selectProjects = (connection, params) => {
     return new Promise((resolve, reject) => {
+        console.log('repo',params);
         connection.query(projectQuery.selectProjects(params), 
         (err, results, fields) => {
 
@@ -25,6 +26,7 @@ exports.selectProjects = (connection, params) => {
 };
 
 exports.selectProject = (connection, projectCode) => {
+    console.log('selectProject', projectCode);
     return new Promise((resolve, reject) => {
         connection.query(projectQuery.selectProjectWithProjectCode(projectCode), 
         
@@ -37,9 +39,7 @@ exports.selectProject = (connection, projectCode) => {
 
             const project = [];
             project.push(new ProjectDTO(results[0]));
-
-
-
+            console.log('성공함?');
             resolve(project);
         });
     });
