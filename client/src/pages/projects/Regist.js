@@ -16,6 +16,9 @@ import { render } from 'react-dom';
 
 
 function Regist() {
+
+    let emptyEmails = [];
+    const registedMember = useSelector(state => state.projectMemberReducer);
     const [projectName, setProjectName ] = useState('');
     const [projectDescription, setProjectDescription ] = useState('');
     const [emails, setEmails ] = useState([]);
@@ -68,12 +71,18 @@ function Regist() {
         dialogFuncMap[`${name}`](false);
     }
 
-    
+    const inviteMember = async() => {
+        console.log('안녕');
+        console.log('emails',emails);
+        await dispatch(callPostIsRegistedMemberAPI(emails));
+        await toast.current.show({ severity: 'info', summary: 'Confirmed', detail: '팀원을 초대했습니다.', life: 3000 });
+        setEmails(emptyEmails);
+    };
 
     const renderFooter = (name) => {
         return (
             <div>
-                <Button label="등록" icon="pi pi-check" onClick={() => inviteMember} autoFocus />
+                <Button type="button" label="등록" icon="pi pi-check" onClick={inviteMember} />
                 <Button label="취소" icon="pi pi-times" onClick={() => onHide(name)} className="p-button-text" />
             </div>
         );
@@ -107,10 +116,7 @@ function Regist() {
     const acceptFunc = async () => { await dispatch(callPostProjectAPI(projectName, projectDescription));
                                      await toast.current.show({ severity: 'info', summary: 'Confirmed', detail: '프로젝트 생성을 완료했습니다.', life: 3000 })};
 
-    const inviteMember = async() => {
-        // await dispatch(callPostIsRegistedMemberAPI(emails));
-        // await toast.current.show({ severity: 'info', summary: 'Confirmed', detail: '팀원을 초대했습니다.', life: 3000 })};
-    }
+    
 
     return(
         <>

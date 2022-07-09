@@ -70,9 +70,9 @@ function Information() {
         await toast.current.show({ severity: 'info', summary: 'Confirmed', detail: '프로젝트 수정을 완료했습니다.', life: 3000 })};
 
     const submitHandler = async (data) => {
-        console.log('안녕');
         await setProjectDescription(data.projectDescription);
         await setProjectName(data.projectName);
+        console.log(data);
         await confirmDialog({
             message: '정말 프로젝트 수정을 하시겠습니까?',
             header: '프로젝트 수정',
@@ -131,7 +131,7 @@ function Information() {
                                     <InputText 
                                         id={field.name} 
                                         {...field}
-                                        onChange={ (e) => setProjectDescription(e.target.value)}
+                                        onChange={async (e) => await setProjectDescription(e.target.value)}
                                         value={ projectDescription }
                                         autoComplete="off" 
                                         // autoFocus 
@@ -157,7 +157,6 @@ function Information() {
                     type="submit" 
                     label="수정" 
                     className="p-button-sm"
-                    // onSubmit={handleSubmit(submitHandler)}
                 />
             </form>
         </>

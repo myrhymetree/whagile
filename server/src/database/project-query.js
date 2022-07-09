@@ -232,7 +232,7 @@ exports.isRegistedMember = (data) => {
   let query = `SELECT
                       A.*
                  FROM TBL_MEMBER A
-                WHERE A.MEMBER_EMAIL = '${ data.email }';
+                WHERE A.MEMBER_EMAIL = '${ data.address }';
          `
   return query;
 
