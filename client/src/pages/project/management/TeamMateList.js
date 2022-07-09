@@ -97,6 +97,7 @@ function TeamMateList() {
         removeMember(member);
         toast.current.show({ severity: 'success', summary: '팀원 제외', detail: '해당 팀원을 제외했습니다.', life: 3000 });
     }
+    
     const deleteMemberDialogFooter = (
         <>
             <Button label="확인" icon="pi pi-check" className="p-button-text" onClick={deleteMember} />
