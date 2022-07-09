@@ -170,3 +170,17 @@ exports.removeProjectMember = (data) => {
         }
     });
 }
+
+exports.findRegistedMember = (data) => {
+
+    return new Promise((resolve, reject) => {
+
+        const connection = getConnection();
+
+        const results = ProjectRepository.selectRegistedMember(connection, data);
+
+        connection.end();
+
+        resolve(results);
+    });
+};
