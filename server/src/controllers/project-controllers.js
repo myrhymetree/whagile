@@ -155,3 +155,21 @@ console.log('이거이거',req.params)
         });
 }
 
+exports.findRegistedMember = async (req, res, next) => {
+
+    await ProjectService.findRegistedMember(req.body)
+        .then((result) => {
+            res.status(HttpStatus.OK).json({
+                status: HttpStatus.OK,
+                message: '가입된 회원입니다.',
+                results: result
+            });
+        }).catch((err) => {
+
+            res.status(HttpStatus.BAD_REQUEST).json({
+                status:HttpStatus.BAD_REQUEST,
+                message: err
+            });
+        });
+};
+

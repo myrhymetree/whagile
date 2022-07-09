@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate, NavLink } from 'react-router-dom';
 import { callPostProjectAPI } from '../../apis/ProjectAPICalls';
+import { callPostIsRegistedMemberAPI } from '../../apis/ProjectAPICalls';
 import EmailItems from '../../components/items/projects/Emails';
 import { useForm, Controller, FieldError } from 'react-hook-form';
 import { classNames } from 'primereact/utils';
@@ -17,9 +18,7 @@ import { render } from 'react-dom';
 function Regist() {
     const [projectName, setProjectName ] = useState('');
     const [projectDescription, setProjectDescription ] = useState('');
-    const [emails, setEmails ] = useState([
-    //    {id: 0, address: ''} 
-    ]);
+    const [emails, setEmails ] = useState([]);
     const [inputEmail, setInputEmail] = useState('');
     const [nextId, setNextId] = useState(1);
 
@@ -69,18 +68,16 @@ function Regist() {
         dialogFuncMap[`${name}`](false);
     }
 
+    
+
     const renderFooter = (name) => {
         return (
             <div>
-                <Button label="Yes" icon="pi pi-check" onClick={() => onHide(name)} autoFocus />
-                <Button label="No" icon="pi pi-times" onClick={() => onHide(name)} className="p-button-text" />
+                <Button label="등록" icon="pi pi-check" onClick={() => inviteMember} autoFocus />
+                <Button label="취소" icon="pi pi-times" onClick={() => onHide(name)} className="p-button-text" />
             </div>
         );
     }
-
-    // const addProject = () => {
-    //     dispatch(callPostProjectAPI(projectName, projectDescription));
-    // }
 
     const addEmail = () => {
 
@@ -109,6 +106,11 @@ function Regist() {
 
     const acceptFunc = async () => { await dispatch(callPostProjectAPI(projectName, projectDescription));
                                      await toast.current.show({ severity: 'info', summary: 'Confirmed', detail: '프로젝트 생성을 완료했습니다.', life: 3000 })};
+
+    const inviteMember = async() => {
+        // await dispatch(callPostIsRegistedMemberAPI(emails));
+        // await toast.current.show({ severity: 'info', summary: 'Confirmed', detail: '팀원을 초대했습니다.', life: 3000 })};
+    }
 
     return(
         <>
@@ -165,7 +167,7 @@ function Regist() {
             </div>
 
             <Button 
-            type="click" 
+            type="button" 
             label="팀원 초대" 
             className="p-button-lg"
             onClick={ () => onClick('displayBasic')}

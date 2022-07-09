@@ -212,3 +212,25 @@ exports.deleteProjectMember = (connection, data) => {
         });
     });
 }
+
+exports.selectRegistedMember = (connection, data) => {
+
+    return new Promise((resolve, reject) => {
+        connection.query(projectQuery.isRegistedMember(data),
+        
+        (err, results, fields) => {
+
+            if(err) {
+                console.log(err);
+                reject(err);
+            }
+
+            const memberInfo = [];
+            for(let i = 0; i < results.length; i++) {
+                memberInfo.push(new ProjectMemberDTO(results[i]));
+            }
+
+            resolve(memberInfo);
+        });
+    });
+}
