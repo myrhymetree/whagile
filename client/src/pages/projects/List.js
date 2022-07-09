@@ -16,18 +16,18 @@ function List() {
 
     let emptyProject = {
         projectCode: null,
-        projectCompletedTask: null,
-        projectDeletedStatus: null,
-        projectDescription: null,
-        projectName: null,
-        projectOwner: null,
-        projectTotalTask: null,
-        remainedTask: null
+        projectCompletedTask: 0,
+        projectDeletedStatus: '',
+        projectDescription: '',
+        projectName: '',
+        projectOwner: '',
+        projectTotalTask: 0,
+        remainedTask: ''
     };
     
     const decoded = decodeJwt(window.localStorage.getItem("access_token"));
     const [ searchValue, setSearchValue ] = useState('');
-    const [ project, setProject ] = useState(emptyProject);
+    const [rowProject, setRowProject] = useState(emptyProject);
     const projects = useSelector(state => state.projectsReducer);
     const dispatch = useDispatch();
     const toast = useRef(null);
@@ -78,24 +78,27 @@ function List() {
     };
 
     const actionChoiceHandler = (rowData) => {
-        console.log(rowData); 
-        // setProject(rowData);
-        // console.log(project);
-        // navigate(`/project/${ project.projectCode }/management/information`)
+        setRowProject(rowData);
+    }
+
+    const actionNavigate = () => {
+        console.log(rowProject);
+        navigate(`/project/${ rowProject.projectCode }/management/information`);
     }
 
     const statusBodyTemplate = (rowData) => {
-        // console.log(rowData);
         // return <span className={`pi pi-ellipsis-h`}></span>;
         return (
             <>
                 <Button
                     type="button" 
                     icon="pi pi-ellipsis-h"
-                    onClick={(e) => op.current.toggle(e)}  
+                    // onClick={(e) => op.current.toggle(e)}
+                    // onClick={ () => { actionChoiceHandler(rowData)}}
+                    onClick={ (e) => { actionChoiceHandler(rowData); op.current.toggle(e);}}       
                 />
                 <OverlayPanel ref={op} id="overlay_panel" style={{width: '200px'}} className="overlaypanel">              
-                    <Button label="프로젝트 수정" className="p-button-text p-button-plain" icon="pi pi-pencil" onClick={ () => { actionChoiceHandler(rowData)}} />               
+                    <Button label="프로젝트 수정" className="p-button-text p-button-plain" icon="pi pi-pencil" onClick={ () => { actionNavigate()}} />               
                     <Button label="프로젝트 삭제" className="p-button-text p-button-plain" icon="pi pi-trash"/>             
                 </OverlayPanel>
             </>
