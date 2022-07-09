@@ -2,20 +2,25 @@ import { createActions, handleActions } from "redux-actions";
 
 const initialState = [];
 
-export const GET_TASKS = "tasks/GET_TASKS";
+export const GET_TASK = "task/GET_TASK";
+export const POST_TASK = "task/POST_TASK";
+
 
 const actions = createActions({
-  [GET_TASKS]: () => {},
+  [GET_TASK]: () => {},
+  [POST_TASK]: () => {},
 });
 
-const TasksReducer = handleActions(
+const taskReducer = handleActions(
   {
-    [GET_TASKS]: (state, { payload }) => {
-
+    [GET_TASK]: (state, { payload }) => {
+      return payload;
+    },
+    [POST_TASK]: (state, { payload }) => {
       return payload;
     },
   },
   initialState
 );
 
-export default TasksReducer;
+export default taskReducer;

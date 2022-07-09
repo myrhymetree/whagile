@@ -5,38 +5,15 @@ import KanbanBoardStyle from "./KanbanBoard.module.css";
 import PageTitle from "../../../components/items/PageTitle";
 import callGetTasksAPI from "../../../apis/TaskAPICalls";
 
-
 // 초기 더미 데이터
 const initialData = [
-  { category: Category.Backlog, id: 0, title: "일감 조회" },
-  { category: Category.InProgress, id: 1, title: "일감 상세 조회" },
-  { category: Category.Done, id: 2, title: "일감 수정" },
-  { category: Category.Before, id: 3, title: "일감 생성" },
-  { category: Category.Before, id: 4, title: "백로그 생성" },
-  { category: Category.Backlog, id: 5, title: "일감 조회" },
-  { category: Category.InProgress, id: 6, title: "일감 상세 조회" },
-  { category: Category.Done, id: 7, title: "일감 수정" },
-  { category: Category.Before, id: 8, title: "일감 생성" },
-  { category: Category.Before, id: 9, title: "백로그 생성" },
-  { category: Category.Backlog, id: 10, title: "일감 조회" },
-  { category: Category.InProgress, id: 11, title: "일감 상세 조회" },
-  { category: Category.Done, id: 12, title: "일감 수정" },
-  { category: Category.Before, id: 13, title: "일감 생성" },
-  { category: Category.Before, id: 14, title: "백로그 생성" },
-  { category: Category.Backlog, id: 15, title: "일감 조회" },
-  { category: Category.InProgress, id: 16, title: "일감 상세 조회" },
-  { category: Category.Done, id: 17, title: "일감 수정" },
-  { category: Category.Before, id: 18, title: "일감 생성" },
-  { category: Category.Before, id: 19, title: "백로그 생성" },
+
 ];
-
-
-
 
 // 칸반 보드 전체
 export default function KanbanBoard() {
   const [exampleData, setExampleData] = useState(() => initialData);
-  const lastID = useRef(20);
+  const lastID = useRef();
   const [activeTask, setActiveTask] = useState(null);
 
   // 새로운 데이터를 exampleData에 넣음
@@ -78,11 +55,8 @@ export default function KanbanBoard() {
     return null;
   };
 
-
-  
   // 칸반 컬럼 - 컬럼에 박스(일감)을 뿌려줌
   function KanbanColumn(props) {
-
     return (
       <>
         <div
@@ -115,7 +89,7 @@ export default function KanbanBoard() {
   // drag and drop에 따라 바뀌는 카테고리 업데이트
   function TaskDisplay(props) {
     // 구조분해 할당
-    const { updateTaskCategory, data, setActiveTask, getTask } = props;
+    const { updateTaskCategory, setActiveTask, getTask } = props;
 
     // 드래그하는 특정 DOM(드래그하는 대상, 컬럼)을 선택하기 위해 useRef 사용
     const dragItem = useRef();
@@ -157,21 +131,15 @@ export default function KanbanBoard() {
         updateTaskCategory(dragItem.current, dragOverKanbanColumn.current);
       }
     };
-
-    
-    const tasks = useSelector((state) => state.TasksReducer);
+    const tasks = useSelector((state) => state.tasksReducer);
     const dispatch = useDispatch();
-    useEffect(
-      () => {
-        dispatch(callGetTasksAPI());
-      },
-      []
-    );
+    useEffect(() => {
+      dispatch(callGetTasksAPI());
+    }, []);
 
     // filterBy - 카테고리 받아서 반환 ( 아이템 카테고리와 카테고리 같은 것만)
     const filterBy = (category) => {
-      
-      if(tasks) {
+      if (tasks) {
         return tasks.filter((item) => item.progressStatus === category);
       }
     };
@@ -208,12 +176,6 @@ export default function KanbanBoard() {
       </div>
     );
   }
-
-
-
-
-
-
 
   // const registNewTask = (newTask) => {
 
@@ -370,7 +332,6 @@ export default function KanbanBoard() {
   );
 }
 
-
 // 일감 상세 조회 및 수정버튼
 function EditButton(props) {
   return (
@@ -423,84 +384,86 @@ function KanbanBox(props) {
 
 
 
+
 /* ------------------------------모달-------------------------------- */
 
-
-
-// 일감 모달창 수정 적용
+// 일감 모달창
 function TaskModal(props) {
-  var _a, _b, _c, _d;
-  const [category, setCategory] = useState(
-    (_b =
-      (_a = props.initialData) === null || _a === void 0
-        ? void 0
-        : _a.category) !== null && _b !== void 0
-      ? _b
-      : Category.Backlog
-  );
-  const [title, setTitle] = useState(
-    (_d =
-      (_c = props.initialData) === null || _c === void 0
-        ? void 0
-        : _c.title) !== null && _d !== void 0
-      ? _d
-      : ""
-  );
-  const [description, setDescription] = useState(
-    (_d =
-      (_c = props.initialData) === null || _c === void 0
-        ? void 0
-        : _c.description) !== null && _d !== void 0
-      ? _d
-      : ""
-  );
-  const [issue, setIssue] = useState(
-    (_b =
-      (_a = props.initialData) === null || _a === void 0
-        ? void 0
-        : _a.issue) !== null && _b !== void 0
-      ? _b
-      : Issue.Basic
-  );
-  const [urgency, setUrgency] = useState(
-    (_b =
-      (_a = props.initialData) === null || _a === void 0
-        ? void 0
-        : _a.urgency) !== null && _b !== void 0
-      ? _b
-      : Urgency.LowGrade
-  );
-  const [charger, setCharger] = useState(
-    (_b =
-      (_a = props.initialData) === null || _a === void 0
-        ? void 0
-        : _a.charger) !== null && _b !== void 0
-      ? _b
-      : Charger.None
-  );
+
+  // 일감 상세 조회 api
+  console.log(props.currentTaskID);
+    fetch(`http://localhost:8888/api/tasks/${props.currentTaskID}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Access_token: window.localStorage.getItem("access_token"),
+      },
+    })
+      .then((response) => response.json())
+      .then((json) => {
+        console.log(json);
+        const result = json.results[0];
+        console.log(result.backlogCode || "");
+      //  console.log(result.projectCode || "");
+      //  console.log(result.sprintCode || "");
+        setTaskTitle(result.backlogTitle || "");
+        setTaskDescription(result.backlogDescription || "");
+        // setTaskCategory(result.backlogCategory || "");
+        setTaskProgressStatus(result.progressStatus || "");
+        setTaskIssue(result.issue || "");
+        setTaskUrgency(result.urgency || "");
+        setTaskCharger(result.memberName || "");
+      });
+
+
+
+  const [taskTitle, setTaskTitle] = useState("");
+  const [taskDescription, setTaskDescription] = useState("");
+  const [taskProgressStatus, setTaskProgressStatus] = useState("");
+  const [taskIssue, setTaskIssue] = useState("");
+  const [taskUrgency, setTaskUrgency] = useState("");
+  const [taskCharger, setTaskCharger] = useState("");
 
   // 초기 폼
   const resetForm = () => {
-    setTitle("");
-    setDescription("");
-    setCategory(Category.Backlog);
-    setIssue(Issue.Basic);
-    setUrgency(Urgency.LowGrade);
-    setCharger(Charger.None);
+    setTaskTitle("");
+    setTaskDescription("");
+    setTaskProgressStatus("");
+    setTaskIssue("");
+    setTaskUrgency("");
+    setTaskCharger("");
   };
+
+
+
 
   // submit 동작
   const onSubmit = (event) => {
     if (props.type === "Create") {
       // 생성
-      props.createTask(category, title, description, issue, urgency, charger);
+      props.createTask(
+        taskTitle, 
+        taskDescription, 
+        taskProgressStatus, 
+        taskIssue,
+        taskUrgency,
+        taskCharger
+      );
     } else {
       //수정
-      props.updateTask(props.currentTaskID, category, title, description, issue, urgency, charger);
+      props.updateTask(
+        props.currentTaskID,
+        taskTitle,
+        taskDescription,
+        taskProgressStatus,
+        taskIssue,
+        taskUrgency,
+        taskCharger
+      );
     }
     event.preventDefault(); //이벤트 동작 중지
     // 만약 create면 초기폼
-       if (props.type === "Create") {
+    if (props.type === "Create") {
       resetForm();
     }
     props.onSubmit();
@@ -512,22 +475,21 @@ function TaskModal(props) {
     props.onSubmit();
   };
 
-
   return (
     <Modal>
       <EditTaskForm
-        currentCategory={category}
-        onCategoryChange={(cat) => setCategory(cat)}
-        currentTitle={title}
-        onTitleChange={(ti) => setTitle(ti)}
-        currentDescription={description}
-        onDescriptionChange={(des) => setDescription(des)}
-        currentIssue={issue}
-        onIssueChange={(iss) => setIssue(iss)}
-        currentUrgency={urgency}
-        onUrgencyChange={(urg) => setUrgency(urg)}
-        currentCharger={charger}
-        onChargerChange={(char) => setCharger(char)}
+        currentTitle={taskTitle}
+        onTitleChange={(ti) => setTaskTitle(ti)}
+        currentDescription={taskDescription}
+        onDescriptionChange={(des) => setTaskDescription(des)}
+        currentIssue={taskIssue}
+        onIssueChange={(iss) => setTaskIssue(iss)}
+        currentUrgency={taskUrgency}
+        onUrgencyChange={(urg) => setTaskUrgency(urg)}
+        currentCharger={taskCharger}
+        onChargerChange={(char) => setTaskUrgency(char)}
+        currentProgressStatus={taskProgressStatus}
+        onProgressStatusChange={(prog)=> setTaskProgressStatus(prog)}
         onFormSubmit={onSubmit}
         onClose={onClose}
       />
@@ -539,9 +501,7 @@ function TaskModal(props) {
 function EditTaskForm(props) {
   const {
     onFormSubmit,
-    onCategoryChange,
     onTitleChange,
-    currentCategory,
     currentTitle,
     onDescriptionChange,
     currentDescription,
@@ -551,8 +511,11 @@ function EditTaskForm(props) {
     onUrgencyChange,
     currentCharger,
     onChargerChange,
-    onClose
+    currentProgressStatus,
+    onProgressStatusChange,
+    onClose,
   } = props;
+
   return (
     <div className={KanbanBoardStyle.kanbanModalContent}>
       <form onSubmit={onFormSubmit}>
@@ -591,9 +554,9 @@ function EditTaskForm(props) {
           <select
             className={KanbanBoardStyle.kanbanDetailInputSelection}
             id="select-category"
-            value={currentCategory}
+            value={currentProgressStatus}
             onChange={(event) => {
-              onCategoryChange(event.target.value);
+              onProgressStatusChange(event.target.value);
             }}
           >
             <option value={Category.Backlog}>백로그</option>
@@ -634,14 +597,11 @@ function EditTaskForm(props) {
               onChargerChange(event.target.value);
             }}
           >
-            <option value={Charger.None}>담당자 없음</option>
-            <option value={Charger.PM}>PM</option>
-            <option value={Charger.Member}>회원</option>
-            <option value={Charger.Park}>박성준</option>
-            <option value={Charger.Lee}>이호성</option>
-            <option value={Charger.Joo}>장민주</option>
-            <option value={Charger.Sol}>장한솔</option>
-            <option value={Charger.Cha}>차우진</option>
+            <option value={Charger.Jin}>우진</option>
+            <option value={Charger.Park}>성준</option>
+            <option value={Charger.Joo}>민주</option>
+            <option value={Charger.Sol}>한솔</option>
+            <option value={Charger.Lee}>호성</option>
           </select>
         </div>
 
@@ -666,7 +626,6 @@ function EditTaskForm(props) {
     </div>
   );
 }
-
 
 //모달 창
 function Modal(props) {

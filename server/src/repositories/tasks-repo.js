@@ -1,6 +1,7 @@
 const tasksQuery = require("../database/tasks-query");
 const TasksDTO = require("../dto/tasks/tasks-response-dto");
 
+//전체 일감 목록 조회
 exports.selectTasks = (connection, params) => {
   return new Promise((resolve, reject) => {
     const query = connection.query(
@@ -24,7 +25,7 @@ exports.selectTasks = (connection, params) => {
   });
 };
 
-
+// 개별 일감 조회
 exports.selectTaskbyTaskCode = (connection, taskCode) => {
   return new Promise((resolve, reject) => {
     connection.query(
@@ -46,7 +47,7 @@ exports.selectTaskbyTaskCode = (connection, taskCode) => {
   });
 };
 
-
+// 개별 일감 생성
 exports.insertNewTask = (connection, params) => {
 
     return new Promise((resolve, reject) => {
@@ -55,7 +56,7 @@ exports.insertNewTask = (connection, params) => {
           tasksQuery.insertNewTask(),
           [
             params.backlogTitle,
-            params.backlogDiscription,
+            params.backlogDescription,
             params.progressStatus,
             params.urgency,
             params.backlogChargerCode,
@@ -79,4 +80,28 @@ exports.insertNewTask = (connection, params) => {
 
 
 
-//delete update
+// 개별 일감 수정
+exports.updateTask = (connection, params) => {
+  return new Promise((resolve, reject) => {
+    // console.log(params)
+    connection.query(
+      tasksQuery.updateTask(),
+      [
+        params.backlogTitle,
+        params.backlogDescription,
+        params.progressStatus,
+        params.urgency,
+        params.backlogChargerCode,
+        params.issue,
+        params.backlogCode,
+      ],
+      (err, results, fields) => {
+        if (err) {
+          reject(err);
+        }
+
+        resolve(results);
+      }
+    );
+  });
+};

@@ -25,12 +25,9 @@ export var Urgency;
 // 담당자 타입
 export var Charger;
 (function (Charger) {
-  Charger["None"] = "담당자 없음";
-  Charger["PM"] = "PM";
-  Charger["Member"] = "회원";
-  Charger["Park"] = "박성준";
-  Charger["Lee"] = "이호성";
-  Charger["Joo"] = "장민주";
-  Charger["Sol"] = "장한솔";
-  Charger["Cha"] = "차우진";
+  Charger["Jin"] = "우진";
+  Charger["Park"] = "성준";
+  Charger["Joo"] = "민주";
+  Charger["Sol"] = "한솔";
+  Charger["Lee"] = "호성";
 })(Charger || (Charger = {}));
