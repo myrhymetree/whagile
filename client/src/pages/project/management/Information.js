@@ -91,8 +91,8 @@ function Information() {
             <Toast ref={toast} />
             <ConfirmDialog />
             <PageTitle 
-                icon={<i className="pi pi-fw pi-cog"></i>}
-                text="프로젝트 상세정보"
+                icon={<i className="pi pi-fw pi-pencil"></i>}
+                text="프로젝트 세부사항"
             />
             <form 
                 style={{display: 'flex', flexDirection: 'column' }}

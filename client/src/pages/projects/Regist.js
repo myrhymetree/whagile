@@ -125,7 +125,7 @@ function Regist() {
         <>
             <Toast ref={toast} />
             <MainHeader />
-            <PageTitle icon={ <i className="pi pi-fw pi-inbox"></i>} text="프로젝트 생성" style={{ display: 'flex', justifyContent: 'center', alignContent: 'center' }}/>
+            <PageTitle icon={ <i className="pi pi-fw pi-plus"></i>} text="프로젝트 생성" style={{ display: 'flex', justifyContent: 'center', alignContent: 'center' }}/>
             <main style={{ width: '100%', display: 'flex', justifyContent: 'center', alignContent: 'center'  }}>
                 <div className="card">
                     <form 
@@ -178,28 +178,30 @@ function Regist() {
                         </div>
                         <div>
                             <Button 
-                            type="button" 
+                            type="button"
+                            icon="pi pi-user-plus" 
                             label="팀원 초대" 
                             className="p-button-lg"
                             onClick={ () => onClick('displayBasic')}
                             />
                         </div>
 
-                        <div>
+                        <div style={{ display: 'flex', alignContent: 'center', flexDirection: 'column' }}>
                             <Button 
-                                type="submit" 
+                                type="submit"
+                                icon="pi pi-check"
                                 label="등록" 
-                                className="p-button-sm"
+                                className="p-button-lg"
                             />
-                        </div>
-                        <div>
                             <Button 
-                                type="click" 
+                                type="click"
+                                icon="pi pi-times"
                                 label="취소" 
-                                className="p-button-sm"
+                                className="p-button-lg"
                                 onClick={ () => { navigate(`/projects`) }}
                             />
                         </div>
+                            
                     </form>
                 </div>
             </main>

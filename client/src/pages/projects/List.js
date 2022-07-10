@@ -142,7 +142,7 @@ function List() {
             <Toast ref={toast}/>
             <MainHeader />
             <main style={{ padding: '20px'}}>
-                <PageTitle icon={ <i className="pi pi-fw pi-inbox"></i>} text="프로젝트 목록"/>
+                <PageTitle icon={ <i className="pi pi-fw pi-list"></i>} text="프로젝트 목록"/>
                 <div>
                     <span className="p-input-icon-left">
                         <i className="pi pi-search" />

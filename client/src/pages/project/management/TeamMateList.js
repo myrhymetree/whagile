@@ -148,7 +148,7 @@ function TeamMateList() {
     return (
         <>  
             <PageTitle 
-                icon={<i className="pi pi-fw pi-cog"></i>}
+                icon={<i className="pi pi-fw pi-users"></i>}
                 text="프로젝트 팀원목록"
             />
 
