@@ -27,7 +27,6 @@ import { ConfirmDialog } from 'primereact/confirmdialog';
 import { Calendar } from 'primereact/calendar';
 import { MultiSelect } from 'primereact/multiselect';
 import { Chips } from 'primereact/chips';
-import { SplitButton } from 'primereact/splitbutton';
 
 function GanttChart() {
 
