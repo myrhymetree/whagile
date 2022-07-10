@@ -214,7 +214,7 @@ exports.deleteProjectMember = (connection, data) => {
 }
 
 exports.selectRegistedMember = (connection, data) => {
-
+console.log('repo1', data.email[0].address);
     return new Promise((resolve, reject) => {
         connection.query(projectQuery.isRegistedMember(data),
         
@@ -225,11 +225,13 @@ exports.selectRegistedMember = (connection, data) => {
                 reject(err);
             }
 
+            console.log('repo2', results);
             const memberInfo = [];
             for(let i = 0; i < results.length; i++) {
                 memberInfo.push(new ProjectMemberDTO(results[i]));
             }
 
+            console.log('repo3', memberInfo)
             resolve(memberInfo);
         });
     });

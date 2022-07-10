@@ -1,3 +1,5 @@
+import PageTitle from '../../components/items/PageTitle';
+import MainHeader from '../../components/commons/MainHeader';
 import React, { useEffect, useState, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate, NavLink } from 'react-router-dom';
@@ -19,6 +21,7 @@ function Regist() {
 
     let emptyEmails = [];
     const registedMember = useSelector(state => state.projectMemberReducer);
+    console.log('가입된 회원입니다.', registedMember);
     const [projectName, setProjectName ] = useState('');
     const [projectDescription, setProjectDescription ] = useState('');
     const [emails, setEmails ] = useState([]);
@@ -120,77 +123,86 @@ function Regist() {
 
     return(
         <>
-        <Toast ref={toast} />
+            <Toast ref={toast} />
+            <MainHeader />
+            <PageTitle icon={ <i className="pi pi-fw pi-inbox"></i>} text="프로젝트 생성" style={{ display: 'flex', justifyContent: 'center', alignContent: 'center' }}/>
+            <main style={{ width: '100%', display: 'flex', justifyContent: 'center', alignContent: 'center'  }}>
+                <div className="card">
+                    <form 
+                        style={{display: 'flex', flexDirection: 'column' }}
+                        onSubmit={handleSubmit(submitHandler)}
+                        className="p-fluid"
+                    >
+                        <div className="p-fluid grid">
+                            <div className="field col-12 md:col-4">
+                                <label htmlFor="projectName">프로젝트 이름</label>
+                                <Controller 
+                                        name="projectName" 
+                                        control={control} 
+                                        // rules={{ required: '프로젝트 이름은 필수입니다.' }} 
+                                        render={({ field, fieldState }) => (
+                                            <InputText 
+                                                id={field.name} 
+                                                {...field}
+                                                ref={handleSubmit}
+                                                value={ projectName }
+                                                onChange={ (e) => setProjectName(e.target.value)}
+                                                autoComplete="off" 
+                                                autoFocus 
+                                                className={classNames({ 'p-invalid': fieldState.invalid })} 
+                                            />
+                                    )} />
+                                    {/* {getFormErrorMessage('projectName')} */}
+                            </div>
 
-        <form 
-            style={{display: 'flex', flexDirection: 'column' }}
-            onSubmit={handleSubmit(submitHandler)}
-            className="p-fluid"
-        >
-            <div className="p-fluid grid">
-                <div className="field col-12 md:col-4">
-                    <label htmlFor="projectName">프로젝트 이름</label>
-                    <Controller 
-                            name="projectName" 
-                            control={control} 
-                            // rules={{ required: '프로젝트 이름은 필수입니다.' }} 
-                            render={({ field, fieldState }) => (
-                                <InputText 
-                                    id={field.name} 
-                                    {...field}
-                                    ref={handleSubmit}
-                                    value={ projectName }
-                                    onChange={ (e) => setProjectName(e.target.value)}
-                                    autoComplete="off" 
-                                    autoFocus 
-                                    className={classNames({ 'p-invalid': fieldState.invalid })} 
-                                />
-                        )} />
-                        {/* {getFormErrorMessage('projectName')} */}
+                            <div className="field col-12 md:col-4">
+                                <label htmlFor="inputtext">프로젝트 설명</label>
+                                <Controller 
+                                        name="projectDescription" 
+                                        control={control} 
+                                        // rules={{ required: '프로젝트 설명은 필수입니다.' }} 
+                                        render={({ field, fieldState }) => (
+                                            <InputText 
+                                                id={field.name} 
+                                                {...field}
+                                                ref={handleSubmit}
+                                                onChange={ (e) => setProjectDescription(e.target.value)}
+                                                value={ projectDescription }
+                                                autoComplete="off" 
+                                                autoFocus 
+                                                className={classNames({ 'p-invalid': fieldState.invalid })} 
+                                            />
+                                    )} />
+                                {/* {getFormErrorMessage('projectDescription')} */}
+                            </div>
+                        </div>
+                        <div>
+                            <Button 
+                            type="button" 
+                            label="팀원 초대" 
+                            className="p-button-lg"
+                            onClick={ () => onClick('displayBasic')}
+                            />
+                        </div>
+
+                        <div>
+                            <Button 
+                                type="submit" 
+                                label="등록" 
+                                className="p-button-sm"
+                            />
+                        </div>
+                        <div>
+                            <Button 
+                                type="click" 
+                                label="취소" 
+                                className="p-button-sm"
+                                onClick={ () => { navigate(`/projects`) }}
+                            />
+                        </div>
+                    </form>
                 </div>
-
-                <div className="field col-12 md:col-4">
-                    <label htmlFor="inputtext">프로젝트 설명</label>
-                    <Controller 
-                            name="projectDescription" 
-                            control={control} 
-                            // rules={{ required: '프로젝트 설명은 필수입니다.' }} 
-                            render={({ field, fieldState }) => (
-                                <InputText 
-                                    id={field.name} 
-                                    {...field}
-                                    ref={handleSubmit}
-                                    onChange={ (e) => setProjectDescription(e.target.value)}
-                                    value={ projectDescription }
-                                    autoComplete="off" 
-                                    autoFocus 
-                                    className={classNames({ 'p-invalid': fieldState.invalid })} 
-                                />
-                        )} />
-                    {/* {getFormErrorMessage('projectDescription')} */}
-                </div>
-                
-            </div>
-
-            <Button 
-            type="button" 
-            label="팀원 초대" 
-            className="p-button-lg"
-            onClick={ () => onClick('displayBasic')}
-            />
-
-            <Button 
-                type="submit" 
-                label="등록" 
-                className="p-button-sm"
-            />
-             <Button 
-                type="click" 
-                label="취소" 
-                className="p-button-sm"
-                onClick={ () => { navigate(`/projects`) }}
-            />
-        </form>
+            </main>
 
             <Dialog 
                 header="팀원 초대" 

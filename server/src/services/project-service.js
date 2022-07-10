@@ -179,6 +179,8 @@ exports.findRegistedMember = (data) => {
 
         const results = ProjectRepository.selectRegistedMember(connection, data);
 
+        console.log('service',results);
+
         connection.end();
 
         resolve(results);
