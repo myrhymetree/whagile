@@ -18,6 +18,7 @@ function Information() {
     const dispatch = useDispatch();
     const { projectCode } = useParams();
     const project = useSelector(state => state.projectsReducer);
+    console.log('project : ', project);
     const memberList = useSelector(state => state.projectMemberReducer);
     const [teamMates, setTeamMates] = useState([]);
     const [projectName, setProjectName ] = useState('');
@@ -28,6 +29,7 @@ function Information() {
     useEffect(
         () =>
         {
+            console.log('처음');
             dispatch(callGetProjectAPI({
                 'projectCode': projectCode
             }));
@@ -66,13 +68,14 @@ function Information() {
         return errors[name] && <small className="p-error">{errors[name].message}</small>
     };
 
-    const acceptFunc = async () => { await dispatch(callPutProjectAPI(projectCode, projectName, projectDescription, selectedProjectOwner));
-        await toast.current.show({ severity: 'info', summary: 'Confirmed', detail: '프로젝트 수정을 완료했습니다.', life: 3000 })};
+    const acceptFunc = async () => {
+        await dispatch(callPutProjectAPI(projectCode, projectName, projectDescription, selectedProjectOwner));
+        await toast.current.show({ severity: 'info', summary: 'Confirmed', detail: '프로젝트 수정을 완료했습니다.', life: 3000 })
+    };
 
-    const submitHandler = async (data) => {
-        await setProjectDescription(data.projectDescription);
-        await setProjectName(data.projectName);
-        console.log(data);
+    const submitHandler = async () => {
+        await setProjectName((project.length !== 0)? project[0].projectName: '');
+        await setProjectDescription((project.length !== 0)? project[0].projectDescription: '');
         await confirmDialog({
             message: '정말 프로젝트 수정을 하시겠습니까?',
             header: '프로젝트 수정',
@@ -126,7 +129,7 @@ function Information() {
                         <Controller 
                                 name="projectDescription" 
                                 control={control} 
-                                // rules={{ required: '프로젝트 설명은 필수입니다.' }} 
+                                rules={{ required: '프로젝트 설명은 필수입니다.' }} 
                                 render={({ field, fieldState }) => (
                                     <InputText 
                                         id={field.name} 
@@ -138,7 +141,7 @@ function Information() {
                                         className={classNames({ 'p-invalid': fieldState.invalid })} 
                                     />
                             )} />
-                        {/* {getFormErrorMessage('projectDescription')} */}
+                        {getFormErrorMessage('projectDescription')}
                     </div>
 
                     <div>

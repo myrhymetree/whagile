@@ -4,7 +4,6 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate, NavLink } from 'react-router-dom';
 import { callPostProjectAPI } from '../../apis/ProjectAPICalls';
-import { callPostIsRegistedMemberAPI } from '../../apis/ProjectAPICalls';
 import EmailItems from '../../components/items/projects/Emails';
 import { useForm, Controller, FieldError } from 'react-hook-form';
 import { classNames } from 'primereact/utils';
@@ -20,11 +19,13 @@ import { render } from 'react-dom';
 function Regist() {
 
     let emptyEmails = [];
-    const registedMembers = useSelector(state => state.projectMemberReducer);
+    // const registedMembers = useSelector(state => state.projectMemberReducer);
     const [projectName, setProjectName ] = useState('');
     const [projectDescription, setProjectDescription ] = useState('');
     const [emails, setEmails ] = useState([]);
     const [inputEmail, setInputEmail] = useState('');
+    // const [clients, setClients] = useState([]);
+    // console.log('이미 가입한 회원들 : ', clients);
     const [nextId, setNextId] = useState(1);
 
     const [displayBasic, setDisplayBasic] = useState(false);
@@ -74,32 +75,28 @@ function Regist() {
     }
 
     const inviteMember = async() => {
-        console.log('안녕');
-        console.log('emails',emails);
-        await dispatch(callPostIsRegistedMemberAPI(emails));
-        await toast.current.show({ severity: 'info', summary: 'Confirmed', detail: '팀원을 초대했습니다.', life: 3000 });
-        setEmails(emptyEmails);
+        await toast.current.show({ severity: 'info', summary: 'Confirmed', detail: '초대할 팀원의 이메일을 입력했습니다.', life: 3000 });
     };
 
     const renderFooter = (name) => {
         return (
             <div>
-                <Button type="button" label="등록" icon="pi pi-check" onClick={inviteMember} />
-                <Button label="취소" icon="pi pi-times" onClick={() => onHide(name)} className="p-button-text" />
+                <Button type="button" label="등록" icon="pi pi-check" onClick={() => {inviteMember(name); onHide(name);}} />
+                <Button label="취소" icon="pi pi-times" onClick={() => {onHide(name); setEmails(emptyEmails);}} className="p-button-text" />
             </div>
         );
     }
 
-    const addEmail = () => {
+    const addEmail = async() => {
 
-        const changeEmails = emails.concat({
+        const changeEmails = await emails.concat({
             id: nextId,
             address: inputEmail
         });
 
-        setInputEmail('');
-        setNextId(nextId + 1);
-        setEmails(changeEmails);
+        await setInputEmail('');
+        await setNextId(nextId + 1);
+        await setEmails(changeEmails);
     }
 
     const submitHandler = async (data) => {
@@ -116,19 +113,20 @@ function Regist() {
     }
 
     const acceptFunc = async () => { 
-        await dispatch(callPostProjectAPI(projectName, projectDescription));
+        await dispatch(callPostProjectAPI(projectName, projectDescription, emails));
+        setEmails(emptyEmails);
+        setProjectName('');
+        setProjectDescription('');
         await toast.current.show({ severity: 'info', summary: 'Confirmed', detail: '프로젝트 생성을 완료했습니다.', life: 3000 });
     };
 
-    useEffect(
-        () => {
-           console.log('가입된 회원입니다.', registedMembers);
-           registedMembers.map(
-              registedMember => console.log(registedMember.memberEmail)
-           ) 
-        },
-        [registedMembers]
-    );
+    // useEffect(
+    //     () => {
+    //        console.log('가입된 회원입니다.', registedMembers);
+           
+    //     },
+    //     [registedMembers]
+    // );
     
 
     return(

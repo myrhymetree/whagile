@@ -44,12 +44,12 @@ exports.selectProject = async (req, res, next) => {
 };
 
 exports.registProject = async (req, res, next) => {
-
+console.log('이메일 들어오나?',req.body);
     await ProjectService.registProject(req.body)
         .then((result) => {
             res.status(HttpStatus.CREATED).json({
                 status: HttpStatus.CREATED,
-                message: 'successfully regist Project',
+                message: '성공적으로 프로젝트를 추가했습니다.',
                 results: result
             });
         }).catch((err) => {
@@ -121,13 +121,14 @@ exports.findProjectMember = async (req, res, next) => {
 
 exports.registProjectMember = async (req, res, next) => {
 
-    await ProjectService.registProjectMember(req.body)
+    await ProjectService.registProjectMember(req.params)
         .then((result) => {
             res.status(HttpStatus.CREATED).json({
                 status: HttpStatus.CREATED,
-                message: 'successfully regist ProjectMember',
+                message: '성공적으로 프로젝트에 참여했습니다.',
                 results: result
             });
+            res.redirect('http://localhost:3000/');
         }).catch((err) => {
 
             res.status(HttpStatus.BAD_REQUEST).json({
@@ -154,13 +155,13 @@ exports.removeProjectMember = async (req, res, next) => {
         });
 }
 
-exports.findRegistedMember = async (req, res, next) => {
+exports.inviteMember = async (req, res, next) => {
 
-    await ProjectService.findRegistedMember(req.body)
+    await ProjectService.inviteMember(req.body)
         .then((result) => {
             res.status(HttpStatus.OK).json({
                 status: HttpStatus.OK,
-                message: '가입된 회원입니다.',
+                message: '해당 이메일로 이메일을 전송했습니다.',
                 results: result
             });
         }).catch((err) => {

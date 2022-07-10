@@ -39,7 +39,6 @@ exports.selectProject = (connection, projectCode) => {
 
             const project = [];
             project.push(new ProjectDTO(results[0]));
-            console.log('성공함?');
             resolve(project);
         });
     });
@@ -178,10 +177,11 @@ exports.selectProjectMember = (connection, projectCode) => {
 }
 
 exports.insertProjectMember = (connection, data) => {
+    console.log('insertProjectMember', data);
     return new Promise((resolve, reject) => {
         connection.query(projectQuery.insertProjectMember(),
         [ data.memberCode
-        , data.authorityCode
+        , 3
         , data.projectCode
         ],
         (err, results, fields) => {
@@ -214,10 +214,10 @@ exports.deleteProjectMember = (connection, data) => {
 }
 
 exports.selectRegistedMember = (connection, data) => {
-console.log('repo1', data);
+
     return new Promise((resolve, reject) => {
+
         connection.query(projectQuery.isRegistedMember(data),
-        
         (err, results, fields) => {
 
             if(err) {
@@ -225,13 +225,11 @@ console.log('repo1', data);
                 reject(err);
             }
 
-            console.log('repo2', results);
             const memberInfo = [];
             for(let i = 0; i < results.length; i++) {
                 memberInfo.push(new ProjectMemberDTO(results[i]));
             }
 
-            console.log('repo3', memberInfo)
             resolve(memberInfo);
         });
     });

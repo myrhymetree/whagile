@@ -33,7 +33,7 @@ export function callGetProjectAPI(params) {
     }
 }
 
-export const  callPostProjectAPI = (projectName, projectDescription) => {
+export const  callPostProjectAPI = (projectName, projectDescription, emails) => {
     let requestURL = `http://localhost:8888/api/projects`;
     const decoded = decodeJwt(window.localStorage.getItem("access_token"));
 
@@ -48,7 +48,8 @@ export const  callPostProjectAPI = (projectName, projectDescription) => {
             body: JSON.stringify({
                 projectName: projectName,
                 projectDescription: projectDescription,
-                loginMember: (decoded !== 'undefined')? decoded.code: ''
+                loginMember: (decoded !== 'undefined')? decoded.code: '',
+                emails: emails
             })
         })
         .then(res => res.json());

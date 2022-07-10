@@ -1,6 +1,7 @@
 const getConnection = require('../database/connection');
 const ProjectRepository = require('../repositories/project-repo');
 const AccountUtils = require('../util/account-utils');
+const EmailUtils = require('../util/email-utils');
 
 exports.selectProjects = (params) => {
 
@@ -41,9 +42,16 @@ exports.registProject = (projectInfo) => {
         try {
             const result = await ProjectRepository.registProject(connection, projectInfo);
             
-            const registMember = await ProjectRepository.registProjectMember(connection, result.insertId, projectInfo);
-            
             const registedProject = await ProjectRepository.selectProject(connection, result.insertId);
+
+            const registedMember = await ProjectRepository.selectRegistedMember(connection, projectInfo.emails);
+
+            if(registedMember.length > 0) {
+                for(let i = 0; registedMember.length > i; i++) {
+                    console.log('registedProject', registedProject);
+                    await EmailUtils.sendInvitationMail(registedMember[i], registedProject[0]);
+                };
+            };
 
             connection.commit();
 
@@ -171,18 +179,16 @@ exports.removeProjectMember = (data) => {
     });
 }
 
-exports.findRegistedMember = (data) => {
+exports.inviteMember = (data) => {
 
     return new Promise((resolve, reject) => {
 
         const connection = getConnection();
 
-        const results = ProjectRepository.selectRegistedMember(connection, data);
-
-        console.log('service',results);
+        const registedMember = ProjectRepository.selectRegistedMember(connection, data);
 
         connection.end();
 
-        resolve(results);
+        resolve(registedMember);
     });
 };
