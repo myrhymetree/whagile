@@ -79,14 +79,24 @@ export const initTasks = () => {
       project: "ProjectSample"
     },
     {
-      start: new Date(currentDate.getFullYear(), currentDate.getMonth(), 18),
-      end: new Date(currentDate.getFullYear(), currentDate.getMonth(), 19),
-      name: "Party Time",
-      id: "Task 9",
-      progress: 0,
-      isDisabled: true,
-      type: "task"
-    }
+      start: new Date(currentDate.getFullYear(), currentDate.getMonth(), 1),
+      end: new Date(currentDate.getFullYear(), currentDate.getMonth(), 15),
+      name: "Other Project",
+      id: "ProjectSample2",
+      progress: 25,
+      type: "project",
+
+      hideChildren: false
+    },
+    // {
+    //   start: new Date(currentDate.getFullYear(), currentDate.getMonth(), 1),
+    //   end: new Date(currentDate.getFullYear(), currentDate.getMonth(), 1),
+    //   name: "Party Time",
+    //   id: "Task 9",
+    //   progress: 0,
+    //   type: "task",
+    //   project: "ProjectSample2"
+    // },
   ];
   return tasks;
 };

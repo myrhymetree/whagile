@@ -5,6 +5,8 @@ import authOrderReducer from './AuthOrderModule';
 import backlogReducer from './BacklogModule';
 import projectsReducer from './ProjectModule';
 import projectMemberReducer from './ProjectMemberModule';
+import sprintsReducer from './SprintsModule';
+import sprintReducer from './SprintModule';
 
 const rootReducer = combineReducers({
     authsReducer,
@@ -12,7 +14,9 @@ const rootReducer = combineReducers({
     authOrderReducer,
     backlogReducer,
     projectsReducer,
-    projectMemberReducer
+    projectMemberReducer,
+    sprintsReducer,
+    sprintReducer
 });
 
 export default rootReducer;

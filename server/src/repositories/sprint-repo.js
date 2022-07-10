@@ -31,7 +31,8 @@ exports.selectSprints = (connection, params) => {
     return new Promise((resolve, reject) => {
 
         connection.query(
-            sprintQuery.selectSprints(params), 
+            sprintQuery.selectSprints(params),
+            [params.projectCode],
             (err, results, fields) => {
                 if(err) {
                     reject(err);

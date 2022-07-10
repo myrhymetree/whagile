@@ -1,5 +1,6 @@
 import { Button } from 'primereact/button';
 import 'primeicons/primeicons.css';
+import styles from './task-list-table.module.css';
 
 export const TaskListTableDefault = ({
 	rowHeight,
@@ -25,9 +26,9 @@ export const TaskListTableDefault = ({
 
 				let expanderSymbol = "";
 				if (t.hideChildren === false) {
-					expanderSymbol = "▼";
+					expanderSymbol = <i className="pi pi-folder-open" style={{'fontSize': '1.2em'}}/>;
 				} else if (t.hideChildren === true) {
-					expanderSymbol = "▶";
+					expanderSymbol = <i className="pi pi-folder" style={{'fontSize': '1.2em'}}/>;
 				}
 		
 				return (
@@ -56,7 +57,7 @@ export const TaskListTableDefault = ({
 							className="Gantt-Task-List_Cell"
 							style={{
 								minWidth: rowWidth,
-								maxWidth: "220px",
+								maxWidth: "260px",
 								height: "50px",
 								border: "1px solid grey",
 								display: 'flex', 
@@ -64,7 +65,7 @@ export const TaskListTableDefault = ({
 								alignItems: 'center',
 								padding: "10px",
 								fontSize: "16px",
-								backgroundColor: expanderSymbol? '#00AA9C': '',
+								backgroundColor: expanderSymbol? '#00AA9C': '#333544',
 							}}
 							title={t.name}
 						>
@@ -85,8 +86,15 @@ export const TaskListTableDefault = ({
 										alignItems: 'center',
 									}}
 								>
-									<div style={{width: "170px"}}>
-										{expanderSymbol}&nbsp;{t.name}
+									{/* <div style={{width: "210px"}}> */}
+									<div className={styles.cells}>
+										{expanderSymbol}
+										{ 
+											(expanderSymbol)
+											? ''
+											: <i className="pi pi-file"/>
+										}
+										&nbsp;{t.name}
 									</div>
 									<Button
 										className="p-button-outlined"

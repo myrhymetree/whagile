@@ -13,10 +13,23 @@ import 'primeicons/primeicons.css';
 export const ViewSwitcher = ({
 	onViewModeChange,
 	onViewListChange,
-	isChecked
+	isChecked,
+	onShowInsert
 }) => {
 
 	const [viewMode, setViewMode] = useState(ViewMode.Day);
+
+	const [condition, setCondition] = useState('');
+
+	// const conditions = [
+    //     { name: '스프린트 이름', code: 'sprintName' },
+	// 	{ name: '담장자 이름', code: 'backlogChargerName' }
+    // ];
+
+    const selectCondition = [
+        {label: '스프린트 이름', value: 'sprintName'},
+        {label: '담장자 이름', value: 'backlogChargerName'}
+    ];
 
 	return (
 		<div className="ViewContainer" id={ViewSwitcherCss.container}>
@@ -24,8 +37,11 @@ export const ViewSwitcher = ({
 			{/* search */}
 			<div id={ViewSwitcherCss.search}>
 				<div>
-					<Dropdown 
-						placeholder="검색 대상"
+					<Dropdown
+                        value={condition} 
+                        options={selectCondition} 
+                        onChange={(e) => setCondition(e.value)} 
+                        placeholder="검색 대상"
 					/>
 				</div>
 				<span className="p-input">
@@ -45,7 +61,7 @@ export const ViewSwitcher = ({
 				/>
 			</div>
 			
-			<ToggleButton 
+			{/* <ToggleButton 
 				onLabel="메뉴바 ON" 
 				offLabel="메뉴바 OFF" 
 				onIcon="pi pi-check" 
@@ -59,7 +75,7 @@ export const ViewSwitcher = ({
 					color: '#FFFFFFAA',
 					border: (isChecked)? '1px solid #333544': '1px solid white'
 				}}
-			/>
+			/> */}
 
 			<div id={ViewSwitcherCss.period}>
 				<Button 
@@ -121,6 +137,7 @@ export const ViewSwitcher = ({
 					backgroundColor: '#00AA9C',
 					border: '1px solid #333544'
 				}}
+				onClick={() => onShowInsert()}
 			/>
 		</div>
 	);
