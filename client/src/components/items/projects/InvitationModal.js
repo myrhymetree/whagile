@@ -11,10 +11,7 @@ function InvitationModal({ displayBasic, setDisplayBasic, emails, setEmails }) {
 
     let emptyEmails = [];
     const toast = useRef(null);
-    // const [displayBasic, setDisplayBasic] = useState(false);
-    // const [position, setPosition] = useState('center');
     const [displayPosition, setDisplayPosition] = useState(false);
-    // const [emails, setEmails ] = useState([]);
     const [inputEmail, setInputEmail] = useState('');
     const [nextId, setNextId] = useState(1);
 

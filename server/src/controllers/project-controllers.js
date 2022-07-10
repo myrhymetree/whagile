@@ -123,11 +123,11 @@ exports.registProjectMember = async (req, res, next) => {
 
     await ProjectService.registProjectMember(req.params)
         .then((result) => {
-            res.status(HttpStatus.CREATED).json({
-                status: HttpStatus.CREATED,
-                message: '성공적으로 프로젝트에 참여했습니다.',
-                results: result
-            });
+            // res.status(HttpStatus.CREATED).json({
+            //     status: HttpStatus.CREATED,
+            //     message: '성공적으로 프로젝트에 참여했습니다.',
+            //     results: result
+            // });
             res.redirect('http://localhost:3000/');
         }).catch((err) => {
 
@@ -159,11 +159,11 @@ exports.inviteMember = async (req, res, next) => {
 
     await ProjectService.inviteMember(req.body)
         .then((result) => {
-            // res.status(HttpStatus.OK).json({
-            //     status: HttpStatus.OK,
-            //     message: '해당 이메일로 이메일을 전송했습니다.',
-            //     results: result
-            // });
+            res.status(HttpStatus.OK).json({
+                status: HttpStatus.OK,
+                message: '해당 이메일로 이메일을 전송했습니다.',
+                results: result
+            });
         }).catch((err) => {
 
             res.status(HttpStatus.BAD_REQUEST).json({

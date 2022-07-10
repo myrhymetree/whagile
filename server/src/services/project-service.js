@@ -80,9 +80,9 @@ exports.modifyProject = (projectInfo) => {
         connection.beginTransaction();
         
         try {
-            const updatedproject = await ProjectRepository.updateProject(connection, projectInfo);
-            const updatedManager1 = await ProjectRepository.updateManager1(connection, projectInfo.projectCode);
-            const updatedManager2 = await ProjectRepository.updateManager2(connection, projectInfo.projectCode, projectInfo.projectOwner);
+            await ProjectRepository.updateProject(connection, projectInfo);
+            await ProjectRepository.updateManager1(connection, projectInfo.projectCode);
+            await ProjectRepository.updateManager2(connection, projectInfo.projectCode, projectInfo.projectOwner);
             const updatedProject = await ProjectRepository.selectProject(connection, projectInfo.projectCode);
             connection.commit();
 
