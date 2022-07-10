@@ -59,7 +59,6 @@ exports.registProject = (projectInfo) => {
 }
 
 exports.modifyProject = (projectInfo) => {
-    
     return new Promise(async (resolve, reject) => {
         
         const connection = getConnection();
@@ -68,9 +67,8 @@ exports.modifyProject = (projectInfo) => {
         try {
             const updatedproject = await ProjectRepository.updateProject(connection, projectInfo);
             const updatedManager1 = await ProjectRepository.updateManager1(connection, projectInfo.projectCode);
-            const memberCode = 4;
-            const updatedManager2 = await ProjectRepository.updateManager2(connection, projectInfo.projectCode, memberCode);
-            const updatedProject = await ProjectRepository.selectProjectWithProjectCode(connection, projectInfo.projectCode);
+            const updatedManager2 = await ProjectRepository.updateManager2(connection, projectInfo.projectCode, projectInfo.projectOwner);
+            const updatedProject = await ProjectRepository.selectProject(connection, projectInfo.projectCode);
             connection.commit();
 
             resolve(updatedProject);
@@ -84,7 +82,9 @@ exports.modifyProject = (projectInfo) => {
     });
 }
 
-exports.removeProject = (projectCode) => {
+exports.removeProject = (data) => {
+
+    console.log('service', data);
 
     return new Promise(async (resolve, reject) => {
 
@@ -92,10 +92,8 @@ exports.removeProject = (projectCode) => {
         connection.beginTransaction();
         
         try {
-            await ProjectRepository.deleteProject(connection, projectCode);
-            
-            const removedProject = await ProjectRepository.selectProjectWithProjectCode(connection, projectCode);
-
+            await ProjectRepository.deleteProject(connection, data.projectCode);
+            const removedProject = await ProjectRepository.selectProjects(connection, data);
             connection.commit();
 
             resolve(removedProject);
@@ -123,3 +121,66 @@ exports.findProjectMember = (projectCode) => {
 
     });
 }
+
+exports.registProjectMember = (data) => {
+    
+    return new Promise(async (resolve, reject) => {
+
+        const connection = getConnection();
+        connection.beginTransaction();
+        
+        try {
+            const result = await ProjectRepository.insertProjectMember(connection, data);
+            
+            connection.commit();
+
+            resolve(result);
+        } catch (err) {
+            connection.rollback();
+
+            reject(err);
+        } finally {
+            connection.end();
+        }
+    });
+}
+
+exports.removeProjectMember = (data) => {
+
+    return new Promise(async (resolve, reject) => {
+
+        const connection = getConnection();
+        connection.beginTransaction();
+
+        try {
+            const result = await ProjectRepository.deleteProjectMember(connection, data);
+
+            const projectMember = await ProjectRepository.selectProjectMember(connection, data.projectCode);
+
+            connection.commit();
+
+            resolve(projectMember)
+
+        } catch (err) {
+            connection.rollback();
+
+            reject(err);
+        } finally {
+            connection.end();
+        }
+    });
+}
+
+exports.findRegistedMember = (data) => {
+
+    return new Promise((resolve, reject) => {
+
+        const connection = getConnection();
+
+        const results = ProjectRepository.selectRegistedMember(connection, data);
+
+        connection.end();
+
+        resolve(results);
+    });
+};

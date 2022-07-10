@@ -1,4 +1,6 @@
-import { GET_PROJECT, GET_PROJECTS, POST_PROJECT } from "../modules/ProjectModules";
+import { GET_PROJECT, GET_PROJECTS, POST_PROJECT, PUT_PROJECT,  DELETE_PROJECT } from "../modules/ProjectModule";
+import { GET_PROJECT_MEMBER } from "../modules/ProjectMemberModule";
+import { GET_IS_REGISTED_MEMBER, DELETE_PROJECT_MEMBER } from "../modules/ProjectMemberModule";
 import { decodeJwt } from '../utils/tokenUtils';
 
 export function callGetProjectsAPI(params) {
@@ -32,7 +34,6 @@ export function callGetProjectAPI(params) {
 }
 
 export const  callPostProjectAPI = (projectName, projectDescription) => {
-
     let requestURL = `http://localhost:8888/api/projects`;
     const decoded = decodeJwt(window.localStorage.getItem("access_token"));
 
@@ -47,11 +48,134 @@ export const  callPostProjectAPI = (projectName, projectDescription) => {
             body: JSON.stringify({
                 projectName: projectName,
                 projectDescription: projectDescription,
-                loginMember: decoded.code
+                loginMember: (decoded !== 'undefined')? decoded.code: ''
             })
         })
         .then(res => res.json());
         await dispatch({ type: POST_PROJECT, payload: result.results });
         await console.log(result.results);
+    }
+}
+
+export const callPutProjectAPI = (projectCode, projectName, projectDescription, projectOwner) => {
+    let requestURL = `http://localhost:8888/api/projects/`;
+
+    requestURL += `${ projectCode }`
+
+    return async function getProject(dispatch, getState) {
+
+        const result = await fetch(requestURL, {
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                projectCode: Number(projectCode),
+                projectName: projectName,
+                projectDescription: projectDescription,
+                projectOwner: projectOwner
+            })
+
+        })
+        .then(res => res.json());
+        await dispatch({ type: PUT_PROJECT, payload: result.results });
+    }
+}
+
+export const callDeleteProjectAPI = (params) => {
+
+    console.log('callDeleteProjectAPI',params);
+    console.log(params.projectCode);
+    console.log(params.loginMember);
+
+    let requestURL =  `http://localhost:8888/api/projects`;
+
+    if(Object.keys(params).length !== 0) {
+        requestURL += `?${Object.entries(params).map(param => param.join('=')).join('&')}`;
+    }
+
+    // requestURL += `${ params.projectCode }`;
+
+    console.log('requestURL: ', requestURL);
+
+    return async function getProject(dispatch, getState) {
+
+        const result = await fetch(requestURL,{
+            method: 'DELETE',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        }).then(res => res.json());
+
+        console.log(result);
+        dispatch({ type: DELETE_PROJECT, payload: result.results});
+    }
+}
+
+export const callGetProjectMemberAPI = (params) => {
+
+    let requestURL = `http://localhost:8888/api/projects/`;
+
+    requestURL += `${Object.entries(params).map(param => param.slice(1))}`;
+
+    requestURL += `/member`;
+
+    return async function getProject(dispatch, getState) {
+
+        const result = await fetch(requestURL).then(res => res.json());
+
+        dispatch({ type: GET_PROJECT_MEMBER, payload: result.results});
+    }
+}
+
+export const callDeleteProjectMemberAPI = (params) => {
+
+    console.log(params);
+
+    let requestURL =  `http://localhost:8888/api/projects/`
+
+    requestURL += `${ params.projectCode }`;
+
+    requestURL += `/removeProjectMember/`
+
+    requestURL += `${ params.memberCode }`;
+
+    console.log(requestURL);
+
+    return async function getProject(dispatch, getState) {
+
+        const result = await fetch(requestURL,{
+            method: 'DELETE',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        }).then(res => res.json());
+
+        console.log(result);
+        dispatch({ type: DELETE_PROJECT_MEMBER, payload: result.results});
+    }
+}
+
+export const callPostIsRegistedMemberAPI = (data) => {
+
+    let requestURL = `http://localhost:8888/api/projects/invitation`;
+
+    return async function getProject(dispatch, getState) {
+
+        const result = await fetch(requestURL, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                email: data
+            })
+        }).then(res => res.json());
+
+        dispatch({ type: GET_IS_REGISTED_MEMBER, payload: result.results});
     }
 }
