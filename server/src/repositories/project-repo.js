@@ -214,7 +214,7 @@ exports.deleteProjectMember = (connection, data) => {
 }
 
 exports.selectRegistedMember = (connection, data) => {
-console.log('repo1', data.email[0].address);
+console.log('repo1', data);
     return new Promise((resolve, reject) => {
         connection.query(projectQuery.isRegistedMember(data),
         

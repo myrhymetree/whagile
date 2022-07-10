@@ -213,15 +213,15 @@ exports.deleteProjectMember = (params) => {
 //                 WHERE A.MEMBER_EMAIL = ${ data[0].memberEmail };
 //          `
 
-//         if(data.length > 1 ) {
-//           for(let i = 1; i < data.length; i++) {
-//             query += `UNION
-//                     SELELCT
-//                             A.*
-//                        FROM TBL_MEMBER A
-//                       WHERE A.MEMBER_EMAIL = ${ data[i].memberEmail }` 
-//           }
-//         }
+        // if(data.length > 1 ) {
+        //   for(let i = 1; i < data.length; i++) {
+        //     query += `UNION
+        //             SELELCT
+        //                     A.*
+        //                FROM TBL_MEMBER A
+        //               WHERE A.MEMBER_EMAIL = ${ data[i].memberEmail }` 
+        //   }
+        // }
 
 //   return query;
 
@@ -232,8 +232,19 @@ exports.isRegistedMember = (data) => {
   let query = `SELECT
                       A.*
                  FROM TBL_MEMBER A
-                WHERE A.MEMBER_EMAIL = '${ data.address }';
+                WHERE A.MEMBER_EMAIL = '${ data.email[0].address }'
          `
+
+  if(data.email.length > 1 ) {
+    for(let i = 0; i < data.email.length; i++) {
+      query += `UNION
+               SELECT
+                      B.*
+                  FROM TBL_MEMBER B
+                 WHERE B.MEMBER_EMAIL = '${ data.email[i].address }'` 
+    }
+  };
+
   return query;
 
   }

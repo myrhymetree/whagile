@@ -20,8 +20,7 @@ import { render } from 'react-dom';
 function Regist() {
 
     let emptyEmails = [];
-    const registedMember = useSelector(state => state.projectMemberReducer);
-    console.log('가입된 회원입니다.', registedMember);
+    const registedMembers = useSelector(state => state.projectMemberReducer);
     const [projectName, setProjectName ] = useState('');
     const [projectDescription, setProjectDescription ] = useState('');
     const [emails, setEmails ] = useState([]);
@@ -116,9 +115,20 @@ function Regist() {
         });
     }
 
-    const acceptFunc = async () => { await dispatch(callPostProjectAPI(projectName, projectDescription));
-                                     await toast.current.show({ severity: 'info', summary: 'Confirmed', detail: '프로젝트 생성을 완료했습니다.', life: 3000 })};
+    const acceptFunc = async () => { 
+        await dispatch(callPostProjectAPI(projectName, projectDescription));
+        await toast.current.show({ severity: 'info', summary: 'Confirmed', detail: '프로젝트 생성을 완료했습니다.', life: 3000 });
+    };
 
+    useEffect(
+        () => {
+           console.log('가입된 회원입니다.', registedMembers);
+           registedMembers.map(
+              registedMember => console.log(registedMember.memberEmail)
+           ) 
+        },
+        [registedMembers]
+    );
     
 
     return(
