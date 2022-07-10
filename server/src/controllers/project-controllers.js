@@ -159,11 +159,11 @@ exports.inviteMember = async (req, res, next) => {
 
     await ProjectService.inviteMember(req.body)
         .then((result) => {
-            res.status(HttpStatus.OK).json({
-                status: HttpStatus.OK,
-                message: '해당 이메일로 이메일을 전송했습니다.',
-                results: result
-            });
+            // res.status(HttpStatus.OK).json({
+            //     status: HttpStatus.OK,
+            //     message: '해당 이메일로 이메일을 전송했습니다.',
+            //     results: result
+            // });
         }).catch((err) => {
 
             res.status(HttpStatus.BAD_REQUEST).json({
@@ -172,4 +172,3 @@ exports.inviteMember = async (req, res, next) => {
             });
         });
 };
-

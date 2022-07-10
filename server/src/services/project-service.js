@@ -40,12 +40,19 @@ exports.registProject = (projectInfo) => {
         console.log(projectInfo);
         
         try {
+            /* 프로젝트 등록 */
             const result = await ProjectRepository.registProject(connection, projectInfo);
+
+            /* 프로젝트 소유자 등록 */
+            await ProjectRepository.registProjectMember(connection, result.insertId, projectInfo);
             
+            /* 프로젝트 조회 */
             const registedProject = await ProjectRepository.selectProject(connection, result.insertId);
 
+            /* 초대할 기존 회원 조회 */
             const registedMember = await ProjectRepository.selectRegistedMember(connection, projectInfo.emails);
 
+            /* 기존회원들에게 초대메일 발송 */
             if(registedMember.length > 0) {
                 for(let i = 0; registedMember.length > i; i++) {
                     console.log('registedProject', registedProject);

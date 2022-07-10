@@ -4,7 +4,8 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate, NavLink } from 'react-router-dom';
 import { callPostProjectAPI } from '../../apis/ProjectAPICalls';
-import EmailItems from '../../components/items/projects/Emails';
+// import EmailItems from '../../components/items/projects/EmailItems';
+import InvitationModal from '../../components/items/projects/InvitationModal';
 import { useForm, Controller, FieldError } from 'react-hook-form';
 import { classNames } from 'primereact/utils';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
@@ -29,21 +30,21 @@ function Regist() {
     const [nextId, setNextId] = useState(1);
 
     const [displayBasic, setDisplayBasic] = useState(false);
-    const [displayBasic2, setDisplayBasic2] = useState(false);
-    const [displayModal, setDisplayModal] = useState(false);
-    const [displayMaximizable, setDisplayMaximizable] = useState(false);
+    // const [displayBasic2, setDisplayBasic2] = useState(false);
+    // const [displayModal, setDisplayModal] = useState(false);
+    // const [displayMaximizable, setDisplayMaximizable] = useState(false);
     const [displayPosition, setDisplayPosition] = useState(false);
-    const [displayResponsive, setDisplayResponsive] = useState(false);
+    // const [displayResponsive, setDisplayResponsive] = useState(false);
     const [position, setPosition] = useState('center');
     const toast = useRef(null);
 
     const dialogFuncMap = {
         'displayBasic': setDisplayBasic,
-        'displayBasic2': setDisplayBasic2,
-        'displayModal': setDisplayModal,
-        'displayMaximizable': setDisplayMaximizable,
-        'displayPosition': setDisplayPosition,
-        'displayResponsive': setDisplayResponsive
+        // 'displayBasic2': setDisplayBasic2,
+        // 'displayModal': setDisplayModal,
+        // 'displayMaximizable': setDisplayMaximizable,
+        'displayPosition': setDisplayPosition
+        // 'displayResponsive': setDisplayResponsive
     }
 
     const defaultValues = {
@@ -62,7 +63,7 @@ function Regist() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
-    const onClick = (name, position) => {
+    const showModal = (name, position) => {
         dialogFuncMap[`${name}`](true);
 
         if (position) {
@@ -70,34 +71,34 @@ function Regist() {
         }
     }
 
-    const onHide = (name) => {
-        dialogFuncMap[`${name}`](false);
-    }
+    // const onHide = (name) => {
+    //     dialogFuncMap[`${name}`](false);
+    // }
 
-    const inviteMember = async() => {
-        await toast.current.show({ severity: 'info', summary: 'Confirmed', detail: '초대할 팀원의 이메일을 입력했습니다.', life: 3000 });
-    };
+    // const inviteMember = async() => {
+    //     await toast.current.show({ severity: 'info', summary: 'Confirmed', detail: '초대할 팀원의 이메일을 입력했습니다.', life: 3000 });
+    // };
 
-    const renderFooter = (name) => {
-        return (
-            <div>
-                <Button type="button" label="등록" icon="pi pi-check" onClick={() => {inviteMember(name); onHide(name);}} />
-                <Button label="취소" icon="pi pi-times" onClick={() => {onHide(name); setEmails(emptyEmails);}} className="p-button-text" />
-            </div>
-        );
-    }
+    // const renderFooter = (name) => {
+    //     return (
+    //         <div>
+    //             <Button type="button" label="등록" icon="pi pi-check" onClick={() => {inviteMember(name); onHide(name);}} />
+    //             <Button label="취소" icon="pi pi-times" onClick={() => {onHide(name); setEmails(emptyEmails);}} className="p-button-text" />
+    //         </div>
+    //     );
+    // }
 
-    const addEmail = async() => {
+    // const addEmail = async() => {
 
-        const changeEmails = await emails.concat({
-            id: nextId,
-            address: inputEmail
-        });
+    //     const changeEmails = await emails.concat({
+    //         id: nextId,
+    //         address: inputEmail
+    //     });
 
-        await setInputEmail('');
-        await setNextId(nextId + 1);
-        await setEmails(changeEmails);
-    }
+    //     await setInputEmail('');
+    //     await setNextId(nextId + 1);
+    //     await setEmails(changeEmails);
+    // }
 
     const submitHandler = async (data) => {
         console.log(data);
@@ -190,7 +191,7 @@ function Regist() {
                             icon="pi pi-user-plus" 
                             label="팀원 초대" 
                             className="p-button-lg"
-                            onClick={ () => onClick('displayBasic')}
+                            onClick={ () => showModal('displayBasic')}
                             />
                         </div>
 
@@ -213,8 +214,14 @@ function Regist() {
                     </form>
                 </div>
             </main>
-
-            <Dialog 
+            
+            <InvitationModal 
+                displayBasic = { displayBasic }
+                setDisplayBasic = { setDisplayBasic }
+                emails = { emails }
+                setEmails = { setEmails }
+            />
+            {/* <Dialog 
                 header="팀원 초대" 
                 visible={displayBasic}
                 footer={renderFooter('displayBasic')}
@@ -230,7 +237,7 @@ function Regist() {
                     emails={ emails } 
                     setEmails={ setEmails } 
                 />   
-            </Dialog>
+            </Dialog> */}
             <ConfirmDialog />
         </>
     );
