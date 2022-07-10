@@ -1,5 +1,5 @@
 import { FIND_BACKLOGS } from '../modules/BacklogModule';
-import { FIND_BACKLOG_DETAILS } from '../modules/BacklogDetailModule';
+import { FIND_BACKLOG_DETAILS, MODIFY_BACKLOG, DELETE_BACKLOG } from '../modules/BacklogDetailModule';
 
 export function callGetBacklogsAPI(params) {
 
@@ -46,4 +46,48 @@ export function callGetBacklogDetailsAPI(backlogCode) {
 
         dispatch({ type: FIND_BACKLOG_DETAILS, payload: result.results});
     }
+}
+
+export function callPutBacklogAPI(modifiedBacklog) {
+
+    const requestURL = 'http://localhost:8888/api/backlogs';
+
+    return async function modifyBacklog(dispatch, getState) {
+        
+        const result = await fetch(requestURL, {
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Access-Token': window.localStorage.getItem('access_token')
+            },
+            body: JSON.stringify(modifiedBacklog)
+        }).then(res => res.json());
+
+        await dispatch({ type: MODIFY_BACKLOG, payload: result.results });
+    }
+}
+
+export function callDeleteBacklogAPI(backlogCode, projectCode) {
+
+    const requestURL = 'http://localhost:8888/api/backlogs';
+
+    return async function removeBacklog(dispatch, getState) {
+        
+        const result = await fetch(requestURL, {
+            method: 'DELETE',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Access-Token': window.localStorage.getItem('access_token')
+            },
+            body: JSON.stringify({
+                backlogCode, 
+                projectCode
+            })
+        }).then(res => res.json());
+
+        await dispatch({ type: DELETE_BACKLOG, payload: result.results });
+    }
+
 }
