@@ -2,7 +2,7 @@ const HttpStatus = require('http-status');
 const SprintService = require('../services/sprint-service');
 
 exports.addSprint = async (req, res, next) => {
-    
+    console.log('addSprint...');
     await SprintService.addSprint(req.body)
     .then((results) => {
 
@@ -22,7 +22,7 @@ exports.addSprint = async (req, res, next) => {
 }
 
 exports.viewSprints = async (req, res, next) => {
-
+    console.log('viewSprints...');
     await SprintService.viewSprints(req.query)
     .then((results) => {
 
@@ -42,7 +42,7 @@ exports.viewSprints = async (req, res, next) => {
 }
 
 exports.viewSprintHistory = async (req, res, next) => {
-
+    console.log('viewSprintHistory...');
     await SprintService.viewSprintHistory(req.query)
     .then((results) => {
 
@@ -62,14 +62,14 @@ exports.viewSprintHistory = async (req, res, next) => {
 }
 
 exports.viewSprint = async (req, res, next) => {
-
+    console.log('viewSprint...');
     await SprintService.viewSprint(req.params.sprintCode)
     .then((results) => {
 
         res.status(HttpStatus.OK).json({
             status: HttpStatus.OK,
             message: 'successfully view sprint',
-            results: results
+            results: results[0]
         });
     })
     .catch((err) =>{
@@ -82,7 +82,7 @@ exports.viewSprint = async (req, res, next) => {
 }
 
 exports.editSprint = async (req, res, next) => {
-
+    console.log('editSprint...');
     await SprintService.editSprint(req.body)
     .then((results) => {
 
@@ -102,7 +102,7 @@ exports.editSprint = async (req, res, next) => {
 }
 
 exports.deleteSprint = async (req, res, next) => {
-
+    console.log('deleteSprint...');
     await SprintService.deleteSprint(req.body)
     .then((results) => {
 

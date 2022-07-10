@@ -15,7 +15,7 @@ function MainNavbar({projectCode}) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const project = useSelector(state => state.projectsReducer);
-  console.log(project);
+  // console.log(project);
   const [selectedMenu, setSelectedMenu] = useState();
   const menus = [
     'dashboard',
@@ -27,7 +27,7 @@ function MainNavbar({projectCode}) {
   ];
 
   const number = parseInt(`${projectCode}`);
-  console.log('project', number);
+  // console.log('project', number);
 
   let items = [
     {

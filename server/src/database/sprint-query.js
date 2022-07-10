@@ -37,6 +37,7 @@ exports.selectSprints = (params) => {
         FROM TBL_SPRINT
         WHERE 
             SPRINT_DELETED_YN = 'N'
+            AND PROJECT_CODE = ?
     `;
 
     if((   params.searchCondition === 'name'
