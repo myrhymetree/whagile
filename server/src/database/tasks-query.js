@@ -102,3 +102,14 @@ exports.updateTask = () => {
             BACKLOG_CODE = ?
     `;
 };
+
+
+// 개별 백로그(일감) 삭제
+exports.deleteTask = () => {
+  return `
+      UPDATE TBL_BACKLOG A
+         SET A.BACKLOG_DELETED_YN = 'Y'
+       WHERE A.BACKLOG_CODE = ?
+  `;
+};
+

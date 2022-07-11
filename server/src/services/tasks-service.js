@@ -81,38 +81,33 @@ exports.editTask = (params) => {
 
 
 
-// 삭제 예시
-// exports.deleteNewTask = (backlogCode, category) => {
-//   return new Promise(async (resolve, reject) => {
-//     const connection = getConnection();
-//     connection.beginTransaction();
+// 삭제 
+exports.removeTask = (taskCode, category) => {
+  return new Promise(async (resolve, reject) => {
+    const connection = getConnection();
+    connection.beginTransaction();
 
-//     try {
-//       const backlog = TasksRepository.selectTaskbyTaskCode(connection, backlogCode);
-      
-//       if(category === '백로그') {
-//         TasksRepository.deleteBacklog(connection, backlogCode);
-//       }
+    try {
+      await TasksRepository.removeTask(connection, taskCode);
 
-//       if(category === '일감') {
-//         TasksRepository.deleteTask(connection, backlogCode);
-//       }
+      const removedTask = await TasksRepository.selectTaskbyTaskCode(connection,taskCode);
 
-//       백로그 삭제 / 일감 삭제
-//       1. backlog_category === '백로그'
-//       update backlog_delete_yn = 'y'
-//       2. backlog_category === '일감'
-//       update backlog_category = '백로그'
 
-//       connection.commit();
+      // 백로그 삭제 / 일감 삭제
+      // 1. backlog_category === '백로그'
+      // update backlog_delete_yn = 'y'
+      // 2. backlog_category === '일감'
+      // update backlog_category = '백로그'
 
-//       resolve(result);
-//     } catch (err) {
-//       connection.rollback();
+      connection.commit();
 
-//       reject(err);
-//     } finally {
-//       connection.end();
-//     }
-//   });
-// };
+      resolve(removedTask);
+    } catch (err) {
+      connection.rollback();
+
+      reject(err);
+    } finally {
+      connection.end();
+    }
+  });
+};

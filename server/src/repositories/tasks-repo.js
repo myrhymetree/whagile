@@ -105,3 +105,23 @@ exports.updateTask = (connection, params) => {
     );
   });
 };
+
+// 개별 일감(백로그) 삭제
+
+exports.deleteTask = (connection, taskCode) => {
+
+    return new Promise((resolve, reject) => {
+        connection.query(
+            tasksQuery.deleteTask(),
+            [ taskCode],
+            (err, results, fields) => {
+
+                if(err) {
+                    reject(err);
+                }
+
+                resolve(results);
+            }
+        );
+    });
+};

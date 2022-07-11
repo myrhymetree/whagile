@@ -1,6 +1,7 @@
 const HttpStatus = require("http-status");
 const TasksService = require("../services/tasks-service");
 
+
 //전체 일감 목록 조회
 exports.findAllTasks = async (req, res, next) => {
   const params = {
@@ -70,4 +71,19 @@ exports.editTask = async (req, res, next) => {
       message: "개별 일감 수정을 완료했습니다.",
       results: results,
     });
+};
+
+// 개별 일감(백로그) 삭제
+
+exports.removeTask = async (req, res, next) => {
+  console.log(req.params.taskCode)
+  await TasksService.removeTask(req.params.taskCode)
+    .then((result) => {
+
+      res.status(HttpStatus.OK).json({
+          status: HttpStatus.OK,
+          message: '개별 일감 삭제를 완료했습니다.',
+          results: result
+      });
+    })
 };
