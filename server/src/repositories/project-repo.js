@@ -234,3 +234,20 @@ exports.selectRegistedMember = (connection, data) => {
         });
     });
 }
+
+exports.modifyMemberEmailAuthApporovedStatus = (connection, memberCode) => {
+
+    return new Promise((resolve, reject) => {
+        connection.query(projectQuery.updateMemberEmailAuthApporovedStatus(memberCode),
+        
+        (err,results, fields) => {
+
+            if(err) {
+                console.log(err);
+                reject(err);
+            }
+
+            resolve(results);
+        });
+    });
+}

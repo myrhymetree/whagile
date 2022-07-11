@@ -159,6 +159,7 @@ exports.inviteMember = async (req, res, next) => {
 
     await ProjectService.inviteMember(req.body)
         .then((result) => {
+
             res.status(HttpStatus.OK).json({
                 status: HttpStatus.OK,
                 message: '해당 이메일로 이메일을 전송했습니다.',
@@ -167,8 +168,27 @@ exports.inviteMember = async (req, res, next) => {
         }).catch((err) => {
 
             res.status(HttpStatus.BAD_REQUEST).json({
-                status:HttpStatus.BAD_REQUEST,
+                status: HttpStatus.BAD_REQUEST,
                 message: err
             });
         });
 };
+
+exports.signUpProjectMember = async (req, res, next) => {
+
+    await ProjectService.signUpProjectMember(req.body)
+        .then((result) => {
+            // res.redirect('http://localhost:3000/login');
+            res.status(HttpStatus.OK).json({
+                status: HttpStatus.OK,
+                message: 'successfully register Account!!',
+                results: result
+            });
+        }).catch((err) => {
+
+            res.status(HttpStatus.BAD_REQUEST).json({
+                status: HttpStatus.BAD_REQUEST,
+                message: err
+            });
+        });
+}

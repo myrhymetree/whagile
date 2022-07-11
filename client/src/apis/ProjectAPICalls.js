@@ -1,6 +1,6 @@
 import { GET_PROJECT, GET_PROJECTS, POST_PROJECT, PUT_PROJECT,  DELETE_PROJECT } from "../modules/ProjectModule";
 import { GET_PROJECT_MEMBER } from "../modules/ProjectMemberModule";
-import { GET_IS_REGISTED_MEMBER, DELETE_PROJECT_MEMBER } from "../modules/ProjectMemberModule";
+import { GET_INVITED_MEMBER, DELETE_PROJECT_MEMBER } from "../modules/ProjectMemberModule";
 import { decodeJwt } from '../utils/tokenUtils';
 
 export function callGetProjectsAPI(params) {
@@ -160,7 +160,7 @@ export const callDeleteProjectMemberAPI = (params) => {
     }
 }
 
-export const callPostIsRegistedMemberAPI = (data) => {
+export const callPostInviteMemberAPI = (emails, projectCode) => {
 
     let requestURL = `http://localhost:8888/api/projects/invitation`;
 
@@ -173,10 +173,11 @@ export const callPostIsRegistedMemberAPI = (data) => {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                email: data
+                emails: emails,
+                projectCode: projectCode
             })
         }).then(res => res.json());
 
-        dispatch({ type: GET_IS_REGISTED_MEMBER, payload: result.results});
+        dispatch({ type: GET_INVITED_MEMBER, payload: result.results});
     }
 }

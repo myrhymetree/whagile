@@ -1,9 +1,10 @@
 import PageTitle from '../../../components/items/PageTitle';
 import React, { useEffect, useState, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import { callGetProjectMemberAPI } from '../../../apis/ProjectAPICalls';
 import { callDeleteProjectMemberAPI } from '../../../apis/ProjectAPICalls';
-import { useParams } from 'react-router-dom';
+import InvitationExecutionModal from '../../../components/items/projects/InvitationExecutionModal';
 
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
@@ -24,6 +25,10 @@ function TeamMateList() {
         authorityName: null
     };
 
+    const [emails, setEmails ] = useState([]);
+    const [displayBasic, setDisplayBasic] = useState(false);
+    const [displayPosition, setDisplayPosition] = useState(false);
+    const [position, setPosition] = useState('center');
     const dispatch = useDispatch();
     const { projectCode } = useParams();
     const toast = useRef(null);
@@ -37,6 +42,10 @@ function TeamMateList() {
     const [submitted, setSubmitted] = useState(false);
     const [memberDialog, setMemberDialog] = useState(false);
     
+    const dialogFuncMap = {
+        'displayBasic': setDisplayBasic,
+        'displayPosition': setDisplayPosition
+    }
 
     // useEffect(
     //     () => {
@@ -136,10 +145,19 @@ function TeamMateList() {
         </div>
     );
 
+    const showModal = (name, position) => {
+        dialogFuncMap[`${name}`](true);
+
+        if (position) {
+            setPosition(position);
+        }
+    }
+    
+
     const leftToolbarTemplate = () => {
         return (
             <>
-                <Button label="팀원 초대" icon="pi pi-plus" className="p-button-success mr-2" onClick={openNew}/>
+                <Button label="팀원 초대"  icon="pi pi-user-plus" className="p-button-success mr-2" onClick={ () => showModal('displayBasic')}/>
                 {/* <Button label="Delete" icon="pi pi-trash" className="p-button-danger" onClick={confirmDeleteSelected} disabled={!selectedProducts || !selectedProducts.length} /> */}
             </>
         )
@@ -195,7 +213,13 @@ function TeamMateList() {
                 </div>
             </Dialog>
 
-  
+            <InvitationExecutionModal 
+                displayBasic = { displayBasic }
+                setDisplayBasic = { setDisplayBasic }
+                emails = { emails }
+                setEmails = { setEmails }
+                projectCode = { projectCode }
+            />
         </>
     );
 }

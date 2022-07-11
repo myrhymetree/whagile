@@ -2,7 +2,7 @@ import PageTitle from '../../components/items/PageTitle';
 import MainHeader from '../../components/commons/MainHeader';
 import React, { useState, useRef } from 'react';
 import { useDispatch } from 'react-redux';
-import { useNavigate, NavLink } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { callPostProjectAPI } from '../../apis/ProjectAPICalls';
 import InvitationModal from '../../components/items/projects/InvitationModal';
 import { useForm, Controller, FieldError } from 'react-hook-form';
@@ -90,42 +90,42 @@ function Regist() {
                             <div className="field col-12 md:col-4">
                                 <label htmlFor="projectName">프로젝트 이름</label>
                                 <Controller 
-                                        name="projectName" 
-                                        control={control} 
-                                        // rules={{ required: '프로젝트 이름은 필수입니다.' }} 
-                                        render={({ field, fieldState }) => (
-                                            <InputText 
-                                                id={field.name} 
-                                                {...field}
-                                                ref={handleSubmit}
-                                                value={ projectName }
-                                                onChange={ (e) => setProjectName(e.target.value)}
-                                                autoComplete="off" 
-                                                autoFocus 
-                                                className={classNames({ 'p-invalid': fieldState.invalid })} 
-                                            />
-                                    )} />
-                                    {/* {getFormErrorMessage('projectName')} */}
+                                    name="projectName" 
+                                    control={control}
+                                    render={({ field, fieldState }) => (
+                                        <InputText 
+                                            id={field.name} 
+                                            {...field}
+                                            ref={handleSubmit}
+                                            value={ projectName }
+                                            onChange={ (e) => setProjectName(e.target.value)}
+                                            autoComplete="off" 
+                                            autoFocus 
+                                            className={classNames({ 'p-invalid': fieldState.invalid })}
+                                            required 
+                                        />
+                                    )} 
+                                />
                             </div>
                             <div className="field col-12 md:col-4">
                                 <label htmlFor="inputtext">프로젝트 설명</label>
                                 <Controller 
-                                        name="projectDescription" 
-                                        control={control} 
-                                        // rules={{ required: '프로젝트 설명은 필수입니다.' }} 
-                                        render={({ field, fieldState }) => (
-                                            <InputText 
-                                                id={field.name} 
-                                                {...field}
-                                                ref={handleSubmit}
-                                                onChange={ (e) => setProjectDescription(e.target.value)}
-                                                value={ projectDescription }
-                                                autoComplete="off" 
-                                                autoFocus 
-                                                className={classNames({ 'p-invalid': fieldState.invalid })} 
-                                            />
-                                    )} />
-                                {/* {getFormErrorMessage('projectDescription')} */}
+                                    name="projectDescription" 
+                                    control={control} 
+                                    render={({ field, fieldState }) => (
+                                        <InputText 
+                                            id={field.name} 
+                                            {...field}
+                                            ref={handleSubmit}
+                                            onChange={ (e) => setProjectDescription(e.target.value)}
+                                            value={ projectDescription }
+                                            autoComplete="off" 
+                                            autoFocus 
+                                            className={classNames({ 'p-invalid': fieldState.invalid })}
+                                            required 
+                                        />
+                                    )}
+                                 />
                             </div>
                         </div>
                         <div>

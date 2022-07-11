@@ -204,31 +204,8 @@ exports.deleteProjectMember = (params) => {
          `
 }
 
-/* 프로젝트 멤버 이메일 조회 */
-// exports.isRegistedMember = (data) => {
- 
-//   let query = `SELECT
-//                       A.*
-//                  FROM TBL_MEMBER A
-//                 WHERE A.MEMBER_EMAIL = ${ data[0].memberEmail };
-//          `
-
-        // if(data.length > 1 ) {
-        //   for(let i = 1; i < data.length; i++) {
-        //     query += `UNION
-        //             SELELCT
-        //                     A.*
-        //                FROM TBL_MEMBER A
-        //               WHERE A.MEMBER_EMAIL = ${ data[i].memberEmail }` 
-        //   }
-        // }
-
-//   return query;
-
-// }
-
 exports.isRegistedMember = (data) => {
-
+  
   let query = `SELECT
                       A.*
                  FROM TBL_MEMBER A
@@ -246,4 +223,15 @@ exports.isRegistedMember = (data) => {
 
   return query;
 
+  }
+
+  exports.updateMemberEmailAuthApporovedStatus = (memberCode) => {
+
+    return `
+      UPDATE
+             TBL_MEMBER A
+         SET 
+             A.MEMBER_EMAIL_AUTH = 'Y'
+       WHERE A.MEMBER_CODE = ${ memberCode }
+    `;
   }

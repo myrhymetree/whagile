@@ -215,3 +215,47 @@ exports.sendInvitationMail = async (memberInfo, projectInfo) => {
   });
 
 }
+
+exports.sendInvitationMailToNewMember = async (email, projectInfo) => {
+  return new Promise((resolve, reject) => {
+    console.log('sendMail', email);
+    console.log('project', projectInfo.projectName);
+
+    const transporter = nodemailer.createTransport({
+      host: 'smtp.gmail.com',
+      port: 587,
+      secure: false,
+      auth: {
+        user: "whagile99",
+        pass: "rgipfmgcrxrvbzej"
+      }
+    });
+
+    const info = transporter.sendMail({
+      from: `"Whagile Team" <whagile99@gmail.com>"`,
+      to: email,
+      subject: 'Whagile 프로젝트 초대',
+      html: 
+      `<h1>안녕하세요</h1><br/>
+      ${ projectInfo.projectName }에 초대 되셨습니다.<br/>
+      <br/>
+      아래 링크를 클릭하시고 회원 가입을 하시면 해당 프로젝트에 초대됩니다.<br/>
+      <a href="http://localhost:3000/invitedMemberSignup/${ projectInfo.projectCode }/${ email }">초대 수락</a><br/>
+      해당 링크는 48시간동안 유효합니다.<br/>
+      <br/>
+      <br/>
+      <br/>
+      Whagile Team 올림
+      `
+    }, (err, info) => {
+      if(err){
+        console.log(err);
+        reject(err);
+      } else {
+        resolve(info.messageId);
+      }
+    });
+
+  });
+
+}

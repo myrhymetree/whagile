@@ -1,5 +1,7 @@
 import React, { useState, useRef } from 'react';
+import { useDispatch } from 'react-redux';
 import EmailItems from './EmailItems';
+import { callPostInviteMemberAPI } from '../../../apis/ProjectAPICalls';
 
 import { Dialog } from 'primereact/dialog';
 import { Button } from 'primereact/button';
@@ -7,10 +9,11 @@ import { Toast } from 'primereact/toast';
 import { InputText } from 'primereact/inputtext';
 
 
-function InvitationModal({ displayBasic, setDisplayBasic, emails, setEmails }) {
+function InvitationExecutionModal({ displayBasic, setDisplayBasic, emails, setEmails, projectCode }) {
 
     let emptyEmails = [];
     const toast = useRef(null);
+    const dispatch = useDispatch();
     const [displayPosition, setDisplayPosition] = useState(false);
     const [inputEmail, setInputEmail] = useState('');
     const [nextId, setNextId] = useState(1);
@@ -50,7 +53,9 @@ function InvitationModal({ displayBasic, setDisplayBasic, emails, setEmails }) {
 
     const inviteMember = async() => {
         if(emails.length > 0) {
-            await toast.current.show({ severity: 'info', summary: 'Confirmed', detail: '초대할 팀원의 이메일을 입력했습니다.', life: 3000 });
+            await dispatch(callPostInviteMemberAPI(emails, projectCode));
+            await setEmails([]);
+            await toast.current.show({ severity: 'info', summary: '발송완료', detail: '해당 이메일로 초대 메일을 발송 했습니다.', life: 3000 });
         }
     };
 
@@ -78,4 +83,4 @@ function InvitationModal({ displayBasic, setDisplayBasic, emails, setEmails }) {
     );
 }
 
-export default InvitationModal;
+export default InvitationExecutionModal;
