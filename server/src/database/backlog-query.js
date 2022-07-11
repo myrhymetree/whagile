@@ -71,10 +71,10 @@ exports.selectBacklogByBacklogCode = () => {
 exports.insertNewBacklog = () => {
   return `
     INSERT INTO TBL_BACKLOG
-    (BACKLOG_TITLE, BACKLOG_DESCRIPTION, BACKLOG_CATEGORY, BACKLOG_PROGRESS_STATUS, 
+    (BACKLOG_TITLE, BACKLOG_DESCRIPTION, BACKLOG_CATEGORY, 
       BACKLOG_URGENCY, BACKLOG_ISSUE, PROJECT_CODE, BACKLOG_CREATOR_CODE)
     VALUES
-    (?, ?, ?, ?, ?, ?, ?, ?)
+    (?, ?, ?, ?, ?, ?, ?)
   `;
 };
 

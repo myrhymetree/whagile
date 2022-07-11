@@ -164,7 +164,7 @@ exports.editBacklog = (modifyingContent) => {
 
             connection.commit();
 
-            resolve(results);
+            resolve(changedBacklog);
 
         } catch(err) {
             connection.rollback();
@@ -184,6 +184,9 @@ exports.removeRequest = (removeRequest) => {
 
         const connection = getConnection();
         connection.beginTransaction();
+        
+        console.log('#####여기야###########33')
+        console.log(removeRequest)
 
         try {
 
@@ -216,7 +219,7 @@ exports.removeRequest = (removeRequest) => {
 
             connection.commit();
 
-            resolve(results);
+            resolve(changedBacklog);
 
         } catch(err) {
             connection.rollback();

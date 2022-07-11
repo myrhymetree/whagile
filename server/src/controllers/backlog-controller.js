@@ -59,7 +59,6 @@ exports.registNewBacklog = async (req, res, next) => {
         title: req.body.title,
         description: req.body.description,
         category: '백로그',
-        progressStatus: req.body.progressStatus,
         urgency: req.body.urgency,
         issue: req.body.issue,
         projectCode: req.body.projectCode,
@@ -80,10 +79,13 @@ exports.registNewBacklog = async (req, res, next) => {
 /* 백로그 수정 요청 */
 exports.editBacklog = async (req, res, next) => {
 
+    const user = decodedToken(req.get('Access-Token'));
+    console.log('여긴 백로그 수정 컨트롤러 메소드: ', req.body);
+
     const modifyingContent = {
         backlogCode: Number(req.body.backlogCode),
         projectCode: Number(req.body.projectCode),
-        memberCode: Number(req.body.memberCode),
+        memberCode: user.usercode,
         changedCategory: req.body.changedCategory,
         changedValue: req.body.changedValue
     };
@@ -100,10 +102,12 @@ exports.editBacklog = async (req, res, next) => {
 /* 백로그 삭제 요청 */
 exports.removeBacklog = async (req, res, next) => {
 
+    const user = decodedToken(req.get('Access-Token'));
+
     const removeRequest = {
         backlogCode: Number(req.body.backlogCode),
         projectCode: Number(req.body.projectCode),
-        memberCode: Number(req.body.memberCode)
+        memberCode: user.usercode
     };
 
     const results = await BacklogService.removeRequest(removeRequest);
