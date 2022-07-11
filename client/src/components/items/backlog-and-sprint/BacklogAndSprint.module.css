@@ -38,7 +38,6 @@
     flex-direction: row;
     justify-content: space-around;
     align-items: center;
-    cursor: pointer;
 }
 
 #divHeader>label,
@@ -207,4 +206,18 @@
     color: #ffcf91;
     font-size: 15px;
     cursor: pointer;
+}
+
+#editableArea, #editableArea>label {
+    float: right;
+    cursor: pointer;
+}
+
+#moreBtn {
+    background-color: #333440;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    float: right;
+    padding: 3px;
 }

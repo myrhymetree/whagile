@@ -155,26 +155,9 @@ function Backlogs() {
                         </div>  
                     )
                 }
-                {/* { backlogList.map(backlog =>  
-                    <div className={ BacklogAndSprintCSS.backlogItem }>
-                        <label>{ backlog.backlogCode }</label>
-                        <label>{ backlog.issue === 1? '이슈' : '기본' }</label>
-                        <label>{ backlog.backlogTitle }</label>
-                        <label>{ backlog.progressStatus }</label>
-                        <label>{ backlog.urgency }</label>
-                        <label>{ backlog.memberName }</label>
-                        <button 
-                            id={ BacklogAndSprintCSS.moreDetailsBtn }
-                            onClick={ () => seeBacklogDetails(backlog.backlogCode) }
-                        >
-                            자세히
-                        </button>
-                    </div>  
-                )} */}
                 <BacklogDetails
                     visibleRight = { visibleRight }
                     setVisibleRight = { setVisibleRight }
-                    // backlog = { backlogDetails[0] }
                     commentOffset = { commentOffset }
                     setCommentOffset = { setCommentOffset }
                 />
