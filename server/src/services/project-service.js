@@ -108,7 +108,7 @@ exports.registProject = (projectInfo) => {
 }
 
 exports.modifyProject = (projectInfo) => {
-    return new Promise(async (resolve, reject) => {
+    return new Promise( async(resolve, reject) => {
         
         const connection = getConnection();
         connection.beginTransaction();
@@ -163,7 +163,7 @@ exports.findProjectMember = (projectCode) => {
 
         const connection = getConnection();
 
-        const results = ProjectRepository.selectProjectMember(connection, projectCode);
+        const results = ProjectRepository.selectProjectMembers(connection, projectCode);
 
         connection.end();
 
@@ -205,7 +205,7 @@ exports.removeProjectMember = (data) => {
         try {
             const result = await ProjectRepository.deleteProjectMember(connection, data);
 
-            const projectMember = await ProjectRepository.selectProjectMember(connection, data.projectCode);
+            const projectMember = await ProjectRepository.selectProjectMembers(connection, data.projectCode);
 
             connection.commit();
 
@@ -326,6 +326,32 @@ exports.signUpProjectMember = (data) => {
         } finally {
             connection.end();
             console.log('connection closed succeeded');
+        }
+    });
+}
+
+exports.modifyAuthorityOfMember = (projectMemberInfo) => {
+    return new Promise( async(resolve, reject) => {
+        
+        const connection = getConnection();
+        connection.beginTransaction();
+
+        try {
+            await ProjectRepository.updateAuthorityOfMember(connection, projectMemberInfo);
+            console.log('service 매개변수 : ', projectMemberInfo);
+            const modifiedProjectMember = await ProjectRepository.selectProjectMember(connection, projectMemberInfo);
+            console.log('modifiedProjectMember : ', modifiedProjectMember);
+            
+            connection.commit();
+
+            resolve(modifiedProjectMember);
+        } catch (err) {
+            console.log(err);
+            connection.rollback();
+            
+            reject(err);
+        } finally {
+            connection.end();
         }
     });
 }

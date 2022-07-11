@@ -152,7 +152,7 @@ exports.deleteProject = () => {
   `;
 }
 
-exports.selectProjectMember = (projectCode) => {
+exports.selectProjectMembers = (projectCode) => {
   return `
     SELECT
            A.MEMBER_CODE
@@ -228,10 +228,40 @@ exports.isRegistedMember = (data) => {
   exports.updateMemberEmailAuthApporovedStatus = (memberCode) => {
 
     return `
-      UPDATE
-             TBL_MEMBER A
-         SET 
-             A.MEMBER_EMAIL_AUTH = 'Y'
-       WHERE A.MEMBER_CODE = ${ memberCode }
+        UPDATE
+                TBL_MEMBER A
+            SET 
+                A.MEMBER_EMAIL_AUTH = 'Y'
+          WHERE A.MEMBER_CODE = ${ memberCode }
+    `;
+  }
+
+  exports.updateAuthorityOfMember = (projectMemberInfo) => {
+
+    return `
+        UPDATE
+               TBL_PROJECT_MEMBER A
+           SET
+               A.AUTHORITY_CODE = ${ projectMemberInfo.authorityCode }
+         WHERE A.MEMBER_CODE = ${ projectMemberInfo.memberCode }
+           AND A.PROJECT_CODE = ${ projectMemberInfo.projectCode }
+    `;
+  }
+
+  exports.selectProjectMember = (projectMemberInfo) => {
+
+    return `
+        SELECT
+               A.MEMBER_CODE
+             , B.MEMBER_ID
+             , B.MEMBER_NAME
+             , B.MEMBER_EMAIL
+             , A.AUTHORITY_CODE
+             , C.AUTHORITY_NAME
+          FROM TBL_PROJECT_MEMBER A
+          JOIN TBL_MEMBER B ON (A.MEMBER_CODE = B.MEMBER_CODE)
+          JOIN TBL_AUTHORITY C ON (A.AUTHORITY_CODE = C.AUTHORITY_CODE)
+         WHERE A.PROJECT_CODE = ${ projectMemberInfo.projectCode }
+           AND A.MEMBER_CODE = ${ projectMemberInfo.memberCode }
     `;
   }

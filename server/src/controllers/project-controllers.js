@@ -192,3 +192,27 @@ exports.signUpProjectMember = async (req, res, next) => {
             });
         });
 }
+
+exports.modifyAuthorityOfMember = async (req, res, next) => {
+
+    const projectMemberInfo = {
+        projectCode : req.params.projectCode,
+        memberCode : req.params.memberCode,
+        authorityCode : req.body.authorityCode
+    }
+
+    console.log('projectMemberInfo', projectMemberInfo);
+    await ProjectService.modifyAuthorityOfMember(projectMemberInfo)
+        .then((result) => {
+            res.status(HttpStatus.OK).json({
+                status: HttpStatus.OK,
+                message: '해당 프로젝트 멤버의 권한을 수정했습니다.',
+                results: result
+            });
+        }).catch((err) => {
+            res.status(HttpStatus.BAD_REQUEST).json({
+                status: HttpStatus.BAD_REQUEST,
+                message: err
+            });
+        });
+}

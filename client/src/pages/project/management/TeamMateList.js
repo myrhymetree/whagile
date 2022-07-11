@@ -14,6 +14,7 @@ import { Row } from 'primereact/row';
 import { Toolbar } from 'primereact/toolbar';
 import { Toast } from 'primereact/toast';
 import { Dialog } from 'primereact/dialog';
+import { RadioButton } from 'primereact/radiobutton';
 
 function TeamMateList() {
 
@@ -29,6 +30,7 @@ function TeamMateList() {
     const [displayBasic, setDisplayBasic] = useState(false);
     const [displayPosition, setDisplayPosition] = useState(false);
     const [position, setPosition] = useState('center');
+    const [productDialog, setProductDialog] = useState(false);
     const dispatch = useDispatch();
     const { projectCode } = useParams();
     const toast = useRef(null);
@@ -44,7 +46,7 @@ function TeamMateList() {
     
     const dialogFuncMap = {
         'displayBasic': setDisplayBasic,
-        'displayPosition': setDisplayPosition
+        'displayPosition': setDisplayPosition,
     }
 
     // useEffect(
@@ -73,6 +75,11 @@ function TeamMateList() {
     //     [memberList]
     // );
 
+    const hideDialog = () => {
+        setSubmitted(false);
+        setProductDialog(false);
+    }
+
     function removeMember(rowData) {
         dispatch(callDeleteProjectMemberAPI({
             'projectCode': projectCode,
@@ -85,6 +92,12 @@ function TeamMateList() {
         setSubmitted(false);
         setMemberDialog(true);
     }
+
+    // const openNew1 = () => {
+    //     setProduct(emptyProduct);
+    //     setSubmitted(false);
+    //     setProductDialog(true);
+    // }
 
     const hideDeleteMemberDialog = () => {
         setDeleteMemberDialog(false);
@@ -105,7 +118,39 @@ function TeamMateList() {
         // setMember(emptyMember);
         removeMember(member);
         toast.current.show({ severity: 'success', summary: '팀원 제외', detail: '해당 팀원을 제외했습니다.', life: 3000 });
-    }
+    };
+
+    // const saveProduct = () => {
+    //     setSubmitted(true);
+
+    //     if (product.name.trim()) {
+    //         let _products = [...products];
+    //         let _product = {...product};
+    //         if (product.id) {
+    //             const index = findIndexById(product.id);
+
+    //             _products[index] = _product;
+    //             toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Product Updated', life: 3000 });
+    //         }
+    //         else {
+    //             _product.id = createId();
+    //             _product.image = 'product-placeholder.svg';
+    //             _products.push(_product);
+    //             toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Product Created', life: 3000 });
+    //         }
+
+    //         setProducts(_products);
+    //         setProductDialog(false);
+    //         setProduct(emptyProduct);
+    //     }
+    // }
+
+    const productDialogFooter = (
+        <>
+            {/* <Button label="Save" icon="pi pi-check" className="p-button-text" onClick={saveProduct} /> */}
+            <Button label="Cancel" icon="pi pi-times" className="p-button-text" onClick={hideDialog} />
+        </>
+    );
     
     const deleteMemberDialogFooter = (
         <>
@@ -113,6 +158,17 @@ function TeamMateList() {
             <Button label="취소" icon="pi pi-times" className="p-button-text" onClick={hideDeleteMemberDialog} />
         </>
     );
+
+    const onCategoryChange = (e) => {
+        let _member = {...member};
+        _member['authorityName'] = e.value;
+        setMember(_member);
+    }
+
+    const editProjectMember = (rowData) => {
+        setMember({...member});
+        setProductDialog(true);
+    }
 
 
     const confirmDeleteProjectMember = (rowData) => {
@@ -128,9 +184,9 @@ function TeamMateList() {
     }
 
     const actionBodyTemplate = (rowData) => {
-        // console.log(rowData);
         return (
             <>
+                <Button icon="pi pi-pencil" className="p-button-rounded p-button-success mr-2" onClick={() => editProjectMember(rowData)} />
                 <Button icon="pi pi-trash" className="p-button-rounded p-button-danger" onClick={() => confirmDeleteProjectMember(rowData)} />
             </>
         );
@@ -141,6 +197,7 @@ function TeamMateList() {
             <span className="p-input-icon-left">
                 <i className="pi pi-search" />
                 <InputText type="search" onInput={(e) => setGlobalFilter(e.target.value)} placeholder="Search..." />
+                {/* {!globalFilter && <small className="p-error">Name is required.</small>}     //나중에 required 대신 쓰면 용이함 */}
             </span>
         </div>
     );
@@ -220,7 +277,26 @@ function TeamMateList() {
                 setEmails = { setEmails }
                 projectCode = { projectCode }
             />
+
+            <Dialog visible={productDialog} style={{ width: '450px' }} header="권한 수정" modal className="p-fluid" footer={productDialogFooter} onHide={hideDialog}>
+     
+                <div className="field">
+                    <label className="mb-3">권한</label>
+                    <div className="formgrid grid">
+                        <div className="field-radiobutton col-6">
+                            <RadioButton inputId="category1" name="category" value="Accessories" onChange={onCategoryChange} checked={member.authorityCode === 2} />
+                            <label htmlFor="category1">팀원</label>
+                        </div>
+                        <div className="field-radiobutton col-6">
+                            <RadioButton inputId="category2" name="category" value="Clothing" onChange={onCategoryChange} checked={member.authorityCode === 3} />
+                            <label htmlFor="category2">게스트</label>
+                        </div>
+                    </div>
+                </div>
+            </Dialog>
         </>
+
+        
     );
 }
 

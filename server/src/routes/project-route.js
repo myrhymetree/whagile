@@ -12,5 +12,6 @@ router.delete('/:projectCode/removeProjectMember/:memberCode', ProjectController
 router.post('/invitation', ProjectController.inviteMember);
 router.get('/:projectCode/joinedMember/:memberCode', ProjectController.registProjectMember);
 router.post('/:projectCode/joinedNewMember', ProjectController.signUpProjectMember);
+router.put('/:projectCode/member/:memberCode/', ProjectController.modifyAuthorityOfMember);
 
 module.exports = router;

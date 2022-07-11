@@ -156,9 +156,9 @@ exports.deleteProject = (connection, projectCode) => {
     });
 }
 
-exports.selectProjectMember = (connection, projectCode) => {
+exports.selectProjectMembers = (connection, projectCode) => {
     return new Promise((resolve, reject) => {
-        connection.query(projectQuery.selectProjectMember(projectCode),
+        connection.query(projectQuery.selectProjectMembers(projectCode),
         (err, results, fields) => {
 
             if(err) {
@@ -166,12 +166,12 @@ exports.selectProjectMember = (connection, projectCode) => {
                 reject(err);
             }
 
-            const projectMember = [];
+            const projectMembers = [];
             for(let i = 0; i < results.length; i++) {
                 projectMember.push(new ProjectMemberDTO(results[i]));
             }
 
-            resolve(projectMember);
+            resolve(projectMembers);
         });
     });
 }
@@ -240,7 +240,7 @@ exports.modifyMemberEmailAuthApporovedStatus = (connection, memberCode) => {
     return new Promise((resolve, reject) => {
         connection.query(projectQuery.updateMemberEmailAuthApporovedStatus(memberCode),
         
-        (err,results, fields) => {
+        (err, results, fields) => {
 
             if(err) {
                 console.log(err);
@@ -248,6 +248,44 @@ exports.modifyMemberEmailAuthApporovedStatus = (connection, memberCode) => {
             }
 
             resolve(results);
+        });
+    });
+}
+
+exports.updateAuthorityOfMember = (connection, projectMemberInfo) => {
+
+    return new Promise((resolve, reject) => {
+        connection.query(projectQuery.updateAuthorityOfMember(projectMemberInfo),
+        
+        (err, results, fields) => {
+
+            if(err) {
+                console.log(err);
+                reject(err);
+            }
+
+            resolve(results);
+        }
+        )
+    });
+}
+
+exports.selectProjectMember = (connection, projectMemberInfo) => {
+    return new Promise((resolve, reject) => {
+        connection.query(projectQuery.selectProjectMember(projectMemberInfo),
+        (err, results, fields) => {
+
+            if(err) {
+                console.log(err);
+                reject(err);
+            }
+
+            console.log('results : ', results);
+            const projectMember = [];
+            projectMember.push(new ProjectMemberDTO(results[0]));
+
+            console.log('projectMember', projectMember);
+            resolve(projectMember[0]);
         });
     });
 }

@@ -107,8 +107,7 @@ function Information() {
                         <label htmlFor="projectName">프로젝트 이름</label>
                         <Controller 
                                 name="projectName" 
-                                control={control} 
-                                rules={{ required: true }} 
+                                control={control}
                                 render={({ field, fieldState }) => (
                                     <InputText 
                                         id={field.name} 
@@ -119,9 +118,9 @@ function Information() {
                                         autoComplete="off" 
                                         // autoFocus 
                                         className={classNames({ 'p-invalid': fieldState.invalid })} 
+                                        required
                                     />
                             )} />
-                            {getFormErrorMessage('projectName')}
                     </div>
 
                     <div className="field col-12 md:col-4">
@@ -129,7 +128,6 @@ function Information() {
                         <Controller 
                                 name="projectDescription" 
                                 control={control} 
-                                rules={{ required: '프로젝트 설명은 필수입니다.' }} 
                                 render={({ field, fieldState }) => (
                                     <InputText 
                                         id={field.name} 
@@ -138,10 +136,10 @@ function Information() {
                                         value={ projectDescription }
                                         autoComplete="off" 
                                         // autoFocus 
-                                        className={classNames({ 'p-invalid': fieldState.invalid })} 
+                                        className={classNames({ 'p-invalid': fieldState.invalid })}
+                                        required 
                                     />
                             )} />
-                        {getFormErrorMessage('projectDescription')}
                     </div>
 
                     <div>
@@ -151,6 +149,7 @@ function Information() {
                             onChange={onProjectMemberChange} 
                             optionValue="memberCode" 
                             optionLabel="memberName" 
+                            required
                         />
                     </div>
                     
