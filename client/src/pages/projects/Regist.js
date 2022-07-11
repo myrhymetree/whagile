@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate, NavLink } from 'react-router-dom';
 import { callPostProjectAPI } from '../../apis/ProjectAPICalls';
+import { callPostIsRegistedMemberAPI } from '../../apis/ProjectAPICalls';
 import EmailItems from '../../components/items/projects/Emails';
 import { useForm, Controller, FieldError } from 'react-hook-form';
 import { classNames } from 'primereact/utils';
@@ -17,9 +18,7 @@ import { render } from 'react-dom';
 function Regist() {
     const [projectName, setProjectName ] = useState('');
     const [projectDescription, setProjectDescription ] = useState('');
-    const [emails, setEmails ] = useState([
-    //    {id: 0, address: ''} 
-    ]);
+    const [emails, setEmails ] = useState([]);
     const [inputEmail, setInputEmail] = useState('');
     const [nextId, setNextId] = useState(1);
 
@@ -42,14 +41,15 @@ function Regist() {
     }
 
     const defaultValues = {
-        projectName : '',
-        projectDescription : ''
+        projectName : projectName,
+        projectDescription : projectDescription
     };
 
     const { control, formState: { errors }, handleSubmit } = useForm({ defaultValues });
 
     
     const getFormErrorMessage = (name) => {
+        console.log('name',name);
         return errors[name] && <small className="p-error">{errors[name].message}</small>
     };
     
@@ -68,18 +68,16 @@ function Regist() {
         dialogFuncMap[`${name}`](false);
     }
 
+    
+
     const renderFooter = (name) => {
         return (
             <div>
-                <Button label="Yes" icon="pi pi-check" onClick={() => onHide(name)} autoFocus />
-                <Button label="No" icon="pi pi-times" onClick={() => onHide(name)} className="p-button-text" />
+                <Button label="등록" icon="pi pi-check" onClick={() => inviteMember} autoFocus />
+                <Button label="취소" icon="pi pi-times" onClick={() => onHide(name)} className="p-button-text" />
             </div>
         );
     }
-
-    // const addProject = () => {
-    //     dispatch(callPostProjectAPI(projectName, projectDescription));
-    // }
 
     const addEmail = () => {
 
@@ -94,6 +92,7 @@ function Regist() {
     }
 
     const submitHandler = async (data) => {
+        console.log(data);
         await setProjectDescription(data.projectDescription);
         await setProjectName(data.projectName);
         await confirmDialog({
@@ -108,6 +107,11 @@ function Regist() {
     const acceptFunc = async () => { await dispatch(callPostProjectAPI(projectName, projectDescription));
                                      await toast.current.show({ severity: 'info', summary: 'Confirmed', detail: '프로젝트 생성을 완료했습니다.', life: 3000 })};
 
+    const inviteMember = async() => {
+        // await dispatch(callPostIsRegistedMemberAPI(emails));
+        // await toast.current.show({ severity: 'info', summary: 'Confirmed', detail: '팀원을 초대했습니다.', life: 3000 })};
+    }
+
     return(
         <>
         <Toast ref={toast} />
@@ -119,21 +123,24 @@ function Regist() {
         >
             <div className="p-fluid grid">
                 <div className="field col-12 md:col-4">
-                    <label htmlFor="inputtext">프로젝트 이름</label>
+                    <label htmlFor="projectName">프로젝트 이름</label>
                     <Controller 
                             name="projectName" 
                             control={control} 
-                            rules={{ required: '프로젝트 이름은 필수입니다.' }} 
+                            // rules={{ required: '프로젝트 이름은 필수입니다.' }} 
                             render={({ field, fieldState }) => (
                                 <InputText 
                                     id={field.name} 
                                     {...field}
+                                    ref={handleSubmit}
+                                    value={ projectName }
+                                    onChange={ (e) => setProjectName(e.target.value)}
                                     autoComplete="off" 
                                     autoFocus 
                                     className={classNames({ 'p-invalid': fieldState.invalid })} 
                                 />
                         )} />
-                        {getFormErrorMessage('projectName')}
+                        {/* {getFormErrorMessage('projectName')} */}
                 </div>
 
                 <div className="field col-12 md:col-4">
@@ -141,23 +148,26 @@ function Regist() {
                     <Controller 
                             name="projectDescription" 
                             control={control} 
-                            rules={{ required: '프로젝트 설명은 필수입니다.' }} 
+                            // rules={{ required: '프로젝트 설명은 필수입니다.' }} 
                             render={({ field, fieldState }) => (
                                 <InputText 
                                     id={field.name} 
                                     {...field}
+                                    ref={handleSubmit}
+                                    onChange={ (e) => setProjectDescription(e.target.value)}
+                                    value={ projectDescription }
                                     autoComplete="off" 
                                     autoFocus 
                                     className={classNames({ 'p-invalid': fieldState.invalid })} 
                                 />
                         )} />
-                    {getFormErrorMessage('projectDescription')}
+                    {/* {getFormErrorMessage('projectDescription')} */}
                 </div>
                 
             </div>
 
             <Button 
-            type="click" 
+            type="button" 
             label="팀원 초대" 
             className="p-button-lg"
             onClick={ () => onClick('displayBasic')}

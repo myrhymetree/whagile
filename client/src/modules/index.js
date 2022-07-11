@@ -7,6 +7,8 @@ import projectsReducer from './ProjectModule';
 import projectMemberReducer from './ProjectMemberModule';
 import tasksReducer from './TasksModule';
 import taskReducer from './TaskModule';
+import sprintsReducer from './SprintsModule';
+import sprintReducer from './SprintModule';
 
 const rootReducer = combineReducers({
     authsReducer,
@@ -16,7 +18,9 @@ const rootReducer = combineReducers({
     projectsReducer,
     projectMemberReducer,
     tasksReducer,
-    taskReducer
+    taskReducer,
+    sprintsReducer,
+    sprintReducer
 });
 
 export default rootReducer;

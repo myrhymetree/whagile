@@ -82,7 +82,9 @@ exports.modifyProject = (projectInfo) => {
     });
 }
 
-exports.removeProject = (projectCode) => {
+exports.removeProject = (data) => {
+
+    console.log('service', data);
 
     return new Promise(async (resolve, reject) => {
 
@@ -90,10 +92,8 @@ exports.removeProject = (projectCode) => {
         connection.beginTransaction();
         
         try {
-            await ProjectRepository.deleteProject(connection, projectCode);
-            
-            const removedProject = await ProjectRepository.selectProjectWithProjectCode(connection, projectCode);
-
+            await ProjectRepository.deleteProject(connection, data.projectCode);
+            const removedProject = await ProjectRepository.selectProjects(connection, data);
             connection.commit();
 
             resolve(removedProject);
@@ -144,3 +144,43 @@ exports.registProjectMember = (data) => {
         }
     });
 }
+
+exports.removeProjectMember = (data) => {
+
+    return new Promise(async (resolve, reject) => {
+
+        const connection = getConnection();
+        connection.beginTransaction();
+
+        try {
+            const result = await ProjectRepository.deleteProjectMember(connection, data);
+
+            const projectMember = await ProjectRepository.selectProjectMember(connection, data.projectCode);
+
+            connection.commit();
+
+            resolve(projectMember)
+
+        } catch (err) {
+            connection.rollback();
+
+            reject(err);
+        } finally {
+            connection.end();
+        }
+    });
+}
+
+exports.findRegistedMember = (data) => {
+
+    return new Promise((resolve, reject) => {
+
+        const connection = getConnection();
+
+        const results = ProjectRepository.selectRegistedMember(connection, data);
+
+        connection.end();
+
+        resolve(results);
+    });
+};
