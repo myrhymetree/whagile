@@ -1,6 +1,5 @@
 const HttpStatus = require('http-status');
 const BacklogCommentService = require('../services/backlog-comment-service');
-const { decodedToken } = require('../util/account-utils');
 
 /* 백로그 댓글 조회 요청 */
 exports.findBacklogComments = async (req, res, next) => {
@@ -23,14 +22,12 @@ exports.findBacklogComments = async (req, res, next) => {
 /* 백로그 댓글 생성 요청 */
 exports.registComment = async (req, res, next) => {
 
-    const user = decodedToken(req.get('Access-Token'));
-
     const newComment = {
         content: req.body.content,
-        createdDate: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString(),
+        createdDate: req.body.createdDate,
         backlogCode: Number(req.body.backlogCode),
         projectCode: Number(req.body.projectCode),
-        memberCode: user.usercode
+        memberCode: Number(req.body.memberCode)
     };
     console.log('newComment: ', newComment);
 
