@@ -19,8 +19,7 @@ function Information() {
     const { projectCode } = useParams();
     const project = useSelector(state => state.projectsReducer);
     const memberList = useSelector(state => state.projectMemberReducer);
-    console.log(project);
-    console.log(memberList);
+    console.log('project : ', project);
     const [teamMates, setTeamMates] = useState([]);
     const [projectName, setProjectName ] = useState('');
     const [projectDescription, setProjectDescription ] = useState('');
@@ -36,9 +35,19 @@ function Information() {
             dispatch(callGetProjectMemberAPI({
                 'projectCode': projectCode
             }));
-            setTeamMates(memberList);
         },
         []
+      );
+
+      useEffect(
+        () =>
+        {   
+            if(memberList.length !== 0) {
+
+                setTeamMates(memberList);
+            }
+        },
+        [memberList]
       );
 
       useEffect(
@@ -49,16 +58,15 @@ function Information() {
                 setProjectName(project[0].projectName);
                 setProjectDescription(project[0].projectDescription);
                 setSelectedProjectOwner(project[0].projectOwnerCode);
-                setTeamMates(memberList);
             }
         },
         [project]
       );
 
     const defaultValues = {
-        projectCode: projectCode,
-        projectName : projectName,
-        projectDescription : projectDescription,
+        projectCode: (project.length !== 0)? project[0].projectCode: '',
+        projectName : (project.length !== 0)? project[0].projectName: '',
+        projectDescription : (project.length !== 0)? project[0].projectDescription: '',
         projectOwner: selectedProjectOwner
     };
 
@@ -68,13 +76,14 @@ function Information() {
         return errors[name] && <small className="p-error">{errors[name].message}</small>
     };
 
-    const acceptFunc = async () => { await dispatch(callPutProjectAPI(projectCode, projectName, projectDescription, selectedProjectOwner));
-        await toast.current.show({ severity: 'info', summary: 'Confirmed', detail: '프로젝트 수정을 완료했습니다.', life: 3000 })};
+    const acceptFunc = async () => {
+        await dispatch(callPutProjectAPI(projectCode, projectName, projectDescription, selectedProjectOwner));
+        await toast.current.show({ severity: 'info', summary: 'Confirmed', detail: '프로젝트 수정을 완료했습니다.', life: 3000 })
+    };
 
-    const submitHandler = async (data) => {
-        console.log('안녕');
-        await setProjectDescription(data.projectDescription);
-        await setProjectName(data.projectName);
+    const submitHandler = async () => {
+        await setProjectName((project.length !== 0)? project[0].projectName: '');
+        await setProjectDescription((project.length !== 0)? project[0].projectDescription: '');
         await confirmDialog({
             message: '정말 프로젝트 수정을 하시겠습니까?',
             header: '프로젝트 수정',
@@ -93,8 +102,8 @@ function Information() {
             <Toast ref={toast} />
             <ConfirmDialog />
             <PageTitle 
-                icon={<i className="pi pi-fw pi-cog"></i>}
-                text="프로젝트 상세정보"
+                icon={<i className="pi pi-fw pi-pencil"></i>}
+                text="프로젝트 세부사항"
             />
             <form 
                 style={{display: 'flex', flexDirection: 'column' }}
@@ -103,43 +112,40 @@ function Information() {
             >
                 <div className="p-fluid grid">
                     <div className="field col-12 md:col-4">
-                        <label htmlFor="inputtext">프로젝트 이름</label>
+                        <label htmlFor="projectName">프로젝트 이름</label>
                         <Controller 
                                 name="projectName" 
-                                control={control} 
-                                rules={{ required: '프로젝트 이름은 필수입니다.' }} 
+                                control={control}
                                 render={({ field, fieldState }) => (
                                     <InputText 
                                         id={field.name} 
                                         {...field}
-                                        onChange={ (e) => {setProjectName(e.target.value)}}
+                                        onChange={ (e) => setProjectName(e.target.value)}
                                         value={ projectName }
+                                        // ref={handleSubmit}
                                         autoComplete="off" 
-                                        autoFocus 
                                         className={classNames({ 'p-invalid': fieldState.invalid })} 
+                                        required
                                     />
                             )} />
-                            {getFormErrorMessage('projectName')}
                     </div>
 
                     <div className="field col-12 md:col-4">
-                        <label htmlFor="inputtext">프로젝트 설명</label>
+                        <label htmlFor="projectDescription">프로젝트 설명</label>
                         <Controller 
                                 name="projectDescription" 
                                 control={control} 
-                                rules={{ required: '프로젝트 설명은 필수입니다.' }} 
                                 render={({ field, fieldState }) => (
                                     <InputText 
                                         id={field.name} 
                                         {...field}
-                                        onChange={ (e) => {setProjectDescription(e.target.value)}}
+                                        onChange={async (e) => await setProjectDescription(e.target.value)}
                                         value={ projectDescription }
                                         autoComplete="off" 
-                                        autoFocus 
-                                        className={classNames({ 'p-invalid': fieldState.invalid })} 
+                                        className={classNames({ 'p-invalid': fieldState.invalid })}
+                                        required
                                     />
                             )} />
-                        {getFormErrorMessage('projectDescription')}
                     </div>
 
                     <div>
@@ -148,7 +154,7 @@ function Information() {
                             options={teamMates} 
                             onChange={onProjectMemberChange} 
                             optionValue="memberCode" 
-                            optionLabel="memberName" 
+                            optionLabel="memberName"
                         />
                     </div>
                     

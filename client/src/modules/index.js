@@ -8,6 +8,11 @@ import backlogCommentReducer from './BacklogCommentModule';
 import backlogCommentDetailReducer from './BacklogCommentDetailModule';
 import projectsReducer from './ProjectModule';
 import projectMemberReducer from './ProjectMemberModule';
+import tasksReducer from './TasksModule';
+import taskReducer from './TaskModule';
+import sprintBacklogReducer from './SprintBacklogModule';
+import sprintsReducer from './SprintsModule';
+import sprintReducer from './SprintModule';
 
 const rootReducer = combineReducers({
     authsReducer,
@@ -18,7 +23,12 @@ const rootReducer = combineReducers({
     backlogCommentReducer,
     backlogCommentDetailReducer,
     projectsReducer,
-    projectMemberReducer
+    projectMemberReducer,
+    tasksReducer,
+    taskReducer,
+    sprintBacklogReducer,
+    sprintsReducer,
+    sprintReducer
 });
 
 export default rootReducer;

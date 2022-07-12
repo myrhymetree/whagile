@@ -1,6 +1,7 @@
 const sprintQuery = require('../database/sprint-query');
 const SprintDTO = require('../dto/sprint/sprint-response-dto');
 const SprintHistoryDTO = require('../dto/sprint/sprintHistory-response-dto');
+const TasksDTO = require("../dto/tasks/tasks-response-dto");
 
 exports.insertSprint = (connection, params) => {
 
@@ -31,7 +32,8 @@ exports.selectSprints = (connection, params) => {
     return new Promise((resolve, reject) => {
 
         connection.query(
-            sprintQuery.selectSprints(params), 
+            sprintQuery.selectSprints(params),
+            [params.projectCode],
             (err, results, fields) => {
                 if(err) {
                     reject(err);
@@ -133,6 +135,30 @@ exports.deleteSprint = (connection, params) => {
                 }
 
                 resolve(results);
+            }
+        );
+    })    
+}
+
+exports.selectTasks = (connection, params) => {
+
+    return new Promise((resolve, reject) => {
+        
+        connection.query(
+
+            sprintQuery.selectTasks(),
+            [params.sprintCode],
+            (err, results, fields) => {
+                if(err) {
+                    reject(err);
+                }
+                
+                const tasks = [];
+                for (let i = 0; i < results.length; i++) {
+                  tasks.push(new TasksDTO(results[i]));
+                }
+
+                resolve(tasks);
             }
         );
     })    
