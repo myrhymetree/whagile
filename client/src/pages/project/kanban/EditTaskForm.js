@@ -28,7 +28,7 @@ export default function EditTaskForm(props) {
 
   return (
     <div className={KanbanBoardStyle.kanbanModalContent}>
-      <form onSubmit={onFormSubmit}>
+      <form onSubmit={onFormSubmit || ""}>
         <div className={KanbanBoardStyle.kanbanTitles}>상세 조회 및 수정</div>
         <div>
           <label
@@ -41,7 +41,7 @@ export default function EditTaskForm(props) {
             className={KanbanBoardStyle.kanbanDetailInputTitle}
             id="input-title"
             placeholder="필수 입력 사항입니다."
-            value={currentTitle}
+            value={currentTitle || ""}
             onChange={(event) => onTitleChange(event.target.value)}
             required
           ></textarea>
@@ -56,7 +56,7 @@ export default function EditTaskForm(props) {
           <textarea
             className={KanbanBoardStyle.kanbanDetailInputDescription}
             id="input-description"
-            value={currentDescription}
+            value={currentDescription || ""}
             onChange={(event) => onDescriptionChange(event.target.value)}
           ></textarea>
         </div>
@@ -64,7 +64,7 @@ export default function EditTaskForm(props) {
           <select
             className={KanbanBoardStyle.kanbanDetailInputSelection}
             id="select-category"
-            value={currentProgressStatus}
+            value={currentProgressStatus || ""}
             onChange={(event) => {
               onProgressStatusChange(event.target.value);
             }}
@@ -77,7 +77,7 @@ export default function EditTaskForm(props) {
           <select
             className={KanbanBoardStyle.kanbanDetailInputSelection}
             id="select-issue"
-            value={currentIssue}
+            value={currentIssue || ""}
             onChange={(event) => {
               onIssueChange(event.target.value);
             }}
@@ -89,7 +89,7 @@ export default function EditTaskForm(props) {
           <select
             className={KanbanBoardStyle.kanbanDetailInputSelection}
             id="select-urgency"
-            value={currentUrgency}
+            value={currentUrgency || ""}
             onChange={(event) => {
               onUrgencyChange(event.target.value);
             }}
@@ -102,7 +102,7 @@ export default function EditTaskForm(props) {
           <select
             className={KanbanBoardStyle.kanbanDetailInputSelection}
             id="select-charger"
-            value={currentCharger}
+            value={currentCharger || ""}
             onChange={(event) => {
               onChargerChange(event.target.value);
             }}

@@ -2,7 +2,7 @@ import TaskModal from "./TaskModal";
 import React, { useState } from "react";
 import KanbanBoardStyle from "./KanbanBoard.module.css";
 import createTask from "./KanbanBoard";
-
+import TaskCreateModal from "./TaskCreateModal";
 
  // 일감 생성 버튼
 function NewTaskButton(props) {
@@ -21,7 +21,7 @@ function NewTaskButton(props) {
         </button>
       </div>
       {showModal && (
-        <TaskModal
+        <TaskCreateModal
           type="Create"
           createTask={props.createTask}
           onSubmit={() => {

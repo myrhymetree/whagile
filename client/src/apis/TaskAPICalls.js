@@ -80,36 +80,25 @@ export const callPutTaskAPI = (
 
 
 // 개별 일감 생성 API
-export const callPostTaskAPI = (
-  taskCode,
-  backlogTitle,
-  backlogDescription,
-  progressStatus,
-  urgency,
-  memberName,
-  issue,
-  backlogChargerCode
-) => {
+export const callPostTaskAPI = (paramTask) => {
   let requestURL = `http://localhost:8888/api/tasks`;
-  const decoded = decodeJwt(window.localStorage.getItem("access_token"));
-
+  console.log(requestURL);
   return async (dispatch, getState) => {
     const result = await fetch(requestURL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Accept": "application/json"
+        'Accept': "application/json",
       },
       body: JSON.stringify({
-        taskCode: Number(taskCode),
-        backlogTitle: backlogTitle,
-        backlogDescription: backlogDescription,
-        progressStatus: progressStatus,
-        urgency: urgency,
-        memberName: memberName,
-        issue: issue,
-        backlogChargerCode: Number(backlogChargerCode),
-        loginMember: decoded !== "undefined" ? decoded.code : "",
+        taskCode: paramTask.taskCode,
+        backlogTitle: paramTask.backlogTitle,
+        backlogDescription: paramTask.backlogDescription,
+        progressStatus: paramTask.progressStatus,
+        urgency: paramTask.urgency,
+        memberName: paramTask.memberName,
+        issue: paramTask.issue,
+        backlogChargerCode: paramTask.backlogChargerCode
       }),
     }).then((res) => res.json());
     await dispatch({ type: POST_TASK, payload: result.results });
