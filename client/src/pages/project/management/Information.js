@@ -18,8 +18,8 @@ function Information() {
     const dispatch = useDispatch();
     const { projectCode } = useParams();
     const project = useSelector(state => state.projectsReducer);
-    console.log('project : ', project);
     const memberList = useSelector(state => state.projectMemberReducer);
+    console.log('project : ', project);
     const [teamMates, setTeamMates] = useState([]);
     const [projectName, setProjectName ] = useState('');
     const [projectDescription, setProjectDescription ] = useState('');
@@ -29,16 +29,25 @@ function Information() {
     useEffect(
         () =>
         {
-            console.log('처음');
             dispatch(callGetProjectAPI({
                 'projectCode': projectCode
             }));
             dispatch(callGetProjectMemberAPI({
                 'projectCode': projectCode
             }));
-            setTeamMates(memberList);
         },
         []
+      );
+
+      useEffect(
+        () =>
+        {   
+            if(memberList.length !== 0) {
+
+                setTeamMates(memberList);
+            }
+        },
+        [memberList]
       );
 
       useEffect(
@@ -49,7 +58,6 @@ function Information() {
                 setProjectName(project[0].projectName);
                 setProjectDescription(project[0].projectDescription);
                 setSelectedProjectOwner(project[0].projectOwnerCode);
-                setTeamMates(memberList);
             }
         },
         [project]
@@ -116,7 +124,6 @@ function Information() {
                                         value={ projectName }
                                         // ref={handleSubmit}
                                         autoComplete="off" 
-                                        // autoFocus 
                                         className={classNames({ 'p-invalid': fieldState.invalid })} 
                                         required
                                     />
@@ -135,7 +142,6 @@ function Information() {
                                         onChange={async (e) => await setProjectDescription(e.target.value)}
                                         value={ projectDescription }
                                         autoComplete="off" 
-                                        // autoFocus 
                                         className={classNames({ 'p-invalid': fieldState.invalid })}
                                         required 
                                     />

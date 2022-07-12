@@ -159,6 +159,7 @@ exports.selectProjectMembers = (projectCode) => {
          , B.MEMBER_ID
          , B.MEMBER_NAME
          , B.MEMBER_EMAIL
+         , A.AUTHORITY_CODE
          , C.AUTHORITY_NAME
       FROM TBL_PROJECT_MEMBER A
       JOIN TBL_MEMBER B ON (A.MEMBER_CODE = B.MEMBER_CODE)

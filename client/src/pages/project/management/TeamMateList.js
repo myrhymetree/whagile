@@ -2,8 +2,7 @@ import PageTitle from '../../../components/items/PageTitle';
 import React, { useEffect, useState, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { callGetProjectMemberAPI } from '../../../apis/ProjectAPICalls';
-import { callDeleteProjectMemberAPI } from '../../../apis/ProjectAPICalls';
+import { callGetProjectMemberAPI, callDeleteProjectMemberAPI, callPutModifyAuthorityProjectMemberAPI } from '../../../apis/ProjectAPICalls';
 import InvitationExecutionModal from '../../../components/items/projects/InvitationExecutionModal';
 
 import { InputText } from 'primereact/inputtext';
@@ -23,14 +22,16 @@ function TeamMateList() {
         memberId: null,
         memberName: null,
         memberEmail: null,
+        authorityCode: null,
         authorityName: null
     };
 
     const [emails, setEmails ] = useState([]);
+    const [authority, setAuthority] = useState('');
     const [displayBasic, setDisplayBasic] = useState(false);
     const [displayPosition, setDisplayPosition] = useState(false);
     const [position, setPosition] = useState('center');
-    const [productDialog, setProductDialog] = useState(false);
+    const [authorityDialog, setAuthorityDialog] = useState(false);
     const dispatch = useDispatch();
     const { projectCode } = useParams();
     const toast = useRef(null);
@@ -77,7 +78,7 @@ function TeamMateList() {
 
     const hideDialog = () => {
         setSubmitted(false);
-        setProductDialog(false);
+        setAuthorityDialog(false);
     }
 
     function removeMember(rowData) {
@@ -120,34 +121,24 @@ function TeamMateList() {
         toast.current.show({ severity: 'success', summary: '팀원 제외', detail: '해당 팀원을 제외했습니다.', life: 3000 });
     };
 
-    // const saveProduct = () => {
-    //     setSubmitted(true);
+    const saveAuthority = () => {
+        setSubmitted(true);
 
-    //     if (product.name.trim()) {
-    //         let _products = [...products];
-    //         let _product = {...product};
-    //         if (product.id) {
-    //             const index = findIndexById(product.id);
+        dispatch(callPutModifyAuthorityProjectMemberAPI({
+            'projectCode' : projectCode,
+            'memberCode' : member.memberCode,
+            'authorityCode' : member.authorityCode
+        }));
 
-    //             _products[index] = _product;
-    //             toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Product Updated', life: 3000 });
-    //         }
-    //         else {
-    //             _product.id = createId();
-    //             _product.image = 'product-placeholder.svg';
-    //             _products.push(_product);
-    //             toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Product Created', life: 3000 });
-    //         }
+        setAuthorityDialog(false);
+        // setProduct(emptyProduct);
+        toast.current.show({ severity: 'success', summary: '권한 수정 완료', detail: '해당 회원의 권한을 수정했습니다.', life: 3000 });
 
-    //         setProducts(_products);
-    //         setProductDialog(false);
-    //         setProduct(emptyProduct);
-    //     }
-    // }
+    }
 
-    const productDialogFooter = (
+    const authorityDialogFooter = (
         <>
-            {/* <Button label="Save" icon="pi pi-check" className="p-button-text" onClick={saveProduct} /> */}
+            <Button label="Save" icon="pi pi-check" className="p-button-text" onClick={saveAuthority} />
             <Button label="Cancel" icon="pi pi-times" className="p-button-text" onClick={hideDialog} />
         </>
     );
@@ -160,19 +151,25 @@ function TeamMateList() {
     );
 
     const onCategoryChange = (e) => {
+        // let _authority = {...authority};
         let _member = {...member};
-        _member['authorityName'] = e.value;
+        _member['authorityCode'] = e.value;
+        console.log('_member', _member);
         setMember(_member);
     }
 
-    const editProjectMember = (rowData) => {
+    const editProjectMember = (member) => {
+
+        if(member.authorityName === 'PM') {
+            return toast.current.show({ severity: 'error', summary: '수정 불가', detail: 'PM은 수정할 수 없습니다.', life: 3000 });
+        }
+
         setMember({...member});
-        setProductDialog(true);
+        setAuthorityDialog(true);
     }
 
 
     const confirmDeleteProjectMember = (rowData) => {
-        console.log(rowData);
 
         if(rowData.authorityName === 'PM') {
             return toast.current.show({ severity: 'error', summary: '제거 불가', detail: 'PM은 제거할 수 없습니다.', life: 3000 });
@@ -278,17 +275,17 @@ function TeamMateList() {
                 projectCode = { projectCode }
             />
 
-            <Dialog visible={productDialog} style={{ width: '450px' }} header="권한 수정" modal className="p-fluid" footer={productDialogFooter} onHide={hideDialog}>
+            <Dialog visible={authorityDialog} style={{ width: '450px' }} header="권한 수정" modal className="p-fluid" footer={authorityDialogFooter} onHide={hideDialog}>
      
                 <div className="field">
                     <label className="mb-3">권한</label>
                     <div className="formgrid grid">
                         <div className="field-radiobutton col-6">
-                            <RadioButton inputId="category1" name="category" value="Accessories" onChange={onCategoryChange} checked={member.authorityCode === 2} />
+                            <RadioButton inputId="category1" name="category" value="2" onChange={onCategoryChange} checked={member.authorityCode === 2} />
                             <label htmlFor="category1">팀원</label>
                         </div>
                         <div className="field-radiobutton col-6">
-                            <RadioButton inputId="category2" name="category" value="Clothing" onChange={onCategoryChange} checked={member.authorityCode === 3} />
+                            <RadioButton inputId="category2" name="category" value="3" onChange={onCategoryChange} checked={member.authorityCode === 3} />
                             <label htmlFor="category2">게스트</label>
                         </div>
                     </div>

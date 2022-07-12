@@ -195,6 +195,8 @@ exports.signUpProjectMember = async (req, res, next) => {
 
 exports.modifyAuthorityOfMember = async (req, res, next) => {
 
+    console.log('파람으로 건너온 데이터 확인 : ', req.body);
+
     const projectMemberInfo = {
         projectCode : req.params.projectCode,
         memberCode : req.params.memberCode,

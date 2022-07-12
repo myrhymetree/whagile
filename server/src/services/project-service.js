@@ -338,13 +338,11 @@ exports.modifyAuthorityOfMember = (projectMemberInfo) => {
 
         try {
             await ProjectRepository.updateAuthorityOfMember(connection, projectMemberInfo);
-            console.log('service 매개변수 : ', projectMemberInfo);
-            const modifiedProjectMember = await ProjectRepository.selectProjectMember(connection, projectMemberInfo);
-            console.log('modifiedProjectMember : ', modifiedProjectMember);
+            const projectMemberList = await ProjectRepository.selectProjectMembers(connection, projectMemberInfo.projectCode);
             
             connection.commit();
 
-            resolve(modifiedProjectMember);
+            resolve(projectMemberList);
         } catch (err) {
             console.log(err);
             connection.rollback();

@@ -165,10 +165,10 @@ exports.selectProjectMembers = (connection, projectCode) => {
                 console.log(err);
                 reject(err);
             }
-
+            
             const projectMembers = [];
             for(let i = 0; i < results.length; i++) {
-                projectMember.push(new ProjectMemberDTO(results[i]));
+                projectMembers.push(new ProjectMemberDTO(results[i]));
             }
 
             resolve(projectMembers);

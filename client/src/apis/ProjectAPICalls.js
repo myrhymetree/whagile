@@ -1,6 +1,6 @@
 import { GET_PROJECT, GET_PROJECTS, POST_PROJECT, PUT_PROJECT,  DELETE_PROJECT } from "../modules/ProjectModule";
 import { GET_PROJECT_MEMBER } from "../modules/ProjectMemberModule";
-import { GET_INVITED_MEMBER, DELETE_PROJECT_MEMBER } from "../modules/ProjectMemberModule";
+import { GET_INVITED_MEMBER, PUT_MODIFY_AUTHORITY, DELETE_PROJECT_MEMBER } from "../modules/ProjectMemberModule";
 import { decodeJwt } from '../utils/tokenUtils';
 
 export function callGetProjectsAPI(params) {
@@ -181,3 +181,26 @@ export const callPostInviteMemberAPI = (emails, projectCode) => {
         dispatch({ type: GET_INVITED_MEMBER, payload: result.results});
     }
 }
+
+export const callPutModifyAuthorityProjectMemberAPI = (data) => {
+
+    console.log('api에 넘어온 데이터 확인 : ', data);
+
+    let requestURL = `http://localhost:8888/api/projects/${ data.projectCode }/member/${ data.memberCode }`;
+
+    return async function getProject(dispatch, getState) {
+
+        const result = await fetch(requestURL, {
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                authorityCode: data.authorityCode
+            })
+        }).then(res => res.json());
+
+        dispatch({ type: PUT_MODIFY_AUTHORITY, payload: result.results});
+    };
+};
