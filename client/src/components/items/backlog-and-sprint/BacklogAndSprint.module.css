@@ -184,6 +184,7 @@
 }
 
 #inputComment {
+    margin-top: 10px;
     width: 100%;
     resize: none;
 }
@@ -200,7 +201,7 @@
 }
 
 #newComment {
-    margin-top: 20px;
+    margin-top: auto;
 }
 
 #moreDetailsBtn, #readMoreBtn {
@@ -262,12 +263,4 @@
 
 .smallText {
     font-size: 10px;
-}
-
-#backlogTitle {
-    display: block;
-    padding: 10px;
-    margin-top: 30px;
-    border-radius: 10px;
-    background-color: #1D1E27;
 }

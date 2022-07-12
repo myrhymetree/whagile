@@ -2,32 +2,18 @@
     font-weight: bold;
 }
 
-#noComments {
-    margin-bottom: 10px;
-}
-
 #latestEdited {
     margin-left: 10px;
     margin-right: 10px;
 }
 
 #latestEdited, #modifiedYN {
-    font-size: 10px;
+    font-size: small;
     color: #A2A2A6;
 }
 
 #content {
     margin-top: 5px;
-    background-color: #1D1E27;
-    padding: 3px;
-    margin-top: 4px;
-    margin-bottom: 4px;
-    border-radius: 5px;
-}
-
-#editableBtns {
-    margin-top: 0px;
-    margin-bottom: 10px;
 }
 
 #editComment, #removeComment {
@@ -62,8 +48,4 @@
 
 #modifyCancelBtn {
     background-color: rgba(255, 255, 255, 0.25);
-}
-
-.editArea {
-    margin-bottom: 40px;
 }
