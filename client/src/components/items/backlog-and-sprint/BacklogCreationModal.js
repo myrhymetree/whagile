@@ -74,7 +74,7 @@ function BacklogCreationModal() {
     /* 백로그 생성 API 요청 */
     const registNewBacklog = () => {
         /* 필수입력사항 기입 여부 확인 */
-        if(title == '' || selectedProgressStatus == null || selectedUrgency == null || selectedIssue == null) {
+        if(title == '' || selectedUrgency == null || selectedIssue == null) {
             alert('필수 입력사항을 모두 입력해주세요.');
 
         } else {
@@ -141,14 +141,14 @@ function BacklogCreationModal() {
                     <br/><br/>
                 </div>
                 <div id={ BacklogModalsCSS.dropdownArea }>
-                    <Dropdown 
+                    {/* <Dropdown 
                         value={ selectedProgressStatus } 
                         options={ progressStatusOptions } 
                         optionLabel="name" 
                         optionValue="value" 
                         onChange={ (e) => setSelectedProgressStatus(e.target.value) }  
                         placeholder="진행상태*" 
-                    />  
+                    />   */}
                     <Dropdown 
                         value={ selectedUrgency } 
                         options={ urgencyOptions } 
@@ -179,7 +179,7 @@ function BacklogCreationModal() {
                 <div
                     style={ 
                         {
-                            display: title == '' || selectedIssue == null || selectedProgressStatus == null || selectedUrgency == null? 'block' : 'none'
+                            display: title == '' || selectedIssue == null || selectedUrgency == null? 'block' : 'none'
                         } 
                     }
                 >

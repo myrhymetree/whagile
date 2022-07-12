@@ -1,6 +1,7 @@
 import BacklogAndSprintCSS from './BacklogAndSprint.module.css';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import { useParams } from 'react-router';
 import { useSelector, useDispatch } from 'react-redux';
 
 import DivHeader from './DivHeader';
@@ -9,27 +10,26 @@ import BacklogDetails from './BacklogDetails';
 
 import { Sidebar} from 'primereact/sidebar';
 import { Dropdown } from 'primereact/dropdown';
-import { callGetBacklogDetailsAPI, callGetBacklogsAPI } from '../../../apis/BacklogAPICalls';
+import { callGetBacklogDetailsAPI, callGetBacklogsAPI, callGetFilteredBacklogsAPI } from '../../../apis/BacklogAPICalls';
 import { callGetBacklogCommentsAPI } from '../../../apis/BacklogCommentAPICalls';
 
 function Backlogs() {
     
+    const { projectCode } = useParams();
     const dispatch = useDispatch();
     const backlogs = useSelector(state => state.backlogReducer);                //api에서 가져온 백로그 목록
-    const backlogDetails = useSelector(state => state.backlogDetailReducer);    //api에서 가져온 백로그 목록
-    const backlogComments = useSelector(state => state.bakclogCommentReducer);  //api에서 가져온 백로그 댓글 목록
+    // const backlogComments = useSelector(state => state.bakclogCommentReducer);  //api에서 가져온 백로그 댓글 목록
     
     const [visibleRight, setVisibleRight] = useState(false);
 
     /* 페이징 */
     const [pageNo, setPageNo] = useState(0);                                    //백로그 목록
-    const [backlogList, setBacklogList] = useState([]);
     const [commentOffset, setCommentOffset] = useState(0);                      //백로그 댓글 목록
 
     /* 필터 조건 */
-    const [selectedProgressStatus, setSelectedProgressStatus] = useState(null);
-    const [selectedUrgency, setSelectedUrgency] = useState(null);
-    const [selectedIssue, setSelectedIssue] = useState(null);
+    const [progressStatus, setProgressStatus] = useState(null);
+    const [urgency, setUrgency] = useState(null);
+    const [issue, setIssue] = useState(null);
 
     /* 필터 조건 options */
     const progressStatusOptions = [
@@ -51,40 +51,45 @@ function Backlogs() {
         () => {
             dispatch(callGetBacklogsAPI({
                 'offset': pageNo,
-                'limit': 10
+                'limit': 10,
+                'projectCode': projectCode
             }));
-            setBacklogList(backlogs);
         },
-        [backlogList]
+        []
     );
 
     /* 목록 행 더보기 요청 onClick Handler fuction */
-    const readMoreBacklogs = () => {
-        dispatch(callGetBacklogsAPI(
-            {
-                'offset': pageNo, 
-                'limit': 10 * (pageNo + 1)
-            }
-        ));
-        console.log('more backlogs@@@@@@@@@@@@', backlogs)
-
-        setPageNo(pageNo + 1);
-        setBacklogList([...backlogList].concat(backlogs));
-        console.log(backlogList)
-    };
+    const readMoreBacklogs = useCallback(
+        () => {
+            console.log('엉?')
+            dispatch(callGetFilteredBacklogsAPI(
+                {
+                    'offset': (pageNo + 1) * 10, 
+                    'limit': 10,
+                    'projectCode': projectCode
+                }
+            ));
+            setPageNo(pageNo + 1);
+        },
+        [backlogs]
+    );
 
     /* 필터 조건을 적용한 목록행 조회 요청 */
-    const findFilteredResults = () => {
-        dispatch(callGetBacklogsAPI(
-            {
-                offset: pageNo,
-                limit: 10,
-                progressStatus: selectedProgressStatus,
-                urgency: selectedUrgency,
-                issue: selectedIssue
-            }
-        ));
-    };
+    const findFilteredResults = useCallback(
+        () => {
+            console.log('왔니?')
+            dispatch(callGetFilteredBacklogsAPI(
+                {
+                    offset: pageNo,
+                    limit: 10,
+                    projectCode: projectCode,
+                    urgency: urgency,
+                    issue: issue
+                }
+            ));
+        },
+        [backlogs, urgency, issue]
+    );
 
     /* 백로그 상세내용 조회 요청 */
     const seeBacklogDetails = (backlogCode) => {
@@ -102,29 +107,29 @@ function Backlogs() {
             <span className={ BacklogAndSprintCSS.divTitle }>백로그 목록</span>
             <hr className={ BacklogAndSprintCSS.divisionLine }/>
             <div id={ BacklogAndSprintCSS.filterConditions }>
-                <Dropdown 
+                {/* <Dropdown 
                     value={ selectedProgressStatus } 
                     options={ progressStatusOptions } 
                     optionLabel="name" 
                     optionValue="value" 
                     onChange={ (e) => setSelectedProgressStatus(e.target.value) }  
                     placeholder="진행상태" 
-                />  
+                />   */}
                 <Dropdown 
-                    value={ selectedUrgency } 
+                    value={ urgency } 
                     options={ urgencyOptions } 
-                    onChange={ (e) => setSelectedUrgency(e.target.value) }  
+                    onChange={ (e) => setUrgency(e.target.value) }  
                     optionLabel="name" 
                     optionValue="value" 
-                    placeholder="긴급도" 
+                    placeholder="긴급도"
                 />
                 <Dropdown 
-                    value={ selectedIssue } 
+                    value={ issue } 
                     options={ issueCheck } 
                     optionLabel="name" 
                     optionValue="value" 
-                    onChange={ (e) => setSelectedIssue(e.target.value) } 
-                    placeholder="구분" 
+                    onChange={ (e) => setIssue(e.target.value) } 
+                    placeholder="구분"
                 />
                 <button onClick={ () => findFilteredResults() }>적용</button>            
             </div>
