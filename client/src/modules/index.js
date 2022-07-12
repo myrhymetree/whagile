@@ -5,6 +5,7 @@ import authOrderReducer from './AuthOrderModule';
 import backlogReducer from './BacklogModule';
 import backlogDetailReducer from './BacklogDetailModule';
 import backlogCommentReducer from './BacklogCommentModule';
+import backlogCommentDetailReducer from './BacklogCommentDetailModule';
 import projectsReducer from './ProjectModule';
 import projectMemberReducer from './ProjectMemberModule';
 
@@ -15,6 +16,7 @@ const rootReducer = combineReducers({
     backlogReducer,
     backlogDetailReducer,
     backlogCommentReducer,
+    backlogCommentDetailReducer,
     projectsReducer,
     projectMemberReducer
 });

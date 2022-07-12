@@ -8,7 +8,6 @@ import DivHeader from './DivHeader';
 import BacklogCreationModal from './BacklogCreationModal';
 import BacklogDetails from './BacklogDetails';
 
-import { Sidebar} from 'primereact/sidebar';
 import { Dropdown } from 'primereact/dropdown';
 import { callGetBacklogDetailsAPI, callGetBacklogsAPI, callGetFilteredBacklogsAPI } from '../../../apis/BacklogAPICalls';
 import { callGetBacklogCommentsAPI } from '../../../apis/BacklogCommentAPICalls';
@@ -17,14 +16,12 @@ function Backlogs() {
     
     const { projectCode } = useParams();
     const dispatch = useDispatch();
-    const backlogs = useSelector(state => state.backlogReducer);                //api에서 가져온 백로그 목록
-    // const backlogComments = useSelector(state => state.bakclogCommentReducer);  //api에서 가져온 백로그 댓글 목록
+    const backlogs = useSelector(state => state.backlogReducer);
     
     const [visibleRight, setVisibleRight] = useState(false);
 
     /* 페이징 */
-    const [pageNo, setPageNo] = useState(0);                                    //백로그 목록
-    const [commentOffset, setCommentOffset] = useState(0);                      //백로그 댓글 목록
+    const [pageNo, setPageNo] = useState(0);
 
     /* 필터 조건 */
     const [progressStatus, setProgressStatus] = useState(null);
@@ -61,7 +58,6 @@ function Backlogs() {
     /* 목록 행 더보기 요청 onClick Handler fuction */
     const readMoreBacklogs = useCallback(
         () => {
-            console.log('엉?')
             dispatch(callGetFilteredBacklogsAPI(
                 {
                     'offset': (pageNo + 1) * 10, 
@@ -77,7 +73,6 @@ function Backlogs() {
     /* 필터 조건을 적용한 목록행 조회 요청 */
     const findFilteredResults = useCallback(
         () => {
-            console.log('왔니?')
             dispatch(callGetFilteredBacklogsAPI(
                 {
                     offset: pageNo,
@@ -92,15 +87,18 @@ function Backlogs() {
     );
 
     /* 백로그 상세내용 조회 요청 */
-    const seeBacklogDetails = (backlogCode) => {
-        dispatch(callGetBacklogDetailsAPI(backlogCode));
-        dispatch(callGetBacklogCommentsAPI({
-            backlogCode: backlogCode,
-            offset: commentOffset,
-            limit: 5
-        }));
-        setVisibleRight(true);
-    };
+    const seeBacklogDetails = useCallback(
+        (backlogCode) => {
+            dispatch(callGetBacklogDetailsAPI(backlogCode));
+            dispatch(callGetBacklogCommentsAPI({
+                backlogCode: backlogCode,
+                offset: 0,
+                limit: 5
+            }));
+            setVisibleRight(true);
+        },
+        []
+    );
 
     return (
         <>
@@ -163,8 +161,6 @@ function Backlogs() {
                 <BacklogDetails
                     visibleRight = { visibleRight }
                     setVisibleRight = { setVisibleRight }
-                    commentOffset = { commentOffset }
-                    setCommentOffset = { setCommentOffset }
                 />
             </div>
             <button id={ BacklogAndSprintCSS.readMoreBtn }
