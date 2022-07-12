@@ -353,3 +353,27 @@ exports.modifyAuthorityOfMember = (projectMemberInfo) => {
         }
     });
 }
+
+exports.registNoticeToProject = (noticeInfo) => {
+    return new Promise( async(resolve, reject) => {
+        
+        const connection = getConnection();
+        connection.beginTransaction();
+
+        try {
+            await ProjectRepository.insertNoticeToProject(connection, noticeInfo);
+            
+            
+            connection.commit();
+
+            resolve();
+        } catch (err) {
+            console.log(err);
+            connection.rollback();
+            
+            reject(err);
+        } finally {
+            connection.end();
+        }
+    });
+}

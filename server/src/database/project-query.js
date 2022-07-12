@@ -266,3 +266,24 @@ exports.isRegistedMember = (data) => {
            AND A.MEMBER_CODE = ${ projectMemberInfo.memberCode }
     `;
   }
+
+  exports.insertNoticeToProject = () => {
+    // console.log('noticeInfo', noticeInfo);
+    return `
+        INSERT
+          INTO TBL_NOTICE
+        (
+          NOTICE_CONTENT
+        , NOTICE_CREATED_DATE
+        , CREATOR
+        , PROJECT_CODE
+        )
+          VALUES
+        (
+          ?
+        , ?
+        , ?
+        , ?
+        )
+    `;
+  }

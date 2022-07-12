@@ -81,7 +81,7 @@ exports.modifyProject = async (req, res, next) => {
 
 exports.removeProject = async (req, res, next) => {
 
-    console.log(req.query);
+    console.log('프로젝트 삭제', req.query);
     
     await ProjectService.removeProject(req.query)
         .then((result) => {
@@ -94,13 +94,13 @@ exports.removeProject = async (req, res, next) => {
         }).catch((err) => {
 
             res.status(HttpStatus.BAD_REQUEST).json({
-                status: HttpStatus.BAD_REQUEST,
+                status: HttpStatus.BAD_REQUEST, 
                 message: err
             });
         });
 }
 
-exports.findProjectMember = async (req, res, next) => {
+exports.findProjectMembers = async (req, res, next) => {
     
     await ProjectService.findProjectMember(req.params.projectCode)
         .then((results) => {
@@ -209,6 +209,29 @@ exports.modifyAuthorityOfMember = async (req, res, next) => {
             res.status(HttpStatus.OK).json({
                 status: HttpStatus.OK,
                 message: '해당 프로젝트 멤버의 권한을 수정했습니다.',
+                results: result
+            });
+        }).catch((err) => {
+            res.status(HttpStatus.BAD_REQUEST).json({
+                status: HttpStatus.BAD_REQUEST,
+                message: err
+            });
+        });
+}
+
+exports.registNoticeToProject = async (req, res, next) => {
+
+    const noticeInfo = {
+        projectCode : req.params.projectCode,
+        memberCode : req.body.loginMemberCode,
+        content : req.body.content
+    }
+
+    await ProjectService.registNoticeToProject(noticeInfo)
+        .then((result) => {
+            res.status(HttpStatus.OK).json({
+                status: HttpStatus.OK,
+                message: '해당 프로젝트 공지사항을 등록했습니다.',
                 results: result
             });
         }).catch((err) => {

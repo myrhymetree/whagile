@@ -1,6 +1,7 @@
 const projectQuery = require('../database/project-query');
 const ProjectDTO = require('../dto/project/project-response-dto');
-const ProjectMemberDTO  = require('../dto/project/project-member-response-dto');
+const ProjectMemberDTO = require('../dto/project/project-member-response-dto');
+const ProjectNoticeDTO = require('../dto/project/project-notice-response-dto');
 
 exports.selectProjects = (connection, params) => {
     return new Promise((resolve, reject) => {
@@ -286,6 +287,26 @@ exports.selectProjectMember = (connection, projectMemberInfo) => {
 
             console.log('projectMember', projectMember);
             resolve(projectMember[0]);
+        });
+    });
+}
+
+exports.insertNoticeToProject = (connection, noticeInfo) => {
+    return new Promise((resolve, reject) => {
+        connection.query(projectQuery.insertNoticeToProject(noticeInfo),
+        [noticeIfo.content, 'SYSDATE', notice.memberCode, projectCode],
+        (err, results, fields) => {
+
+            if(err) {
+                console.log(err);
+                reject(err);
+            }
+
+            console.log('results : ', results);
+            const notice = [];
+            notice.push(new ProjectNoticeDTO(results[0]));
+
+            resolve(notice[0]);
         });
     });
 }
