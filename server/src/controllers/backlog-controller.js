@@ -13,11 +13,11 @@ app.use(express.urlencoded({ extended: true }));
 /* 백로그 목록 조회 요청 */
 exports.findAllBacklogs = async (req, res, next) => {
 
-
     /* querystring parameter로 넘어온 페이징 조건 및 필터링 조건을 추출 */
     const params = {
         offset: Number(req.query.offset),
         limit: Number(req.query.limit),
+        projectCode: Number(req.query.projectCode),
         issue: Number(req.query.issue),
         progressStatus: req.query.progressStatus,
         urgency: req.query.urgency
@@ -86,16 +86,16 @@ exports.editBacklog = async (req, res, next) => {
         backlogCode: Number(req.body.backlogCode),
         projectCode: Number(req.body.projectCode),
         memberCode: user.usercode,
-        changedCategory: req.body.changedCategory,
-        changedValue: req.body.changedValue
+        changedItem: req.body.changedItem
     };
 
-    const results = await BacklogService.editBacklog(modifyingContent);
+    const results = 
+    await BacklogService.editBacklog(modifyingContent);
 
     res.status(httpStatus.OK).json({
         status: httpStatus.OK,
         message: '정상적으로 개별 백로그 목록을 수정했습니다.',
-        results: results
+        // results: results
     });
 };
 

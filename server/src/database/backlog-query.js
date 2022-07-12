@@ -16,6 +16,7 @@ exports.selectBacklogs = (params) => {
       JOIN TBL_PROJECT_MEMBER B ON (A.PROJECT_CODE = B.PROJECT_CODE) AND (A.BACKLOG_CREATOR_CODE = B.MEMBER_CODE)
       JOIN TBL_MEMBER C ON (B.MEMBER_CODE = C.MEMBER_CODE)
      WHERE A.BACKLOG_DELETED_YN = 'N'
+       AND A.PROJECT_CODE = ${params.projectCode}
        AND A.BACKLOG_CATEGORY = '백로그'
   `;
 
@@ -109,42 +110,37 @@ exports.selectHistoryByHistoryCode = () => {
 /* 백로그 수정 요청 SQL */
 exports.editBacklog = (modifyingContent) => {
 
-  console.log(`query로 넘어온 modifyingContent: `);
-  console.log(modifyingContent.changedCategory);
-  console.log(modifyingContent.changedValue);
-
   let query = `
     UPDATE TBL_BACKLOG A
-  `;
+       SET`;
+    
+  const target = modifyingContent.changedItem;
 
-  switch(modifyingContent.changedCategory) {
-    case 'title' : 
-      query += `  SET A.BACKLOG_TITLE = '${ modifyingContent.changedValue }'
-      `;
-      break;
-    case 'description' : 
-      query += `  SET A.BACKLOG_DESCRIPTION = '${ modifyingContent.changedValue }'
-      `;
-      break;
-    case 'category' :
-      query += `  SET A.BACKLOG_CATEGORY = '${ modifyingContent.changedValue }'
-      `;
-      break;
-    case 'progressStatus' : 
-      query += `  SET A.BACKLOG_PROGRESS_STATUS = '${ modifyingContent.changedValue }'
-      `;
-      break;
-    case 'urgency' : 
-      query += `  SET A.BACKLOG_URGENCY = '${ modifyingContent.changedValue }'
-      `;
-      break;
-    case 'issue' : 
-      query += `  SET A.BACKLOG_ISSUE = '${ Number(modifyingContent.changedValue) }'
-      `;
-      break;
+  if(target.title) {
+    query += `
+     A.BACKLOG_TITLE = '${ target.title }',`;
+  }
+  if(target.description) {
+    query += `
+     A.BACKLOG_DESCRIPTION = '${ target.description }',`;
+  }
+  if(typeof(target.issue) == 'number') {
+    query += `
+     A.BACKLOG_ISSUE = '${ Number(target.issue) }',`;
+  }
+  if(target.urgency) {
+    query += `
+     A.BACKLOG_URGENCY = '${ target.urgency }',`;
+  }
+  if(target.sprint) {
+    console.log('요건 좀 나중에 ')
+    query += `
+     A.BACKLOG_CATEGORY = '일감',`;
   }
 
-  query += ` WHERE A.BACKLOG_CODE = ${ modifyingContent.backlogCode }`;
+  query = query.slice(0, -1);
+  query += `
+   WHERE A.BACKLOG_CODE = ${ modifyingContent.backlogCode }`;
 
   return query;
 };
