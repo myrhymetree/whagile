@@ -23,14 +23,31 @@
 }
 
 div.cells {
-	background-color: #333544;
-	color: white;
+	height: 40px;
+	background-color: #282936;
+	color: #00AA9C;
 	padding: 10px;
 	font-size: 16px;
-	font-weight: bold;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	
+	text-align: center;
 	-ms-user-select: none; 
     -moz-user-select: -moz-none;
     -khtml-user-select: none;
     -webkit-user-select: none;
     user-select: none;
+}
+
+.cells>div {
+	color: #00AA9C;
+	border: 1px solid #00AA9C;
+	border-radius: 10px;
+	display: inline-block;
+	padding: 4px 18px;
+	font-size: 16px;
+	text-align: center;
+	margin: 0 10px;
 }

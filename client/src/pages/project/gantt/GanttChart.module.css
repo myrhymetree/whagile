@@ -39,8 +39,13 @@
 #unfoldButton {
     width: 16px;
     height: calc(100% - 18px);
-    background-color: #333544;
-    border: 1px solid grey;
+    background-color: #282936;
+    color: lightgrey;
+    border-top: 1px solid grey;
+    border-bottom: 1px solid grey;
+    border-left: 1px solid grey;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -82,6 +87,7 @@
     display: flex;
     flex-direction: column;
     width: 60%;
+    max-height: 80%;
 }
 
 #dialogBody>div:nth-child(3), #dialogBody>div:nth-child(4) { /* 진행할 기존백로그/신규백로그 */
@@ -101,8 +107,8 @@
 }
 
 #dialogBody>div:nth-child(3) li:not(:last-child) {
-    background: rgba(255, 185, 95, .16);
-    color: #FFB95F;
+    /* background: rgba(255, 185, 95, .16);
+    color: #FFB95F; */
     margin-bottom: 5px;
 }
 
@@ -180,7 +186,17 @@
     margin: 10px 0;
 }
 
-#taskContainer label {
+#backlogDetail label:nth-child(n+1):nth-child(-n+2){
+    height: 40px;
+    display: block;
+}
+
+#backlogDetail label:nth-child(n+3):nth-child(-n+5){
     height: 38px;
     display: block;
+}
+
+#taskContainer>div:nth-child(3) li:not(:last-child) {
+    /* background: rgba(255, 185, 95, .16);
+    color: #FFB95F; */
 }
