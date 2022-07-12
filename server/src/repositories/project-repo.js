@@ -39,7 +39,6 @@ exports.selectProject = (connection, projectCode) => {
 
             const project = [];
             project.push(new ProjectDTO(results[0]));
-            console.log('성공함?');
             resolve(project);
         });
     });
@@ -157,31 +156,32 @@ exports.deleteProject = (connection, projectCode) => {
     });
 }
 
-exports.selectProjectMember = (connection, projectCode) => {
+exports.selectProjectMembers = (connection, projectCode) => {
     return new Promise((resolve, reject) => {
-        connection.query(projectQuery.selectProjectMember(projectCode),
+        connection.query(projectQuery.selectProjectMembers(projectCode),
         (err, results, fields) => {
 
             if(err) {
                 console.log(err);
                 reject(err);
             }
-
-            const projectMember = [];
+            
+            const projectMembers = [];
             for(let i = 0; i < results.length; i++) {
-                projectMember.push(new ProjectMemberDTO(results[i]));
+                projectMembers.push(new ProjectMemberDTO(results[i]));
             }
 
-            resolve(projectMember);
+            resolve(projectMembers);
         });
     });
 }
 
 exports.insertProjectMember = (connection, data) => {
+    console.log('insertProjectMember', data);
     return new Promise((resolve, reject) => {
         connection.query(projectQuery.insertProjectMember(),
         [ data.memberCode
-        , data.authorityCode
+        , 3
         , data.projectCode
         ],
         (err, results, fields) => {
@@ -216,8 +216,8 @@ exports.deleteProjectMember = (connection, data) => {
 exports.selectRegistedMember = (connection, data) => {
 
     return new Promise((resolve, reject) => {
+
         connection.query(projectQuery.isRegistedMember(data),
-        
         (err, results, fields) => {
 
             if(err) {
@@ -231,6 +231,61 @@ exports.selectRegistedMember = (connection, data) => {
             }
 
             resolve(memberInfo);
+        });
+    });
+}
+
+exports.modifyMemberEmailAuthApporovedStatus = (connection, memberCode) => {
+
+    return new Promise((resolve, reject) => {
+        connection.query(projectQuery.updateMemberEmailAuthApporovedStatus(memberCode),
+        
+        (err, results, fields) => {
+
+            if(err) {
+                console.log(err);
+                reject(err);
+            }
+
+            resolve(results);
+        });
+    });
+}
+
+exports.updateAuthorityOfMember = (connection, projectMemberInfo) => {
+
+    return new Promise((resolve, reject) => {
+        connection.query(projectQuery.updateAuthorityOfMember(projectMemberInfo),
+        
+        (err, results, fields) => {
+
+            if(err) {
+                console.log(err);
+                reject(err);
+            }
+
+            resolve(results);
+        }
+        )
+    });
+}
+
+exports.selectProjectMember = (connection, projectMemberInfo) => {
+    return new Promise((resolve, reject) => {
+        connection.query(projectQuery.selectProjectMember(projectMemberInfo),
+        (err, results, fields) => {
+
+            if(err) {
+                console.log(err);
+                reject(err);
+            }
+
+            console.log('results : ', results);
+            const projectMember = [];
+            projectMember.push(new ProjectMemberDTO(results[0]));
+
+            console.log('projectMember', projectMember);
+            resolve(projectMember[0]);
         });
     });
 }

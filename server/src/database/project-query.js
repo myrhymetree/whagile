@@ -152,13 +152,14 @@ exports.deleteProject = () => {
   `;
 }
 
-exports.selectProjectMember = (projectCode) => {
+exports.selectProjectMembers = (projectCode) => {
   return `
     SELECT
            A.MEMBER_CODE
          , B.MEMBER_ID
          , B.MEMBER_NAME
          , B.MEMBER_EMAIL
+         , A.AUTHORITY_CODE
          , C.AUTHORITY_NAME
       FROM TBL_PROJECT_MEMBER A
       JOIN TBL_MEMBER B ON (A.MEMBER_CODE = B.MEMBER_CODE)
@@ -204,36 +205,64 @@ exports.deleteProjectMember = (params) => {
          `
 }
 
-/* 프로젝트 멤버 이메일 조회 */
-// exports.isRegistedMember = (data) => {
- 
-//   let query = `SELECT
-//                       A.*
-//                  FROM TBL_MEMBER A
-//                 WHERE A.MEMBER_EMAIL = ${ data[0].memberEmail };
-//          `
-
-//         if(data.length > 1 ) {
-//           for(let i = 1; i < data.length; i++) {
-//             query += `UNION
-//                     SELELCT
-//                             A.*
-//                        FROM TBL_MEMBER A
-//                       WHERE A.MEMBER_EMAIL = ${ data[i].memberEmail }` 
-//           }
-//         }
-
-//   return query;
-
-// }
-
 exports.isRegistedMember = (data) => {
- 
+  
   let query = `SELECT
                       A.*
                  FROM TBL_MEMBER A
-                WHERE A.MEMBER_EMAIL = '${ data.email }';
-         `
+                WHERE A.MEMBER_EMAIL = '${ data[0].address }'`
+
+  if(data.length > 1 ) {
+    for(let i = 1; i < data.length; i++) {
+      query += `UNION
+               SELECT
+                      B.*
+                  FROM TBL_MEMBER B
+                 WHERE B.MEMBER_EMAIL = '${ data[i].address }'` 
+    }
+  };
+
   return query;
 
+  }
+
+  exports.updateMemberEmailAuthApporovedStatus = (memberCode) => {
+
+    return `
+        UPDATE
+                TBL_MEMBER A
+            SET 
+                A.MEMBER_EMAIL_AUTH = 'Y'
+          WHERE A.MEMBER_CODE = ${ memberCode }
+    `;
+  }
+
+  exports.updateAuthorityOfMember = (projectMemberInfo) => {
+
+    return `
+        UPDATE
+               TBL_PROJECT_MEMBER A
+           SET
+               A.AUTHORITY_CODE = ${ projectMemberInfo.authorityCode }
+         WHERE A.MEMBER_CODE = ${ projectMemberInfo.memberCode }
+           AND A.PROJECT_CODE = ${ projectMemberInfo.projectCode }
+    `;
+  }
+
+  exports.selectProjectMember = (projectMemberInfo) => {
+
+    return `
+        SELECT
+               A.MEMBER_CODE
+             , B.MEMBER_ID
+             , B.MEMBER_NAME
+             , B.MEMBER_EMAIL
+             , A.AUTHORITY_CODE
+             , C.AUTHORITY_NAME
+          FROM TBL_PROJECT_MEMBER A
+          JOIN TBL_MEMBER B ON (A.MEMBER_CODE = B.MEMBER_CODE)
+          JOIN TBL_AUTHORITY C ON (A.AUTHORITY_CODE = C.AUTHORITY_CODE)
+         WHERE A.PROJECT_CODE = ${ projectMemberInfo.projectCode }
+           AND A.MEMBER_CODE = ${ projectMemberInfo.memberCode }
+    `;
   }

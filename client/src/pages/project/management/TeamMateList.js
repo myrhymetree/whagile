@@ -1,9 +1,9 @@
 import PageTitle from '../../../components/items/PageTitle';
 import React, { useEffect, useState, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { callGetProjectMemberAPI } from '../../../apis/ProjectAPICalls';
-import { callDeleteProjectMemberAPI } from '../../../apis/ProjectAPICalls';
 import { useParams } from 'react-router-dom';
+import { callGetProjectMemberAPI, callDeleteProjectMemberAPI, callPutModifyAuthorityProjectMemberAPI } from '../../../apis/ProjectAPICalls';
+import InvitationExecutionModal from '../../../components/items/projects/InvitationExecutionModal';
 
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
@@ -13,6 +13,7 @@ import { Row } from 'primereact/row';
 import { Toolbar } from 'primereact/toolbar';
 import { Toast } from 'primereact/toast';
 import { Dialog } from 'primereact/dialog';
+import { RadioButton } from 'primereact/radiobutton';
 
 function TeamMateList() {
 
@@ -21,9 +22,16 @@ function TeamMateList() {
         memberId: null,
         memberName: null,
         memberEmail: null,
+        authorityCode: null,
         authorityName: null
     };
 
+    const [emails, setEmails ] = useState([]);
+    const [authority, setAuthority] = useState('');
+    const [displayBasic, setDisplayBasic] = useState(false);
+    const [displayPosition, setDisplayPosition] = useState(false);
+    const [position, setPosition] = useState('center');
+    const [authorityDialog, setAuthorityDialog] = useState(false);
     const dispatch = useDispatch();
     const { projectCode } = useParams();
     const toast = useRef(null);
@@ -37,6 +45,10 @@ function TeamMateList() {
     const [submitted, setSubmitted] = useState(false);
     const [memberDialog, setMemberDialog] = useState(false);
     
+    const dialogFuncMap = {
+        'displayBasic': setDisplayBasic,
+        'displayPosition': setDisplayPosition,
+    }
 
     // useEffect(
     //     () => {
@@ -64,6 +76,11 @@ function TeamMateList() {
     //     [memberList]
     // );
 
+    const hideDialog = () => {
+        setSubmitted(false);
+        setAuthorityDialog(false);
+    }
+
     function removeMember(rowData) {
         dispatch(callDeleteProjectMemberAPI({
             'projectCode': projectCode,
@@ -76,6 +93,12 @@ function TeamMateList() {
         setSubmitted(false);
         setMemberDialog(true);
     }
+
+    // const openNew1 = () => {
+    //     setProduct(emptyProduct);
+    //     setSubmitted(false);
+    //     setProductDialog(true);
+    // }
 
     const hideDeleteMemberDialog = () => {
         setDeleteMemberDialog(false);
@@ -96,7 +119,29 @@ function TeamMateList() {
         // setMember(emptyMember);
         removeMember(member);
         toast.current.show({ severity: 'success', summary: '팀원 제외', detail: '해당 팀원을 제외했습니다.', life: 3000 });
+    };
+
+    const saveAuthority = () => {
+        setSubmitted(true);
+
+        dispatch(callPutModifyAuthorityProjectMemberAPI({
+            'projectCode' : projectCode,
+            'memberCode' : member.memberCode,
+            'authorityCode' : member.authorityCode
+        }));
+
+        setAuthorityDialog(false);
+        // setProduct(emptyProduct);
+        toast.current.show({ severity: 'success', summary: '권한 수정 완료', detail: '해당 회원의 권한을 수정했습니다.', life: 3000 });
+
     }
+
+    const authorityDialogFooter = (
+        <>
+            <Button label="Save" icon="pi pi-check" className="p-button-text" onClick={saveAuthority} />
+            <Button label="Cancel" icon="pi pi-times" className="p-button-text" onClick={hideDialog} />
+        </>
+    );
     
     const deleteMemberDialogFooter = (
         <>
@@ -105,9 +150,26 @@ function TeamMateList() {
         </>
     );
 
+    const onCategoryChange = (e) => {
+        // let _authority = {...authority};
+        let _member = {...member};
+        _member['authorityCode'] = e.value;
+        console.log('_member', _member);
+        setMember(_member);
+    }
+
+    const editProjectMember = (member) => {
+
+        if(member.authorityName === 'PM') {
+            return toast.current.show({ severity: 'error', summary: '수정 불가', detail: 'PM은 수정할 수 없습니다.', life: 3000 });
+        }
+
+        setMember({...member});
+        setAuthorityDialog(true);
+    }
+
 
     const confirmDeleteProjectMember = (rowData) => {
-        console.log(rowData);
 
         if(rowData.authorityName === 'PM') {
             return toast.current.show({ severity: 'error', summary: '제거 불가', detail: 'PM은 제거할 수 없습니다.', life: 3000 });
@@ -119,9 +181,9 @@ function TeamMateList() {
     }
 
     const actionBodyTemplate = (rowData) => {
-        // console.log(rowData);
         return (
             <>
+                <Button icon="pi pi-pencil" className="p-button-rounded p-button-success mr-2" onClick={() => editProjectMember(rowData)} />
                 <Button icon="pi pi-trash" className="p-button-rounded p-button-danger" onClick={() => confirmDeleteProjectMember(rowData)} />
             </>
         );
@@ -132,14 +194,24 @@ function TeamMateList() {
             <span className="p-input-icon-left">
                 <i className="pi pi-search" />
                 <InputText type="search" onInput={(e) => setGlobalFilter(e.target.value)} placeholder="Search..." />
+                {/* {!globalFilter && <small className="p-error">Name is required.</small>}     //나중에 required 대신 쓰면 용이함 */}
             </span>
         </div>
     );
 
+    const showModal = (name, position) => {
+        dialogFuncMap[`${name}`](true);
+
+        if (position) {
+            setPosition(position);
+        }
+    }
+    
+
     const leftToolbarTemplate = () => {
         return (
             <>
-                <Button label="팀원 초대" icon="pi pi-plus" className="p-button-success mr-2" onClick={openNew}/>
+                <Button label="팀원 초대"  icon="pi pi-user-plus" className="p-button-success mr-2" onClick={ () => showModal('displayBasic')}/>
                 {/* <Button label="Delete" icon="pi pi-trash" className="p-button-danger" onClick={confirmDeleteSelected} disabled={!selectedProducts || !selectedProducts.length} /> */}
             </>
         )
@@ -148,7 +220,7 @@ function TeamMateList() {
     return (
         <>  
             <PageTitle 
-                icon={<i className="pi pi-fw pi-cog"></i>}
+                icon={<i className="pi pi-fw pi-users"></i>}
                 text="프로젝트 팀원목록"
             />
 
@@ -195,19 +267,33 @@ function TeamMateList() {
                 </div>
             </Dialog>
 
-            {/* <Dialog visible={productDialog} style={{ width: '450px' }} header="Product Details" modal className="p-fluid" footer={productDialogFooter} onHide={hideDialog}>
-                {product.image && <img src={`images/product/${product.image}`} onError={(e) => e.target.src='https://www.primefaces.org/wp-content/uploads/2020/05/placeholder.png'} alt={product.image} className="product-image block m-auto pb-3" />}
+            <InvitationExecutionModal 
+                displayBasic = { displayBasic }
+                setDisplayBasic = { setDisplayBasic }
+                emails = { emails }
+                setEmails = { setEmails }
+                projectCode = { projectCode }
+            />
+
+            <Dialog visible={authorityDialog} style={{ width: '450px' }} header="권한 수정" modal className="p-fluid" footer={authorityDialogFooter} onHide={hideDialog}>
+     
                 <div className="field">
-                    <label htmlFor="name">Name</label>
-                    <InputText id="name" value={product.name} onChange={(e) => onInputChange(e, 'name')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.name })} />
-                    {submitted && !product.name && <small className="p-error">Name is required.</small>}
+                    <label className="mb-3">권한</label>
+                    <div className="formgrid grid">
+                        <div className="field-radiobutton col-6">
+                            <RadioButton inputId="category1" name="category" value="2" onChange={onCategoryChange} checked={member.authorityCode === 2} />
+                            <label htmlFor="category1">팀원</label>
+                        </div>
+                        <div className="field-radiobutton col-6">
+                            <RadioButton inputId="category2" name="category" value="3" onChange={onCategoryChange} checked={member.authorityCode === 3} />
+                            <label htmlFor="category2">게스트</label>
+                        </div>
+                    </div>
                 </div>
-                <div className="field">
-                    <label htmlFor="description">Description</label>
-                    <InputTextarea id="description" value={product.description} onChange={(e) => onInputChange(e, 'description')} required rows={3} cols={20} />
-                </div>
-            </Dialog> */}
+            </Dialog>
         </>
+
+        
     );
 }
 
