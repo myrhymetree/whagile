@@ -60,9 +60,9 @@ export const callPostAuthAPI = (paramAuth, paramAuthOrder) => { // 권한 생성
         }).then(res => res.json());
 
         await dispatch(callGetAuthsAPI());
-        await dispatch(callGetAuthAPI({
-            authorityCode: result.results.insertId
-        }));
+        // await dispatch(callGetAuthAPI({
+        //     authorityCode: result.results.insertId
+        // }));
         
         await dispatch(callPutAuthOrderAPI(paramAuthOrder));
     }

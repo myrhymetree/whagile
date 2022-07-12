@@ -1,7 +1,8 @@
 import { GET_SPRINTS } from '../modules/SprintsModule';
 import { GET_SPRINT } from '../modules/SprintModule';
+import { GET_BACKLOGS } from '../modules/SprintBacklogModule';
 
-export function callGetSpintsAPI(params) {
+export function callGetSprintsAPI(params) {
     
     let requestURL = `http://localhost:8888/api/sprints`;
     
@@ -9,7 +10,7 @@ export function callGetSpintsAPI(params) {
         // 'offset': 0,
         // 'limit': 30,
         'orderCondition': 'code',
-        'orderValue': 'desc'
+        'orderValue': 'desc',
     };
 
     if(params === undefined || Object.keys(params).length === 0) {
@@ -26,7 +27,7 @@ export function callGetSpintsAPI(params) {
     }
 }
 
-export function callGetSpintAPI(params) {
+export function callGetSprintAPI(params) {
 
     let requestURL = `http://localhost:8888/api/sprints/${params.sprintCode}`;
     
@@ -38,8 +39,24 @@ export function callGetSpintAPI(params) {
     }
 }
 
-export function callPostSpintAPI(params) {}
+export function callPostSprintAPI(params) {}
 
-export function callPutSpintAPI(params) {}
+export function callPutSprintAPI(params) {}
 
-export function callDeleteSpintAPI(params) {}
+export function callDeleteSprintAPI(params) {}
+
+export function callGetBacklogsAPI(params) {
+
+    let requestURL = `http://localhost:8888/api/backlogs`;
+
+    if(!(params === undefined || Object.keys(params).length === 0)) {
+        requestURL += `?${Object.entries(params).map(param => param.join('=')).join('&')}`;
+    }
+    
+    return async (dispatch, getState) => {
+        
+        const result = await fetch(requestURL).then(res => res.json());
+        
+        dispatch({ type: GET_BACKLOGS, payload: result.results });
+    }
+}

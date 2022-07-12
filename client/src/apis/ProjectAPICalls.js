@@ -1,6 +1,6 @@
 import { GET_PROJECT, GET_PROJECTS, POST_PROJECT, PUT_PROJECT,  DELETE_PROJECT } from "../modules/ProjectModule";
 import { GET_PROJECT_MEMBER } from "../modules/ProjectMemberModule";
-import { GET_IS_REGISTED_MEMBER, DELETE_PROJECT_MEMBER } from "../modules/ProjectMemberModule";
+import { GET_INVITED_MEMBER, PUT_MODIFY_AUTHORITY, DELETE_PROJECT_MEMBER } from "../modules/ProjectMemberModule";
 import { decodeJwt } from '../utils/tokenUtils';
 
 export function callGetProjectsAPI(params) {
@@ -33,7 +33,7 @@ export function callGetProjectAPI(params) {
     }
 }
 
-export const  callPostProjectAPI = (projectName, projectDescription) => {
+export const  callPostProjectAPI = (projectName, projectDescription, emails) => {
     let requestURL = `http://localhost:8888/api/projects`;
     const decoded = decodeJwt(window.localStorage.getItem("access_token"));
 
@@ -48,7 +48,8 @@ export const  callPostProjectAPI = (projectName, projectDescription) => {
             body: JSON.stringify({
                 projectName: projectName,
                 projectDescription: projectDescription,
-                loginMember: (decoded !== 'undefined')? decoded.code: ''
+                loginMember: (decoded !== 'undefined')? decoded.code: '',
+                emails: emails
             })
         })
         .then(res => res.json());
@@ -159,7 +160,7 @@ export const callDeleteProjectMemberAPI = (params) => {
     }
 }
 
-export const callPostIsRegistedMemberAPI = (data) => {
+export const callPostInviteMemberAPI = (emails, projectCode) => {
 
     let requestURL = `http://localhost:8888/api/projects/invitation`;
 
@@ -172,10 +173,34 @@ export const callPostIsRegistedMemberAPI = (data) => {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                email: data
+                emails: emails,
+                projectCode: projectCode
             })
         }).then(res => res.json());
 
-        dispatch({ type: GET_IS_REGISTED_MEMBER, payload: result.results});
+        dispatch({ type: GET_INVITED_MEMBER, payload: result.results});
     }
 }
+
+export const callPutModifyAuthorityProjectMemberAPI = (data) => {
+
+    console.log('api에 넘어온 데이터 확인 : ', data);
+
+    let requestURL = `http://localhost:8888/api/projects/${ data.projectCode }/member/${ data.memberCode }`;
+
+    return async function getProject(dispatch, getState) {
+
+        const result = await fetch(requestURL, {
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                authorityCode: data.authorityCode
+            })
+        }).then(res => res.json());
+
+        dispatch({ type: PUT_MODIFY_AUTHORITY, payload: result.results});
+    };
+};

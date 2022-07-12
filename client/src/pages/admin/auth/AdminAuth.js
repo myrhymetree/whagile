@@ -12,7 +12,7 @@ import {
     , callPutAuthAPI
     , callDeleteAuthAPI
     , callPutAuthOrderAPI
-} from '../../../apis/AuthAPICalls';
+} from "../../../apis/AuthAPICalls";
 import { SET_AUTH, INIT_AUTH, UPDATE_AUTH } from "../../../modules/AuthModule";
 import { INSERT_AUTH_ORDER, DELETE_AUTH_ORDER, SET_AUTH_ORDER, SET_AUTH_ORDER_UPDATE } from "../../../modules/AuthOrderModule";
 

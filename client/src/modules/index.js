@@ -7,6 +7,7 @@ import projectsReducer from './ProjectModule';
 import projectMemberReducer from './ProjectMemberModule';
 import tasksReducer from './TasksModule';
 import taskReducer from './TaskModule';
+import sprintBacklogReducer from './SprintBacklogModule';
 import sprintsReducer from './SprintsModule';
 import sprintReducer from './SprintModule';
 
@@ -19,6 +20,7 @@ const rootReducer = combineReducers({
     projectMemberReducer,
     tasksReducer,
     taskReducer,
+    sprintBacklogReducer,
     sprintsReducer,
     sprintReducer
 });
