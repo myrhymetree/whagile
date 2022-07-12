@@ -160,10 +160,14 @@
     flex-direction: column;
 }
 
-#fontColoring {
+.fontColoring {
     color: #A2A2A6;
 }
 
+.boldAndColored {
+    color: #A2A2A6;
+    font-weight: bold;
+}
 
 #detailDiv {
     width: 100%;
@@ -208,9 +212,9 @@
     cursor: pointer;
 }
 
-#editableArea, #editableArea>label {
+#editableArea {
+    display: block;
     float: right;
-    cursor: pointer;
 }
 
 #moreBtn {
@@ -220,4 +224,43 @@
     border-radius: 4px;
     float: right;
     padding: 3px;
+    margin: 2px;
+    height: 30px
+}
+
+#editConfirmBtn, #editCancelBtn {
+    border: none;
+    color: #fff;
+    border-radius: 5px;
+    width: 50px;
+    height: 30px;
+    padding: 5px;
+    margin: 2px;
+    margin-top: 10px;
+    display: block;
+    float: right;
+}
+
+#editConfirmBtn {
+    background-color: #00AA9C;
+}
+
+#editConfirmBtn:disabled {
+    background-color: rgba(255, 255, 255, 0.25);
+}
+
+#editCancelBtn {
+    background-color: rgba(255, 255, 255, 0.25);
+}
+
+#inputTitle, #sprintOption, #issueOption, #urgencyOption {
+    width: 100%;
+}
+
+#detailDiv>h6 {
+    margin-bottom: 5px;
+}
+
+.smallText {
+    font-size: 10px;
 }
