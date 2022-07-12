@@ -50,16 +50,19 @@ exports.selectSprints = (params) => {
     if((   params.orderCondition === 'code' 
         || params.orderCondition === 'name' 
         || params.orderCondition === 'start_date' 
-        || params.orderCondition === 'end_date') 
+        || params.orderCondition === 'end_date' 
+        || params.orderCondition === 'progress_status') 
         &&(params.orderValue.toLowerCase() === 'asc'
         || params.orderValue.toLowerCase() === 'desc')) { // 정렬
         query += `\nORDER BY ${'SPRINT_' + params.orderCondition.toUpperCase()} ${params.orderValue.toUpperCase()}`;
+    } else if(params.isGantt) {
+        query += `\nORDER BY SPRINT_PROGRESS_STATUS DESC, SPRINT_CODE DESC`;
     }
     
     if(params.offset !== undefined && params.limit !== undefined) { // 페이징
         query += `\nLIMIT ${params.offset}, ${params.limit}`;
     }
-
+    
     return query;
 }
 
@@ -156,3 +159,31 @@ exports.deleteSprint = () => {
 
     return query;
 }
+
+/* tasks쪽이 작업중이라 나만 쓰는 임시 쿼리 */
+exports.selectTasks = () => {
+    
+    let query = `
+        SELECT
+              B.BACKLOG_CODE
+            , B.BACKLOG_TITLE
+            , B.BACKLOG_DESCRIPTION
+            , B.BACKLOG_PROGRESS_STATUS
+            , B.BACKLOG_URGENCY
+            , B.BACKLOG_CHARGER_CODE
+            , B.BACKLOG_CATEGORY
+            , B.SPRINT_CODE
+            , B.BACKLOG_CREATOR_CODE
+            , B.BACKLOG_ISSUE  
+            , B.BACKLOG_START_DATE
+            , B.BACKLOG_END_DATE
+            , M.MEMBER_NAME
+        FROM TBL_BACKLOG B
+        LEFT JOIN TBL_MEMBER M ON (B.BACKLOG_CREATOR_CODE = M.MEMBER_CODE)
+        WHERE SPRINT_CODE = ?
+            AND B.BACKLOG_DELETED_YN = 'N'
+            AND B.BACKLOG_CATEGORY = '일감'
+    `;
+  
+    return query;
+};
