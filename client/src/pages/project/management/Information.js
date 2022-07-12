@@ -143,7 +143,7 @@ function Information() {
                                         value={ projectDescription }
                                         autoComplete="off" 
                                         className={classNames({ 'p-invalid': fieldState.invalid })}
-                                        required 
+                                        required
                                     />
                             )} />
                     </div>
@@ -154,8 +154,7 @@ function Information() {
                             options={teamMates} 
                             onChange={onProjectMemberChange} 
                             optionValue="memberCode" 
-                            optionLabel="memberName" 
-                            required
+                            optionLabel="memberName"
                         />
                     </div>
                     
