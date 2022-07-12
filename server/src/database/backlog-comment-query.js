@@ -12,7 +12,9 @@ exports.selectBacklogComments = () => {
              , A.BACKLOG_CODE
              , A.PROJECT_CODE
              , A.MEMBER_CODE
+             , B.MEMBER_NAME
           FROM TBL_BACKLOG_COMMENT A
+          JOIN TBL_MEMBER B ON (A.MEMBER_CODE = B.MEMBER_CODE)
          WHERE A.BACKLOG_COMMENT_DELETED_YN = 'N'
            AND A.BACKLOG_CODE = ?
           LIMIT ?, ?
