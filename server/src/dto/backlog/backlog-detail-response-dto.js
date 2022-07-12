@@ -9,11 +9,7 @@ class BacklogDatailDTO {
     issue;
     creatorCode;
     creatorName;
-    chargerCode;
-    chargerName;
     projectCode;
-    sprintCode;
-    sprintName;
     deletedYN;
 
     constructor(data) {
@@ -25,12 +21,8 @@ class BacklogDatailDTO {
         this.urgency = data.BACKLOG_URGENCY;
         this.issue = data.BACKLOG_ISSUE;
         this.creatorCode = data.BACKLOG_CREATOR_CODE;
-        this.creatorName = data.CREATOR_NAME;
-        this.chargerCode = data.CHARGER_CODE;
-        this.chargerName = data.CHARGER_NAME;
+        this.creatorName = data.MEMBER_NAME;
         this.projectCode = data.PROJECT_CODE;
-        this.sprintCode = data.SPRINT_CODE;
-        this.sprintName = data.SPRINT_NAME;
         this.deletedYN = data.BACKLOG_DELETED_YN;
     };
 }
