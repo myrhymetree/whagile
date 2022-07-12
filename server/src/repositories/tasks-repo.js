@@ -65,7 +65,6 @@ exports.insertNewTask = (connection, params) => {
             params.projectCode,
             params.backlogCreatorCode,
             params.issue,
-            params.backlogDeletedYN,
           ],
           (err, results, fields) => {
             if (err) {
@@ -83,7 +82,7 @@ exports.insertNewTask = (connection, params) => {
 // 개별 일감 수정
 exports.updateTask = (connection, params) => {
   return new Promise((resolve, reject) => {
-    // console.log(params)
+    console.log("as", params)
     connection.query(
       tasksQuery.updateTask(),
       [

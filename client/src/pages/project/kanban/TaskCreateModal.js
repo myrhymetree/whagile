@@ -1,149 +1,99 @@
 
+import React, { useState } from "react";
+
 import KanbanBoardStyle from "./KanbanBoard.module.css";
 import EditTaskForm from "./EditTaskForm";
-import React, { useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { POST_TASK } from "../../../modules/TaskModule";
+import { useParams } from 'react-router-dom';
+import { decodeJwt } from "../../../utils/tokenUtils";
 
-//API, Redux
-import callPostTaskAPI from "../../../apis/TaskAPICalls";
 
 // 일감 모달창
 export default function TaskCreateModal(props) {
-  // 초기 폼
-  const resetForm = () => {
-    setTaskTitle("");
-    setTaskDescription("");
-    setTaskProgressStatus("");
-    setTaskIssue("");
-    setTaskUrgency("");
-    setTaskCharger("");
-  };
-  
-  const dispatch = useDispatch();
-  const task = useSelector((state) => state.taskReducer);
-  const confirmInsertTask = () => {
-        dispatch(callPostTaskAPI(task));
-        onChangeTask();
-  }
+	
+	const { projectCode } = useParams();
 
 
-    const onChangeTask = async (e) => {
+	const [taskAll, setTaskAll] = useState({
+		taskTitle: '',
+		taskDescription: '',
+		taskProgressStatus: '백로그',
+		taskIssue: 0,
+		taskUrgency: '보통',
+		taskCharger: null,
+	});
+
+
+
+
+    const onChangeTask = (e) => {
       // 모달창 내용 변경시 감지
+		setTaskAll({
+			...taskAll,
+			[e.target.name]: e.target.value,
+		});
 
-      let paramTask = {
-        ...task,
-        [e.target.backlogTitle]: e.target.value,
-        [e.target.backlogDescription]: e.target.value,
-        [e.target.progressStatus]: e.target.value,
-        [e.target.urgency]: e.target.value,
-        [e.target.memberName]: e.target.value,
-        [e.target.issue]: e.target.value,
-      };
+	};
 
-      dispatch({
-        type: POST_TASK,
-        payload: paramTask,
+	// submit 동작
+	const onSubmit = async (event) => {
+		const decoded = decodeJwt(window.localStorage.getItem("access_token"));
+		const result = await fetch("http://localhost:8888/api/tasks", {
+		method: "POST",
+		headers: {
+			Accept: "application/json",
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify({
+			backlogTitle: taskAll.taskTitle,
+			backlogDescription: taskAll.taskDescription,
+			progressStatus: taskAll.taskProgressStatus,
+			issue: taskAll.taskIssue,
+			urgency: taskAll.taskUrgency,
+			backlogChargerCode: taskAll.taskCharger,
+			backlogCategory: "백로그",
+			sprintCode: decoded !== "undefined" ? decoded.code : "",
+			projectCode: projectCode,
+			backlogCreatorCode: decoded !== "undefined" ? decoded.code : "",
+		}),
+		})
+      .then((res) => res.json())
+      .then((json) => {
+        console.log(json);
+        if (json.status == 200) {
+          console.log("작동");
+          window.location.reload();
+        }
       });
-    };
+		console.log('result: ', result);
 
+	};
 
-  const [taskTitle, setTaskTitle] = useState("");
-  const [taskDescription, setTaskDescription] = useState("");
-  const [taskProgressStatus, setTaskProgressStatus] = useState(null);
-  const [taskIssue, setTaskIssue] = useState(null);
-  const [taskUrgency, setTaskUrgency] = useState(null);
-  const [taskCharger, setTaskCharger] = useState(null);
+	const onClose = () => {
+		setTaskAll({});
+		props.onSubmit();
+	};
 
-
-    
-//       fetch("http://localhost:8888/api/tasks", {
-//         method: "POST",
-//         headers: {
-//           "Content-Type": "application/json",
-//           "Access-Token": window.localStorage.getItem("access_token"),
-//         }})
-//         .then((response) => response.json())
-//         .then((json) => {
-//             console.log(json);
-//             const result = json.results[0];
-//             console.log(result.backlogCode || "");
-//             setTaskTitle(result.backlogTitle || "");
-//             setTaskDescription(result.backlogDescription || "");
-//             setTaskProgressStatus(result.progressStatus || "");
-//             setTaskIssue(result.issue || "");
-//             setTaskUrgency(result.urgency || "");
-//             setTaskCharger(result.memberName || "");
-//         });
-
-
-
-// submit 동작
-  const onSubmit = (event) => {
-    if (props.type === "Create") {
-      // 생성
-      props.createTask(
-        taskTitle,
-        taskDescription,
-        taskProgressStatus,
-        taskIssue,
-        taskUrgency,
-        taskCharger
-      );
-    } else {
-      //수정
-      props.updateTask(
-        props.currentTaskID,
-        taskTitle,
-        taskDescription,
-        taskProgressStatus,
-        taskIssue,
-        taskUrgency,
-        taskCharger
-      );
-    }
-    event.preventDefault(); 
-    if (props.type === "Create") {
-      resetForm();
-    }
-    props.onSubmit();
-  };
-
-  const onClose = () => {
-    resetForm();
-    props.onSubmit();
-  };
-
-  return (
-    <Modal>
-      <EditTaskForm
-        onTitleChange={(e) => confirmInsertTask(e)}
-        currentDescription={taskDescription}
-        onDescriptionChange={(e) => confirmInsertTask(e)}
-        currentIssue={taskIssue}
-        onIssueChange={(e) => confirmInsertTask(e)}
-        currentUrgency={taskUrgency}
-        onUrgencyChange={(e) => confirmInsertTask(e)}
-        currentCharger={taskCharger}
-        onChargerChange={(e) => confirmInsertTask(e)}
-        currentProgressStatus={taskProgressStatus}
-        onProgressStatusChange={(e) => confirmInsertTask(e)}
-        onFormSubmit={onSubmit}
-        onClose={onClose}
-      />
-    </Modal>
-  );
+	return (
+		<Modal>
+			<EditTaskForm
+				onChangeTask={onChangeTask}
+				taskAll={taskAll}
+				onFormSubmit={onSubmit}
+				onClose={onClose}
+			/>
+		</Modal>
+	);
 }
 
 //모달 창
 function Modal(props) {
-  return (
-    <>
-      <div className={KanbanBoardStyle.kanbanModalScreen} />
-      <div role="dialog" className={KanbanBoardStyle.kanbanModal}>
-        {props.children}
-      </div>
-    </>
-  );
+	return (
+		<>
+			<div className={KanbanBoardStyle.kanbanModalScreen} />
+			<div role="dialog" className={KanbanBoardStyle.kanbanModal}>
+				{props.children}
+			</div>
+		</>
+	);
 }
 

@@ -61,7 +61,32 @@ exports.selectTaskbyTaskCode = () => {
     `;
   return query;
 }
-// AND BACKLOG_CATEGORY = '일감'
+
+// exports.selectTaskbyTaskCode = () => {
+//   return `
+//     SELECT
+//            A.BACKLOG_CODE
+//          , A.BACKLOG_TITLE
+//          , A.BACKLOG_DESCRIPTION
+//          , A.BACKLOG_PROGRESS_STATUS
+//          , A.BACKLOG_URGENCY
+//          , A.BACKLOG_CATEGORY
+//          , A.PROJECT_CODE
+//          , IFNULL(A.SPRINT_CODE, 0) AS SPRINT_CODE
+//          , IFNULL(C.SPRINT_NAME, '') AS SPRINT_NAME
+//          , A.BACKLOG_ISSUE
+//          , A.BACKLOG_CREATOR_CODE
+//          , (SELECT MEMBER_NAME FROM TBL_MEMBER WHERE MEMBER_CODE = A.BACKLOG_CREATOR_CODE) AS CREATOR_NAME
+//          , IFNULL(A.BACKLOG_CHARGER_CODE, 0) AS CHARGER_CODE
+//          , IFNULL((SELECT MEMBER_NAME FROM TBL_MEMBER WHERE MEMBER_CODE = A.BACKLOG_CHARGER_CODE), '') AS CHARGER_NAME
+//          , A.BACKLOG_DELETED_YN
+//       FROM TBL_BACKLOG A
+//       JOIN TBL_PROJECT_MEMBER B ON (A.PROJECT_CODE = B.PROJECT_CODE) AND (A.BACKLOG_CREATOR_CODE = B.MEMBER_CODE)
+//       LEFT JOIN TBL_SPRINT C ON (A.SPRINT_CODE = C.SPRINT_CODE)
+//       JOIN TBL_MEMBER D ON (B.MEMBER_CODE = D.MEMBER_CODE)
+//      WHERE A.BACKLOG_CODE = ?
+//   `;
+// };
 
 // 개별 일감 생성
 exports.insertNewTask = () => {
@@ -78,10 +103,9 @@ exports.insertNewTask = () => {
       , PROJECT_CODE
       , BACKLOG_CREATOR_CODE
       , BACKLOG_ISSUE
-      , BACKLOG_DELETED_YN
       ) 
         VALUES 
-      (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `;
 };
 

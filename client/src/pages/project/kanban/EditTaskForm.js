@@ -1,32 +1,12 @@
 
 import React from "react";
-import { Category, Issue, Urgency, Charger } from "./Types";
-
+import { Category, Urgency } from "./Types";
 import KanbanBoardStyle from "./KanbanBoard.module.css";
 
-
-
-
 // 일감 모달 창 - 상세 조회 폼
-export default function EditTaskForm(props) {
-  const {
-    onFormSubmit,
-    onTitleChange,
-    currentTitle,
-    onDescriptionChange,
-    currentDescription,
-    currentIssue,
-    onIssueChange,
-    currentUrgency,
-    onUrgencyChange,
-    currentCharger,
-    onChargerChange,
-    currentProgressStatus,
-    onProgressStatusChange,
-    onClose,
-  } = props;
+export default function EditTaskForm({onChangeTask, taskAll, onFormSubmit, onClose}) {
 
-  return (
+	return (
     <div className={KanbanBoardStyle.kanbanModalContent}>
       <form onSubmit={onFormSubmit || ""}>
         <div className={KanbanBoardStyle.kanbanTitles}>상세 조회 및 수정</div>
@@ -38,11 +18,12 @@ export default function EditTaskForm(props) {
             요약 *
           </label>
           <textarea
+            name="taskTitle"
             className={KanbanBoardStyle.kanbanDetailInputTitle}
             id="input-title"
             placeholder="필수 입력 사항입니다."
-            value={currentTitle || ""}
-            onChange={(event) => onTitleChange(event.target.value)}
+            value={taskAll.taskTitle || ""}
+            onChange={(event) => onChangeTask(event)}
             required
           ></textarea>
         </div>
@@ -54,20 +35,20 @@ export default function EditTaskForm(props) {
             설명
           </label>
           <textarea
+            name="taskDescription"
             className={KanbanBoardStyle.kanbanDetailInputDescription}
             id="input-description"
-            value={currentDescription || ""}
-            onChange={(event) => onDescriptionChange(event.target.value)}
+            value={taskAll.taskDescription || ""}
+            onChange={(event) => onChangeTask(event)}
           ></textarea>
         </div>
         <div className={KanbanBoardStyle.TaskOptions}>
           <select
+            name="taskProgressStatus"
             className={KanbanBoardStyle.kanbanDetailInputSelection}
             id="select-category"
-            value={currentProgressStatus || ""}
-            onChange={(event) => {
-              onProgressStatusChange(event.target.value);
-            }}
+            value={taskAll.taskProgressStatus || ""}
+            onChange={(event) => onChangeTask(event)}
           >
             <option value={Category.Backlog}>백로그</option>
             <option value={Category.Before}>진행 전</option>
@@ -75,24 +56,22 @@ export default function EditTaskForm(props) {
             <option value={Category.Done}>완료</option>
           </select>
           <select
+            name="taskIssue"
             className={KanbanBoardStyle.kanbanDetailInputSelection}
             id="select-issue"
-            value={currentIssue || ""}
-            onChange={(event) => {
-              onIssueChange(event.target.value);
-            }}
+            value={taskAll.taskIssue || ""}
+            onChange={(event) => onChangeTask(event)}
           >
-            <option value={Issue.Basic}>기본</option>
-            <option value={Issue.Issue}>이슈</option>
+            <option value={0}>기본</option>
+            <option value={1}>이슈</option>
           </select>
 
           <select
+            name="taskUrgency"
             className={KanbanBoardStyle.kanbanDetailInputSelection}
             id="select-urgency"
-            value={currentUrgency || ""}
-            onChange={(event) => {
-              onUrgencyChange(event.target.value);
-            }}
+            value={taskAll.taskUrgency || ""}
+            onChange={(event) => onChangeTask(event)}
           >
             <option value={Urgency.LowGrade}>낮음</option>
             <option value={Urgency.NormalGrade}>보통</option>
@@ -100,18 +79,17 @@ export default function EditTaskForm(props) {
           </select>
 
           <select
+            name="taskCharger"
             className={KanbanBoardStyle.kanbanDetailInputSelection}
             id="select-charger"
-            value={currentCharger || ""}
-            onChange={(event) => {
-              onChargerChange(event.target.value);
-            }}
+            value={taskAll.taskCharger || ""}
+            onChange={(event) => onChangeTask(event)}
           >
-            <option value={Charger.Jin}>우진</option>
-            <option value={Charger.Park}>성준</option>
-            <option value={Charger.Joo}>민주</option>
-            <option value={Charger.Sol}>한솔</option>
-            <option value={Charger.Lee}>호성</option>
+            <option value={1}>우진</option>
+            <option value={2}>성준</option>
+            <option value={3}>민주</option>
+            <option value={4}>한솔</option>
+            <option value={5}>호성</option>
           </select>
         </div>
 

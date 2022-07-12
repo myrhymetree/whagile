@@ -53,24 +53,42 @@ exports.findTaskByTaskCode = async (req, res, next) => {
 
 // 개별 일감 생성
 exports.registNewTask = async (req, res, next) => {
+  console.log(111, req.body)
   await TasksService.registNewTask(req.body)
-    const results = req.body
+    .then((result) => {
       res.status(HttpStatus.CREATED).json({
         status: HttpStatus.CREATED,
         message: "정상적으로 일감을 생성했습니다.",
-        results: results,
+        results: result,
       });
+    })
+    .catch((err) => {
+      res.status(HttpStatus.BAD_REQUEST).json({
+        status: HttpStatus.BAD_REQUEST,
+        message: err,
+      });
+    });
 };
 
 // 개별 일감 수정
 exports.editTask = async (req, res, next) => {
-    await TasksService.editTask(req.body);
-    const results = req.body
-    res.status(HttpStatus.OK).json({
-      status: HttpStatus.OK,
-      message: "개별 일감 수정을 완료했습니다.",
-      results: results,
+
+  await TasksService.editTask(req.body.kanbanInfo)
+    .then((result) => {
+      res.status(HttpStatus.OK).json({
+        status: HttpStatus.OK,
+        message: "개별 일감 수정을 완료했습니다.",
+        results: result,
+      });
+    })
+    .catch((err) => {
+      res.status(HttpStatus.BAD_REQUEST).json({
+        status: HttpStatus.BAD_REQUEST,
+        message: err,
+      });
     });
+
+
 };
 
 // 개별 일감(백로그) 삭제

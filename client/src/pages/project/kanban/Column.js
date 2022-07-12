@@ -39,9 +39,6 @@ function NewTaskButton(props) {
 function EditButton(props) {
   // 일감 수정 요청
 
-  // const task = useSelector((state) => state.taskReducer);
-  //     const dispatch = useDispatch();
-  // dispatch(callPutTaskAPI());
 
   return (
     <div

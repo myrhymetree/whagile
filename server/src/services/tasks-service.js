@@ -65,7 +65,7 @@ exports.editTask = (params) => {
 
     try {
       const results = await TasksRepository.updateTask(connection, params);
-
+      // console.log(results);
       connection.commit();
 
       resolve(results);
