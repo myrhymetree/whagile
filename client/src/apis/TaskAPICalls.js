@@ -3,7 +3,6 @@ import { GET_TASK } from "../modules/TaskModule";
 import { PUT_TASK } from "../modules/TaskModule";
 import { POST_TASK } from "../modules/TaskModule";
 import { DELETE_TASK } from "../modules/TaskModule";
-import { decodeJwt } from "../utils/tokenUtils";
 
 
 //전체 일감 목록 조회 API
@@ -47,7 +46,6 @@ export const callPutTaskAPI = (
   issue,
   backlogChargerCode
 ) => {
-  console.log(requestURL)
   let requestURL = `http://localhost:8888/api/tasks/${taskCode}`;
 
   return async (dispatch, getState) => {

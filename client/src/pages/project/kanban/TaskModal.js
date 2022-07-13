@@ -6,8 +6,6 @@ import { Category, Urgency } from "./Types";
 
 // 일감 모달창
 export default function TaskModal(props) {
-  console.log("init", props);
-  // 초기 폼
 
   // 개별 일감 상세 조회
   const [taskTitle, setTaskTitle] = useState("");
@@ -37,9 +35,11 @@ export default function TaskModal(props) {
         setTaskUrgency(result.urgency || "");
         setTaskCharger(result.backlogChargerCode || "");
       });
-  }, []);
+  }, [props.currentTaskID]);
 
- 
+  
+
+
 
   const onClose = () => {
     props.onSubmit();
@@ -101,8 +101,7 @@ export default function TaskModal(props) {
       .then((response) => response.json())
       .then((json) => {
         console.log(json);
-        if (json.status == 200) {
-          console.log("작동");
+        if (json.status === 200) {
           window.location.reload();
         }
       })

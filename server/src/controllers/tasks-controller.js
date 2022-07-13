@@ -105,3 +105,25 @@ exports.removeTask = async (req, res, next) => {
       });
     })
 };
+
+
+// 일감(백로그) 히스토리 조회 요청
+exports.findAllTaskHistory = async (req, res, next) =>{
+
+    await TasksService.findAllTaskHistory (req.body)
+    .then((result) => {
+        res.status(HttpStatus.OK).json({
+            status: HttpStatus.OK,
+            message: "일감 히스토리를 정상적으로 조회했습니다.",
+            results: result,
+        });
+
+    })
+    .catch((err) =>{
+            res.status(HttpStatus.BAD_REQUEST).json({
+                status: HttpStatus.BAD_REQUEST,
+                message: err
+            });
+        });
+}
+
