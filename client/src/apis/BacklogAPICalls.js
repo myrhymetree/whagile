@@ -140,7 +140,7 @@ export function callDeleteBacklogAPI(backlogCode, projectCode) {
         }).then(res => res.json());
 
         await dispatch({ type: DELETE_BACKLOG, payload: result.message });
-        await dispatch({ type: FIND_BACKLOG_DETAILS, payload: result.results });
+        // await dispatch({ type: FIND_BACKLOG_DETAILS, payload: result.results });
     }
 
 }

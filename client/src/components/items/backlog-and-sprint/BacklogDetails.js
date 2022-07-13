@@ -207,7 +207,7 @@ function BacklogDetails({visibleRight, setVisibleRight}) {
                         style={ toggleOff }
                     >
                         { 
-                            backlogDetails[0].description != ''? 
+                            backlogDetails[0].description !== '' && backlogDetails[0].description !== null? 
                             backlogDetails[0].description : '백로그 설명이 없습니다.' 
                         }
                     </span>
@@ -337,8 +337,11 @@ function BacklogDetails({visibleRight, setVisibleRight}) {
                     </button>  
                     <div style={ toggleOff }>
                         <br/>
-                        <h6 id={ BacklogAndSprintCSS.fontColoring }>댓글</h6>
-                        <BacklogComment/>
+                        <h6 className={ BacklogAndSprintCSS.fontColoring }>댓글</h6>
+                        <BacklogComment
+                            backlogCode = { backlogDetails[0].backlogCode }
+                            projectCode = { backlogDetails[0].projectCode }
+                        />
                     </div>
                 </>
             }
