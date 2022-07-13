@@ -185,7 +185,10 @@ function BacklogDetails({visibleRight, setVisibleRight}) {
                         onClick={ changeEditableState }
                         style={ toggleOff }
                     /><br/>
-                    <h3 style={ toggleOff }>
+                    <h3
+                        id={ BacklogAndSprintCSS.backlogTitle }
+                        style={ toggleOff }
+                    >
                         { backlogDetails[0].title }
                     </h3>
                     <h6
