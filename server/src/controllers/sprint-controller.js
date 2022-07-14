@@ -29,7 +29,7 @@ exports.viewSprints = async (req, res, next) => {
         res.status(HttpStatus.OK).json({
             status: HttpStatus.OK,
             message: 'successfully view sprints',
-            results: results
+            results: results,
         });
     })
     .catch((err) =>{
@@ -109,6 +109,26 @@ exports.deleteSprint = async (req, res, next) => {
         res.status(HttpStatus.OK).json({ 
             status: HttpStatus.OK,
             message: 'successfully delete sprint',
+            results: results
+        })
+    })
+    .catch((err) =>{
+
+        res.status(HttpStatus.BAD_REQUEST).json({
+            status: HttpStatus.BAD_REQUEST,
+            message: err
+        });
+    });
+}
+
+exports.viewSprintsCount = async (req, res, next) => {
+    console.log('viewSprintsCount...', req.query);
+    await SprintService.viewSprintsCount(req.query)
+    .then((results) => {
+
+        res.status(HttpStatus.OK).json({ 
+            status: HttpStatus.OK,
+            message: 'successfully view sprints count',
             results: results
         })
     })

@@ -13,7 +13,7 @@ exports.findAllBacklogs = async (req, res, next) => {
         progressStatus: req.query.progressStatus,
         urgency: req.query.urgency
     };
-    console.log(`params: ${params}`);
+    // console.log(`params: ${params}`);
 
     const results = await BacklogService.findBacklogs(params);
     

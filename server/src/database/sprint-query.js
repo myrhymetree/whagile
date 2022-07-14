@@ -67,7 +67,7 @@ exports.selectSprints = (params) => {
 }
 
 exports.selectSprintHistory = (params) => {
-    console.log('selectSprintHistory', params);
+    
     let query = `
         SELECT 
             SPRINT_HISTORY_CODE
@@ -187,3 +187,144 @@ exports.selectTasks = () => {
   
     return query;
 };
+
+exports.insertTask = () => {
+
+    let query = `
+        INSERT INTO TBL_BACKLOG (
+            BACKLOG_TITLE
+            , BACKLOG_DESCRIPTION
+            , BACKLOG_PROGRESS_STATUS
+            , BACKLOG_URGENCY
+            , BACKLOG_CHARGER_CODE
+            , BACKLOG_CATEGORY
+            , SPRINT_CODE
+            , PROJECT_CODE
+            , BACKLOG_CREATOR_CODE
+            , BACKLOG_ISSUE
+            , BACKLOG_START_DATE
+            , BACKLOG_END_DATE
+        ) VALUES (
+            ?
+            , ?
+            , '진행 중'
+            , ?
+            , ?
+            , '일감'
+            , ?
+            , ?
+            , ?
+            , ?
+            , ?
+            , ?
+        )
+    `;
+
+    return query;
+};
+
+exports.updateBacklogToTask = () => {
+
+    let query = `
+        UPDATE TBL_BACKLOG
+        SET
+              BACKLOG_PROGRESS_STATUS = '진행 전'
+            , BACKLOG_CATEGORY = '일감'
+            , SPRINT_CODE = ?
+        WHERE
+            BACKLOG_CODE = ?
+    `;
+
+    return query;
+}
+
+exports.updateTaskToBacklogBySprintCode = () => {
+
+    let query = `
+        UPDATE TBL_BACKLOG
+        SET
+              BACKLOG_PROGRESS_STATUS = '백로그'
+            , BACKLOG_CATEGORY = '백로그'
+            , SPRINT_CODE = NULL
+        WHERE
+            SPRINT_CODE = ?
+    `;
+
+    return query;
+}
+
+exports.updateTaskToBacklogByBacklogCode = () => {
+
+    let query = `
+        UPDATE TBL_BACKLOG
+        SET
+              BACKLOG_PROGRESS_STATUS = '백로그'
+            , BACKLOG_CATEGORY = '백로그'
+            , SPRINT_CODE = NULL
+        WHERE
+            BACKLOG_CODE = ?
+    `;
+
+    return query;
+}
+
+exports.selectSprintsCount = (params) => {
+
+    let query = `
+        SELECT COUNT(*) COUNT
+        FROM TBL_SPRINT
+        WHERE SPRINT_DELETED_YN = 'N' 
+            AND PROJECT_CODE = ?
+    `;
+
+    return query;
+}
+
+exports.selectTasksCount = (params) => {
+
+    let query = `
+        SELECT COUNT(*) COUNT
+        FROM TBL_BACKLOG
+        WHERE BACKLOG_DELETED_YN = 'N' 
+            AND BACKLOG_CATEGORY = '일감'
+            AND PROJECT_CODE = ?
+    `;
+
+    return query;
+}
+
+exports.selectBacklogsCount = () => {
+
+    let query = `
+        SELECT COUNT(*) COUNT
+        FROM TBL_BACKLOG
+        WHERE BACKLOG_DELETED_YN = 'N' 
+            AND BACKLOG_CATEGORY = '백로그'
+            AND PROJECT_CODE = ?
+    `;
+
+    return query;
+}
+
+exports.insertSprintHistory = () => {
+
+    let query = `
+        INSERT INTO TBL_SPRINT_HISTORY (
+              SPRINT_HISTORY_ITEM
+            , SPRINT_HISTORY_CONTENT
+            , SPRINT_HISTORY_DATE
+            , SPRINT_CODE
+            , MEMBER_CODE
+            , PROJECT_CODE
+        ) VALUES (
+              ?
+            , ?
+            , NOW()
+            , ?
+            , ?
+            , ?
+        )
+    `;
+
+    return query;
+}

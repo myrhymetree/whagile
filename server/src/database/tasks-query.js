@@ -44,6 +44,8 @@ exports.selectTaskbyTaskCode = () => {
             , A.BACKLOG_CREATOR_CODE
             , A.SPRINT_CODE
             , A.BACKLOG_CREATOR_CODE
+            , A.BACKLOG_START_DATE
+            , A.BACKLOG_END_DATE
             , E.MEMBER_NAME
          FROM TBL_BACKLOG A
          JOIN TBL_SPRINT B ON (A.SPRINT_CODE = B.SPRINT_CODE)
