@@ -6,13 +6,13 @@ import { DELETE_TASK } from "../modules/TaskModule";
 
 
 //전체 일감 목록 조회 API
-function callGetTasksAPI(url) {
-  const requestURL = url || "http://localhost:8888/api/tasks";
-    // console.log("requestURL:", requestURL);
+function callGetTasksAPI(projectCode) {
+
+  const requestURL = `http://localhost:8888/api/tasks?projectcode=${projectCode}`;
+
   return async function getTasks(dispatch, getState) {
     const result = await fetch(requestURL).then((res) => res.json());
 
-    // console.log("result : ", result.results);
     dispatch({ type: GET_TASKS, payload: result.results });
   };
 }
@@ -106,20 +106,21 @@ export const callPostTaskAPI = (paramTask) => {
 
 
 // 개별 일감 삭제
-export function callDeleteTaskAPI(taskCode, projectCode) {
+export function callDeleteTaskAPI(taskCode, projectCode, category) {
   const requestURL = "http://localhost:8888/api/tasks";
 
   return async function removeTask(dispatch, getState) {
     const result = await fetch(requestURL, {
       method: "DELETE",
       headers: {
-        Accept: "application/json",
+        "Accept": "application/json",
         "Content-Type": "application/json",
         "Access-Token": window.localStorage.getItem("access_token"),
       },
       body: JSON.stringify({
-        taskCode,
-        projectCode,
+        'taskCode':taskCode,
+        'projectCdoe':projectCode,
+        'category': category
       }),
     }).then((res) => res.json());
 

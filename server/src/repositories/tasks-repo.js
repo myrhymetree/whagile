@@ -4,10 +4,10 @@ const TasksHistoryDTO = require("../dto/tasks/tasks-history-response-dto");
 
 
 //전체 일감 목록 조회
-exports.selectTasks = (connection, params) => {
+exports.selectTasks = (connection, projectCode) => {
   return new Promise((resolve, reject) => {
     const query = connection.query(
-      tasksQuery.selectTasks(params),
+      tasksQuery.selectTasks(),[projectCode],
       (err, results, fields) => {
         if (err) {
           reject(err);
@@ -107,14 +107,14 @@ exports.updateTask = (connection, params) => {
   });
 };
 
-// 개별 일감(백로그) 삭제
+// 개별 백로그 삭제
 
 exports.deleteTask = (connection, taskCode) => {
 
     return new Promise((resolve, reject) => {
         connection.query(
             tasksQuery.deleteTask(),
-            [ taskCode],
+            [ taskCode ],
             (err, results, fields) => {
 
                 if(err) {
@@ -125,6 +125,24 @@ exports.deleteTask = (connection, taskCode) => {
             }
         );
     });
+};
+
+
+// 개별 일감 삭제
+exports.removeTask = (connection, taskCode) => {
+  return new Promise((resolve, reject) => {
+    connection.query(
+      tasksQuery.removeTask(),
+      [taskCode],
+      (err, results, fields) => {
+        if (err) {
+          reject(err);
+        }
+
+        resolve(results);
+      }
+    );
+  });
 };
 
 

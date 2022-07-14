@@ -2,11 +2,11 @@ const getConnection = require("../database/connection");
 const TasksRepository = require("../repositories/tasks-repo");
 
 // 전체 일감 목록 조회
-exports.getTasks = (params) => {
+exports.getTasks = (projectCode) => {
   return new Promise((resolve, reject) => {
     const connection = getConnection();
 
-    const results = TasksRepository.selectTasks(connection, params);
+    const results = TasksRepository.selectTasks(connection, projectCode);
 
     connection.end();
 
@@ -78,21 +78,10 @@ exports.editTask = (params) => {
       const results = await TasksRepository.updateTask(connection, params);
 
 			// const taskHistory = createTaskHistory();
-			// taskHistory.historyContent = "일감 수정";
 			// taskHistory.taskCode = params.taskCode;
 			// taskHistory.projectCode = params.projectCode;
 			// taskHistory.memberCode = params.memberCode;
 			// await TasksRepository.insertTaskHistory(connection, taskHistory);
-
-			// const taskHistoryInserted = await TasksRepository.insertTaskHistory(
-			// 		connection,
-			// 		taskHistory
-			// );
-
-			// await TasksRepository.selectTaskbyTaskCode(
-			// 		connection,
-			// 		taskHistoryInserted.insertedCode
-			// );
 
       connection.commit();
 
@@ -110,18 +99,19 @@ exports.editTask = (params) => {
 
 
 // 삭제 
-exports.removeTask = (taskCode, progressStatus, projectCode, memberCode) => {
+exports.removeTask = (params) => {
   return new Promise(async (resolve, reject) => {
     const connection = getConnection();
     connection.beginTransaction();
 
     try {
-      if (progressStatus === "백로그") {
-        await TasksRepository.deleteTask(connection, taskCode);
+      console.log("params",params)
+      if (params.taskCategory === "백로그") {
+        await TasksRepository.deleteTask(connection, params.taskCode);
 
         const removedTask = await TasksRepository.selectTaskbyTaskCode(
           connection,
-          taskCode
+          params.taskCode
         );
 
         // const taskHistory = createTaskHistory();
@@ -140,11 +130,11 @@ exports.removeTask = (taskCode, progressStatus, projectCode, memberCode) => {
 
       } else {
 
-        await TasksRepository.removeTask(connection, taskCode);
+        await TasksRepository.removeTask(connection, params.taskCode);
 
         const removedTask = await TasksRepository.selectTaskbyTaskCode(
           connection,
-          taskCode
+          params.taskCode
         );
         // const taskHistory = createTaskHistory();
 

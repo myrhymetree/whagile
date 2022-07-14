@@ -1,7 +1,7 @@
 
 // 전체 일감 목록 조회
-exports.selectTasks = (params) => {
-  console.log("progressStatus: ", params.progressStatus);
+exports.selectTasks = () => {
+
   let query = `
        SELECT
               A.BACKLOG_CODE
@@ -15,7 +15,7 @@ exports.selectTasks = (params) => {
             , A.PROJECT_CODE
             , A.BACKLOG_CREATOR_CODE
             , A.SPRINT_CODE
-            , A.BACKLOG_CREATOR_CODE
+            , A.BACKLOG_CHARGER_CODE
             , E.MEMBER_NAME
          FROM TBL_BACKLOG A
          JOIN TBL_SPRINT B ON (A.SPRINT_CODE = B.SPRINT_CODE)
@@ -23,6 +23,7 @@ exports.selectTasks = (params) => {
          JOIN TBL_PROJECT_MEMBER D ON (A.PROJECT_CODE = D.PROJECT_CODE) AND (A.BACKLOG_CREATOR_CODE = D.MEMBER_CODE)
          JOIN TBL_MEMBER E ON (D.MEMBER_CODE = E.MEMBER_CODE)
         WHERE BACKLOG_DELETED_YN = 'N'
+        AND A.PROJECT_CODE = ?
         ORDER BY BACKLOG_CODE ASC
     `;
 
@@ -47,19 +48,19 @@ exports.selectTaskbyTaskCode = () => {
             , A.PROJECT_CODE
             , A.BACKLOG_CREATOR_CODE
             , A.SPRINT_CODE
-            , A.BACKLOG_CREATOR_CODE
+            , A.BACKLOG_CHARGER_CODE
+            , B.SPRINT_NAME
             , E.MEMBER_NAME
          FROM TBL_BACKLOG A
-         JOIN TBL_SPRINT B ON (A.SPRINT_CODE = B.SPRINT_CODE)
-         JOIN TBL_PROJECT C ON (A.PROJECT_CODE = C.PROJECT_CODE)
-         JOIN TBL_PROJECT_MEMBER D ON (A.PROJECT_CODE = D.PROJECT_CODE) AND (A.BACKLOG_CREATOR_CODE = D.MEMBER_CODE)
-         JOIN TBL_MEMBER E ON (D.MEMBER_CODE = E.MEMBER_CODE)
+         LEFT JOIN TBL_SPRINT B ON (A.SPRINT_CODE = B.SPRINT_CODE)
+         LEFT JOIN TBL_MEMBER E ON (A.BACKLOG_CHARGER_CODE = E.MEMBER_CODE)
         WHERE BACKLOG_DELETED_YN = 'N'
         AND A.BACKLOG_CODE = ?
         ORDER BY BACKLOG_CODE ASC
     `;
   return query;
 }
+
 
 
 // 개별 일감 생성
@@ -115,7 +116,9 @@ exports.deleteTask = () => {
 exports.removeTask = () => {
   return `
       UPDATE TBL_BACKLOG A
-         SET A.BACKLOG_PROGRESS_STATUS; = '백로그'
+         SET 
+            A.BACKLOG_PROGRESS_STATUS = '백로그',
+            A.BACKLOG_CATEGORY = '백로그'
        WHERE A.BACKLOG_CODE = ?
   `;
 };

@@ -1,7 +1,7 @@
 
 import TaskTotalScreen from "./TaskTotalScreen";
 
-import AbandonTask from "./AbandonTask";
+
 import React from "react";
 
 import KanbanBoardStyle from "./KanbanBoard.module.css";
@@ -22,7 +22,6 @@ export default function KanbanBoard() {
       />
       <TaskTotalScreen/>
       <div className={KanbanBoardStyle.kanbanDeleteTaskButtonDiv}>
-        <AbandonTask />
       </div>
     </>
   );

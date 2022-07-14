@@ -21,6 +21,7 @@ function NewTaskButton(props) {
       </div>
       {showModal && (
         <TaskCreateModal
+          category={props.category}
           type="Create"
           onSubmit={() => {
             setShowModal(false);
@@ -100,7 +101,9 @@ export function KanbanColumn(props) {
             ))}
         </div>
         <div className={KanbanBoardStyle.kanbanNewTaskButtonDiv}>
-          <NewTaskButton />
+          <NewTaskButton
+            category={props.category}
+          />
         </div>
       </div>
     </>

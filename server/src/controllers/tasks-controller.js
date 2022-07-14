@@ -4,16 +4,9 @@ const TasksService = require("../services/tasks-service");
 
 //전체 일감 목록 조회
 exports.findAllTasks = async (req, res, next) => {
-  const params = {
-    offset: Number(req.query.offset),
-    limit: Number(req.query.limit),
-    issue: Number(req.query.issue),
-    progressStatus: req.query.progressStatus,
-    urgency: req.query.urgency,
-    backlogChargerCode: Number(req.query.backlogChargerCode),
-  };
-
-  const results = await TasksService.getTasks(params);
+  const projectCode = req.query.projectcode;
+  console.log("CODE", req.query.projectcode);
+  const results = await TasksService.getTasks(projectCode);
 
   console.log("findAllTasks :", results);
 
@@ -94,8 +87,8 @@ exports.editTask = async (req, res, next) => {
 // 개별 일감(백로그) 삭제
 
 exports.removeTask = async (req, res, next) => {
-  console.log(req.params.taskCode)
-  await TasksService.removeTask(req.params.taskCode)
+  console.log("controllers", req.body)
+  await TasksService.removeTask(req.body)
     .then((result) => {
 
       res.status(HttpStatus.OK).json({

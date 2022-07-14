@@ -3,17 +3,22 @@ import { useSelector, useDispatch } from "react-redux";
 import { Category } from "./Types";
 import KanbanBoardStyle from "./KanbanBoard.module.css";
 import { KanbanColumn } from "./Column";
+import { useParams } from "react-router-dom";
+
 //API, Redux
 import callGetTasksAPI from "../../../apis/TaskAPICalls";
 
 
 export default function TaskTotalScreen(props) {
-
+   
     // 일감 목록 
     const tasks = useSelector((state) => state.tasksReducer);
     const dispatch = useDispatch();
+    const { projectCode } = useParams();
+
     useEffect(() => {
-      dispatch(callGetTasksAPI());
+      console.log("tasks",tasks)
+      dispatch(callGetTasksAPI(projectCode));
     }, []);
 
     const filterBy = (category) => {
