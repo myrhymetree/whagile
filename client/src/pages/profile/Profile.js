@@ -7,7 +7,12 @@ import { decodeJwt } from '../../utils/tokenUtils';
 import { Toast } from 'primereact/toast';
 import { Password } from 'primereact/password';
 import { useNavigate, NavLink } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
 import MainHeader from '../../components/commons/MainHeader';
+
+import { 
+    callGetMemberAPI
+} from '../../apis/MemberAPICalls';
 
 function Profile() {
 
@@ -31,13 +36,64 @@ function Profile() {
     const [passwordform, setPasswordform] = useState(false);
     const [emailform, setEmailform] = useState(false);
 
-    const [isLogin, setIsLogin] = useState(window.sessionStorage.getItem('isLogin'));
+    const [memberInfoClick, setMemberInfoClick] = useState(false);
+    const [passwordFormClick, setPasswordFormClick] = useState(false);
+    const [emailFormClick, setEmailFormClick] = useState(false);
+
+    const member = useSelector(state => state.memberReducer);
+    const dispatch = useDispatch();
+
+
     const navigate = useNavigate();
 
     const toast = useRef(null);
     const toastBC = useRef(null);
 
     const decoded = decodeJwt(window.localStorage.getItem("access_token"));
+
+    const [snapshot, setSnapshot] = useState({});
+
+    useEffect(() => {
+        
+        console.log("Profile useEffect");
+        //dispatch(callGetMemberAPI(decoded));
+        
+        console.log('member', member);
+        console.log(decoded);
+        fetch(`http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/account/member?code=${decoded.code}`, {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              "Access-Control-Allow-Origin": "*",
+              "Access_token": window.localStorage.getItem("access_token")
+            }
+        })
+        .then(response => response.json())
+        .then(json => {
+            console.log(json);
+            const result = json.results[0];            
+            setUserID(result.memberId || '');
+            setEmail(result.email  || '');
+            setUsername(result.name  || '') ;
+            setPhone(result.phone  || '');
+            setCompany(result.company  || '');
+            setPurpose(result.purpose  || '');
+            setSnapshot({
+                memberId: result.memberId,
+                email: result.email,
+                name: result.name,
+                phone: result.phone,
+                company: result.company,
+                purpose: result.purpose
+            });
+        })
+        .catch((err) => {
+            showError('내 정보 불러오기를 실패하였습니다.');
+        });
+    },
+    []);
+
+
 
     const showError = (msg) => {
         toast.current.show({severity:'error', summary: 'Error Message', detail:msg, life: 3000});
@@ -73,10 +129,8 @@ function Profile() {
     const goMain = () => {
         console.log('logout process finished');
         sessionStorage.clear();
-        setIsLogin(false);          
-        navigate('/');
+        navigate('/' , { replace: true });
     }
-
 
     const init = () => {
         setOriginPassword('');
@@ -123,18 +177,20 @@ function Profile() {
     const onClickModifyPasswordSubmit = () => {
         console.log('onClickModifyPasswordSubmit');
 
+        
         if(originPassword == '' || password == '' || passwordform == '') {
             console.log('password required');
             showError('필수값을 입력하셔야 합니다.');
             return;
         }
-
+        
         if(password !== confirmPassword){
             console.log('password not equal');
             showError('비밀번호가 일치하지 않습니다');
             return;
         }
-
+        
+        setPasswordFormClick(true);
         console.log('pass');
 
         const pwdUpdateData = {
@@ -144,10 +200,11 @@ function Profile() {
         };
 
         console.log(pwdUpdateData);
-        fetch(`http://localhost:8888/api/account/updatepwd`, {
+        fetch(`http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/account/updatepwd`, {
             method: "PUT",
             headers: {
               "Content-Type": "application/json",
+              "Access-Control-Allow-Origin": "*",
               "Access_token": window.localStorage.getItem("access_token")
             },
             body: JSON.stringify({
@@ -167,6 +224,7 @@ function Profile() {
         })
         .catch((err) => {
             showError('비밀번호 변경에 실패하였습니다.');
+            setPasswordFormClick(false);
         });
     };
 
@@ -188,11 +246,13 @@ function Profile() {
             memberCode: decoded.code,
             email: modifyEmail
         }
+        setEmailFormClick(true);
       
-        fetch(`http://localhost:8888/api/account/email`, {
+        fetch(`http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/account/email`, {
             method: "PUT",
             headers: {
               "Content-Type": "application/json",
+              "Access-Control-Allow-Origin": "*",
               "Access_token": window.localStorage.getItem("access_token")
             },
             body: JSON.stringify({
@@ -216,6 +276,7 @@ function Profile() {
         })
         .catch((err) => {
             showError('이메일 변경에 실패하였습니다.');
+            setEmailFormClick(false);
         });
 
     };
@@ -223,6 +284,7 @@ function Profile() {
     
     const onClickMemberInfo = () => {
         console.log('정보 변경 눌림');
+        console.log(snapshot);
 
         const memberInfo = {
             memberCode: decoded.code,
@@ -231,12 +293,18 @@ function Profile() {
             purpose: purpose
         };
 
+        if(snapshot.phone === phone && snapshot.company === company && snapshot.purpose === purpose) {
+            showError('변경된 값이 없습니다.');
+            return;
+        }
 
+        setMemberInfoClick(true);
 
-        fetch(`http://localhost:8888/api/account/member`, {
+        fetch(`http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/account/member`, {
             method: "PUT",
             headers: {
               "Content-Type": "application/json",
+              "Access-Control-Allow-Origin": "*",
               "Access_token": window.localStorage.getItem("access_token")
             },
             body: JSON.stringify({
@@ -257,6 +325,7 @@ function Profile() {
         })
         .catch((err) => {
             showError('정보 변경에 실패하였습니다.');
+            setMemberInfoClick(false);
         });
 
 
@@ -295,10 +364,11 @@ function Profile() {
         };
 
 
-        fetch(`http://localhost:8888/api/account/authsend`, {
+        fetch(`http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/account/authsend`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
+              "Access-Control-Allow-Origin": "*",
               "Access_token": window.localStorage.getItem("access_token")
             },
             body: JSON.stringify({
@@ -340,6 +410,7 @@ function Profile() {
                     style={{ width: '90%' }} 
                     label="저장하기" 
                     onClick={ onClickMemberInfo }
+                    disabled={ memberInfoClick }
                 />
             </div>
         </div>
@@ -360,6 +431,7 @@ function Profile() {
                     style={{ width: '90%' }} 
                     label="저장하기" 
                     onClick={ passwordform ? onClickModifyPasswordSubmit : onClickModifyEmailSubmit }
+                    disabled={ passwordform ? passwordFormClick : emailFormClick}
                 />
             </div>
         </div>
@@ -368,34 +440,6 @@ function Profile() {
 
 
 
-
-    useEffect(() => {
-
-        console.log("Profile useEffect");
-        console.log(decoded);
-        fetch(`http://localhost:8888/api/account/member?code=${decoded.code}`, {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              "Access_token": window.localStorage.getItem("access_token")
-            }
-        })
-        .then(response => response.json())
-        .then(json => {
-            console.log(json);
-            const result = json.results[0];            
-            setUserID(result.memberId || '');
-            setEmail(result.email  || '');
-            setUsername(result.name  || '') ;
-            setPhone(result.phone  || '');
-            setCompany(result.company  || '');
-            setPurpose(result.purpose  || '');
-        })
-        .catch((err) => {
-            showError('내 정보 불러오기를 실패하였습니다.');
-        });
-    },
-    [isLogin]);
 
 
 

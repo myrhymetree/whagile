@@ -125,41 +125,41 @@ function Regist() {
                     <Controller 
                             name="projectName" 
                             control={control} 
-                            // rules={{ required: '프로젝트 이름은 필수입니다.' }} 
+                            rules={{ required: '프로젝트 이름은 필수입니다.' }} 
                             render={({ field, fieldState }) => (
                                 <InputText 
                                     id={field.name} 
                                     {...field}
                                     ref={handleSubmit}
                                     value={ projectName }
-                                    onChange={ (e) => setProjectName(e.target.value)}
                                     autoComplete="off" 
                                     autoFocus 
                                     className={classNames({ 'p-invalid': fieldState.invalid })} 
                                 />
                         )} />
-                        {/* {getFormErrorMessage('projectName')} */}
+                        {getFormErrorMessage('projectName')}
                 </div>
+
+
 
                 <div className="field col-12 md:col-4">
                     <label htmlFor="inputtext">프로젝트 설명</label>
                     <Controller 
                             name="projectDescription" 
                             control={control} 
-                            // rules={{ required: '프로젝트 설명은 필수입니다.' }} 
+                            rules={{ required: '프로젝트 설명은 필수입니다.' }} 
                             render={({ field, fieldState }) => (
                                 <InputText 
                                     id={field.name} 
                                     {...field}
                                     ref={handleSubmit}
-                                    onChange={ (e) => setProjectDescription(e.target.value)}
                                     value={ projectDescription }
                                     autoComplete="off" 
                                     autoFocus 
                                     className={classNames({ 'p-invalid': fieldState.invalid })} 
                                 />
                         )} />
-                    {/* {getFormErrorMessage('projectDescription')} */}
+                    {getFormErrorMessage('projectDescription')}
                 </div>
                 
             </div>

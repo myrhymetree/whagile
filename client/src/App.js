@@ -36,17 +36,11 @@ import AdminStatistics from './pages/admin/statistics/AdminStatistics';
 function App() {
 
   const isLogin = window.sessionStorage.getItem('isLogin');
-  
+  console.log("app", isLogin);
   return (
       <BrowserRouter>
         <Routes>
-          <Route path="/" 
-            element={ 
-              (!isLogin)
-              ? <Login/>
-              : <Navigate replace to ="/projects" />
-              // : <Navigate replace to ="/main" />
-            } />
+          <Route path="/" element={ <Login /> } />
           {/* { isLogin ? <Navigate replace to ="/main" /> : <Login/>} */}
           <Route path="/main" element={ <Main/> } />
           <Route path="/signup" element={ <Signup/> } />

@@ -26,7 +26,7 @@ exports.generateTempPassword = () => {
     });
 }
 
-exports.generateToken = (memberCode, memberId, memberName, memberEmail) => {
+exports.generateToken = (memberCode, memberId, memberName, memberEmail, role) => {
     return new Promise((resolve, reject) => {
 
         jwt.sign(
@@ -34,7 +34,8 @@ exports.generateToken = (memberCode, memberId, memberName, memberEmail) => {
                 code: memberCode,
                 id: memberId,
                 username: memberName,
-                email: memberEmail
+                email: memberEmail,
+                role: role
             },
             process.env.JWT_SECRET,
             {
