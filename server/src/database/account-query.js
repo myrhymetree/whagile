@@ -18,6 +18,38 @@ exports.selectMembers = () => {
     `;
 };
 
+exports.searchMember = (searchInfo) => {
+
+  let query = `
+          SELECT
+                  A.MEMBER_CODE
+                , A.MEMBER_ID
+                , A.MEMBER_EMAIL
+                , A.MEMBER_PHONE
+                , A.MEMBER_CREATED_DATE
+                , A.MEMBER_ROLE
+                , A.MEMBER_SECESSION_YN
+                , A.MEMBER_COMPANY
+                , A.MEMBER_OCCUPATION
+                , A.MEMBER_PURPOSE
+                , A.MEMBER_NAME
+            FROM TBL_MEMBER A
+            WHERE A.MEMBER_ID NOT IN ('admin')
+    `;
+
+    if((searchInfo.condition === 'memberId') && searchInfo.value !== undefined) { // 조건 검색
+      query += `AND ${'A.MEMBER_ID'} LIKE '%${searchInfo.value}%'`;
+    }
+    
+    if((searchInfo.condition === 'name') && searchInfo.value !== undefined) { // 조건 검색
+      query += `AND ${'A.MEMBER_NAME'} LIKE '%${searchInfo.value}%'`;
+    }
+
+    console.log('query', query);
+
+    return query;
+};
+
 exports.selectMemberWithMemberCode = () => {
     return `
         SELECT

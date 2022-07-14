@@ -4,16 +4,30 @@ import { createActions, handleActions } from 'redux-actions';
 const initialState = [];
 
 /* 액션 */
-export const GET_BACKLOGS = 'backlogs/GET_BACKLOGS';
+export const FIND_BACKLOGS = 'backlog/FIND_BACKLOGS';
+export const MORE_BACKLOGS = 'backlog/MORE_BACKLOGS';
+export const FIND_FILTERED_BACKLOGS = 'backlog/FIND_FILTERED_BACKLOGS';
 
 const actions = createActions({
-    [GET_BACKLOGS]: () => {}
+    [FIND_BACKLOGS]: () => {},
+    [MORE_BACKLOGS]: () => {},
+    [FIND_FILTERED_BACKLOGS]: () => {}
 });
 
 /* 리듀서 */
 const backlogReducer = handleActions(
     {
-        [GET_BACKLOGS]: (state, { payload }) => {
+        [FIND_BACKLOGS]: (state, { payload }) => {
+            return payload;
+        }, 
+        [MORE_BACKLOGS]: (state, { payload }) => {
+            payload = state.concat(payload);
+            return payload;
+        },
+        [FIND_FILTERED_BACKLOGS]: (state, { payload }) => {
+            if(state.length > 0) {
+                state = [];
+            }
             return payload;
         }
     },
