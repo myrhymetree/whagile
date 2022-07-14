@@ -1,23 +1,29 @@
 import KanbanBoardStyle from "./KanbanBoard.module.css";
 
 import React, { useEffect, useState } from "react";
+
 import { Category, Urgency } from "./Types";
+
+
 
 
 // 일감 모달창
 export default function TaskModal(props) {
-  console.log("init", props);
-  // 초기 폼
-
-  // 개별 일감 상세 조회
   const [taskTitle, setTaskTitle] = useState("");
   const [taskDescription, setTaskDescription] = useState("");
   const [taskProgressStatus, setTaskProgressStatus] = useState("");
   const [taskIssue, setTaskIssue] = useState("");
   const [taskUrgency, setTaskUrgency] = useState("");
   const [taskCharger, setTaskCharger] = useState("");
+  const [taskMemberList, setTaskMemberList] = useState([]);
+  const [taskCode, setTaskCode] = useState("");
+  const [taskProjectCode, setTaskProjectCode] = useState("");
+  const [taskCategory, setTaskCategory] = useState("");
+
 
   useEffect(() => {
+    console.log("Task", props.currentTaskID);
+    // 개별 일감 상세 조회
     fetch(`http://localhost:8888/api/tasks/${props.currentTaskID}`, {
       method: "GET",
       headers: {
@@ -27,24 +33,37 @@ export default function TaskModal(props) {
     })
       .then((response) => response.json())
       .then((json) => {
-        console.log(json);
+        console.log("일감상세", json);
         const result = json.results[0];
-        console.log(result.backlogCode || "");
+        setTaskCode(result.backlogCode || "");
         setTaskTitle(result.backlogTitle || "");
         setTaskDescription(result.backlogDescription || "");
         setTaskProgressStatus(result.progressStatus || "");
         setTaskIssue(result.issue);
         setTaskUrgency(result.urgency || "");
         setTaskCharger(result.backlogChargerCode || "");
-      });
-  }, []);
+        setTaskProjectCode(result.projectCode || "");
+        setTaskCategory(result.category || "");
+        console.log("카테고리", result.category);
 
- 
+        fetch(
+          `http://localhost:8888/api/projects/${result.projectCode}/member`,
+          {
+            method: "GET",
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
+          }
+        )
+          .then((res) => res.json())
+          .then((json) => setTaskMemberList(json.results));
+      });
+  }, [props.currentTaskID]);
 
   const onClose = () => {
     props.onSubmit();
   };
-  
 
   const onTitleChange = (e) => {
     setTaskTitle(e.target.value);
@@ -71,9 +90,8 @@ export default function TaskModal(props) {
     setTaskCharger(e.target.value);
   };
 
+  // 개별 일감 수정
   const onClickSubmitHandler = async () => {
-
-
     const kanbanInfo = {
       backlogCode: props.currentTaskID,
       backlogTitle: taskTitle,
@@ -85,24 +103,20 @@ export default function TaskModal(props) {
     };
 
     console.log("kanban", kanbanInfo);
-    await fetch(
-      `http://localhost:8888/api/tasks`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          "Accept": "application/json",
-        },
-        body: JSON.stringify({
-          kanbanInfo,
-        }),
-      }
-    )
+    await fetch(`http://localhost:8888/api/tasks`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify({
+        kanbanInfo,
+      }),
+    })
       .then((response) => response.json())
       .then((json) => {
         console.log(json);
-        if (json.status == 200) {
-          console.log("작동");
+        if (json.status === 200) {
           window.location.reload();
         }
       })
@@ -111,12 +125,43 @@ export default function TaskModal(props) {
       });
   };
 
+  // 개별 일감 삭제
+
+  const onClickDeleteHandler = (taskCode, taskProjectCode, taskCategory) => {
+    console.log("Code", taskCode, "ProjectCode", taskProjectCode, "taskCategory", taskCategory);
+
+    fetch(`http://localhost:8888/api/tasks`, {
+      method: "DELETE",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        "Access-Token": window.localStorage.getItem("access_token"),
+      },
+      body: JSON.stringify({
+        taskCode: taskCode,
+        taskProjectCode: taskProjectCode,
+        taskCategory: taskCategory,
+      }),
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        console.log(json);
+        if (json.status === 200) {
+          window.location.reload();
+        }
+      })
+      .catch((err) => {
+        console.log("login error: " + err);
+      });
+  };
+
+
+
   return (
     <>
       <div className={KanbanBoardStyle.kanbanModalScreen} />
       <div role="dialog" className={KanbanBoardStyle.kanbanModal}>
         <div className={KanbanBoardStyle.kanbanModalContent}>
-
           <form>
             <div className={KanbanBoardStyle.kanbanTitles}>
               상세 조회 및 수정
@@ -192,11 +237,14 @@ export default function TaskModal(props) {
                 value={taskCharger}
                 onChange={(e) => onChargerChange(e)}
               >
-                <option value={1}>우진</option>
-                <option value={2}>성준</option>
-                <option value={3}>민주</option>
-                <option value={4}>한솔</option>
-                <option value={5}>호성</option>
+                <option value={null} name="담당자없음">
+                  담당자 없음
+                </option>
+                {taskMemberList.map((member) => (
+                  <option key={member.memberCode} value={member.memberCode}>
+                    {member.memberName}
+                  </option>
+                ))}
               </select>
             </div>
 
@@ -207,18 +255,26 @@ export default function TaskModal(props) {
                   className={KanbanBoardStyle.saveButton}
                   onClick={onClickSubmitHandler}
                 >
-					저장
-				</button>
+                  저장
+                </button>
                 <button
                   className={KanbanBoardStyle.cancelButton}
                   type="button"
                   onClick={onClose}
                 >
-                	취소
+                  취소
                 </button>
               </div>
             </div>
           </form>
+          <button
+            className={KanbanBoardStyle.kanbanBoxDeleteButton}
+            onClick={() =>
+              onClickDeleteHandler(taskCode, taskProjectCode, taskCategory)
+            }
+          >
+            삭제
+          </button>
         </div>
       </div>
     </>
