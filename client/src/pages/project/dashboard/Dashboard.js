@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import DashboardCSS from './Dashboard.module.css';
 import { callGetProjectStatisticsAPI } from '../../../apis/ProjectStatisticsAPICalls';
+import { callGetNoticeAPI } from '../../../apis/ProjectAPICalls';
 import { Chart } from 'primereact/chart';
 import { Editor } from 'primereact/editor';
 
@@ -13,14 +14,26 @@ function Dashboard() {
     const dispatch = useDispatch();
     const { projectCode } = useParams();
     const { taskInfo, setTaskInfo } = useState([]);
-    const [text1, setText1] = useState('<div>Hello World!</div><div>PrimeReact <b>Editor</b> Rocks</div><div><br></div>');
+    const [text, setText] = useState('');
     const taskCounts = useSelector(state => state.projectStatisticsReducer);
-    console.log('통계', taskCounts.includes);
+    const notice = useSelector(state => state.ProjectNoticeReducer);
+    console.log('통계', taskCounts);
+    console.log('공지', notice);
 
     useEffect(
         () =>
         {
             dispatch(callGetProjectStatisticsAPI({
+                'projectCode': projectCode
+            }));
+        },
+        []
+      );
+
+      useEffect(
+        () =>
+        {
+            dispatch(callGetNoticeAPI({
                 'projectCode': projectCode
             }));
         },
@@ -108,10 +121,14 @@ function Dashboard() {
                 </div>
                 <div className="flex align-items-center justify-content-center bg-black-alpha-30 font-bold text-white m-2 border-round" style={{minWidth: 200 + 'px', minHeight: 100 + 'px'}}>
                     공지사항
-                    {/* <Editor style={{ height: '320px' }} value={text1} onTextChange={(e) => setText1(e.htmlValue)} /> */}
+                    <Editor style={{ height: '100px' }} value={ text } onTextChange={(e) => setText(e.htmlValue)} />
                 </div>
-                <div className="flex align-items-center justify-content-center bg-blue-500 font-bold text-white m-2 border-round" style={{minWidth: 200 + 'px', minHeight: 100 + 'px'}}>3</div>
-                <div className="flex align-items-center justify-content-center bg-blue-500 font-bold text-white m-2 border-round" style={{minWidth: 200 + 'px', minHeight: 100 + 'px'}}>4</div>
+                <div className="flex align-items-center justify-content-center bg-blue-500 font-bold text-white m-2 border-round" style={{minWidth: 200 + 'px', minHeight: 100 + 'px'}}>
+                    팀원목록
+                </div>
+                <div className="flex align-items-center justify-content-center bg-blue-500 font-bold text-white m-2 border-round" style={{minWidth: 200 + 'px', minHeight: 100 + 'px'}}>
+                    업무목록
+                </div>
             </div>
         </>
     );
