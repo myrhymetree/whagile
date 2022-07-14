@@ -1,7 +1,4 @@
 /* 프로젝트 목록 조회 */
-
-const { query } = require("express");
-
 exports.selectProjects = (params) => {
 
     let query = 

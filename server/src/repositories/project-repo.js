@@ -292,9 +292,14 @@ exports.selectProjectMember = (connection, projectMemberInfo) => {
 }
 
 exports.insertNoticeToProject = (connection, noticeInfo) => {
+
+    const dt = new Date();
+
+    const today = dt.getFullYear()+'-'+(dt.getMonth()+1)+'-'+dt.getDate();
+
     return new Promise((resolve, reject) => {
-        connection.query(projectQuery.insertNoticeToProject(noticeInfo),
-        [noticeIfo.content, 'SYSDATE', notice.memberCode, projectCode],
+        connection.query(projectQuery.insertNoticeToProject(),
+        [noticeInfo.content, String(today), noticeInfo.memberCode, noticeInfo.projectCode],
         (err, results, fields) => {
 
             if(err) {
@@ -302,11 +307,7 @@ exports.insertNoticeToProject = (connection, noticeInfo) => {
                 reject(err);
             }
 
-            console.log('results : ', results);
-            const notice = [];
-            notice.push(new ProjectNoticeDTO(results[0]));
-
-            resolve(notice[0]);
+            resolve(results);
         });
     });
 }
