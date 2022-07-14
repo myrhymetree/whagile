@@ -5,7 +5,7 @@ import { decodeJwt } from '../../../utils/tokenUtils';
 import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { callGetBacklogCommentsAPI, callPostBacklogCommentAPI, callDeleteBacklogCommentAPI } from '../../../apis/BacklogCommentAPICalls';
+import { callGetBacklogCommentsAPI, callPostBacklogCommentAPI, callPutBacklogCommentAPI, callDeleteBacklogCommentAPI } from '../../../apis/BacklogCommentAPICalls';
 
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 import { Toast } from 'primereact/toast';
@@ -34,6 +34,11 @@ function BacklogComment({backlogCode, projectCode}) {
     const [content, setContent] = useState(null);
     const [editable, setEditable] = useState(false);
     const [modifiedComment, setModifiedComment] = useState(null);
+    const modifyRequest = {
+        backlogCommentCode: 0,
+        projectCode: projectCode,
+        modifiedComment: modifiedComment
+    }
     const [removeRequest, setRemoveRequest] = useState({});
         
     useEffect(
@@ -104,6 +109,34 @@ function BacklogComment({backlogCode, projectCode}) {
         });
     };
 
+    // const input = useRef(null);
+
+    // const [singleCommentStates, setSingleCommentStates] = useState([]);
+    // const a = [];
+    // for(let i = 0; i < backlogComments.length; i++) {
+    //     a.push({
+    //         id: backlogComments[i].backlogCommentCode,
+    //         editable: false
+    //     });
+    //    
+    // }
+    // setSingleCommentStates();
+
+    /* 백로그 댓글 수정 */
+    /* 댓글 수정 활성화 */
+    const editComment = (backlogCommentCode) => {
+        setEditable(true);
+    };
+
+    /* 수정한 데이터 전송 */
+    const confirmModification = (backlogCommentCode) => {
+        modifyRequest.backlogCommentCode = backlogCommentCode;
+
+        dispatch(callPutBacklogCommentAPI(modifyRequest));
+        setEditable(false);
+        window.location.replace(window.location.href);
+    };
+
     /* 백로그 댓글 삭제 */
     const removeComment = (backlogCommentCode, memberCode) => {
         setRemoveRequest({
@@ -156,7 +189,7 @@ function BacklogComment({backlogCode, projectCode}) {
                     <label id={ BacklogCommentCSS.modifiedYN }>
                         { comment.modifiedYN == 'Y'? '수정됨' : '' }
                     </label>
-                    <div 
+                    {/* <div 
                         className={ BacklogCommentCSS.editArea }
                         style={ toggle.on }
                     >
@@ -176,22 +209,39 @@ function BacklogComment({backlogCode, projectCode}) {
                             label="저장"
                             onClick={ () => alert(`댓글 수정 api 요청`) }    
                         />
-                    </div>
+                    </div> */}
                     <div>
-                        <div
+                        <input
                             id={ BacklogCommentCSS.content }
-                            style={ toggle.off }
+                            type='text'
+                            value={ modifiedComment }
+                            placeholder={ comment.content }
+                            readOnly={ !editable? true : false }
+                            onChange={ (e) => setModifiedComment(e.target.value) }
                         >
-                            <p>{ comment.content }</p>
+                        </input>
+                        <div
+                            style={ toggle.on }
+                        >
+                            <Button 
+                                id={ BacklogCommentCSS.modifyCancelBtn } 
+                                label="취소"
+                                onClick={ () => setEditable(false) }
+                            />
+                            <Button 
+                                id={ BacklogCommentCSS.modifySaveBtn } 
+                                label="저장"
+                                onClick={ () => confirmModification(comment.backlogCommentCode) }    
+                            />
                         </div>
                         <div
                             id={ BacklogCommentCSS.editableBtns }
-                            style={ {visibility: comment.memberCode == loginUser.code && !editable? 'visible' : 'hidden'} }
+                            style={{ visibility: comment.memberCode == loginUser.code && !editable? 'visible' : 'hidden' }}
                         >
                             <button 
                                 id={ BacklogCommentCSS.editComment }
                                 name="editComment"
-                                onClick={ () => setEditable(true) }
+                                onClick={ () => editComment(comment.backlogCommentCode) }
                             >
                                 수정
                             </button>|    
