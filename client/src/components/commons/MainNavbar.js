@@ -17,7 +17,6 @@ function MainNavbar({projectCode}) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const project = useSelector(state => state.projectsReducer);
-
   const [selectedMenu, setSelectedMenu] = useState();
   const [isManagement, setIsmanageMent] = useState(false);
   const menus = [
@@ -42,7 +41,7 @@ function MainNavbar({projectCode}) {
   }
 
   const number = parseInt(`${projectCode}`);
-
+  
   let items = [
     {
       label: "대시보드",

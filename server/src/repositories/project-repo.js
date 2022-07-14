@@ -1,9 +1,11 @@
 const projectQuery = require('../database/project-query');
 const ProjectDTO = require('../dto/project/project-response-dto');
-const ProjectMemberDTO  = require('../dto/project/project-member-response-dto');
+const ProjectMemberDTO = require('../dto/project/project-member-response-dto');
+const ProjectNoticeDTO = require('../dto/project/project-notice-response-dto');
 
 exports.selectProjects = (connection, params) => {
     return new Promise((resolve, reject) => {
+        console.log('repo',params);
         connection.query(projectQuery.selectProjects(params), 
         (err, results, fields) => {
 
@@ -25,6 +27,7 @@ exports.selectProjects = (connection, params) => {
 };
 
 exports.selectProject = (connection, projectCode) => {
+    console.log('selectProject', projectCode);
     return new Promise((resolve, reject) => {
         connection.query(projectQuery.selectProjectWithProjectCode(projectCode), 
         
@@ -37,9 +40,6 @@ exports.selectProject = (connection, projectCode) => {
 
             const project = [];
             project.push(new ProjectDTO(results[0]));
-
-
-
             resolve(project);
         });
     });
@@ -157,31 +157,32 @@ exports.deleteProject = (connection, projectCode) => {
     });
 }
 
-exports.selectProjectMember = (connection, projectCode) => {
+exports.selectProjectMembers = (connection, projectCode) => {
     return new Promise((resolve, reject) => {
-        connection.query(projectQuery.selectProjectMember(projectCode),
+        connection.query(projectQuery.selectProjectMembers(projectCode),
         (err, results, fields) => {
 
             if(err) {
                 console.log(err);
                 reject(err);
             }
-
-            const projectMember = [];
+            
+            const projectMembers = [];
             for(let i = 0; i < results.length; i++) {
-                projectMember.push(new ProjectMemberDTO(results[i]));
+                projectMembers.push(new ProjectMemberDTO(results[i]));
             }
 
-            resolve(projectMember);
+            resolve(projectMembers);
         });
     });
 }
 
 exports.insertProjectMember = (connection, data) => {
+    console.log('insertProjectMember', data);
     return new Promise((resolve, reject) => {
         connection.query(projectQuery.insertProjectMember(),
         [ data.memberCode
-        , data.authorityCode
+        , 3
         , data.projectCode
         ],
         (err, results, fields) => {
@@ -202,6 +203,104 @@ exports.deleteProjectMember = (connection, data) => {
         connection.query(projectQuery.deleteProjectMember(data),
         
         (err,results, fields) => {
+
+            if(err) {
+                console.log(err);
+                reject(err);
+            }
+
+            resolve(results);
+        });
+    });
+}
+
+exports.selectRegistedMember = (connection, data) => {
+
+    return new Promise((resolve, reject) => {
+
+        connection.query(projectQuery.isRegistedMember(data),
+        (err, results, fields) => {
+
+            if(err) {
+                console.log(err);
+                reject(err);
+            }
+
+            const memberInfo = [];
+            for(let i = 0; i < results.length; i++) {
+                memberInfo.push(new ProjectMemberDTO(results[i]));
+            }
+
+            resolve(memberInfo);
+        });
+    });
+}
+
+exports.modifyMemberEmailAuthApporovedStatus = (connection, memberCode) => {
+
+    return new Promise((resolve, reject) => {
+        connection.query(projectQuery.updateMemberEmailAuthApporovedStatus(memberCode),
+        
+        (err, results, fields) => {
+
+            if(err) {
+                console.log(err);
+                reject(err);
+            }
+
+            resolve(results);
+        });
+    });
+}
+
+exports.updateAuthorityOfMember = (connection, projectMemberInfo) => {
+
+    return new Promise((resolve, reject) => {
+        connection.query(projectQuery.updateAuthorityOfMember(projectMemberInfo),
+        
+        (err, results, fields) => {
+
+            if(err) {
+                console.log(err);
+                reject(err);
+            }
+
+            resolve(results);
+        }
+        )
+    });
+}
+
+exports.selectProjectMember = (connection, projectMemberInfo) => {
+    return new Promise((resolve, reject) => {
+        connection.query(projectQuery.selectProjectMember(projectMemberInfo),
+        (err, results, fields) => {
+
+            if(err) {
+                console.log(err);
+                reject(err);
+            }
+
+            console.log('results : ', results);
+            const projectMember = [];
+            projectMember.push(new ProjectMemberDTO(results[0]));
+
+            console.log('projectMember', projectMember);
+            resolve(projectMember[0]);
+        });
+    });
+}
+
+exports.insertNoticeToProject = (connection, noticeInfo) => {
+
+    const dt = new Date();
+
+    const today = dt.getFullYear()+'-'+(dt.getMonth()+1)+'-'+dt.getDate();
+
+    return new Promise((resolve, reject) => {
+        connection.query(projectQuery.insertNoticeToProject(),
+        [noticeInfo.content, String(today), noticeInfo.memberCode, noticeInfo.projectCode],
+        (err, results, fields) => {
 
             if(err) {
                 console.log(err);

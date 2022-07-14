@@ -23,6 +23,7 @@ import History from './pages/project/history/History';
 import Information from "./pages/project/management/Information";
 import TeamMateList from "./pages/project/management/TeamMateList";
 import Statistics from "./pages/project/management/Statistics";
+import InvitedMemberSignup from "./pages/project/management/registration/InvitedMemberSignup";
 
 // admin
 import AdminLayout from './layouts/AdminLayout';
@@ -44,6 +45,7 @@ function App() {
           {/* { isLogin ? <Navigate replace to ="/main" /> : <Login/>} */}
           <Route path="/main" element={ <Main/> } />
           <Route path="/signup" element={ <Signup/> } />
+          <Route path="/invitedMemberSignup/:projectCode/:email" element={ <InvitedMemberSignup /> } />
           <Route path="/profile" element={ <Profile/> } />
           <Route path="/project/:projectCode" element={ <ProjectLayout/>} >
             <Route path="dashboard" element={ <Dashboard/> }/>

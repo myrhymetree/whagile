@@ -2,21 +2,26 @@ import React from "react";
 import "gantt-task-react/dist/index.css";
 import { ViewMode } from "gantt-task-react";
 import ViewSwitcherCss from './ViewSwitcher.module.css';
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 import { Button } from 'primereact/button';
 import { Dropdown } from 'primereact/dropdown';
 import { InputText } from 'primereact/inputtext';
-import { ToggleButton } from 'primereact/togglebutton';
 import 'primeicons/primeicons.css';
 
 export const ViewSwitcher = ({
 	onViewModeChange,
 	onViewListChange,
-	isChecked
+	isChecked,
+	onShowInsert
 }) => {
 
 	const [viewMode, setViewMode] = useState(ViewMode.Day);
+	const [condition, setCondition] = useState('sprintName');
+    const selectCondition = [
+        {label: '스프린트 이름', value: 'sprintName'},
+        {label: '담당자 이름', value: 'backlogChargerName'}
+    ];
 
 	return (
 		<div className="ViewContainer" id={ViewSwitcherCss.container}>
@@ -24,8 +29,11 @@ export const ViewSwitcher = ({
 			{/* search */}
 			<div id={ViewSwitcherCss.search}>
 				<div>
-					<Dropdown 
-						placeholder="검색 대상"
+					<Dropdown
+                        value={condition} 
+                        options={selectCondition} 
+                        onChange={(e) => setCondition(e.value)} 
+                        placeholder="검색 대상"
 					/>
 				</div>
 				<span className="p-input">
@@ -45,22 +53,6 @@ export const ViewSwitcher = ({
 				/>
 			</div>
 			
-			<ToggleButton 
-				onLabel="메뉴바 ON" 
-				offLabel="메뉴바 OFF" 
-				onIcon="pi pi-check" 
-				offIcon="pi pi-times" 
-				checked={isChecked} 
-				onChange={() => onViewListChange(!isChecked)}
-				style={{
-					width: '160px',
-					height: '40px',
-					backgroundColor: (isChecked)? '#F86064': '',
-					color: '#FFFFFFAA',
-					border: (isChecked)? '1px solid #333544': '1px solid white'
-				}}
-			/>
-
 			<div id={ViewSwitcherCss.period}>
 				<Button 
 					className="p-button-outlined p-button-custom"  
@@ -121,6 +113,7 @@ export const ViewSwitcher = ({
 					backgroundColor: '#00AA9C',
 					border: '1px solid #333544'
 				}}
+				onClick={() => onShowInsert()}
 			/>
 		</div>
 	);

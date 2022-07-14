@@ -1,5 +1,6 @@
 const getConnection = require('../database/connection');
 const SprintRepository = require('../repositories/sprint-repo');
+const TasksRepository = require('../repositories/tasks-repo');
 
 exports.addSprint = (params) => {
 
@@ -29,15 +30,19 @@ exports.addSprint = (params) => {
 
 exports.viewSprints = (params) => {
 
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
         
         const connection = getConnection();
 
-        const results = SprintRepository.selectSprints(connection, params);
+        const sprints = await SprintRepository.selectSprints(connection, params);
+        
+        for(let i = 0; i < sprints.length; i++) {
+            sprints[i].tasks = await SprintRepository.selectTasks(connection, {sprintCode: sprints[i].sprintCode});
+        }
 
         connection.end();
 
-        resolve(results);
+        resolve(sprints);
     });
 }
 
@@ -57,15 +62,17 @@ exports.viewSprintHistory = (params) => {
 
 exports.viewSprint = (sprintCode) => {
 
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
         
         const connection = getConnection();
 
-        const results = SprintRepository.selectSprint(connection, sprintCode);
-
+        const sprints = await SprintRepository.selectSprint(connection, sprintCode);
+        
+        sprints[0].tasks = await SprintRepository.selectTasks(connection, {sprintCode: sprints[0].sprintCode});
+        
         connection.end();
-
-        resolve(results);
+        
+        resolve(sprints);
     });
 }
 

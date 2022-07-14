@@ -1,6 +1,14 @@
 const httpStatus = require('http-status');
 const HttpStatus = require('http-status');
+const express = require('express');
+const app = express();
+
 const BacklogService = require('../services/backlog-service');
+
+const { decodedToken } = require('../util/account-utils');
+
+app.use(express.json()); 
+app.use(express.urlencoded({ extended: true }));
 
 /* 백로그 목록 조회 요청 */
 exports.findAllBacklogs = async (req, res, next) => {
@@ -9,6 +17,7 @@ exports.findAllBacklogs = async (req, res, next) => {
     const params = {
         offset: Number(req.query.offset),
         limit: Number(req.query.limit),
+        projectCode: Number(req.query.projectCode),
         issue: Number(req.query.issue),
         progressStatus: req.query.progressStatus,
         urgency: req.query.urgency
@@ -42,15 +51,18 @@ exports.findBacklogsByBacklogCode = async (req, res, next) => {
 /* 새로운 백로그 생성 요청 */
 exports.registNewBacklog = async (req, res, next) => {
 
+    const user = decodedToken(req.get('Access-Token'));
+    console.log(user)
+    console.log(req.params)
+
     const backlog = {
         title: req.body.title,
         description: req.body.description,
-        category: req.body.category,
-        progressStatus: req.body.progressStatus,
+        category: '백로그',
         urgency: req.body.urgency,
         issue: req.body.issue,
         projectCode: req.body.projectCode,
-        creatorCode:  req.body.creatorCode
+        creatorCode: user.usercode
     };
     console.log('backlog : ', backlog);
 
@@ -67,30 +79,35 @@ exports.registNewBacklog = async (req, res, next) => {
 /* 백로그 수정 요청 */
 exports.editBacklog = async (req, res, next) => {
 
+    const user = decodedToken(req.get('Access-Token'));
+    console.log('여긴 백로그 수정 컨트롤러 메소드: ', req.body);
+
     const modifyingContent = {
         backlogCode: Number(req.body.backlogCode),
         projectCode: Number(req.body.projectCode),
-        memberCode: Number(req.body.memberCode),
-        changedCategory: req.body.changedCategory,
-        changedValue: req.body.changedValue
+        memberCode: user.usercode,
+        changedItem: req.body.changedItem
     };
 
-    const results = await BacklogService.editBacklog(modifyingContent);
+    const results = 
+    await BacklogService.editBacklog(modifyingContent);
 
     res.status(httpStatus.OK).json({
         status: httpStatus.OK,
         message: '정상적으로 개별 백로그 목록을 수정했습니다.',
-        results: results
+        // results: results
     });
 };
 
 /* 백로그 삭제 요청 */
 exports.removeBacklog = async (req, res, next) => {
 
+    const user = decodedToken(req.get('Access-Token'));
+
     const removeRequest = {
         backlogCode: Number(req.body.backlogCode),
         projectCode: Number(req.body.projectCode),
-        memberCode: Number(req.body.memberCode)
+        memberCode: user.usercode
     };
 
     const results = await BacklogService.removeRequest(removeRequest);

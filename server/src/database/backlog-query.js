@@ -16,6 +16,7 @@ exports.selectBacklogs = (params) => {
       JOIN TBL_PROJECT_MEMBER B ON (A.PROJECT_CODE = B.PROJECT_CODE) AND (A.BACKLOG_CREATOR_CODE = B.MEMBER_CODE)
       JOIN TBL_MEMBER C ON (B.MEMBER_CODE = C.MEMBER_CODE)
      WHERE A.BACKLOG_DELETED_YN = 'N'
+       AND A.PROJECT_CODE = ${params.projectCode}
        AND A.BACKLOG_CATEGORY = '백로그'
   `;
 
@@ -44,32 +45,37 @@ exports.selectBacklogs = (params) => {
 exports.selectBacklogByBacklogCode = () => {
   return `
     SELECT
-            A.BACKLOG_CODE
-          , A.BACKLOG_TITLE
-          , A.BACKLOG_DESCRIPTION
-          , A.BACKLOG_PROGRESS_STATUS
-          , A.BACKLOG_URGENCY
-          , A.BACKLOG_CATEGORY
-          , A.PROJECT_CODE
-          , A.BACKLOG_ISSUE
-          , A.BACKLOG_CREATOR_CODE
-          , C.MEMBER_NAME
-          , A.BACKLOG_DELETED_YN
+           A.BACKLOG_CODE
+         , A.BACKLOG_TITLE
+         , A.BACKLOG_DESCRIPTION
+         , A.BACKLOG_PROGRESS_STATUS
+         , A.BACKLOG_URGENCY
+         , A.BACKLOG_CATEGORY
+         , A.PROJECT_CODE
+         , IFNULL(A.SPRINT_CODE, 0) AS SPRINT_CODE
+         , IFNULL(C.SPRINT_NAME, '') AS SPRINT_NAME
+         , A.BACKLOG_ISSUE
+         , A.BACKLOG_CREATOR_CODE
+         , (SELECT MEMBER_NAME FROM TBL_MEMBER WHERE MEMBER_CODE = A.BACKLOG_CREATOR_CODE) AS CREATOR_NAME
+         , IFNULL(A.BACKLOG_CHARGER_CODE, 0) AS CHARGER_CODE
+         , IFNULL((SELECT MEMBER_NAME FROM TBL_MEMBER WHERE MEMBER_CODE = A.BACKLOG_CHARGER_CODE), '') AS CHARGER_NAME
+         , A.BACKLOG_DELETED_YN
       FROM TBL_BACKLOG A
       JOIN TBL_PROJECT_MEMBER B ON (A.PROJECT_CODE = B.PROJECT_CODE) AND (A.BACKLOG_CREATOR_CODE = B.MEMBER_CODE)
-      JOIN TBL_MEMBER C ON (B.MEMBER_CODE = C.MEMBER_CODE)
-      WHERE A.BACKLOG_CODE = ?
+      LEFT JOIN TBL_SPRINT C ON (A.SPRINT_CODE = C.SPRINT_CODE)
+      JOIN TBL_MEMBER D ON (B.MEMBER_CODE = D.MEMBER_CODE)
+     WHERE A.BACKLOG_CODE = ?
   `;
-};
+}
 
 /* 백로그 행 삽입 요청 SQL */
 exports.insertNewBacklog = () => {
   return `
     INSERT INTO TBL_BACKLOG
-    (BACKLOG_TITLE, BACKLOG_DESCRIPTION, BACKLOG_CATEGORY, BACKLOG_PROGRESS_STATUS, 
+    (BACKLOG_TITLE, BACKLOG_DESCRIPTION, BACKLOG_CATEGORY, 
       BACKLOG_URGENCY, BACKLOG_ISSUE, PROJECT_CODE, BACKLOG_CREATOR_CODE)
     VALUES
-    (?, ?, ?, ?, ?, ?, ?, ?)
+    (?, ?, ?, ?, ?, ?, ?)
   `;
 };
 
@@ -104,42 +110,37 @@ exports.selectHistoryByHistoryCode = () => {
 /* 백로그 수정 요청 SQL */
 exports.editBacklog = (modifyingContent) => {
 
-  console.log(`query로 넘어온 modifyingContent: `);
-  console.log(modifyingContent.changedCategory);
-  console.log(modifyingContent.changedValue);
-
   let query = `
     UPDATE TBL_BACKLOG A
-  `;
+       SET`;
+    
+  const target = modifyingContent.changedItem;
 
-  switch(modifyingContent.changedCategory) {
-    case 'title' : 
-      query += `  SET A.BACKLOG_TITLE = '${ modifyingContent.changedValue }'
-      `;
-      break;
-    case 'description' : 
-      query += `  SET A.BACKLOG_DESCRIPTION = '${ modifyingContent.changedValue }'
-      `;
-      break;
-    case 'category' :
-      query += `  SET A.BACKLOG_CATEGORY = '${ modifyingContent.changedValue }'
-      `;
-      break;
-    case 'progressStatus' : 
-      query += `  SET A.BACKLOG_PROGRESS_STATUS = '${ modifyingContent.changedValue }'
-      `;
-      break;
-    case 'urgency' : 
-      query += `  SET A.BACKLOG_URGENCY = '${ modifyingContent.changedValue }'
-      `;
-      break;
-    case 'issue' : 
-      query += `  SET A.BACKLOG_ISSUE = '${ Number(modifyingContent.changedValue) }'
-      `;
-      break;
+  if(target.title) {
+    query += `
+     A.BACKLOG_TITLE = '${ target.title }',`;
+  }
+  if(target.description) {
+    query += `
+     A.BACKLOG_DESCRIPTION = '${ target.description }',`;
+  }
+  if(typeof(target.issue) == 'number') {
+    query += `
+     A.BACKLOG_ISSUE = '${ Number(target.issue) }',`;
+  }
+  if(target.urgency) {
+    query += `
+     A.BACKLOG_URGENCY = '${ target.urgency }',`;
+  }
+  if(target.sprint) {
+    console.log('요건 좀 나중에 ')
+    query += `
+     A.BACKLOG_CATEGORY = '일감',`;
   }
 
-  query += ` WHERE A.BACKLOG_CODE = ${ modifyingContent.backlogCode }`;
+  query = query.slice(0, -1);
+  query += `
+   WHERE A.BACKLOG_CODE = ${ modifyingContent.backlogCode }`;
 
   return query;
 };

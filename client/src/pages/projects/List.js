@@ -3,6 +3,7 @@ import MainHeader from '../../components/commons/MainHeader';
 import React, { useEffect, useState, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { callGetProjectsAPI } from '../../apis/ProjectAPICalls';
+import { callDeleteProjectAPI} from  '../../apis/ProjectAPICalls';
 import { decodeJwt } from '../../utils/tokenUtils';
 import { useNavigate } from "react-router-dom"; 
 
@@ -11,23 +12,26 @@ import { Button } from 'primereact/button';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { OverlayPanel } from 'primereact/overlaypanel';
+import { Dialog } from 'primereact/dialog';
+import { Toast } from 'primereact/toast';
 
 function List() {
 
     let emptyProject = {
         projectCode: null,
-        projectCompletedTask: null,
-        projectDeletedStatus: null,
-        projectDescription: null,
-        projectName: null,
-        projectOwner: null,
-        projectTotalTask: null,
-        remainedTask: null
+        projectCompletedTask: 0,
+        projectDeletedStatus: '',
+        projectDescription: '',
+        projectName: '',
+        projectOwner: '',
+        projectTotalTask: 0,
+        remainedTask: ''
     };
     
     const decoded = decodeJwt(window.localStorage.getItem("access_token"));
     const [ searchValue, setSearchValue ] = useState('');
-    const [ project, setProject ] = useState(emptyProject);
+    const [rowProject, setRowProject] = useState(emptyProject);
+    const [deleteProjectDialog, setDeleteProjectDialog] = useState(false);
     const projects = useSelector(state => state.projectsReducer);
     const dispatch = useDispatch();
     const toast = useRef(null);
@@ -37,16 +41,10 @@ function List() {
 
     useEffect(
         () => {
-
-            console.log();
-
-            dispatch(callGetProjectsAPI({
-                 
+            dispatch(callGetProjectsAPI({   
                 'loginMember': (decoded !== 'undefined')? decoded.code: '',
                 'searchValue': searchValue
         }));
-
-
         },
         []
     );
@@ -78,42 +76,73 @@ function List() {
     };
 
     const actionChoiceHandler = (rowData) => {
-        console.log(rowData); 
-        // setProject(rowData);
-        // console.log(project);
-        // navigate(`/project/${ project.projectCode }/management/information`)
+        setRowProject(rowData);
+    }
+
+    const actionNavigate = () => {
+        console.log(rowProject);
+        navigate(`/project/${ rowProject.projectCode }/management/information`);
+    }
+
+    const confirmDeleteProject = () => {        
+        setDeleteProjectDialog(true);
     }
 
     const statusBodyTemplate = (rowData) => {
-        // console.log(rowData);
         // return <span className={`pi pi-ellipsis-h`}></span>;
         return (
             <>
                 <Button
                     type="button" 
                     icon="pi pi-ellipsis-h"
-                    onClick={(e) => op.current.toggle(e)}  
+                    // onClick={(e) => op.current.toggle(e)}
+                    // onClick={ () => { actionChoiceHandler(rowData)}}
+                    onClick={ (e) => { actionChoiceHandler(rowData); op.current.toggle(e);}}       
                 />
                 <OverlayPanel ref={op} id="overlay_panel" style={{width: '200px'}} className="overlaypanel">              
-                    <Button label="프로젝트 수정" className="p-button-text p-button-plain" icon="pi pi-pencil" onClick={ () => { actionChoiceHandler(rowData)}} />               
-                    <Button label="프로젝트 삭제" className="p-button-text p-button-plain" icon="pi pi-trash"/>             
+                    <Button label="프로젝트 수정" className="p-button-text p-button-plain" icon="pi pi-pencil" onClick={ () => { actionNavigate()}} />               
+                    <Button label="프로젝트 삭제" className="p-button-text p-button-plain" icon="pi pi-trash" onClick={() => confirmDeleteProject()}/>             
                 </OverlayPanel>
             </>
         );
     }
 
+    const hideDeleteProjectDialog = () => {
+        setDeleteProjectDialog(false);
+    }
+
+    function removeProject() {
+        dispatch(callDeleteProjectAPI({
+            'projectCode': rowProject.projectCode,
+            'loginMember': (decoded !== 'undefined')? decoded.code: '',
+            'searchValue': searchValue
+        }));
+    }
+
+    const deleteMember = () => {
+        // let _members = members.filter(val => val.memberCode !== member.memberCode);
+        // setMembers(_members);
+        setDeleteProjectDialog(false);
+        // setMember(emptyMember);
+        removeProject(rowProject);
+        toast.current.show({ severity: 'success', summary: '프로젝트 제거', detail: '해당 프로젝트를 제거했습니다.', life: 3000 });
+    }
+
+    const deleteProjectDialogFooter = (
+        <>
+            <Button label="확인" icon="pi pi-check" className="p-button-text" onClick={deleteMember} />
+            <Button label="취소" icon="pi pi-times" className="p-button-text" onClick={hideDeleteProjectDialog} />
+        </>
+    );
+
     const footer = `총  ${projects ? projects.length : 0}개의 프로젝트가 있습니다.`;
 
     return (
         <>
-            <MainHeader/>
-            <main>
-                <section>
-                    <PageTitle 
-                        icon={ <i className="pi pi-fw pi-inbox"></i>}
-                        text="프로젝트 목록"
-                    />
-                </section>
+            <Toast ref={toast}/>
+            <MainHeader />
+            <main style={{ padding: '20px'}}>
+                <PageTitle icon={ <i className="pi pi-fw pi-list"></i>} text="프로젝트 목록"/>
                 <div>
                     <span className="p-input-icon-left">
                         <i className="pi pi-search" />
@@ -151,6 +180,12 @@ function List() {
                     </div>
                 </div>
             </main>
+            <Dialog visible={deleteProjectDialog} style={{ width: '450px' }} header="프로젝트 제거" modal footer={deleteProjectDialogFooter} onHide={hideDeleteProjectDialog}>
+                <div className="confirmation-content">
+                    <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem'}} />
+                    {rowProject && <span><b>      {rowProject.projectName}</b> 프로젝트를 제거하시겠습니까?</span>}
+                </div>
+            </Dialog>
         </>
     );
 }

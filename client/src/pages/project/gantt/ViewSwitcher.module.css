@@ -19,6 +19,10 @@
     align-items: center;
 }
 
+#search>* {
+    margin-right: 10px;
+}
+
 #search>div>* { /* search condition */
     width: 160px;
 }
