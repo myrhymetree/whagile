@@ -2,6 +2,9 @@ import BacklogModalsCSS from './BacklogModals.module.css';
 
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+
+import { callPostBacklogAPI } from '../../../apis/BacklogAPICalls';
 
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
@@ -12,6 +15,8 @@ import { InputTextarea } from 'primereact/inputtextarea';
 function BacklogCreationModal() {
     
     const { projectCode } = useParams();
+    const dispatch = useDispatch();
+    const backlogDetails = useSelector(state => state.backlogDetailReducer);
 
     /* state 정의 */
     const [displayDialog, setDisplayDialog] = useState(false);
@@ -78,23 +83,12 @@ function BacklogCreationModal() {
             alert('필수 입력사항을 모두 입력해주세요.');
 
         } else {
-            fetch('http://localhost:8888/api/backlogs', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Access-Token': window.localStorage.getItem('access_token')
-                },
-                body: JSON.stringify(newBacklog)
-            }).then((res) => res.json())
-            .then((result) => { 
-                if(result.status == 201) {
-                    alert(result.message);
-                    setsuccessfullyRegistered(true);
-                } else {
-                    alert(result.status);
-                }
-            }).then(onHide(displayDialog));
-        };
+            return new Promise(async (resolve, reject) => {
+                await dispatch(callPostBacklogAPI(newBacklog));
+                await window.location.replace(window.location.href);
+                await alert(backlogDetails.message);
+            });
+        }
     };
 
     const renderFooter = (displayDialog) => {

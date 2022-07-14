@@ -5,11 +5,13 @@ const initialState = [];
 
 /* 액션 */
 export const FIND_BACKLOG_DETAILS = 'backlog/FIND_BACKLOG_DETAILS';
+export const REGIST_BACKLOG = 'backlog/REGIST_BACKLOG';
 export const MODIFY_BACKLOG = 'backlog/MODIFY_BACKLOG';
 export const DELETE_BACKLOG = 'backlog/DELETE_BACKLOG';
 
 const actions = createActions({
     [FIND_BACKLOG_DETAILS]: () => {}, 
+    [REGIST_BACKLOG]: () => {},
     [MODIFY_BACKLOG]: () => {},
     [DELETE_BACKLOG]: () => {}
 });
@@ -18,10 +20,13 @@ const actions = createActions({
 const backlogDetailReducer = handleActions(
     {
         [FIND_BACKLOG_DETAILS]: (state, { payload }) => {
-            console.log('####################')
-            console.log(payload)
+            console.log('백로그 조회 payload: ', payload)
             return payload;
         },
+        [REGIST_BACKLOG]: (state, { payload }) => {
+            console.log('백로그 생성 payload: ', payload)
+            return payload;
+        }, 
         [MODIFY_BACKLOG]: (state, { payload }) => {
             console.log('백로그 수정 payload: ', payload)
             return payload;

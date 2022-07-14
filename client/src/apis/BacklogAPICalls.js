@@ -1,5 +1,5 @@
 import { FIND_BACKLOGS, MORE_BACKLOGS, FIND_FILTERED_BACKLOGS } from '../modules/BacklogModule';
-import { FIND_BACKLOG_DETAILS, MODIFY_BACKLOG, DELETE_BACKLOG } from '../modules/BacklogDetailModule';
+import { FIND_BACKLOG_DETAILS, REGIST_BACKLOG, MODIFY_BACKLOG, DELETE_BACKLOG } from '../modules/BacklogDetailModule';
 
 /* 백로그 목록 조회 (최초 요청) API 호출 */
 export function callGetBacklogsAPI(params) {
@@ -96,6 +96,27 @@ export function callGetBacklogDetailsAPI(backlogCode) {
     }
 }
 
+/* 백로그 생성 API 호출 */
+export function callPostBacklogAPI(newBacklog) {
+
+    const requestURL = 'http://localhost:8888/api/backlogs';
+
+    return async function registBacklogComment(dispatch, getState) {
+
+        const result = await fetch(requestURL, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Access-Token': window.localStorage.getItem('access_token')
+            },
+            body: JSON.stringify(newBacklog)
+        }).then(res => res.json());
+
+        await dispatch({ type: REGIST_BACKLOG, payload: result });
+    }
+}
+
 /* 백로그 수정 API 호출 */
 export function callPutBacklogAPI(modifiedBacklog) {
 
@@ -142,5 +163,4 @@ export function callDeleteBacklogAPI(backlogCode, projectCode) {
         await dispatch({ type: DELETE_BACKLOG, payload: result.message });
         // await dispatch({ type: FIND_BACKLOG_DETAILS, payload: result.results });
     }
-
 }
