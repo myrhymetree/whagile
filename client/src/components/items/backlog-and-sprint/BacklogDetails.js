@@ -5,7 +5,7 @@ import BacklogComment from './BacklogComment';
 import { useSelector, useDispatch } from 'react-redux';
 import { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import { callPutBacklogAPI, callDeleteBacklogAPI } from '../../../apis/BacklogAPICalls';
-import { callGetBacklogDetailsAPI } from '../../../apis/BacklogAPICalls';
+import { callCleanBacklogComments } from '../../../apis/BacklogCommentAPICalls';
 
 import { Dropdown } from 'primereact/dropdown';
 import { Button } from 'primereact/button';
@@ -18,9 +18,9 @@ import _default from 'react-redux/es/components/connect';
 
 function BacklogDetails({visibleRight, setVisibleRight}) {
 
+    const dispatch = useDispatch();
     const backlogDetails = useSelector(state => state.backlogDetailReducer);
     // const sprints = useSelector(state => state.sprintReducer);
-    const dispatch = useDispatch();
 
     /* 백로그 편집 상태값 저장 */
     const [editable, setEditable] = useState(false);
@@ -157,6 +157,7 @@ function BacklogDetails({visibleRight, setVisibleRight}) {
         setSprint(null);
         setIssue(null);
         setUrgency(null);
+        dispatch(callCleanBacklogComments());
         };
 
     return (
@@ -319,7 +320,7 @@ function BacklogDetails({visibleRight, setVisibleRight}) {
                                 className={ BacklogAndSprintCSS.smallText }
                                 style={ toggleOn }
                             >
-                                담당자 편집은 칸반보드 또는 간트차트 페이지에서 할 수 있습니다.
+                                백로그는 담당자를 지정할 수 없습니다.
                             </label>
                         </div>
                     </div>

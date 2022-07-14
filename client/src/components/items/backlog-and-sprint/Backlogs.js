@@ -17,6 +17,8 @@ function Backlogs() {
     const { projectCode } = useParams();
     const dispatch = useDispatch();
     const backlogs = useSelector(state => state.backlogReducer);
+    const backlogDetails = useSelector(state => state.backlogDetailReducer);
+    const backlogComments = useSelector(state => state.backlogCommentReducer);
     
     const [visibleRight, setVisibleRight] = useState(false);
 
