@@ -64,7 +64,7 @@ exports.insertNewBacklog = (connection, backlog) => {
 
         connection.query(
             backlogQuery.insertNewBacklog(),
-            [backlog.title, backlog.description, backlog.category, backlog.progressStatus, backlog.urgency, backlog.issue, backlog.projectCode, backlog.creatorCode],
+            [backlog.title, backlog.description, backlog.category, backlog.urgency, backlog.issue, backlog.projectCode, backlog.creatorCode],
             (err, results, fields) => {
 
                 if(err) {
