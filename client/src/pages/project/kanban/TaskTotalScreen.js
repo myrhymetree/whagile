@@ -17,7 +17,7 @@ export default function TaskTotalScreen(props) {
     const { projectCode } = useParams();
 
     useEffect(() => {
-      console.log("tasks",tasks)
+      
       dispatch(callGetTasksAPI(projectCode));
     }, []);
 

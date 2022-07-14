@@ -92,6 +92,7 @@ exports.updateTask = (connection, params) => {
         params.backlogDescription,
         params.progressStatus,
         params.urgency,
+        params.backlogCategory,
         params.backlogChargerCode,
         params.issue,
         params.backlogCode,

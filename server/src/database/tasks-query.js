@@ -97,6 +97,7 @@ exports.updateTask = () => {
             , BACKLOG_DESCRIPTION = ?
             , BACKLOG_PROGRESS_STATUS = ?
             , BACKLOG_URGENCY = ?
+            , BACKLOG_CATEGORY = ?
             , BACKLOG_CHARGER_CODE = ?
             , BACKLOG_ISSUE = ?
         WHERE
