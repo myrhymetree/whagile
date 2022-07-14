@@ -2,6 +2,7 @@ const HttpStatus = require('http-status');
 const BacklogCommentService = require('../services/backlog-comment-service');
 const { decodedToken } = require('../util/account-utils');
 
+
 /* 백로그 댓글 조회 요청 */
 exports.findBacklogComments = async (req, res, next) => {
 
@@ -10,9 +11,9 @@ exports.findBacklogComments = async (req, res, next) => {
         offset: Number(req.query.offset),
         limit: Number(req.query.limit)
     };
-
+    
     const results = await BacklogCommentService.findBacklogComments(params);
-
+    
     res.status(HttpStatus.OK).json({
         status: HttpStatus.OK,
         message: '댓글 조회에 성공했습니다.',
@@ -22,9 +23,8 @@ exports.findBacklogComments = async (req, res, next) => {
 
 /* 백로그 댓글 생성 요청 */
 exports.registComment = async (req, res, next) => {
-
     const user = decodedToken(req.get('Access-Token'));
-
+    
     const newComment = {
         content: req.body.content,
         createdDate: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString(),
@@ -66,12 +66,13 @@ exports.editComment = async (req, res, next) => {
 
 /* 백로그 댓글 삭제 요청 */
 exports.removeComment = async (req, res, next) => {
+    const user = decodedToken(req.get('Access-Token'));
 
     const removeRequest = {
         backlogCommentCode: Number(req.body.backlogCommentCode),
-        deletedDate: req.body.deletedDate,
+        deletedDate: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString(),
         projectCode: Number(req.body.projectCode),
-        memberCode: Number(req.body.memberCode)
+        memberCode: user.usercode
     };
 
     const results = await BacklogCommentService.removeComment(removeRequest);
