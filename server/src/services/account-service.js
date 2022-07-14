@@ -26,6 +26,27 @@ exports.updateAccount = (memberInfo) => {
     });
 }
 
+exports.searchAccounts = (searchInfo) => {
+    
+    return new Promise(async (resolve, reject) => {
+
+        const connection = getConnection();
+
+        console.log('searchAccounts', searchInfo);
+
+        const results = await AccountRepository.searchAccounts(connection, searchInfo);
+        
+        if(results.length < 1) {
+            console.log('조회되지 않음');
+            return reject('조회되지 않음');
+        }
+
+        connection.end();
+
+        resolve(results);
+    });
+}
+
 exports.updateEmail = (emailInfo) => {
 
     return new Promise(async (resolve, reject) => {
@@ -186,10 +207,21 @@ exports.registerAccount = (memberInfo) => {
             console.log('validationID', validationID[0]);
 
             if(validationID[0]){
-                console.log('Already registered');
+                console.log('Already ID registered');
                 connection.rollback();
-                return reject("Already registered");
+                return reject("Already ID registered");
             }
+
+
+            const validationEmail = await AccountRepository.selectAccountWithEmail(connection, memberInfo.email);
+            console.log('validationEmail', validationEmail[0]);
+
+            if(validationEmail[0]){
+                console.log('Already Email registered');
+                connection.rollback();
+                return reject("Already Email registered");
+            }
+
 
             console.log('registerAccountBefore', memberInfo);
             memberInfo.password = await AccountUtils.setPassword(memberInfo.password);
@@ -265,7 +297,7 @@ exports.loginAccount = (loginInfo) => {
             }
 
             //로그인 성공시 JWT 토큰 발급 ()emberId, memberName, memberEmail)
-            const token = await AccountUtils.generateToken(account[0].memberCode, account[0].memberId, account[0].name, account[0].email);
+            const token = await AccountUtils.generateToken(account[0].memberCode, account[0].memberId, account[0].name, account[0].email, account[0].role);
             
             const resData = {
                 account,

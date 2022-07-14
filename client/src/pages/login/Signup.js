@@ -81,10 +81,11 @@ function Signup() {
             return;
         }
 
-        fetch("http://localhost:8888/api/account/register", {
+        fetch(`http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/account/register`, {
             method: "POST",
             headers: {
-              "Content-Type": "application/json"
+              "Content-Type": "application/json",
+              "Access-Control-Allow-Origin": "*"
             },
             body: JSON.stringify({
                 data
@@ -92,11 +93,12 @@ function Signup() {
         })
         .then(response => response.json())
         .then(json => {
+            console.log(json);
             if(json.status == 200){
                 showConfirm();               
             }
             else{
-                showError("이미 있는 회원이거나 유효하지 않은 값이 입력되었습니다.");
+                showError(json.message);
                 setRegisterClick(false);
             }
         })
