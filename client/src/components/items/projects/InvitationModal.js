@@ -64,7 +64,7 @@ function InvitationModal({ displayBasic, setDisplayBasic, emails, setEmails }) {
                 onHide={() => onHide('displayBasic')}
                 style={{ width: '50vw', height: '50%' }}
             >
-                <div className="field col-12 md:col-4">
+                <div className="field row-12 md:row-4">
                     <label htmlFor="inputtext">이메일</label>
                     <InputText id="inputtext1" value={inputEmail} onChange={(e) => setInputEmail(e.target.value)} className="p-invalid" />
                     <Button type='click' label='추가'  icon='pi pi-plus' onClick={ addEmail }></Button>

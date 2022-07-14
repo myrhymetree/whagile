@@ -1,8 +1,9 @@
 const getConnection = require('../database/connection');
 const ProjectRepository = require('../repositories/project-repo');
+const ProjectStatisticsRepository = require('../repositories/project-statistics-repo');
+const AccountRepository = require('../repositories/account-repo');
 const AccountUtils = require('../util/account-utils');
 const EmailUtils = require('../util/email-utils');
-const AccountRepository = require('../repositories/account-repo');
 
 exports.selectProjects = (params) => {
 

@@ -17,6 +17,9 @@ app.use("/api/account", accountRouter);
 const projectRouter = require("./src/routes/project-route");
 app.use("/api/projects", projectRouter);
 
+const projectStatisticsRouter = require("./src/routes/project-statistics-route");
+app.use("/api/project-statistics", projectStatisticsRouter);
+
 const testRouter = require("./src/routes/test-route");
 app.use("/api/test", testRouter);
 
