@@ -1,7 +1,4 @@
 /* 프로젝트 목록 조회 */
-
-const { query } = require("express");
-
 exports.selectProjects = (params) => {
 
     let query = 
@@ -264,5 +261,26 @@ exports.isRegistedMember = (data) => {
           JOIN TBL_AUTHORITY C ON (A.AUTHORITY_CODE = C.AUTHORITY_CODE)
          WHERE A.PROJECT_CODE = ${ projectMemberInfo.projectCode }
            AND A.MEMBER_CODE = ${ projectMemberInfo.memberCode }
+    `;
+  }
+
+  exports.insertNoticeToProject = () => {
+    // console.log('noticeInfo', noticeInfo);
+    return `
+        INSERT
+          INTO TBL_NOTICE
+        (
+          NOTICE_CONTENT
+        , NOTICE_CREATED_DATE
+        , CREATOR
+        , PROJECT_CODE
+        )
+          VALUES
+        (
+          ?
+        , ?
+        , ?
+        , ?
+        )
     `;
   }

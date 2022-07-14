@@ -1,0 +1,14 @@
+version: "3"
+
+services:
+  webapp:
+    image: whagile99/react-server
+    ports:
+      - "80:80"
+    depends_on:
+      - app
+
+  app : 
+    image: whagile99/express-server
+    posts:
+      - "8888:8888"
