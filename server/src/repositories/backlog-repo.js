@@ -26,7 +26,7 @@ exports.selectBacklogs = (connection, params) => {
             }
         );
 
-        console.log(query.sql);
+        // console.log(query.sql);
     });
 };
 
@@ -53,7 +53,7 @@ exports.selectBacklogByBacklogCode = (connection, backlogCode) => {
             }
         );
 
-        console.log(query.sql);
+        // console.log(query.sql);
     });
 };
 
@@ -178,6 +178,6 @@ exports.selectBacklogHistories = (connection, params) => {
                 resolve(backlogHistories);
             }
         );
-        console.log(query.sql);
+        // console.log(query.sql);
     });
 };

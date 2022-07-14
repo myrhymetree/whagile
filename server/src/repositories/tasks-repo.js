@@ -23,7 +23,7 @@ exports.selectTasks = (connection, projectCode) => {
       }
     );
 
-    console.log(query.sql);
+    // console.log(query.sql);
   });
 };
 

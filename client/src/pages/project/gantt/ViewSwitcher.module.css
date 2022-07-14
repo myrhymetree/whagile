@@ -34,3 +34,21 @@
 #period>* {
     margin-right: 5px;
 }
+
+#searchResult {
+    width: 96%;
+    height: 28px;
+    background-color: #282936;
+    border: 1px solid #333544;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    align-items: center;
+    margin: 0 0 20px 0;
+    padding: 10px 10px 10px 20px;
+}
+
+#searchResult>* {
+    margin-right: 10px;
+}
