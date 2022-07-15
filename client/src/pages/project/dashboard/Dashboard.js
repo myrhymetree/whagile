@@ -116,11 +116,11 @@ function Dashboard() {
                 text="대시보드"
             />
             <div className="flex flex-wrap card-container blue-container" style={{maxWidth: 100 + '%'}}>
-                <div className="flex align-items-center justify-content-center bg-black-alpha-30 font-bold text-white m-2 border-round" style={{minWidth: 1000 + 'px', minHeight: 100 + 'px'}}>
-                    <label style={{ position: 'relative', width: '100%', height: '100%' }}>업무리포트</label>
-                    <Chart type="doughnut" data={chartData} options={lightOptions} style={{ position: 'relative', width: '30%' }} />
+                <div className="flex align-items-center justify-content-center bg-black-alpha-10 font-bold text-white m-2 border-round" style={{minWidth: 1000 + 'px', minHeight: 100 + 'px'}}>
+                    {/* <label style={{  }}>업무리포트</label> */}
+                    <Chart type="doughnut" data={chartData} options={lightOptions} />
                 </div>
-                <div className="flex align-items-center justify-content-center bg-black-alpha-30 font-bold text-white m-2 border-round" style={{minWidth: 1000 + 'px', minHeight: 100 + 'px'}}>
+                <div className="flex align-items-center justify-content-center bg-black-alpha-10 font-bold text-white m-2 border-round" style={{minWidth: 1000 + 'px', minHeight: 100 + 'px'}}>
                     <label style={{ position: 'relative', width: '100%', height: '100%' }}>공지사항</label>
                     <p style={{ width: '150%', height: '10%', fontWeight: 'lighter' }}>{ notice.content}</p>
                     {/* <Editor style={{ height: '100px' }} value={ text } onTextChange={(e) => setText(e.htmlValue)} /> */}
