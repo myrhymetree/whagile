@@ -24,15 +24,16 @@ function MainHeader() {
     console.log('logout process finished');
     sessionStorage.clear();
     setIsLogin(false);
+    navigate('/', { replace: true })
   }
 
   useEffect(() => {    
     if(!isLogin){
-      console.log(isLogin);
-      navigate("/");
+      console.log('MainHeader isLogin?', isLogin);
+      navigate('/', { replace: true })
     }
   },
-  [isLogin]);
+  []);
 
   return (
     <header id={ MainHeaderCSS.header }>

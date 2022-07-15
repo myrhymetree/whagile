@@ -62,10 +62,11 @@ export const TaskListTableDefault = ({
 								alignItems: 'center',
 								padding: "10px",
 								fontSize: "16px",
-								backgroundColor: expanderSymbol? '#282936': '#333544',
-								color: expanderSymbol? ((t.progressStatus === 'Y')? '#F86064': '#FFB95F'): 'lightgrey',
+								// backgroundColor: expanderSymbol? '#282936': '#333544',
+								color: expanderSymbol? ((t.progressStatus === 'Y')? '#F86064CC': '#FFB95FCC'): 'lightgrey',
 							}}
 							title={t.name}
+							id={styles.cellsHover}
 						>
 							<div className="Gantt-Task-List_Name-Container">
 								<div
@@ -80,7 +81,12 @@ export const TaskListTableDefault = ({
 										e.stopPropagation();
 									}}
 								>
-									<div className={styles.cells}>
+									<div className={styles.cells} 
+										style={{
+											marginLeft: (expanderSymbol)? '5px': '35px',
+											width: (expanderSymbol)? '305px': '275px',
+										}}
+									>
 										{expanderSymbol}
 										{ 
 											(expanderSymbol)
@@ -98,7 +104,8 @@ export const TaskListTableDefault = ({
 											}
 										</span>
 									</div>
-									<Button
+									{/* TODO: 자식이벤트를 부모로 전달하지 못해서 보류 */}
+									{/* <Button
 										className="p-button-outlined"
 										style={{
 											width: '20px',
@@ -110,7 +117,7 @@ export const TaskListTableDefault = ({
 										onClick={(e) => {
 											e.stopPropagation();
 										}}
-									/>
+									/> */}
 								</div>
 							</div>
 						</div>

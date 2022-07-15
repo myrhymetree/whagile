@@ -46,7 +46,7 @@ function MainNavbar({projectCode}) {
     {
       label: "대시보드",
       icon: "pi pi-fw pi-chart-pie",
-      style: { backgroundColor: (selectedMenu ==='dashboard')? '#00AA9C': '' },
+      style: { backgroundColor: (selectedMenu ==='dashboard')? 'rgba(0, 170, 156, .16)': '' },
       command: () => {
         navigate(`/project/${ projectCode }/dashboard`);
       },
@@ -54,7 +54,7 @@ function MainNavbar({projectCode}) {
     {
       label: "백로그 및 스프린트",
       icon: "pi pi-fw pi-inbox",
-      style: { backgroundColor: (selectedMenu ==='backlog-and-sprint')? '#00AA9C': '' },
+      style: { backgroundColor: (selectedMenu ==='backlog-and-sprint')? 'rgba(0, 170, 156, .16)': '' },
       command: () => {
         navigate(`/project/${ projectCode }/backlog-and-sprint`);
       },
@@ -62,7 +62,7 @@ function MainNavbar({projectCode}) {
     {
       label: "간트차트",
       icon: "pi pi-fw pi-chart-bar",
-      style: { backgroundColor: (selectedMenu ==='gantt')? '#00AA9C': '' },
+      style: { backgroundColor: (selectedMenu ==='gantt')? 'rgba(0, 170, 156, .16)': '' },
       command: () => {
         navigate(`/project/${ projectCode }/gantt`);
       },
@@ -70,7 +70,7 @@ function MainNavbar({projectCode}) {
     {
       label: "칸반보드",
       icon: "pi pi-fw pi-th-large",
-      style: { backgroundColor: (selectedMenu ==='kanban-board')? '#00AA9C': '' },
+      style: { backgroundColor: (selectedMenu ==='kanban-board')? 'rgba(0, 170, 156, .16)': '' },
       command: () => {
         navigate(`/project/${ projectCode }/kanban-board`);
       },
@@ -78,7 +78,7 @@ function MainNavbar({projectCode}) {
     {
       label: "히스토리",
       icon: "pi pi-fw pi-history",
-      style: { backgroundColor: (selectedMenu ==='history')? '#00AA9C': '' },
+      style: { backgroundColor: (selectedMenu ==='history')? 'rgba(0, 170, 156, .16)': '' },
       command: () => {
         navigate(`/project/${ projectCode }/history`);
       },
@@ -89,7 +89,7 @@ function MainNavbar({projectCode}) {
               {label: '팀원 목록', icon: 'pi pi-fw pi-users', command:()=>{ navigate(`/project/${ projectCode }/management/teamMateList`); }},
               {label: '프로젝트 통계', icon: 'pi pi-fw pi-chart-pie', command:()=>{ navigate(`/project/${ projectCode }/management/statistics`); }}],
       icon: "pi pi-fw pi-cog",
-      style: { backgroundColor: (selectedMenu ==='management')? '#00AA9C' : '', color: (selectedMenu ==='management')? '#FFFFFF' : ''}
+      style: { backgroundColor: (selectedMenu ==='management')? 'rgba(0, 170, 156, .16)' : '', color: (selectedMenu ==='management')? '#FFFFFF' : ''}
     }
   ];
 

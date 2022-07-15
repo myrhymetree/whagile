@@ -1,6 +1,28 @@
 const accountQuery = require('../database/account-query');
 const MemberDTO = require('../dto/account/account-response-dto');
 
+exports.searchAccounts = (connection, searchInfo) => {
+
+    return new Promise((resolve, reject) => {
+        connection.query(accountQuery.searchMember(searchInfo), 
+        (err, results, fields) => {
+            if(err) {
+                console.log(err);
+                reject(err);
+            }
+            console.log('test', results);
+            const member = [];
+            for(let i = 0; i < results.length; i++) {
+                member.push(new MemberDTO(results[i]));
+            }
+
+            console.log('member', member);
+
+
+            resolve(member);
+        });
+    });
+}
 
 exports.updateAccount = (connection, memberInfo) => {
     

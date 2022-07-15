@@ -10,12 +10,6 @@
 	list-style: none;
 }
 
-.ganttTable_HeaderSeparator {
-	border-right: 1px solid rgb(196, 196, 196);
-	opacity: 1;
-	margin-left: -2px;
-}
-
 .ganttTable_HeaderItem {
 	display: table-cell;
 	vertical-align: -webkit-baseline-middle;
@@ -25,29 +19,16 @@
 div.cells {
 	height: 40px;
 	background-color: #282936;
-	color: #00AA9C;
-	padding: 10px;
+	color: #FFFFFFAA;
 	font-size: 16px;
 	display: flex;
 	flex-direction: row;
 	justify-content: center;
 	align-items: center;
-	
 	text-align: center;
 	-ms-user-select: none; 
     -moz-user-select: -moz-none;
     -khtml-user-select: none;
     -webkit-user-select: none;
     user-select: none;
-}
-
-.cells>div {
-	color: #00AA9C;
-	border: 1px solid #00AA9C;
-	border-radius: 10px;
-	display: inline-block;
-	padding: 4px 18px;
-	font-size: 16px;
-	text-align: center;
-	margin: 0 10px;
 }

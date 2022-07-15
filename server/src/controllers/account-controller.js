@@ -78,6 +78,34 @@ exports.authNumberSend = async (req, res, next) => {
         });
 }
 
+exports.searchAccounts = async (req, res, next) => {
+    
+    const searchInfo = {
+        condition: { condition },
+        value : { value }
+    } = req.query;
+
+    await AccountService.searchAccounts(searchInfo)
+    .then((results) => {
+
+        res.status(HttpStatus.OK).json({
+            status: HttpStatus.OK,
+            message: 'successfully searchAccounts!!',
+            results: results
+        });
+
+    })
+    .catch((err) =>{
+
+        res.status(HttpStatus.BAD_REQUEST).json({
+            status: HttpStatus.BAD_REQUEST,
+            message: err
+        });
+
+    });
+   
+}
+
 exports.selectAccounts = async (req, res, next) => {
 
     await AccountService.selectAccounts()
@@ -155,11 +183,12 @@ exports.registerAccount = async (req, res, next) => {
             });
 
         })
-        .catch((err) =>{
+        .catch((err, result) =>{
 
             res.status(HttpStatus.BAD_REQUEST).json({
                 status: HttpStatus.BAD_REQUEST,
-                message: err
+                message: err,
+                results: result
             });
 
         });

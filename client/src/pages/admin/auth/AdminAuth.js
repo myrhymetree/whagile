@@ -49,7 +49,7 @@ function AdminAuth() {
     const dispatch = useDispatch();
     const toast = useRef(null);
 
-    const selectConditions = [
+    const selectCondition = [
         {label: '권한명', value: 'name'},
         {label: '권한 설명', value: 'description'},
         {label: '활성화 여부', value: 'activated_yn'}
@@ -78,7 +78,14 @@ function AdminAuth() {
             'orderValue': 'desc'
         }));
 
-        toast.current.show({severity: 'success', summary: `검색완료`, detail: value? `${value}을(를) 포함한 검색결과입니다.`: `모든 권한을 조회합니다.`, life: 2400});
+        toast.current.show({
+            severity: 'success', 
+            summary: `검색완료`, 
+            detail: value
+            ? `${selectCondition.find(x => x.value === condition).label}에 '${value}'을(를) 포함한 검색결과입니다.`
+                    : `모든 권한을 조회합니다.`, 
+            life: 3000
+        });
     };
 
     const onKeyPressHandler = e => { // 엔터키 입력
@@ -269,9 +276,8 @@ function AdminAuth() {
                 <div>
                     <Dropdown 
                         value={condition} 
-                        options={selectConditions} 
+                        options={selectCondition} 
                         onChange={(e) => setCondition(e.value)} 
-                        placeholder="검색 대상"
                     />
                 </div>
                 <span className="p-input">

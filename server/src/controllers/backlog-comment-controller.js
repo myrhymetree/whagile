@@ -46,13 +46,14 @@ exports.registComment = async (req, res, next) => {
 
 /* 백로그 댓글 수정 요청 */
 exports.editComment = async (req, res, next) => {
+    const user = decodedToken(req.get('Access-Token'));
 
     const modifyingContent = {
         backlogCommentCode: Number(req.body.backlogCommentCode),
-        content: req.body.content,
-        modifiedDate: req.body.modifiedDate,
+        content: req.body.modifiedComment,
+        modifiedDate: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString(),
         projectCode : Number(req.body.projectCode),
-        memberCode: Number(req.body.memberCode)
+        memberCode: user.usercode
     };
 
     const results = await BacklogCommentService.editComment(modifyingContent);

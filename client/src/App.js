@@ -34,52 +34,53 @@ import AdminProduct from './pages/admin/product/AdminProduct';
 import AdminInquery from './pages/admin/inquery/AdminInquery';
 import AdminStatistics from './pages/admin/statistics/AdminStatistics';
 
+// NotFound
+import NotFound from './pages/notFound/NotFound';
+
 function App() {
 
   const isLogin = window.sessionStorage.getItem('isLogin');
-  
+  console.log("app", isLogin);
   return (
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" 
-            element={ 
-              (!isLogin)
-              ? <Login/>
-              : <Navigate replace to ="/projects" />
-              // : <Navigate replace to ="/main" />
-            } />
-          {/* { isLogin ? <Navigate replace to ="/main" /> : <Login/>} */}
-          <Route path="/main" element={ <Main/> } />
-          <Route path="/signup" element={ <Signup/> } />
-          <Route path="/invitedMemberSignup/:projectCode/:email" element={ <InvitedMemberSignup /> } />
-          <Route path="/profile" element={ <Profile/> } />
-          <Route path="/project/:projectCode" element={ <ProjectLayout/>} >
-            <Route path="dashboard" element={ <Dashboard/> }/>
-            <Route path="backlog-and-sprint" element={ <BacklogAndSprint/> }/>
-            <Route path="gantt" element={ <GanttChart/> }/>
-            <Route path="kanban-board" element={ <KanbanBoard/> }/>
-            <Route path="history" element={ <History/> }/>
-            <Route path="management">
-              <Route path="information" element={ <Information/> }/>
-              <Route path="teamMateList" element={ <TeamMateList/> }/>
-              <Route path="statistics" element={ <Statistics/> }/>
-            </Route>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Login />} />
+        {/* { isLogin ? <Navigate replace to ="/main" /> : <Login/>} */}
+        <Route path="/main" element={<Main />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route
+          path="/invitedMemberSignup/:projectCode/:email"
+          element={<InvitedMemberSignup />}
+        />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/project/:projectCode" element={<ProjectLayout />}>
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="backlog-and-sprint" element={<BacklogAndSprint />} />
+          <Route path="gantt" element={<GanttChart />} />
+          <Route path="kanban-board" element={<KanbanBoard />} />
+          <Route path="history" element={<History />} />
+          <Route path="management">
+            <Route path="information" element={<Information />} />
+            <Route path="teamMateList" element={<TeamMateList />} />
+            <Route path="statistics" element={<Statistics />} />
           </Route>
+        </Route>
 
-          {/* admin */}
-          <Route path="/admin" element={ <AdminLayout/>}>
-            <Route path="dashboard" element={ <AdminDashboard/> }/>
-            <Route path="member" element={ <AdminMember/> }/>
-            <Route path="auth" element={ <AdminAuth/> }/>
-            <Route path="product" element={ <AdminProduct/> }/>
-            <Route path="inquery" element={ <AdminInquery/> }/>
-            <Route path="statistics" element={ <AdminStatistics/> }/>
-          </Route>
+        {/* admin */}
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route path="dashboard" element={<AdminDashboard />} />
+          <Route path="member" element={<AdminMember />} />
+          <Route path="auth" element={<AdminAuth />} />
+          <Route path="product" element={<AdminProduct />} />
+          <Route path="inquery" element={<AdminInquery />} />
+          <Route path="statistics" element={<AdminStatistics />} />
+        </Route>
 
-          <Route path="/projects" element={ <List/> }/>
-          <Route path="/projects/regist" element={ <Regist/> }/>
-        </Routes>
-      </BrowserRouter>
+        <Route path="/projects" element={<List />} />
+        <Route path="/projects/regist" element={<Regist />} />
+        <Route path="/*" element={<NotFound />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
