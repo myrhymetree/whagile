@@ -33,7 +33,7 @@ export default function TaskModal(props) {
     })
       .then((response) => response.json())
       .then((json) => {
-        console.log("일감상세", json);
+        console.log("상세", json);
         const result = json.results[0];
         setTaskCode(result.backlogCode || "");
         setTaskTitle(result.backlogTitle || "");
@@ -99,6 +99,7 @@ export default function TaskModal(props) {
       progressStatus: taskProgressStatus,
       issue: taskIssue,
       urgency: taskUrgency,
+      backlogCategory: (taskProgressStatus === "백로그" )? "백로그" : "일감",
       backlogChargerCode: taskCharger,
     };
 
