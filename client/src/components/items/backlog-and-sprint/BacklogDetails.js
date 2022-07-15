@@ -200,7 +200,6 @@ function BacklogDetails({visibleRight, setVisibleRight}) {
                     </h6>
                     <InputText 
                         id={ BacklogAndSprintCSS.inputTitle }
-                        className="block"
                         value={ title }
                         onChange={ (e) => setTitle(e.target.value) }
                         style={ toggleOn }

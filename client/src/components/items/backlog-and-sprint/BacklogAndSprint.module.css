@@ -40,53 +40,24 @@
     align-items: center;
 }
 
-#divHeader>label,
-.backlogItem>label {
+#divHeader>div,
+.backlogItem>div {
     text-align: center;
+    width: calc(100% / 6);
 }
-
-/* #divHeader>:nth-child(1),
-.backlogItem>:nth-child(1) {
-    width: 10%;
-} */
-
-/* #divHeader>:nth-child(2) 
-.backlogItem>:nth-child(2) {
-    width: 50vw;
-} */
-
-/* #divHeader>:nth-child(3),
-.backlogItem>:nth-child(3) {
-    width: 10%;
-} */
-
-/* #divHeader>:nth-child(4),
-.backlogItem>:nth-child(4) {
-    width: 10%;
-} */
-
-/* #divHeader>:nth-child(5),
-.backlogItem>:nth-child(5) {
-    width: 10%;
-} */
-
-/* #divHeader>:nth-child(6),
-.backlogItem>:nth-child(6) {
-    width: 10%;
-} */
 
 #filterConditions {
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
 }
+
 #filterConditions>:nth-child(1), 
 #filterConditions>:nth-child(2), 
 #filterConditions>:nth-child(3) {
     margin-top: 10px;
     margin-left: 10px;
 }
-
 
 .sprintItem {
     background-color: #333544;
@@ -209,6 +180,7 @@
     color: #ffcf91;
     font-size: 15px;
     cursor: pointer;
+    padding: 5px;
 }
 
 #editableArea {

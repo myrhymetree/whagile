@@ -1,4 +1,4 @@
-import { FIND_BACKLOGS, MORE_BACKLOGS, FIND_FILTERED_BACKLOGS } from '../modules/BacklogModule';
+import { FIND_BACKLOGS, MORE_BACKLOGS, FIND_FILTERED_BACKLOGS, CLEAN_BACKLOG } from '../modules/BacklogModule';
 import { FIND_BACKLOG_DETAILS, REGIST_BACKLOG, MODIFY_BACKLOG, DELETE_BACKLOG } from '../modules/BacklogDetailModule';
 
 /* 백로그 목록 조회 (최초 요청) API 호출 */
@@ -113,7 +113,7 @@ export function callPostBacklogAPI(newBacklog) {
             body: JSON.stringify(newBacklog)
         }).then(res => res.json());
 
-        await dispatch({ type: REGIST_BACKLOG, payload: result });
+        await dispatch({ type: REGIST_BACKLOG, payload: result.message });
     }
 }
 
@@ -164,3 +164,11 @@ export function callDeleteBacklogAPI(backlogCode, projectCode) {
         // await dispatch({ type: FIND_BACKLOG_DETAILS, payload: result.results });
     }
 }
+
+/* 기존 state reset */
+export function callCleanBacklog() {
+
+    return async function cleanBacklogComments(dispatch, getState) {
+        await dispatch({ type: CLEAN_BACKLOG, payload: [] });
+    }
+};

@@ -268,7 +268,7 @@ exports.updateTaskToBacklogByBacklogCode = () => {
     return query;
 }
 
-exports.selectSprintsCount = (params) => {
+exports.selectSprintsCount = () => {
 
     let query = `
         SELECT COUNT(*) COUNT
@@ -280,7 +280,7 @@ exports.selectSprintsCount = (params) => {
     return query;
 }
 
-exports.selectTasksCount = (params) => {
+exports.selectTasksCount = () => {
 
     let query = `
         SELECT COUNT(*) COUNT
