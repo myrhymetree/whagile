@@ -9,6 +9,7 @@ function DivHeader() {
             <div>진행상태</div>
             <div>긴급도</div>
             <div>생성자</div>
+            <div>자세히</div>
         </div>
     );
 }
