@@ -65,7 +65,7 @@ exports.registNewTask = async (req, res, next) => {
 
 // 개별 일감 수정
 exports.editTask = async (req, res, next) => {
-  
+  console.log("INFO",req.body.kanbanInfo)
   await TasksService.editTask(req.body.kanbanInfo)
     .then((result) => {
       res.status(HttpStatus.OK).json({
