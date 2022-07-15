@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import DashboardCSS from './Dashboard.module.css';
 import { callGetProjectStatisticsAPI } from '../../../apis/ProjectStatisticsAPICalls';
-import { callGetNoticeAPI } from '../../../apis/ProjectAPICalls';
+import { callGetNoticeAPI, callGetProjectMemberAPI } from '../../../apis/ProjectAPICalls';
 import { Chart } from 'primereact/chart';
 import { Editor } from 'primereact/editor';
 
@@ -17,8 +17,10 @@ function Dashboard() {
     const [text, setText] = useState('');
     const taskCounts = useSelector(state => state.projectStatisticsReducer);
     const notice = useSelector(state => state.ProjectNoticeReducer);
+    const members = useSelector(state => state.projectMemberReducer);
     console.log('통계', taskCounts);
     console.log('공지', notice);
+    console.log('멤버목록', members);
 
     useEffect(
         () =>
@@ -26,19 +28,18 @@ function Dashboard() {
             dispatch(callGetProjectStatisticsAPI({
                 'projectCode': projectCode
             }));
-        },
-        []
-      );
 
-      useEffect(
-        () =>
-        {
             dispatch(callGetNoticeAPI({
+                'projectCode': projectCode
+            }));
+
+            dispatch(callGetProjectMemberAPI({
                 'projectCode': projectCode
             }));
         },
         []
       );
+
 
     //   useEffect(
     //     () =>
@@ -116,19 +117,20 @@ function Dashboard() {
             />
             <div className="flex flex-wrap card-container blue-container" style={{maxWidth: 100 + '%'}}>
                 <div className="flex align-items-center justify-content-center bg-black-alpha-30 font-bold text-white m-2 border-round" style={{minWidth: 1000 + 'px', minHeight: 100 + 'px'}}>
-                    업무리포트
+                    <label style={{ position: 'relative', width: '100%', height: '100%' }}>업무리포트</label>
                     <Chart type="doughnut" data={chartData} options={lightOptions} style={{ position: 'relative', width: '30%' }} />
                 </div>
-                <div className="flex align-items-center justify-content-center bg-black-alpha-30 font-bold text-white m-2 border-round" style={{minWidth: 200 + 'px', minHeight: 100 + 'px'}}>
-                    공지사항
-                    <Editor style={{ height: '100px' }} value={ text } onTextChange={(e) => setText(e.htmlValue)} />
+                <div className="flex align-items-center justify-content-center bg-black-alpha-30 font-bold text-white m-2 border-round" style={{minWidth: 1000 + 'px', minHeight: 100 + 'px'}}>
+                    <label style={{ position: 'relative', width: '100%', height: '100%' }}>공지사항</label>
+                    <p style={{ width: '150%', height: '10%', fontWeight: 'lighter' }}>{ notice.content}</p>
+                    {/* <Editor style={{ height: '100px' }} value={ text } onTextChange={(e) => setText(e.htmlValue)} /> */}
                 </div>
-                <div className="flex align-items-center justify-content-center bg-blue-500 font-bold text-white m-2 border-round" style={{minWidth: 200 + 'px', minHeight: 100 + 'px'}}>
+                {/* <div className="flex align-items-center justify-content-center bg-blue-500 font-bold text-white m-2 border-round" style={{minWidth: 200 + 'px', minHeight: 100 + 'px'}}>
                     팀원목록
                 </div>
                 <div className="flex align-items-center justify-content-center bg-blue-500 font-bold text-white m-2 border-round" style={{minWidth: 200 + 'px', minHeight: 100 + 'px'}}>
                     업무목록
-                </div>
+                </div> */}
             </div>
         </>
     );
