@@ -86,7 +86,6 @@ function BacklogCreationModal() {
             return new Promise(async (resolve, reject) => {
                 await dispatch(callPostBacklogAPI(newBacklog));
                 await window.location.replace(window.location.href);
-                await alert(backlogDetails.message);
             });
         }
     };
