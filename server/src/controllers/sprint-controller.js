@@ -122,7 +122,7 @@ exports.deleteSprint = async (req, res, next) => {
 }
 
 exports.viewSprintsCount = async (req, res, next) => {
-    console.log('viewSprintsCount...', req.query);
+    console.log('viewSprintsCount...');
     await SprintService.viewSprintsCount(req.query)
     .then((results) => {
 

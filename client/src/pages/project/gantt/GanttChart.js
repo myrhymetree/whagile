@@ -38,13 +38,13 @@ function GanttChart() {
 
 	const [view, setView] = useState(ViewMode.Day);
 	const [isChecked, setIsChecked] = useState(true);
-	let columnWidth = 60;
+	let columnWidth = 48;
 	if (view === ViewMode.Month) {
-	  	columnWidth = 300;
+	  	columnWidth = 150;
 	} else if (view === ViewMode.Week) {
-	  	columnWidth = 250;
+	  	columnWidth = 120;
 	}
-	
+
 	const sprints = useSelector(state => state.sprintsReducer);
 	const counts = useSelector(state => state.sprintsCountReducer);
 	const sprint = useSelector(state => state.sprintReducer);
@@ -74,6 +74,10 @@ function GanttChart() {
 		backlogUrgency: '보통',
 		backlogIssue: 0,
 		backlogChargerCode: '',
+		backlogIssue: 0,
+		backlogCode: '',
+		backlogStartDate: '',
+		backlogEndDate: '',
 	});
 	const [currentLimit, setCurrentLimit] = useState(10); // 간트차트에 보여줄 sprints 개수
 
@@ -162,6 +166,9 @@ function GanttChart() {
 				backlogUrgency: sprintTask.urgency,
 				backlogIssue: sprintTask.issue,
 				backlogChargerCode: sprintTask.backlogChargerCode,
+				backlogProgressStatus: sprintTask.progressStatus,
+				backlogCategory: sprintTask.category,
+				backlogCode: sprintTask.backlogCode,
 			});
 		},
 		[sprintTask]
@@ -490,15 +497,14 @@ function GanttChart() {
 
 	// 신규 백로그 추가 확인 버튼
 	const confirmInsertTask = () => {
-		console.log('selectedNewBacklogs', selectedNewBacklogs)
-		console.log('newBacklog', newBacklog)
+		
 		let changedBacklogs = [...selectedNewBacklogs];
 		changedBacklogs.push({
 			name: newBacklog.backlogTitle,
 			type: 'newBacklog'
 		});
 		setSelectedNewBacklogs(changedBacklogs); // 생성/수정 모달에서 보여주기 위해
-		console.log('newBacklogs:', newBacklogs)
+		
 		let copyNewBacklogs = [...newBacklogs];
 		copyNewBacklogs.push({ // 생성/수정완료 시 API로 보내기 위해
 			...newBacklog,
@@ -506,7 +512,7 @@ function GanttChart() {
 			backlogEndDate: (newBacklog.backlogEndDate)? dateFormat(new Date(newBacklog.backlogEndDate), 'end'): '',
 		});
 		setNewBacklogs(copyNewBacklogs);
-		console.log('copyNewBacklogs:', copyNewBacklogs);
+		
 		initTask();
 
 		setTaskShow(false);
@@ -536,9 +542,6 @@ function GanttChart() {
 	};
 
 	const onChangeNewBacklog = (e) => {
-		console.log('이상해', newBacklog)
-		console.log('저상해', e.target.name)
-		console.log('수상해', e.target.value)
 
 		setNewBacklog({
 			...newBacklog,
@@ -641,7 +644,9 @@ function GanttChart() {
 								barCornerRadius="5"
 								barProgressColor="#BBBBBB"
 								barProgressSelectedColor="#808080"
-								headerHeight="44"
+								headerHeight={36}
+								rowHeight={32}
+								// headerHeight="44"
 								columnWidth={columnWidth}
 								listCellWidth={isChecked ? "155px" : ""}
 								todayColor="rgba(0, 170, 156, .1)"

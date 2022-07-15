@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { callGetBacklogsAPI } from '../../../apis/SprintAPICalls';
+import { SET_COLLAPSED_ALL_SPRINTS } from "../../../modules/SprintsModule";
 
 export const TaskListHeaderDefault = ({ headerHeight, fontFamily, fontSize, rowWidth, isChecked }) => {
 
@@ -12,6 +13,14 @@ export const TaskListHeaderDefault = ({ headerHeight, fontFamily, fontSize, rowW
 	const counts = useSelector(state => state.sprintsCountReducer);
 	const { projectCode } = useParams();
 	const dispatch = useDispatch();
+
+	const collapseGantt = () => {
+
+		dispatch({ 
+            type: SET_COLLAPSED_ALL_SPRINTS,
+			payload: sprints
+		});
+	}
 
 	useEffect(
 		() => {
@@ -31,10 +40,11 @@ export const TaskListHeaderDefault = ({ headerHeight, fontFamily, fontSize, rowW
 				fontFamily: fontFamily,
 				fontSize: fontSize,
 				minWidth: '360px',
-				height: '44px',
+				height: '36px',
 				border: '1px solid grey',
 				backgroundColor: '#282936',
 			}}
+			onClick={collapseGantt}
 		>
 			<div
 				className={styles.ganttTable_Header}

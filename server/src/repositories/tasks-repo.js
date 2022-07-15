@@ -84,9 +84,9 @@ exports.insertNewTask = (connection, params) => {
 // 개별 일감 수정
 exports.updateTask = (connection, params) => {
   return new Promise((resolve, reject) => {
-    console.log("as", params)
+    console.log('params:', params)
     connection.query(
-      tasksQuery.updateTask(),
+      tasksQuery.updateTask(params),
       [
         params.backlogTitle,
         params.backlogDescription,

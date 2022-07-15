@@ -89,20 +89,29 @@ exports.insertNewTask = () => {
 
 
 // 개별 일감 수정
-exports.updateTask = () => {
-  return `
-        UPDATE TBL_BACKLOG
-        SET
-              BACKLOG_TITLE = ?
-            , BACKLOG_DESCRIPTION = ?
-            , BACKLOG_PROGRESS_STATUS = ?
-            , BACKLOG_URGENCY = ?
-            , BACKLOG_CATEGORY = ?
-            , BACKLOG_CHARGER_CODE = ?
-            , BACKLOG_ISSUE = ?
-        WHERE
-            BACKLOG_CODE = ?
+exports.updateTask = (params) => {
+
+  let query = `
+    UPDATE TBL_BACKLOG
+    SET
+        BACKLOG_TITLE = ?
+      , BACKLOG_DESCRIPTION = ?
+      , BACKLOG_PROGRESS_STATUS = ?
+      , BACKLOG_URGENCY = ?
+      , BACKLOG_CATEGORY = ?
+      , BACKLOG_CHARGER_CODE = ?
+      , BACKLOG_ISSUE = ?`;
+    
+  if(params.backlogStartDate !== undefined && params.backlogEndDate !== undefined) { // 페이징
+    query += ` 
+        , BACKLOG_START_DATE = ${params.backlogStartDate}
+        , BACKLOG_END_DATE = ${params.backlogEndDate}
     `;
+  }
+
+  query += `WHERE BACKLOG_CODE = ?`;
+
+  return query;
 };
 
 

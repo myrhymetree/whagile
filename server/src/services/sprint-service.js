@@ -11,7 +11,7 @@ exports.addSprint = (params) => {
         connection.beginTransaction();
 
         try {
-            console.log(7979, params.newBacklogs)
+            
             const results = await SprintRepository.insertSprint(connection, params);
             
             params.currentInfo.sprintCode = results.insertId;
@@ -239,9 +239,7 @@ exports.viewSprintsCount = (params) => {
         const connection = getConnection();
 
         const sprintsCount = await SprintRepository.selectSprintsCount(connection, params);
-
         const tasksCount = await SprintRepository.selectTasksCount(connection, params);
-
         const backlogsCount = await SprintRepository.selectBacklogsCount(connection, params);
 
         const results = {

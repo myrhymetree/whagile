@@ -211,23 +211,28 @@ export function callUpdateTaskAPI(params, projectCode) {
     let requestURL = `http://localhost:8888/api/tasks`;
     
     return async (dispatch, getState) => {
-        //TODO: 일감 수정 api가 없어요
-        // const result = await fetch(requestURL, {
-        //     method: 'PUT',
-        //     headers: {
-        //         'Accept': 'application/json',
-        //         'Content-Type': 'application/json'
-        //     },
-        //     body: JSON.stringify({
-        //         backlogTitle: params.backlogTitle,
-        //         backlogDescription: params.backlogDescription,
-        //         backlogStartDate: (params.backlogStartDate)? dateFormat(new Date(params.backlogStartDate), 'start'): '',
-        //         backlogEndDate: (params.backlogEndDate)? dateFormat(new Date(params.backlogEndDate), 'end'): '',
-        //         backlogUrgency: params.backlogUrgency,
-        //         backlogIssue: params.backlogIssue,
-        //         backlogChargerCode: params.backlogChargerCode,
-        //     })
-        // }).then(res => res.json());
+        
+        const result = await fetch(requestURL, {
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                kanbanInfo: {
+                    backlogTitle: params.backlogTitle,
+                    backlogDescription: (params.backlogDescription)? params.backlogDescription: '',
+                    progressStatus: (params.backlogProgressStatus)? params.backlogProgressStatus: '',
+                    urgency: (params.backlogUrgency)? params.backlogUrgency: '',
+                    backlogCategory: (params.backlogCategory)? params.backlogCategory: '',
+                    backlogChargerCode: (params.backlogChargerCode)? params.backlogChargerCode: '',
+                    issue: (params.backlogIssue)? params.backlogIssue: 0,
+                    backlogCode: (params.backlogCode)? params.backlogCode: '',
+                    backlogStartDate: (params.backlogStartDate)? dateFormat(new Date(params.backlogStartDate), 'start'): '',
+                    backlogEndDate: (params.backlogEndDate)? dateFormat(new Date(params.backlogEndDate), 'end'): '',
+                }
+            })
+        }).then(res => res.json());
         
         await dispatch(callGetSprintsAPI({	// 스프린트 목록 조회
             projectCode: projectCode,
