@@ -148,7 +148,8 @@ function Information() {
                             )} />
                     </div>
 
-                    <div>
+                    <div className="field col-12 md:col-4">
+                         <label htmlFor="projectDescription">프로젝트 매니저</label>
                         <Dropdown 
                             value={selectedProjectOwner} 
                             options={teamMates} 
