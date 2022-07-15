@@ -1,5 +1,4 @@
 import { createActions, handleActions } from 'redux-actions';
-// import { getStartEndDateForProject } from '../pages/project/gantt/helpers';
 
 /* 초기값 */
 const initialState = [];
@@ -19,7 +18,7 @@ const actions = createActions({
 const sprintsReducer = handleActions(
     {
         [GET_SPRINTS]: (state, { payload }) => {
-
+            
             const newState = [];
 
             payload.map((p) => {
@@ -37,7 +36,7 @@ const sprintsReducer = handleActions(
                 newState.push({
                     id: p.sprintCode,
                     name: p.sprintName,
-                    progress: 25,
+                    progress: 0,
                     type: "project",
                     start: new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate()),
                     end: new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate()),
@@ -52,7 +51,7 @@ const sprintsReducer = handleActions(
                         
                         let taskStartDate = startDate;
                         let taskEndDate = endDate;
-
+                        
                         if(t.startDate && t.endDate) {
                             taskStartDate = new Date(t.startDate);
                             taskEndDate = new Date(t.endDate);
@@ -63,10 +62,10 @@ const sprintsReducer = handleActions(
                         newState.push({
                             id: `t${t.backlogCode}`, //sprint의 id와 구분하기위해 앞에 't'를 붙임
                             name: t.backlogTitle,
-                            progress: 25,
+                            progress: 100,
                             type: "task",
-                            start: new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate()),
-                            end: new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate()),
+                            start: new Date(taskStartDate.getFullYear(), taskStartDate.getMonth(), taskStartDate.getDate()),
+                            end: new Date(taskEndDate.getFullYear(), taskEndDate.getMonth(), taskEndDate.getDate()),
                             project: p.sprintCode,
                             dependencies: [p.sprintCode]
                         });
@@ -75,12 +74,10 @@ const sprintsReducer = handleActions(
                 }
             })
 
-            console.log('sprints: ', newState);
-
             return newState;
         },
         [SET_COLLAPSED_SPRINTS]: (state, { payload }) => {
-
+            
             let newState = [...state];
 
             return newState.map((t) => (t.id === payload.id ? payload : t));
@@ -90,20 +87,20 @@ const sprintsReducer = handleActions(
             let newState = [...state];
             newState = newState.map((t) => (t.id === payload.id ? payload : t));
 
-            if(payload.project) {
+            // if(payload.project) {
 
-                const [start, end] = getStartEndDateForProject(newState, payload.project);
-                const project = newState[newState.findIndex((t) => t.id === payload.project)];
+            //     const [start, end] = getStartEndDateForProject(newState, payload.project);
+            //     const project = newState[newState.findIndex((t) => t.id === payload.project)];
 
-                if(project.start.getTime() !== start.getTime() ||
-                    project.end.getTime() !== end.getTime()) {
+            //     if(project.start.getTime() !== start.getTime() ||
+            //         project.end.getTime() !== end.getTime()) {
 
-                    const changedProject = { ...project, start, end };
-                    newState = newState.map((t) =>
-                        t.id === payload.project ? changedProject : t
-                    );
-                }
-		    }
+            //         const changedProject = { ...project, start, end };
+            //         newState = newState.map((t) =>
+            //             t.id === payload.project ? changedProject : t
+            //         );
+            //     }
+		    // }
 
             return newState;
         }
@@ -112,13 +109,13 @@ const sprintsReducer = handleActions(
 );
 
 /* 리듀서에서 사용하는 메서드 */
-const getStartEndDateForProject = (tasks, projectId) => {
+//TODO:로직을 바꿔야함
+const getStartEndDateForProject = (tasks, projectId) => { // 스프린트 기간이 일감기간에 따라 바뀜
 
     const projectTasks = tasks.filter((t) => t.project === projectId);
     let start = projectTasks[0].start;
     let end = projectTasks[0].end;
-    console.log('start: ' + start)
-    console.log('end: ' + end)
+
     for (let i = 0; i < projectTasks.length; i++) {
 
         const task = projectTasks[i];

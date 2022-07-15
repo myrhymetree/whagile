@@ -4,21 +4,21 @@ import { createActions, handleActions } from 'redux-actions';
 const initialState = [];
 
 /* 액션 */
-export const GET_BACKLOGS = 'sprintBacklog/GET_BACKLOGS';
+export const GET_BACKLOGS = 'sprintBacklogs/GET_BACKLOGS';
 
 const actions = createActions({
     [GET_BACKLOGS]: () => {},
 });
 
 /* 리듀서 */
-const sprintBacklogReducer = handleActions(
+const sprintBacklogsReducer = handleActions(
     {
         [GET_BACKLOGS]: (state, { payload }) => {
-            console.log(999999, payload)
+
             return payload;
         }
     },
     initialState
 );
 
-export default sprintBacklogReducer;
+export default sprintBacklogsReducer;

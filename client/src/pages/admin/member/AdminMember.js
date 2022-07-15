@@ -21,7 +21,6 @@ function AdminMember() {
     const [memberDetail, setMemberDetail] = useState({});
     const [memberDetailShow, setMemberDetailShow] = useState(false); // 상세보기 모달창 ON/OFF
 
-
     const [condition, setCondition] = useState(''); // 조건검색 카테고리    
     const [value, setValue] = useState(''); // 조건검색 키워드
 
@@ -32,8 +31,35 @@ function AdminMember() {
 
     /* 검색 */
     const onClickSearch = () => { // 검색 버튼 클릭
+
+        if(condition == '' || value == '') {
+            console.log('condition', condition);
+            console.log('value', value);    
+            return showError('검색 조건을 확인해주세요');
+        }
         
-        toast.current.show({severity: 'success', summary: `검색완료`, detail: value? `${value}을(를) 포함한 검색결과입니다.`: `모든 권한을 조회합니다.`, life: 2400});
+        fetch(`http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/account/searchmember?condition=${condition}&value=${value}`, {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              "Access-Control-Allow-Origin": "*",
+              "Access_token": window.localStorage.getItem("access_token")
+            }
+        })
+        .then(response => response.json())
+        .then(json => {
+            console.log(json);
+            setProducts(json.results);
+        })
+        .catch((err) => {
+            showError('회원 목록 조회 실패하였습니다.');
+        });
+
+
+        toast.current.show({severity: 'success', 
+                            summary: `검색완료`, 
+                            detail: `${value}을(를) 포함한 검색결과입니다.`, 
+                            life: 2400});
     };
 
     const onKeyPressHandler = e => { // 엔터키 입력
@@ -50,22 +76,23 @@ function AdminMember() {
 
     useEffect(() => {
 
-        fetch(`http://localhost:8888/api/account/members`, {
+        fetch(`http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/account/members`, {
             method: "GET",
             headers: {
-              "Content-Type": "application/json",
-              "Access_token": window.localStorage.getItem("access_token")
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+            "Access_token": window.localStorage.getItem("access_token")
             }
         })
         .then(response => response.json())
         .then(json => {
+            console.log(json);
             setProducts(json.results);
         })
         .catch((err) => {
             showError('회원 목록 조회 실패하였습니다.');
         });
 
-        
     }, 
     []); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -82,10 +109,11 @@ function AdminMember() {
     const onClickMemberDetailHandler = (memberCode) => {
         console.log(memberCode);
 
-        fetch(`http://localhost:8888/api/account/member?code=${memberCode}`, {
+        fetch(`http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/account/member?code=${memberCode}`, {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
+              "Access-Control-Allow-Origin": "*",
               "Access_token": window.localStorage.getItem("access_token")
             }
         })
@@ -144,7 +172,7 @@ function AdminMember() {
     };
 
 
-    const dismissDetail = () => { // 권한 순서 변경 확인(실제 저장은 dialog 확인 시)
+    const dismissDetail = () => { 
 
         
         setMemberDetailShow(false);
@@ -200,7 +228,7 @@ function AdminMember() {
                 
             </div>
 
-            {/* 권한 순서 수정 모달창 */}
+            {/* 회원 정보 상세 모달창 */}
             <Dialog 
                     visible={ memberDetailShow } 
                     style={{ width: '30vw', height: '75vh' }}

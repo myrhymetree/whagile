@@ -24,7 +24,7 @@ const sprintReducer = handleActions(
                 'sprintStartDate': new Date(payload.sprintStartDate),
                 'sprintEndDate': new Date(payload.sprintEndDate)
             }
-            console.log('sprint: ', newState)
+            
             return newState;
         },
         [SET_SPRINT]: (state, { payload }) => {

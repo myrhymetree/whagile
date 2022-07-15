@@ -50,7 +50,7 @@ export default function TaskCreateModal(props) {
 			issue: taskAll.taskIssue,
 			urgency: taskAll.taskUrgency,
 			backlogChargerCode: taskAll.taskCharger,
-			backlogCategory: "백로그",
+			backlogCategory: (taskAll.taskProgressStatus === '백로그')? '백로그': '일감',
 			sprintCode: decoded !== "undefined" ? decoded.code : "",
 			projectCode: projectCode,
 			backlogCreatorCode: decoded !== "undefined" ? decoded.code : "",
@@ -80,6 +80,7 @@ export default function TaskCreateModal(props) {
 				taskAll={taskAll}
 				onFormSubmit={onSubmit}
 				onClose={onClose}
+				category={props.category}
 			/>
 		</Modal>
 	);

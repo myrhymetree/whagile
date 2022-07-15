@@ -1,15 +1,40 @@
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Category, Urgency } from "./Types";
 import KanbanBoardStyle from "./KanbanBoard.module.css";
+import { useParams } from "react-router-dom";
 
-// 일감 모달 창 - 상세 조회 폼
-export default function EditTaskForm({onChangeTask, taskAll, onFormSubmit, onClose}) {
+// 일감 생성 모달 창
+export default function EditTaskForm({onChangeTask, taskAll, onFormSubmit, onClose, category}) {
+
+  const { projectCode } = useParams();
+
+  const [taskMemberList, setTaskMemberList] = useState([]);
+
+  useEffect(() => {
+
+    fetch(
+      `http://localhost:8888/api/projects/${projectCode}/member`,
+      {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      }
+    )
+      .then((res) => res.json())
+      .then((json) => setTaskMemberList(json.results));
+    },[projectCode]
+    );
+    
 
 	return (
     <div className={KanbanBoardStyle.kanbanModalContent}>
       <form onSubmit={onFormSubmit || ""}>
-        <div className={KanbanBoardStyle.kanbanTitles}>상세 조회 및 수정</div>
+        <div className={KanbanBoardStyle.kanbanTitles}>
+          {category}&nbsp; 생성
+        </div>
         <div>
           <label
             htmlFor="input-title"
@@ -85,11 +110,14 @@ export default function EditTaskForm({onChangeTask, taskAll, onFormSubmit, onClo
             value={taskAll.taskCharger || ""}
             onChange={(event) => onChangeTask(event)}
           >
-            <option value={1}>우진</option>
-            <option value={2}>성준</option>
-            <option value={3}>민주</option>
-            <option value={4}>한솔</option>
-            <option value={5}>호성</option>
+            <option value={null} name="담당자없음">
+              담당자 없음
+            </option>
+            {taskMemberList.map((member) => (
+              <option key={member.memberCode} value={member.memberCode}>
+                {member.memberName}
+              </option>
+            ))}
           </select>
         </div>
 

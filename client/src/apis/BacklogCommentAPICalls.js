@@ -1,5 +1,5 @@
 import { FIND_BACKLOG_COMMENTS, MORE_BACKLOG_COMMENTS, CLEAN_BACKLOG_COMMENTS } from '../modules/BacklogCommentModule';
-import { REGIST_BACKLOG_COMMENT, REMOVE_BACKLOG_COMMENT } from '../modules/BacklogCommentDetailModule';
+import { REGIST_BACKLOG_COMMENT, MODIFY_BACKLOG_COMMENT, REMOVE_BACKLOG_COMMENT } from '../modules/BacklogCommentDetailModule';
 
 /* 백로그 댓글 목록 조회 API 호출 */
 export function callGetBacklogCommentsAPI(params) {
@@ -50,6 +50,27 @@ export function callPostBacklogCommentAPI(newComment) {
     }
 }
 
+/* 백로그 댓글 수정 API 호출 */
+export function callPutBacklogCommentAPI(modifyRequest) {
+
+    const requestURL = 'http://localhost:8888/api/backlog-comments';
+
+    return async function modifyBacklogComment(dispatch, getState) {
+        
+        const result = await fetch(requestURL, {
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Access-Token': window.localStorage.getItem('access_token')
+            },
+            body: JSON.stringify(modifyRequest)
+        }).then(res => res.json());
+
+        await dispatch({ type: MODIFY_BACKLOG_COMMENT, payload: result });
+    }
+}
+
 /* 백로그 댓글 삭제 API 호출 */
 export function callDeleteBacklogCommentAPI(removeRequest) {
 
@@ -74,7 +95,6 @@ export function callDeleteBacklogCommentAPI(removeRequest) {
 /* 기존 state reset */
 export function callCleanBacklogComments() {
 
-    console.log('@@@@@@@@@@동작?')
     return async function cleanBacklogComments(dispatch, getState) {
         await dispatch({ type: CLEAN_BACKLOG_COMMENTS, payload: [] });
     }

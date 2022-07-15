@@ -12,16 +12,18 @@ function Login() {
 
     // const [id, setId] = useState("");
     // const [password, setPassword] = useState("");
-    const [isLogin, setIsLogin] = useState('');
+    const [isLogin, setIsLogin] = useState(window.sessionStorage.getItem('isLogin', true) || false);
     const [searchIDForm, setSearchIDForm] = useState(false);
     const [loginform, setLoginform] = useState(true);
     const [searchPwForm, setSearchPwForm] = useState(false);
 
-    useEffect(() => {
-        console.log("useEffect Login", isLogin);
-        setIsLogin(window.sessionStorage.getItem('isLogin'));       
+    useEffect(() => {        
+            
         if(isLogin) {
-            navigate('/main');
+            //navigate('/projects');
+            console.log('test');
+            setIsLogin(true);
+            navigate('/projects', { replace: true });
         }
     },
     [isLogin]);
@@ -81,10 +83,11 @@ function Login() {
 
     const onSubmitHandler = (data) => {
         
-        fetch("http://localhost:8888/api/account/login", {
+        fetch(`http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/account/login`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
+              "Access-Control-Allow-Origin": "*"
             },
             body: JSON.stringify(data)
         })
@@ -95,10 +98,10 @@ function Login() {
             if(json.status == 200){                
                 window.sessionStorage.setItem('isLogin', true);
                 setIsLogin(true);
-
+                
                 window.localStorage.setItem('access_token', json.accessToken);
                 window.localStorage.getItem('access_token') !== 'undefined' 
-                ? ((json.result[0].role == 'ROLE_ADMIN')? navigate('/admin/dashboard') : navigate('/projects'))
+                ? ((json.result[0].role == 'ROLE_ADMIN')? navigate('/admin/dashboard', { replace: true }) : navigate('/projects', { replace: true }))
                 : showError('로그인에 실패하였습니다.');
             } else {
                 showError('로그인에 실패하였습니다.');
@@ -117,10 +120,11 @@ function Login() {
     const onSearchIDHandler = (data) => {
         console.log(data);
         
-        fetch(`http://localhost:8888/api/account/search?email=${data.searchIDEmail}`, {
+        fetch(`http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/account/search?email=${data.searchIDEmail}`, {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
+              "Access-Control-Allow-Origin": "*"
             }
         })
         .then(response => response.json())
@@ -151,10 +155,11 @@ function Login() {
     const onSearchPWHandler = (data) => {
         console.log(data);
 
-        fetch(`http://localhost:8888/api/account/temppwd?id=${data.searchPWMemberId}&email=${data.searchPWEmail}`, {
+        fetch(`http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/account/temppwd?id=${data.searchPWMemberId}&email=${data.searchPWEmail}`, {
             method: "PUT",
             headers: {
               "Content-Type": "application/json",
+              "Access-Control-Allow-Origin": "*"
             }
         })
         .then(response => response.json())

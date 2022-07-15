@@ -14,7 +14,7 @@ exports.insertSprint = (connection, params) => {
                 , (params.sprintTarget)? params.sprintTarget: null
                 , (params.sprintStartDate)? params.sprintStartDate: null
                 , (params.sprintEndDate)? params.sprintEndDate: null
-                , parseInt(params.projectCode)
+                , parseInt(params.currentInfo.projectCode)
             ],
             (err, results, fields) => {
                 if(err) {
@@ -162,4 +162,177 @@ exports.selectTasks = (connection, params) => {
             }
         );
     })    
+}
+
+exports.insertTask = (connection, params, currentInfo) => {
+
+    return new Promise((resolve, reject) => {
+        
+        connection.query(
+
+            sprintQuery.insertTask(),
+            [
+                params.backlogTitle
+                , params.backlogDescription
+                , params.backlogUrgency
+                , (params.backlogChargerCode)? params.backlogChargerCode: null
+                , currentInfo.sprintCode
+                , currentInfo.projectCode
+                , currentInfo.backlogCreatorCode
+                , params.backlogIssue
+                , (params.backlogStartDate)? params.backlogStartDate: null
+                , (params.backlogEndDate)? params.backlogEndDate: null
+            ],
+            (err, results, fields) => {
+                if(err) {
+                    reject(err);
+                }
+
+                resolve(results);
+            }
+        );
+    })    
+}
+
+exports.updateBacklogToTask = (connection, params, currentInfo) => {
+
+    return new Promise((resolve, reject) => {
+        
+        connection.query(
+
+            sprintQuery.updateBacklogToTask(),
+            [
+                currentInfo.sprintCode,
+                params.backlogCode,
+            ],
+            (err, results, fields) => {
+                if(err) {
+                    reject(err);
+                }
+
+                resolve(results);
+            }
+        );
+    })
+}
+
+exports.updateTaskToBacklogBySprintCode = (connection, sprintCode) => {
+
+    return new Promise((resolve, reject) => {
+        
+        connection.query(
+
+            sprintQuery.updateTaskToBacklogBySprintCode(),
+            [sprintCode],
+            (err, results, fields) => {
+                if(err) {
+                    reject(err);
+                }
+
+                resolve(results);
+            }
+        );
+    })
+}
+
+exports.updateTaskToBacklogByBacklogCode = (connection, backlogCode) => {
+
+    return new Promise((resolve, reject) => {
+        
+        connection.query(
+
+            sprintQuery.updateTaskToBacklogByBacklogCode(),
+            [backlogCode],
+            (err, results, fields) => {
+                if(err) {
+                    reject(err);
+                }
+
+                resolve(results);
+            }
+        );
+    })
+}
+
+exports.selectSprintsCount = (connection, params) => {
+
+    return new Promise((resolve, reject) => {
+        
+        connection.query(
+
+            sprintQuery.selectSprintsCount(params),
+            [params.projectCode],
+            (err, results, fields) => {
+                if(err) {
+                    reject(err);
+                }
+
+                resolve(results);
+            }
+        );
+    })
+}
+
+exports.selectTasksCount = (connection, params) => {
+    
+    return new Promise((resolve, reject) => {
+        
+        connection.query(
+
+            sprintQuery.selectTasksCount(params),
+            [parseInt(params.projectCode)],
+            (err, results, fields) => {
+                if(err) {
+                    reject(err);
+                }
+
+                resolve(results);
+            }
+        );
+    })
+}
+
+exports.selectBacklogsCount = (connection, params) => {
+    
+    return new Promise((resolve, reject) => {
+        
+        connection.query(
+
+            sprintQuery.selectBacklogsCount(),
+            [parseInt(params.projectCode)],
+            (err, results, fields) => {
+                if(err) {
+                    reject(err);
+                }
+
+                resolve(results);
+            }
+        );
+    })
+}
+
+exports.insertSprintHistory = (connection, sprintHistory, currentInfo) => {
+    console.log(111, sprintHistory)
+    console.log(222, currentInfo)
+    return new Promise((resolve, reject) => {
+        
+        connection.query(
+
+            sprintQuery.insertSprintHistory(),
+            [
+                sprintHistory.sprintHitoryItem.toString(),
+                sprintHistory.sprintHistoryContent,
+                currentInfo.sprintCode,
+                currentInfo.backlogCreatorCode,
+                parseInt(currentInfo.projectCode),
+            ],
+            (err, results, fields) => {
+                if(err) {
+                    reject(err);
+                }
+
+                resolve(results);
+            }
+        );
+    })
 }

@@ -7,10 +7,10 @@ export const callGetAuthsAPI = (params) => { // 권한 목록 조회
     let requestURL = `http://localhost:8888/api/auth`;
     
     let defaultParams = { 
-        // 'offset': 0,
-        // 'limit': 30,
-        'orderCondition': 'code',
-        'orderValue': 'desc'
+        // offset: 0,
+        // limit: 30,
+        orderCondition: 'code',
+        orderValue: 'desc'
     };
 
     if(params === undefined || Object.keys(params).length === 0) {
@@ -141,10 +141,10 @@ export const callGetAuthOrderAPI = (params) => { // 권한 순서 조회
     let requestURL = `http://localhost:8888/api/auth`;
     
     let defaultParams = { 
-        'searchCondition': 'activated_yn',
-        'searchValue': 'Y',
-        'orderCondition': 'exposure_order',
-        'orderValue': 'asc'
+        searchCondition: 'activated_yn',
+        searchValue: 'Y',
+        orderCondition: 'exposure_order',
+        orderValue: 'asc'
     };
 
     if(params === undefined || Object.keys(params).length === 0) {

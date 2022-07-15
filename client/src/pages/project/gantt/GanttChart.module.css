@@ -16,22 +16,29 @@
     height: 16px;
 }
 
-#dialogContainer div::-webkit-scrollbar {
+#dialogContainer div::-webkit-scrollbar
+, #taskContainer div::-webkit-scrollbar {
     width: 16px;
 }
 
-#container div::-webkit-scrollbar-thumb, #dialogContainer div::-webkit-scrollbar-thumb {
-    background-color: #1D1E27;
+#container div::-webkit-scrollbar-thumb
+, #dialogContainer div::-webkit-scrollbar-thumb
+, #taskContainer div::-webkit-scrollbar-thumb {
+    background-color: #282936;
     border-radius: 10px;
     background-clip: padding-box;
     border: 2px solid transparent;
 }
 
-#container div::-webkit-scrollbar-thumb:active, #dialogContainer div::-webkit-scrollbar-thumb:active {
+#container div::-webkit-scrollbar-thumb:active
+, #dialogContainer div::-webkit-scrollbar-thumb:active
+, #taskContainer div::-webkit-scrollbar-thumb:active {
     background-color: #333544;
 }
 
-#container div::-webkit-scrollbar-track, #dialogContainer div::-webkit-scrollbar-track {
+#container div::-webkit-scrollbar-track
+, #dialogContainer div::-webkit-scrollbar-track
+, #taskContainer div::-webkit-scrollbar-track {
     background-color: grey;
     border-radius: 10px;
 }
@@ -135,25 +142,17 @@
 }
 
 /* 일감 목록 */
-#taskContainer {
+#taskBody {
     display: flex;
     flex-direction: column;
 }
 
-#taskContainer>div {
+#taskBody>div {
     display: flex;
     flex-direction: column;
 }
 
-/* #taskContainer>div:nth-child(1) {
-    color: #00AA9C;
-}
-
-#taskContainer>div:nth-child(2) {
-    color: #FFB95F;
-} */
-
-#taskContainer>div label {
+#taskBody>div label {
     font-size: 16px;
     padding: 10px 0;
 }
@@ -196,7 +195,20 @@
     display: block;
 }
 
-#taskContainer>div:nth-child(3) li:not(:last-child) {
+#taskBody>div:nth-child(3) li:not(:last-child) {
     /* background: rgba(255, 185, 95, .16);
     color: #FFB95F; */
 }
+
+#moreSprints {
+    width: 360px;
+    height: 17px;
+    background-color: #282936;
+    border: 1px solid grey;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    text-align: center;
+    position: relative;
+    margin-top: -18px;
+}
+

@@ -1,5 +1,4 @@
 div.cells {
-    width: 320px;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -9,6 +8,15 @@ div.cells {
     -webkit-user-select: none;
     user-select: none;
     cursor: pointer;
+    margin-left: 10px;
+}
+
+div#cellsHover {
+    background-color: #282936;
+}
+
+div#cellsHover:hover {
+    background-color: #333544;
 }
 
 div#cellsContainer {

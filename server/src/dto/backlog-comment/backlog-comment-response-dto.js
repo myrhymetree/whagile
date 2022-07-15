@@ -9,6 +9,7 @@ class BacklogCommentDTO {
     backlogCode;
     projectCode;
     memberCode;
+    memberName;
 
     constructor(data) {
         this.backlogCommentCode = data.BACKLOG_COMMENT_CODE;
@@ -20,6 +21,7 @@ class BacklogCommentDTO {
         this.backlogCode = data.BACKLOG_CODE;
         this.projectCode = data.PROJECT_CODE;
         this.memberCode = data.MEMBER_CODE;
+        this.memberName = data.MEMBER_NAME;
     }
 }
 
