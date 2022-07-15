@@ -308,7 +308,7 @@ exports.selectNotice = (connection, projectCode) => {
                 notice.push(new ProjectNoticeDTO(results[i]));
             }
 
-            resolve(notice[0]);
+            resolve(notice);
         });
     });
 }
