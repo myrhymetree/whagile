@@ -1,4 +1,4 @@
-nav {
+#navbar {
     width: 240px;
     height: calc(100vh - 58px);
     background-color: #282936;
@@ -9,27 +9,27 @@ nav {
     align-items: center;
 }
 
-nav>* {
+#navbar>* {
     margin-top: 16px;
 }
 
-nav>div {
-    width: 198px;
+#navbar>div {
+    width: 203px;
     font-size: 16px;
 }
 
-nav>div:nth-child(1) {
+#navbar>div:nth-child(1) {
     background-color: #333544;
     border-radius: 6px;
     padding: 20px;
     height: auto;
 }
 
-nav>div:nth-child(2) {
+#navbar>div:nth-child(2) {
     flex: 1;
 }
 
-nav>div:nth-child(3) {
+#navbar>div:nth-child(3) {
     justify-content: end;
 }
 

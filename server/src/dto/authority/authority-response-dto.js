@@ -1,4 +1,5 @@
 class AuthorityDTO {
+
     authorityCode;
     authorityName;
     authorityDescription;
@@ -7,6 +8,7 @@ class AuthorityDTO {
     authorityExposureDate;
     
     constructor(data) {
+        
         this.authorityCode = data.AUTHORITY_CODE;
         this.authorityName = data.AUTHORITY_NAME;
         this.authorityDescription = data.AUTHORITY_DESCRIPTION;

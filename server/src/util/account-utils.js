@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { JWT_SECRET } = process.env;
+const generator = require('generate-password');
 
 exports.setPassword = (password) => {
     console.log('setPassword called');
@@ -12,8 +13,20 @@ exports.checkPassword = (password, passwordHash) => {
     return bcrypt.compare(password, passwordHash);
 }
 
+exports.generateTempPassword = () => {
+    return new Promise((resolve, reject) => {
+        
+        resolve(generator.generate({
+            length: 10,
+            lowercase: true,
+            uppercase: true,
+            numbers: true,
+            symbols: true
+        }))
+    });
+}
 
-exports.generateToken = (memberCode, memberId, memberName, memberEmail) => {
+exports.generateToken = (memberCode, memberId, memberName, memberEmail, role) => {
     return new Promise((resolve, reject) => {
 
         jwt.sign(
@@ -21,7 +34,8 @@ exports.generateToken = (memberCode, memberId, memberName, memberEmail) => {
                 code: memberCode,
                 id: memberId,
                 username: memberName,
-                email: memberEmail
+                email: memberEmail,
+                role: role
             },
             process.env.JWT_SECRET,
             {
@@ -45,7 +59,7 @@ exports.decodedToken = (token) => {
     const result = jwt.verify(token, JWT_SECRET);
 
     const decodedToken = {
-        //usercode: result.usercode,
+        usercode: result.code,
         id: result.id,
         username: result.username,
         email: result.email,

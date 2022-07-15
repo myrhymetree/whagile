@@ -16,13 +16,45 @@ function Signup() {
     const navigate = useNavigate();
     
     const toast = useRef(null);
-    const showError = () => {
-        toast.current.show({severity:'error', summary: 'Error Message', detail:'패스워드가 일치하지 않습니다.', life: 3000});
+    const toastBC = useRef(null);
+    const [registerClick, setRegisterClick] = useState(false);
+
+    const showError = (msg) => {
+        toast.current.show({severity:'error', summary: 'Error Message', detail: msg || '패스워드가 일치하지 않습니다.', life: 3000});
     }
 
     const clear = () => {
         toast.current.clear();
     }
+
+    const goMain = () => {
+        console.log('register finished');      
+        navigate('/');
+    }
+
+    const showConfirm = () => {
+        toastBC.current.show({ severity: 'warn', sticky: true, content: (
+            <div className="flex flex-column" style={{flex: '1'}}>
+                <div className="text-center">
+                    <i className="pi pi-exclamation-triangle" style={{fontSize: '3rem'}}></i>
+                    <h4>회원 가입 완료</h4>     
+                    <p>이메일 인증을 완료해주시기 바랍니다.</p>               
+                </div>
+                <div className="grid p-fluid">
+                    <div className="col-6">
+                        <Button 
+                            type="button" 
+                            label="Yes" 
+                            className="p-button-success" 
+                            onClick={  goMain } 
+                        />
+                    </div>
+                </div>
+            </div>
+        ) });
+    }
+
+  
 
     const [formData, setFormData] = useState({});
     const defaultValues = {
@@ -42,16 +74,18 @@ function Signup() {
     const onSubmitHandler = (data) => {
         
         console.log(data);
+        setRegisterClick(true);
         
         if(data.password !== data.confirmPassword) {            
             showError();
             return;
         }
 
-        fetch("http://localhost:8888/api/account/register", {
+        fetch(`http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/account/register`, {
             method: "POST",
             headers: {
-              "Content-Type": "application/json"
+              "Content-Type": "application/json",
+              "Access-Control-Allow-Origin": "*"
             },
             body: JSON.stringify({
                 data
@@ -59,13 +93,21 @@ function Signup() {
         })
         .then(response => response.json())
         .then(json => {
-            navigate('/');
+            console.log(json);
+            if(json.status == 200){
+                showConfirm();               
+            }
+            else{
+                showError(json.message);
+                setRegisterClick(false);
+            }
         })
         .catch((err) => {
           console.log('login error: ' + err);
         });
-        reset();
-        navigate('/');
+        
+        // reset();
+        // navigate('/');
 
     };
 
@@ -88,9 +130,14 @@ function Signup() {
         </React.Fragment>
     );
 
+    const onClickLoginPage = () => {
+        navigate('/') 
+    }
+
     return (
       <div className="formDiv login-center">
             <Toast ref={toast} position="top-center" />
+            <Toast ref={toastBC} position="top-center" />
 
            <div className="flex justify-content-center">
               <div className="card">
@@ -217,9 +264,15 @@ function Signup() {
                         type="submit" 
                         label="가입" 
                         className="p-button-success p-button-sm" 
+                        disabled={registerClick}
                     />
-
-                    <NavLink to="/">로그인페이지로</NavLink>
+                    <Button 
+                        style={{ width: '100%' }} 
+                        className="p-button-warning p-button-text" 
+                        label="로그인페이지로" 
+                        onClick={ onClickLoginPage }
+                    />     
+                    {/* <NavLink to="/">로그인페이지로</NavLink> */}
                 </form>
               </div>
           </div>
