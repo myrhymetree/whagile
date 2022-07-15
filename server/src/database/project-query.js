@@ -264,6 +264,20 @@ exports.isRegistedMember = (data) => {
     `;
   }
 
+  exports.selectNotice = (projectCode) => {
+    return `
+        SELECT
+               A.NOTICE_CODE
+             , A.NOTICE_CONTENT
+             , A.NOTICE_CREATED_DATE
+             , A.PROJECT_CODE
+             , A.CREATOR
+             , A.MODIFIER
+          FROM TBL_NOTICE A
+         WHERE A.PROJECT_CODE = ${ projectCode }  
+    `;
+  };
+
   exports.insertNoticeToProject = () => {
     // console.log('noticeInfo', noticeInfo);
     return `

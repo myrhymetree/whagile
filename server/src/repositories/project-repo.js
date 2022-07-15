@@ -291,6 +291,28 @@ exports.selectProjectMember = (connection, projectMemberInfo) => {
     });
 }
 
+exports.selectNotice = (connection, projectCode) => {
+
+    return new Promise((resolve, reject) => {
+        connection.query(projectQuery.selectNotice(projectCode),
+
+        (err, results, fields) => {
+
+            if(err) {
+                console.log(err);
+                reject(err);
+            }
+
+            const notice = [];
+            for(let i = 0; i < results.length; i++) {
+                notice.push(new ProjectNoticeDTO(results[i]));
+            }
+
+            resolve(notice[0]);
+        });
+    });
+}
+
 exports.insertNoticeToProject = (connection, noticeInfo) => {
 
     const dt = new Date();

@@ -219,6 +219,23 @@ exports.modifyAuthorityOfMember = async (req, res, next) => {
         });
 }
 
+exports.findNotice = async (req, res, next) => {
+
+    await ProjectService.findNotice(req.params.projectCode)
+        .then((result) => {
+            res.status(HttpStatus.OK).json({
+                status: HttpStatus.OK,
+                message: '해당 프로젝트 공지사항을 조회했습니다.',
+                results: result
+            });
+        }).catch((err) => {
+            res.status(HttpStatus.BAD_REQUEST).json({
+                status: HttpStatus.BAD_REQUEST,
+                message: err
+            });
+        });
+};
+
 exports.registNoticeToProject = async (req, res, next) => {
 
     const noticeInfo = {
@@ -229,8 +246,8 @@ exports.registNoticeToProject = async (req, res, next) => {
 
     await ProjectService.registNoticeToProject(noticeInfo)
         .then((result) => {
-            res.status(HttpStatus.OK).json({
-                status: HttpStatus.OK,
+            res.status(HttpStatus.CREATED).json({
+                status: HttpStatus.CREATED,
                 message: '해당 프로젝트 공지사항을 등록했습니다.',
                 results: result
             });
