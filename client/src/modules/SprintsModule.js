@@ -7,11 +7,13 @@ const initialState = [];
 export const GET_SPRINTS = 'sprints/GET_SPRINTS';
 export const SET_COLLAPSED_SPRINTS = 'sprints/SET_COLLAPSED_SPRINTS';
 export const UPDATE_TASKS_GANTT = 'sprints/UPDATE_TASKS_GANTT';
+export const SET_COLLAPSED_ALL_SPRINTS = 'sprints/SET_COLLAPSED_ALL_SPRINTS';
 
 const actions = createActions({
     [GET_SPRINTS]: () => {},
     [SET_COLLAPSED_SPRINTS]: () => {},
     [UPDATE_TASKS_GANTT]: () => {},
+    [SET_COLLAPSED_ALL_SPRINTS]: () => {}
 });
 
 /* 리듀서 */
@@ -40,7 +42,7 @@ const sprintsReducer = handleActions(
                     type: "project",
                     start: new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate()),
                     end: new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate()),
-                    hideChildren: false,
+                    hideChildren: true,
                     progressStatus: p.sprintProgressStatus,
                     tasksCount: p.tasks.length
                 });
@@ -103,7 +105,22 @@ const sprintsReducer = handleActions(
 		    // }
 
             return newState;
-        }
+        },
+        [SET_COLLAPSED_ALL_SPRINTS]: (state, { payload }) => { // 스프린트 리스트 상단 메뉴 누르면 전부 접기
+
+            let newState = [...state];
+
+            newState.map((el) => {
+                if(el.type === 'project') {
+                    el.hideChildren = true;
+                    return el;
+                } else {
+                    return el;
+                }
+            })
+            
+            return newState;
+        },
     },
     initialState
 );

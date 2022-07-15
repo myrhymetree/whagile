@@ -88,7 +88,7 @@ exports.editTask = (params) => {
       resolve(results);
     } catch (err) {
       connection.rollback();
-
+      console.log('error', err)
       reject(err);
     } finally {
       connection.end();

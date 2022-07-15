@@ -65,7 +65,7 @@ exports.registNewTask = async (req, res, next) => {
 
 // 개별 일감 수정
 exports.editTask = async (req, res, next) => {
-
+  
   await TasksService.editTask(req.body.kanbanInfo)
     .then((result) => {
       res.status(HttpStatus.OK).json({
@@ -80,8 +80,6 @@ exports.editTask = async (req, res, next) => {
         message: err,
       });
     });
-
-
 };
 
 // 개별 일감(백로그) 삭제

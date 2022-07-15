@@ -276,11 +276,13 @@ exports.selectSprintsCount = (connection, params) => {
 exports.selectTasksCount = (connection, params) => {
     
     return new Promise((resolve, reject) => {
-        
+        console.log('여기', params)
         connection.query(
 
             sprintQuery.selectTasksCount(params),
-            [parseInt(params.projectCode)],
+            [
+                parseInt(params.projectCode)
+            ],
             (err, results, fields) => {
                 if(err) {
                     reject(err);
