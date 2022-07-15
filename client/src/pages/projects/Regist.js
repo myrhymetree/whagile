@@ -128,27 +128,27 @@ function Regist() {
                                  />
                             </div>
                         </div>
-                        <div>
+                        <div style={{ display: 'flex', alignContent: 'center', flexDirection: 'row' }}>
                             <Button 
                             type="button"
                             icon="pi pi-user-plus" 
                             label="팀원 초대" 
-                            className="p-button-lg"
+                            className="p-button-lg m-2 bg-green-100"
                             onClick={ () => showModal('displayBasic')}
                             />
                         </div>
-                        <div style={{ display: 'flex', alignContent: 'center', flexDirection: 'column' }}>
+                        <div style={{ display: 'flex', alignContent: 'center', flexDirection: 'row' }}>
                             <Button 
                                 type="submit"
                                 icon="pi pi-check"
                                 label="등록" 
-                                className="p-button-lg"
+                                className="p-button-lg m-2"
                             />
                             <Button 
                                 type="click"
                                 icon="pi pi-times"
                                 label="취소" 
-                                className="p-button-lg"
+                                className="p-button-lg m-2 bg-primary-reverse"
                                 onClick={ () => { navigate(`/projects`) }}
                             />
                         </div>    
