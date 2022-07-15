@@ -9,7 +9,7 @@ import BacklogCreationModal from './BacklogCreationModal';
 import BacklogDetails from './BacklogDetails';
 
 import { Dropdown } from 'primereact/dropdown';
-import { callGetBacklogDetailsAPI, callGetBacklogsAPI, callGetFilteredBacklogsAPI } from '../../../apis/BacklogAPICalls';
+import { callGetBacklogDetailsAPI, callGetBacklogsAPI, callGetFilteredBacklogsAPI, callCleanBacklog } from '../../../apis/BacklogAPICalls';
 import { callGetBacklogCommentsAPI } from '../../../apis/BacklogCommentAPICalls';
 
 function Backlogs() {
@@ -48,6 +48,7 @@ function Backlogs() {
 
     useEffect(
         () => {
+            dispatch(callCleanBacklog());
             dispatch(callGetBacklogsAPI({
                 'offset': pageNo,
                 'limit': 10,
@@ -106,15 +107,7 @@ function Backlogs() {
         <>
             <span className={ BacklogAndSprintCSS.divTitle }>백로그 목록</span>
             <hr className={ BacklogAndSprintCSS.divisionLine }/>
-            <div id={ BacklogAndSprintCSS.filterConditions }>
-                {/* <Dropdown 
-                    value={ selectedProgressStatus } 
-                    options={ progressStatusOptions } 
-                    optionLabel="name" 
-                    optionValue="value" 
-                    onChange={ (e) => setSelectedProgressStatus(e.target.value) }  
-                    placeholder="진행상태" 
-                />   */}
+            {/* <div id={ BacklogAndSprintCSS.filterConditions }>
                 <Dropdown 
                     value={ urgency } 
                     options={ urgencyOptions } 
@@ -132,7 +125,7 @@ function Backlogs() {
                     placeholder="구분"
                 />
                 <button onClick={ () => findFilteredResults() }>적용</button>            
-            </div>
+            </div> */}
             <div>
                  <DivHeader/>
                  { 
@@ -146,17 +139,19 @@ function Backlogs() {
                             className={ BacklogAndSprintCSS.backlogItem }
                             key={ backlog.backlogCode }
                         >
-                            <label>{ backlog.issue === 1? '이슈' : '기본' }</label>
-                            <label>{ backlog.backlogTitle }</label>
-                            <label>{ backlog.progressStatus }</label>
-                            <label>{ backlog.urgency }</label>
-                            <label>{ backlog.memberName }</label>
-                            <button 
-                                id={ BacklogAndSprintCSS.moreDetailsBtn }
-                                onClick={ () => seeBacklogDetails(backlog.backlogCode) }
-                            >
-                                자세히
-                            </button>
+                            <div>{ backlog.issue === 1? '이슈' : '기본' }</div>
+                            <div>{ backlog.backlogTitle }</div>
+                            <div>{ backlog.progressStatus }</div>
+                            <div>{ backlog.urgency }</div>
+                            <div>{ backlog.memberName }</div>
+                            <div>
+                                <button 
+                                    id={ BacklogAndSprintCSS.moreDetailsBtn }
+                                    onClick={ () => seeBacklogDetails(backlog.backlogCode) }
+                                >
+                                    자세히
+                                </button>
+                            </div>
                         </div>  
                     )
                 }
