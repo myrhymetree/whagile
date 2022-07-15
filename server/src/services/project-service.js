@@ -1,8 +1,9 @@
 const getConnection = require('../database/connection');
 const ProjectRepository = require('../repositories/project-repo');
+const ProjectStatisticsRepository = require('../repositories/project-statistics-repo');
+const AccountRepository = require('../repositories/account-repo');
 const AccountUtils = require('../util/account-utils');
 const EmailUtils = require('../util/email-utils');
-const AccountRepository = require('../repositories/account-repo');
 
 exports.selectProjects = (params) => {
 
@@ -354,6 +355,20 @@ exports.modifyAuthorityOfMember = (projectMemberInfo) => {
     });
 }
 
+exports.findNotice = (projectCode) => {
+    return new Promise( async(resolve, reject) => {
+
+        const connection = getConnection();
+
+        const results = ProjectRepository.selectNotice(connection, projectCode);
+
+        connection.end();
+
+        resolve(results);
+
+    })
+}
+
 exports.registNoticeToProject = (noticeInfo) => {
     return new Promise( async(resolve, reject) => {
         
@@ -361,8 +376,8 @@ exports.registNoticeToProject = (noticeInfo) => {
         connection.beginTransaction();
 
         try {
-            await ProjectRepository.insertNoticeToProject(connection, noticeInfo);
-            
+            const result = await ProjectRepository.insertNoticeToProject(connection, noticeInfo);
+            await ProjectRepository.selectNotice(connection, noticeInfo.projectCode);
             
             connection.commit();
 

@@ -1,6 +1,7 @@
 import { GET_PROJECT, GET_PROJECTS, POST_PROJECT, PUT_PROJECT,  DELETE_PROJECT } from "../modules/ProjectModule";
 import { GET_PROJECT_MEMBER } from "../modules/ProjectMemberModule";
 import { GET_INVITED_MEMBER, PUT_MODIFY_AUTHORITY, DELETE_PROJECT_MEMBER } from "../modules/ProjectMemberModule";
+import { GET_PROJECT_NOTICE } from "../modules/ProjectNoticeModule";
 import { decodeJwt } from '../utils/tokenUtils';
 
 export function callGetProjectsAPI(params) {
@@ -204,3 +205,15 @@ export const callPutModifyAuthorityProjectMemberAPI = (data) => {
         dispatch({ type: PUT_MODIFY_AUTHORITY, payload: result.results});
     };
 };
+
+export const callGetNoticeAPI = (data) => {
+
+    const requestURL = `http://localhost:8888/api/projects/${ data.projectCode }/notice`;
+
+    return async function getProject(dispatch, getState) {
+
+        const result = await fetch(requestURL).then(res => res.json());
+
+        dispatch({ type: GET_PROJECT_NOTICE, payload: result.results});
+    }
+}

@@ -12,7 +12,10 @@ exports.selectBacklogComments = () => {
              , A.BACKLOG_CODE
              , A.PROJECT_CODE
              , A.MEMBER_CODE
+             , B.MEMBER_NAME
           FROM TBL_BACKLOG_COMMENT A
+          JOIN TBL_PROJECT_MEMBER P ON (A.PROJECT_CODE = P.PROJECT_CODE) AND (A.MEMBER_CODE = P.MEMBER_CODE)
+          JOIN TBL_MEMBER B ON (P.MEMBER_CODE = B.MEMBER_CODE)
          WHERE A.BACKLOG_COMMENT_DELETED_YN = 'N'
            AND A.BACKLOG_CODE = ?
           LIMIT ?, ?
@@ -33,7 +36,10 @@ exports.selectBacklogComment = () => {
              , A.BACKLOG_CODE
              , A.PROJECT_CODE
              , A.MEMBER_CODE
+             , B.MEMBER_NAME
           FROM TBL_BACKLOG_COMMENT A
+          JOIN TBL_PROJECT_MEMBER P ON (A.PROJECT_CODE = P.PROJECT_CODE) AND (A.MEMBER_CODE = P.MEMBER_CODE)
+          JOIN TBL_MEMBER B ON (P.MEMBER_CODE = B.MEMBER_CODE)
          WHERE A.BACKLOG_COMMENT_CODE = ?
     `;
 }
