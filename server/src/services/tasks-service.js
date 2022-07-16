@@ -82,7 +82,8 @@ exports.editTask = (params) => {
 			// taskHistory.projectCode = params.projectCode;
 			// taskHistory.memberCode = params.memberCode;
 			// await TasksRepository.insertTaskHistory(connection, taskHistory);
-
+      
+      console.log("수정result", results)
       connection.commit();
 
       resolve(results);

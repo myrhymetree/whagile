@@ -93,26 +93,60 @@ exports.updateTask = (params) => {
 
   let query = `
     UPDATE TBL_BACKLOG
-    SET
-        BACKLOG_TITLE = ?
-      , BACKLOG_DESCRIPTION = ?
-      , BACKLOG_PROGRESS_STATUS = ?
-      , BACKLOG_URGENCY = ?
-      , BACKLOG_CATEGORY = ?
-      , BACKLOG_CHARGER_CODE = ?
-      , BACKLOG_ISSUE = ?`;
+    SET`;
     
-  if(params.backlogStartDate !== undefined && params.backlogEndDate !== undefined) { // 페이징
-    query += ` 
-        , BACKLOG_START_DATE = ${params.backlogStartDate}
-        , BACKLOG_END_DATE = ${params.backlogEndDate}
-    `;
+  if (params.backlogTitle) {
+    query += `
+     BACKLOG_TITLE = '${params.backlogTitle}',`;
+  }
+  
+  if (params.backlogDescription) {
+    query += `
+     BACKLOG_DESCRIPTION = '${params.backlogDescription}',`;
+  }
+  
+  if (params.urgency) {
+    query += `
+    BACKLOG_URGENCY = '${params.urgency}',`;
+  }
+  
+  if (params.backlogCategory) {
+    query += `
+    BACKLOG_CATEGORY = '${params.backlogCategory}',`;
+  }
+  
+  if (params.backlogChargerCode) {
+    query += `
+    BACKLOG_CHARGER_CODE = '${params.backlogChargerCode}',`;
+  }
+  
+  if (
+    params.backlogStartDate !== undefined &&
+    params.backlogEndDate !== undefined
+    ) {
+      query += ` 
+      BACKLOG_START_DATE = '${params.backlogStartDate}',
+      BACKLOG_END_DATE = '${params.backlogEndDate}',`;
+    }
+    
+  if(params.issue) {
+    query += `
+    BACKLOG_ISSUE = '${ params.issue }',`;
+  }
+  
+  if(params.progressStatus) {
+    query += `
+      BACKLOG_PROGRESS_STATUS = '${ params.progressStatus }'`;
   }
 
-  query += `WHERE BACKLOG_CODE = ?`;
+  query += `
+  WHERE BACKLOG_CODE = '${params.backlogCode}'`;
 
+
+  console.log("query",query);
   return query;
-};
+    
+  };
 
 
 // 개별 백로그 삭제

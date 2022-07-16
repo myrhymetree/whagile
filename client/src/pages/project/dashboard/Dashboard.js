@@ -15,7 +15,7 @@ function Dashboard() {
     const { projectCode } = useParams();
     const { taskInfo, setTaskInfo } = useState([]);
     const [text, setText] = useState('');
-    const taskCounts = useSelector(state => state.projectStatisticsReducer);
+     const taskCounts = useSelector(state => state.projectStatisticsReducer);
     const notice = useSelector(state => state.ProjectNoticeReducer);
     const members = useSelector(state => state.projectMemberReducer);
     console.log('통계', taskCounts);
@@ -56,7 +56,6 @@ function Dashboard() {
             labels: ['진행 전', '진행 중', '완료'],
             datasets: [
                 {
-                    label: '맡고 있는 일감 갯수',
                     data: [taskCounts.pendingTaskCntToProject, taskCounts.progressingTaskCntToProject, taskCounts.completedTaskCntToProject],
                     backgroundColor: [
                         "#FF6384",
