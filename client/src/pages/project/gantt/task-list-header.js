@@ -60,18 +60,15 @@ export const TaskListHeaderDefault = ({ headerHeight, fontFamily, fontSize, rowW
 				>
 					<div className={styles.cells}>
 
-						<i className="pi pi-folder" style={{marginRight: '5px'}}/>
+						<i className="pi pi-bars" style={{margin: '0 10px 0 20px'}}/>
 						{/* 스프린트 · {sprints.filter(sprint => sprint.type === 'project').length} / */}
-						스프린트 · {counts.sprintsCount} /
-						
-						<i className="pi pi-file" style={{margin: '0 5px'}}/>
-						{/* 일감 · {sprints.filter(sprint => sprint.type === 'task').length} / */}
+						<span>스프린트</span>
+						<span style={{fontSize: '12px', marginLeft: '10px'}}>[{counts.sprintsCount}]</span>
+						{/* <i className="pi pi-file" style={{margin: '0 5px'}}/>
 						일감 · {counts.tasksCount} /
 
 						<i className="pi pi-file-excel" style={{margin: '0 5px'}}/>
-						{/* 백로그 · {backlogs.length} */}
-						백로그 · {counts.backlogsCount}
-
+						백로그 · {counts.backlogsCount} */}
 					</div>
 				</div>
 			</div>

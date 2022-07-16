@@ -14,7 +14,7 @@ export default function EditTaskForm({onChangeTask, taskAll, onFormSubmit, onClo
   useEffect(() => {
 
     fetch(
-      `http://localhost:8888/api/projects/${projectCode}/member`,
+      `http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/projects/${projectCode}/member`,
       {
         method: "GET",
         headers: {

@@ -13,6 +13,7 @@ import projectStatisticsReducer from './ProjectStatisticsModule';
 import memberReducer from './MemberModule';
 import tasksReducer from './TasksModule';
 import taskReducer from './TaskModule';
+import tasksSprintReducer from './TasksSprintModule';
 import sprintBacklogsReducer from './SprintBacklogsModule';
 import sprintTaskReducer from './SprintTaskModule';
 import sprintsCountReducer from './SprintsCountModule';
@@ -34,6 +35,7 @@ const rootReducer = combineReducers({
     projectStatisticsReducer,
     tasksReducer,
     taskReducer,
+    tasksSprintReducer,
     sprintBacklogsReducer,
     sprintTaskReducer,
     sprintsCountReducer,

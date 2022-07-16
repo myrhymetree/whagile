@@ -3,23 +3,26 @@ import { GET_TASK } from "../modules/TaskModule";
 import { PUT_TASK } from "../modules/TaskModule";
 import { POST_TASK } from "../modules/TaskModule";
 import { DELETE_TASK } from "../modules/TaskModule";
+import { GET_SPRINT } from "../modules/TasksSprintModule";
 
 
 //전체 일감 목록 조회 API
-function callGetTasksAPI(projectCode) {
+export function callGetTasksAPI(projectCode) {
 
-  const requestURL = `http://localhost:8888/api/tasks?projectcode=${projectCode}`;
+  const requestURL = `http://localhost:8888/api/tasks?projectCode=${projectCode}&backlogCategory=백로그`;
+  const requestURL2 = `http://localhost:8888/api/tasks/onTask?projectCode=${projectCode};`;
 
   return async function getTasks(dispatch, getState) {
-    const result = await fetch(requestURL).then((res) => res.json());
+    const backlogs = await fetch(requestURL).then((res) => res.json());
+    const tasks = await fetch(requestURL2).then((res) => res.json());
 
-    dispatch({ type: GET_TASKS, payload: result.results });
+    console.log('backlogs', backlogs)
+    console.log('tasks', tasks)
+    console.log('backlogs&tasks', backlogs.results.concat(tasks.results))
+
+    dispatch({ type: GET_TASKS, payload: backlogs.results.concat(tasks.results) });
   };
 }
-export default callGetTasksAPI;
-
-
-
 
 
 // 개별 일감 조회 API
@@ -125,5 +128,16 @@ export function callDeleteTaskAPI(taskCode, projectCode, category) {
     }).then((res) => res.json());
 
     await dispatch({ type: DELETE_TASK, payload: result.results });
+  };
+}
+
+export function callGetTasksSprintAPI(projectCode) {
+
+  const requestURL = `http://localhost:8888/api/tasks/sprint?projectCode=${projectCode}`;
+
+  return async function getTasks(dispatch, getState) {
+    const result = await fetch(requestURL).then((res) => res.json());
+    console.log(1414, result.results[0])
+    dispatch({ type: GET_SPRINT, payload: result.results[0] });
   };
 }
