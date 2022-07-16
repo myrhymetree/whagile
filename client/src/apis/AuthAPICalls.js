@@ -4,7 +4,7 @@ import { GET_AUTH_ORDER } from "../modules/AuthOrderModule";
 
 export const callGetAuthsAPI = (params) => { // 권한 목록 조회
 
-    let requestURL = `http://localhost:8888/api/auth`;
+    let requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/auth`;
     
     let defaultParams = { 
         // offset: 0,
@@ -29,7 +29,7 @@ export const callGetAuthsAPI = (params) => { // 권한 목록 조회
 
 export const callGetAuthAPI = (params) => { // 권한 조회
 
-    let requestURL = `http://localhost:8888/api/auth/${params.authorityCode}`;
+    let requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/auth/${params.authorityCode}`;
 
     return async (dispatch, getState) => {
         
@@ -41,7 +41,7 @@ export const callGetAuthAPI = (params) => { // 권한 조회
 
 export const callPostAuthAPI = (paramAuth, paramAuthOrder) => { // 권한 생성
     
-    let requestURL = `http://localhost:8888/api/auth`;
+    let requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/auth`;
     
     return async (dispatch, getState) => {
         
@@ -70,7 +70,7 @@ export const callPostAuthAPI = (paramAuth, paramAuthOrder) => { // 권한 생성
 
 export const callPutAuthAPI = (paramAuth, paramAuthOrder) => { // 권한 변경
     
-    let requestURL = `http://localhost:8888/api/auth`;
+    let requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/auth`;
     
     return async (dispatch, getState) => {
 
@@ -109,7 +109,7 @@ export const callPutAuthAPI = (paramAuth, paramAuthOrder) => { // 권한 변경
 
 export const callDeleteAuthAPI = (paramAuth, paramAuthOrder) => { // 권한 삭제
     
-    let requestURL = `http://localhost:8888/api/auth`;
+    let requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/auth`;
     
     return async (dispatch, getState) => {
         
@@ -138,7 +138,7 @@ export const callDeleteAuthAPI = (paramAuth, paramAuthOrder) => { // 권한 삭�
 
 export const callGetAuthOrderAPI = (params) => { // 권한 순서 조회
 
-    let requestURL = `http://localhost:8888/api/auth`;
+    let requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/auth`;
     
     let defaultParams = { 
         searchCondition: 'activated_yn',
@@ -163,7 +163,7 @@ export const callGetAuthOrderAPI = (params) => { // 권한 순서 조회
 
 export const callPutAuthOrderAPI = (params) => { // 권한 순서 변경
     
-    let requestURL = `http://localhost:8888/api/auth/order`;
+    let requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/auth/order`;
     
     return async (dispatch, getState) => {
         

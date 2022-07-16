@@ -39,8 +39,7 @@ exports.registComment = async (req, res, next) => {
     res.status(HttpStatus.CREATED).json({
         status: HttpStatus.CREATED,
         message: '댓글 추가에 성공했습니다.',
-        results: results,
-        url: 'localhost:8888/api/backlog-comments/:backlogCode?offset=0&limit=5'
+        results: results
     });
 };
 
@@ -81,7 +80,6 @@ exports.removeComment = async (req, res, next) => {
     res.status(HttpStatus.OK).json({
         status: HttpStatus.OK,
         message: '댓글 삭제에 성공했습니다.',
-        results: results,
-        url: 'localhost:8888/api/backlog-comments/:backlogCode?offset=0&limit=5'
+        results: results
     });
 };

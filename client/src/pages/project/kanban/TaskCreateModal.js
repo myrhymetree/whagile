@@ -37,7 +37,7 @@ export default function TaskCreateModal(props) {
 	// submit 동작
 	const onSubmit = async (event) => {
 		const decoded = decodeJwt(window.localStorage.getItem("access_token"));
-		const result = await fetch("http://localhost:8888/api/tasks", {
+		const result = await fetch(`http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/tasks`, {
 		method: "POST",
 		headers: {
 			Accept: "application/json",

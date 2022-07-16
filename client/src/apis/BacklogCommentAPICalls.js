@@ -6,7 +6,7 @@ export function callGetBacklogCommentsAPI(params) {
 
     console.log('백로그 댓글 파라미터: ', params);
 
-    let requestURL = 'http://localhost:8888/api/backlog-comments/';
+    let requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/backlog-comments/`;
 
     requestURL += `${params.backlogCode}?offset=${params.offset}&limit=${params.limit}`;
 
@@ -32,7 +32,7 @@ export function callGetBacklogCommentsAPI(params) {
 /* 백로그 댓글 생성 API 호출 */
 export function callPostBacklogCommentAPI(newComment) {
 
-    const requestURL = 'http://localhost:8888/api/backlog-comments';
+    const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/backlog-comments`;
 
     return async function registBacklogComment(dispatch, getState) {
 
@@ -53,7 +53,7 @@ export function callPostBacklogCommentAPI(newComment) {
 /* 백로그 댓글 수정 API 호출 */
 export function callPutBacklogCommentAPI(modifyRequest) {
 
-    const requestURL = 'http://localhost:8888/api/backlog-comments';
+    const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/backlog-comments`;
 
     return async function modifyBacklogComment(dispatch, getState) {
         
@@ -74,7 +74,7 @@ export function callPutBacklogCommentAPI(modifyRequest) {
 /* 백로그 댓글 삭제 API 호출 */
 export function callDeleteBacklogCommentAPI(removeRequest) {
 
-    const requestURL = 'http://localhost:8888/api/backlog-comments';
+    const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/backlog-comments`;
 
     return async function removeBacklogComment(dispatch, getState) {
 

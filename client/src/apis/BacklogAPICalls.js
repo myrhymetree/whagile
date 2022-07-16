@@ -4,7 +4,7 @@ import { FIND_BACKLOG_DETAILS, REGIST_BACKLOG, MODIFY_BACKLOG, DELETE_BACKLOG } 
 /* 백로그 목록 조회 (최초 요청) API 호출 */
 export function callGetBacklogsAPI(params) {
 
-    let requestURL = 'http://localhost:8888/api/backlogs';
+    let requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/backlogs`;
 
     if(Object.keys(params).length !== 0) {
 
@@ -44,7 +44,7 @@ export function callGetBacklogsAPI(params) {
 /* 백로그 목록 조회 (필터링) API 호출 */
 export function callGetFilteredBacklogsAPI(params) {
 
-    let requestURL = 'http://localhost:8888/api/backlogs';
+    let requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/backlogs`;
 
     if(Object.keys(params).length !== 0) {
 
@@ -85,7 +85,7 @@ export function callGetFilteredBacklogsAPI(params) {
 /* 백로그 상세 조회 API 호출 */
 export function callGetBacklogDetailsAPI(backlogCode) {
 
-    let requestURL = 'http://localhost:8888/api/backlogs/' + backlogCode;
+    let requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/backlogs/` + backlogCode;
     console.log('requestURL: ' + requestURL);
 
     return async function findBacklogDetails(dispatch, getState) {
@@ -99,7 +99,7 @@ export function callGetBacklogDetailsAPI(backlogCode) {
 /* 백로그 생성 API 호출 */
 export function callPostBacklogAPI(newBacklog) {
 
-    const requestURL = 'http://localhost:8888/api/backlogs';
+    const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/backlogs`;
 
     return async function registBacklogComment(dispatch, getState) {
 
@@ -120,7 +120,7 @@ export function callPostBacklogAPI(newBacklog) {
 /* 백로그 수정 API 호출 */
 export function callPutBacklogAPI(modifiedBacklog) {
 
-    const requestURL = 'http://localhost:8888/api/backlogs';
+    const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/backlogs`;
 
     return async function modifyBacklog(dispatch, getState) {
         
@@ -143,7 +143,7 @@ export function callPutBacklogAPI(modifiedBacklog) {
 /* 백로그 삭제 API 호출 */
 export function callDeleteBacklogAPI(backlogCode, projectCode) {
 
-    const requestURL = 'http://localhost:8888/api/backlogs';
+    const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/backlogs`;
 
     return async function removeBacklog(dispatch, getState) {
         
