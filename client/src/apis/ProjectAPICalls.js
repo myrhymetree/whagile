@@ -6,7 +6,7 @@ import { decodeJwt } from '../utils/tokenUtils';
 
 export function callGetProjectsAPI(params) {
     
-    let requestURL = `http://localhost:8888/api/projects`;
+    let requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/projects`;
 
     if(Object.keys(params).length !== 0) {
         requestURL += `?${Object.entries(params).map(param => param.join('=')).join('&')}`;
@@ -22,7 +22,7 @@ export function callGetProjectsAPI(params) {
 
 export function callGetProjectAPI(params) {
 
-    let requestURL = `http://localhost:8888/api/projects/`;
+    let requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/projects/`;
 
     requestURL += `${Object.entries(params).map(param => param.slice(1))}`;
 
@@ -35,7 +35,7 @@ export function callGetProjectAPI(params) {
 }
 
 export const  callPostProjectAPI = (projectName, projectDescription, emails) => {
-    let requestURL = `http://localhost:8888/api/projects`;
+    let requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/projects`;
     const decoded = decodeJwt(window.localStorage.getItem("access_token"));
 
     return async (dispatch, getState) => {
@@ -60,7 +60,7 @@ export const  callPostProjectAPI = (projectName, projectDescription, emails) => 
 }
 
 export const callPutProjectAPI = (projectCode, projectName, projectDescription, projectOwner) => {
-    let requestURL = `http://localhost:8888/api/projects/`;
+    let requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/projects/`;
 
     requestURL += `${ projectCode }`
 
@@ -91,7 +91,7 @@ export const callDeleteProjectAPI = (params) => {
     console.log(params.projectCode);
     console.log(params.loginMember);
 
-    let requestURL =  `http://localhost:8888/api/projects`;
+    let requestURL =  `http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/projects`;
 
     if(Object.keys(params).length !== 0) {
         requestURL += `?${Object.entries(params).map(param => param.join('=')).join('&')}`;
@@ -118,7 +118,7 @@ export const callDeleteProjectAPI = (params) => {
 
 export const callGetProjectMemberAPI = (params) => {
 
-    let requestURL = `http://localhost:8888/api/projects/`;
+    let requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/projects/`;
 
     requestURL += `${Object.entries(params).map(param => param.slice(1))}`;
 
@@ -136,7 +136,7 @@ export const callDeleteProjectMemberAPI = (params) => {
 
     console.log(params);
 
-    let requestURL =  `http://localhost:8888/api/projects/`
+    let requestURL =  `http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/projects/`
 
     requestURL += `${ params.projectCode }`;
 
@@ -163,7 +163,7 @@ export const callDeleteProjectMemberAPI = (params) => {
 
 export const callPostInviteMemberAPI = (emails, projectCode) => {
 
-    let requestURL = `http://localhost:8888/api/projects/invitation`;
+    let requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/projects/invitation`;
 
     return async function getProject(dispatch, getState) {
 
@@ -187,7 +187,7 @@ export const callPutModifyAuthorityProjectMemberAPI = (data) => {
 
     console.log('api에 넘어온 데이터 확인 : ', data);
 
-    let requestURL = `http://localhost:8888/api/projects/${ data.projectCode }/member/${ data.memberCode }`;
+    let requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/projects/${ data.projectCode }/member/${ data.memberCode }`;
 
     return async function getProject(dispatch, getState) {
 
@@ -208,7 +208,7 @@ export const callPutModifyAuthorityProjectMemberAPI = (data) => {
 
 export const callGetNoticeAPI = (data) => {
 
-    const requestURL = `http://localhost:8888/api/projects/${ data.projectCode }/notice`;
+    const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/projects/${ data.projectCode }/notice`;
 
     return async function getProject(dispatch, getState) {
 

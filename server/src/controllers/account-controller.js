@@ -1,6 +1,8 @@
 const HttpStatus = require('http-status');
 const AccountService = require('../services/account-service');
 const AccountUtils = require('../util/account-utils');
+require('dotenv').config();
+const { REACT_APP_RESTAPI_IP } = process.env;
 
 exports.updateAccount = async (req, res, next) => {
     console.log('updateAccount');
@@ -156,7 +158,7 @@ exports.emailAuth = async (req, res, next) => {
 
     await AccountService.emailAuthWithToken(req.query)
     .then((result) => {
-        res.redirect('http://localhost:3000/');
+        res.redirect(`http://whagile.shop/`);
     })
     .catch((err) =>{
         console.log(err);

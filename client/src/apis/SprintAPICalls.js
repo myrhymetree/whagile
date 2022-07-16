@@ -6,7 +6,7 @@ import { GET_SPRINT_TASK } from '../modules/SprintTaskModule';
 
 export function callGetSprintsAPI(params) {
     
-    let requestURL = `http://localhost:8888/api/sprints`;
+    let requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/sprints`;
     
     let defaultParams = { 
         // 'offset': 0,
@@ -37,7 +37,7 @@ export function callGetSprintsAPI(params) {
 
 export function callGetSprintAPI(params) {
 
-    let requestURL = `http://localhost:8888/api/sprints/${params.sprintCode}`;
+    let requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/sprints/${params.sprintCode}`;
     
     return async (dispatch, getState) => {
         
@@ -49,7 +49,7 @@ export function callGetSprintAPI(params) {
 
 export function callPostSprintAPI(params, changedTasks, currentInfo) {
 
-    let requestURL = `http://localhost:8888/api/sprints`;
+    let requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/sprints`;
     
     return async (dispatch, getState) => {
         
@@ -89,7 +89,7 @@ export function callPostSprintAPI(params, changedTasks, currentInfo) {
 
 export function callPutSprintAPI(params, changedTasks, currentInfo) {
 
-    let requestURL = `http://localhost:8888/api/sprints`;
+    let requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/sprints`;
     
     return async (dispatch, getState) => {
 
@@ -130,7 +130,7 @@ export function callPutSprintAPI(params, changedTasks, currentInfo) {
 
 export function callDeleteSprintAPI(sprintCode, projectCode) {
     
-    let requestURL = `http://localhost:8888/api/sprints`;
+    let requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/sprints`;
     
     return async (dispatch, getState) => {
         
@@ -164,7 +164,7 @@ export function callDeleteSprintAPI(sprintCode, projectCode) {
 
 export function callGetBacklogsAPI(params) {
 
-    let requestURL = `http://localhost:8888/api/backlogs`;
+    let requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/backlogs`;
 
     if(!(params === undefined || Object.keys(params).length === 0)) {
         requestURL += `?${Object.entries(params).map(param => param.join('=')).join('&')}`;
@@ -180,7 +180,7 @@ export function callGetBacklogsAPI(params) {
 
 export function callGetSprintsCountAPI(params) {
     
-    let requestURL = `http://localhost:8888/api/sprints/count`;
+    let requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/sprints/count`;
 
     if(!(params === undefined || Object.keys(params).length === 0)) {
         requestURL += `?${Object.entries(params).map(param => param.join('=')).join('&')}`;
@@ -196,7 +196,7 @@ export function callGetSprintsCountAPI(params) {
 
 export function callGetTaskAPI(params) {
     
-    let requestURL = `http://localhost:8888/api/tasks/${params.taskCode}`;
+    let requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/tasks/${params.taskCode}`;
     
     return async (dispatch, getState) => {
         
@@ -208,7 +208,7 @@ export function callGetTaskAPI(params) {
 
 export function callUpdateTaskAPI(params, projectCode) {
     
-    let requestURL = `http://localhost:8888/api/tasks`;
+    let requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/tasks`;
     
     return async (dispatch, getState) => {
         

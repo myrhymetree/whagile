@@ -1,5 +1,7 @@
 const HttpStatus = require('http-status');
 const ProjectService = require('../services/project-service');
+require('dotenv').config();
+const { REACT_APP_RESTAPI_IP } = process.env;
 
 exports.selectProjects = async (req, res, next) => {
 
@@ -128,7 +130,7 @@ exports.registProjectMember = async (req, res, next) => {
             //     message: '성공적으로 프로젝트에 참여했습니다.',
             //     results: result
             // });
-            res.redirect('http://localhost:3000/');
+            res.redirect(`http://whagile.shop/`);
         }).catch((err) => {
 
             res.status(HttpStatus.BAD_REQUEST).json({
@@ -178,7 +180,7 @@ exports.signUpProjectMember = async (req, res, next) => {
 
     await ProjectService.signUpProjectMember(req.body)
         .then((result) => {
-            // res.redirect('http://localhost:3000/login');
+            // res.redirect('http://whagile.shop:3000/login');
             res.status(HttpStatus.OK).json({
                 status: HttpStatus.OK,
                 message: 'successfully register Account!!',

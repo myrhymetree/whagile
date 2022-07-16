@@ -24,7 +24,7 @@ export default function TaskModal(props) {
   useEffect(() => {
     console.log("Task", props.currentTaskID);
     // 개별 일감 상세 조회
-    fetch(`http://localhost:8888/api/tasks/${props.currentTaskID}`, {
+    fetch(`http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/tasks/${props.currentTaskID}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -47,7 +47,7 @@ export default function TaskModal(props) {
         console.log("카테고리", result.category);
 
         fetch(
-          `http://localhost:8888/api/projects/${result.projectCode}/member`,
+          `http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/projects/${result.projectCode}/member`,
           {
             method: "GET",
             headers: {
@@ -104,7 +104,7 @@ export default function TaskModal(props) {
     };
 
     console.log("kanban", kanbanInfo);
-    await fetch(`http://localhost:8888/api/tasks`, {
+    await fetch(`http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/tasks`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -131,7 +131,7 @@ export default function TaskModal(props) {
   const onClickDeleteHandler = (taskCode, taskProjectCode, taskCategory) => {
     console.log("Code", taskCode, "ProjectCode", taskProjectCode, "taskCategory", taskCategory);
 
-    fetch(`http://localhost:8888/api/tasks`, {
+    fetch(`http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/tasks`, {
       method: "DELETE",
       headers: {
         Accept: "application/json",
