@@ -130,7 +130,7 @@ exports.registProjectMember = async (req, res, next) => {
             //     message: '성공적으로 프로젝트에 참여했습니다.',
             //     results: result
             // });
-            res.redirect(`http://whagile.shop/`);
+            res.redirect(`http://localhost:3000/`);
         }).catch((err) => {
 
             res.status(HttpStatus.BAD_REQUEST).json({

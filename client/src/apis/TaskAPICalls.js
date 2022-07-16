@@ -110,7 +110,7 @@ export const callPostTaskAPI = (paramTask) => {
 
 // 개별 일감 삭제
 export function callDeleteTaskAPI(taskCode, projectCode, category) {
-  const requestURL = "http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/tasks";
+  const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/task`;
 
   return async function removeTask(dispatch, getState) {
     const result = await fetch(requestURL, {
@@ -133,7 +133,7 @@ export function callDeleteTaskAPI(taskCode, projectCode, category) {
 
 export function callGetTasksSprintAPI(projectCode) {
 
-  const requestURL = `http://localhost:8888/api/tasks/sprint?projectCode=${projectCode}`;
+  const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/tasks/sprint?projectCode=${projectCode}`;
 
   return async function getTasks(dispatch, getState) {
     const result = await fetch(requestURL).then((res) => res.json());
