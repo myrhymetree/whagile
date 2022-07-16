@@ -160,7 +160,7 @@ function GanttChart() {
 			
 			setNewBacklog({
 				backlogTitle: sprintTask.backlogTitle,
-				backlogDescription: sprintTask.backlogDiscription,
+				backlogDescription: sprintTask.backlogDescription,
 				backlogStartDate: (sprintTask.startDate)? new Date(sprintTask.startDate): '',
 				backlogEndDate: (sprintTask.endDate)? new Date(sprintTask.endDate): '',
 				backlogUrgency: sprintTask.urgency,
