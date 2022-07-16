@@ -1,11 +1,7 @@
 import KanbanBoardStyle from "./KanbanBoard.module.css";
-
 import React, { useEffect, useState } from "react";
-
 import { Category, Urgency } from "./Types";
-
-
-
+import { useSelector } from "react-redux";
 
 // 일감 모달창
 export default function TaskModal(props) {
@@ -19,7 +15,7 @@ export default function TaskModal(props) {
   const [taskCode, setTaskCode] = useState("");
   const [taskProjectCode, setTaskProjectCode] = useState("");
   const [taskCategory, setTaskCategory] = useState("");
-
+  const sprint = useSelector((state) => state.tasksSprintReducer);
 
   useEffect(() => {
     console.log("Task", props.currentTaskID);
@@ -33,7 +29,6 @@ export default function TaskModal(props) {
     })
       .then((response) => response.json())
       .then((json) => {
-        console.log("상세", json);
         const result = json.results[0];
         setTaskCode(result.backlogCode || "");
         setTaskTitle(result.backlogTitle || "");
@@ -44,7 +39,6 @@ export default function TaskModal(props) {
         setTaskCharger(result.backlogChargerCode || "");
         setTaskProjectCode(result.projectCode || "");
         setTaskCategory(result.category || "");
-        console.log("카테고리", result.category);
 
         fetch(
           `http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/projects/${result.projectCode}/member`,
@@ -101,6 +95,7 @@ export default function TaskModal(props) {
       urgency: taskUrgency,
       backlogCategory: (taskProgressStatus === "백로그" )? "백로그" : "일감",
       backlogChargerCode: taskCharger,
+      sprintCode: (taskProgressStatus === "백로그" )? null: sprint.sprintCode
     };
 
     console.log("kanban", kanbanInfo);

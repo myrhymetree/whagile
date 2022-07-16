@@ -1,17 +1,19 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 
 import KanbanBoardStyle from "./KanbanBoard.module.css";
 import EditTaskForm from "./EditTaskForm";
 import { useParams } from 'react-router-dom';
 import { decodeJwt } from "../../../utils/tokenUtils";
-
+import { callGetTasksSprintAPI } from "../../../apis/TaskAPICalls";
 
 // 일감 모달창
 export default function TaskCreateModal(props) {
 	
 	const { projectCode } = useParams();
-
+	const sprint = useSelector((state) => state.tasksSprintReducer);
+    const dispatch = useDispatch();
 
 	const [taskAll, setTaskAll] = useState({
 		taskTitle: '',
@@ -22,7 +24,9 @@ export default function TaskCreateModal(props) {
 		taskCharger: null,
 	});
 
-
+	useEffect(() => {
+		dispatch(callGetTasksSprintAPI(projectCode));
+	  }, []);
 
 
     const onChangeTask = (e) => {
@@ -51,21 +55,17 @@ export default function TaskCreateModal(props) {
 			urgency: taskAll.taskUrgency,
 			backlogChargerCode: taskAll.taskCharger,
 			backlogCategory: (taskAll.taskProgressStatus === '백로그')? '백로그': '일감',
-			sprintCode: decoded !== "undefined" ? decoded.code : "",
+			sprintCode: (taskAll.taskProgressStatus === '백로그')? null: sprint.sprintCode,
 			projectCode: projectCode,
 			backlogCreatorCode: decoded !== "undefined" ? decoded.code : "",
 		}),
 		})
       .then((res) => res.json())
       .then((json) => {
-        console.log(json);
         if (json.status == 200) {
-          console.log("작동");
           window.location.reload();
         }
       });
-		console.log('result: ', result);
-
 	};
 
 	const onClose = () => {

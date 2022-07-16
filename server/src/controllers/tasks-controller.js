@@ -4,11 +4,11 @@ const TasksService = require("../services/tasks-service");
 
 //전체 일감 목록 조회
 exports.findAllTasks = async (req, res, next) => {
-  const projectCode = req.query.projectcode;
-  console.log("CODE", req.query.projectcode);
-  const results = await TasksService.getTasks(projectCode);
+  // const projectCode = req.query.projectcode;
+  // console.log("findAllTasks", req.query);
+  const results = await TasksService.getTasks(req.query);
 
-  console.log("findAllTasks :", results);
+  // console.log("findAllTasks :", results);
 
   if (results && results.length > 0) {
     res.status(HttpStatus.OK).json({
@@ -106,6 +106,45 @@ exports.findAllTaskHistory = async (req, res, next) =>{
         res.status(HttpStatus.OK).json({
             status: HttpStatus.OK,
             message: "일감 히스토리를 정상적으로 조회했습니다.",
+            results: result,
+        });
+
+    })
+    .catch((err) =>{
+            res.status(HttpStatus.BAD_REQUEST).json({
+                status: HttpStatus.BAD_REQUEST,
+                message: err
+            });
+        });
+}
+
+// 진행중인 스프린트의 일감 조회
+exports.findTasksOnGoingSprint = async (req, res, next) =>{
+
+    await TasksService.findTasksOnGoingSprint(req.query)
+    .then((result) => {
+        res.status(HttpStatus.OK).json({
+            status: HttpStatus.OK,
+            message: "진행중인 스프린트의 일감을 정상적으로 조회했습니다.",
+            results: result,
+        });
+
+    })
+    .catch((err) =>{
+            res.status(HttpStatus.BAD_REQUEST).json({
+                status: HttpStatus.BAD_REQUEST,
+                message: err
+            });
+        });
+}
+
+exports.findSprint = async (req, res, next) =>{
+    console.log(1212,req.query)
+    await TasksService.findSprint(req.query)
+    .then((result) => {
+        res.status(HttpStatus.OK).json({
+            status: HttpStatus.OK,
+            message: "진행중인 스프린트의 일감을 정상적으로 조회했습니다.",
             results: result,
         });
 

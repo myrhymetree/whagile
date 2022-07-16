@@ -1,12 +1,13 @@
 const getConnection = require("../database/connection");
 const TasksRepository = require("../repositories/tasks-repo");
+const SprintRepository = require("../repositories/sprint-repo");
 
 // 전체 일감 목록 조회
-exports.getTasks = (projectCode) => {
+exports.getTasks = (params) => {
   return new Promise((resolve, reject) => {
     const connection = getConnection();
 
-    const results = TasksRepository.selectTasks(connection, projectCode);
+    const results = TasksRepository.selectTasks(connection, params);
 
     connection.end();
 
@@ -207,5 +208,50 @@ exports.findAllTaskHistory = (params) => {
     connection.end();
 
     resolve(results);
+  });
+};
+
+// 진행중인 스프린트의 일감 조회
+exports.findTasksOnGoingSprint = (params) => {
+
+  return new Promise(async (resolve, reject) => {
+
+    const connection = getConnection();
+
+    params.searchCondition = 'progress_status';
+    params.searchValue = 'y';
+
+    const onGoingSprint = await SprintRepository.selectSprints(connection, params);
+    
+    let tasks = [];
+    if(onGoingSprint.length > 0) {
+      tasks = await TasksRepository.selectTasks(connection, {
+        sprintCode: onGoingSprint[0].sprintCode,
+        backlogCategory: '일감'
+      });
+    }
+
+    connection.end();
+
+    resolve(tasks);
+
+  });
+};
+
+exports.findSprint = (params) => {
+
+  return new Promise(async (resolve, reject) => {
+
+    const connection = getConnection();
+
+    params.searchCondition = 'progress_status';
+    params.searchValue = 'y';
+
+    const sprints = await SprintRepository.selectSprints(connection, params);
+    console.log(1313, sprints)
+    connection.end();
+
+    resolve(sprints);
+
   });
 };

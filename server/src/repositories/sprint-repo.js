@@ -28,9 +28,9 @@ exports.insertSprint = (connection, params) => {
 }
 
 exports.selectSprints = (connection, params) => {
-
+    console.log('repo', params)
     return new Promise((resolve, reject) => {
-
+        
         connection.query(
             sprintQuery.selectSprints(params),
             [params.projectCode],

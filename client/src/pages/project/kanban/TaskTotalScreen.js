@@ -6,19 +6,21 @@ import { KanbanColumn } from "./Column";
 import { useParams } from "react-router-dom";
 
 //API, Redux
-import callGetTasksAPI from "../../../apis/TaskAPICalls";
+import {callGetTasksAPI, callGetTasksSprintAPI} from "../../../apis/TaskAPICalls";
 
 
 export default function TaskTotalScreen(props) {
    
     // 일감 목록 
     const tasks = useSelector((state) => state.tasksReducer);
+    const sprint = useSelector((state) => state.tasksSprintReducer);
     const dispatch = useDispatch();
     const { projectCode } = useParams();
 
     useEffect(() => {
       
       dispatch(callGetTasksAPI(projectCode));
+      dispatch(callGetTasksSprintAPI(projectCode));
     }, []);
 
     const filterBy = (category) => {
