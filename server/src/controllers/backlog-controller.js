@@ -22,7 +22,6 @@ exports.findAllBacklogs = async (req, res, next) => {
         progressStatus: req.query.progressStatus,
         urgency: req.query.urgency
     };
-    // console.log(`params: ${params}`);
 
     const results = await BacklogService.findBacklogs(params);
     
@@ -71,8 +70,7 @@ exports.registNewBacklog = async (req, res, next) => {
     res.status(httpStatus.CREATED).json({
         status: httpStatus.CREATED,
         message: '백로그가 생성되었습니다.',
-        results: results,
-        url: 'localhost:8888/api/backlogs?offset=0&limit=10'
+        results: results
     });
 };
 
@@ -115,8 +113,7 @@ exports.removeBacklog = async (req, res, next) => {
     res.status(httpStatus.OK).json({
         status: httpStatus.OK,
         message: '정상적으로 개별 백로그를 삭제했습니다.',
-        results: results,
-        url: 'localhost:8888/api/backlogs?offset=0&limit=10'
+        results: results
     });
 };
 

@@ -9,8 +9,8 @@ import { GET_SPRINT } from "../modules/TasksSprintModule";
 //전체 일감 목록 조회 API
 export function callGetTasksAPI(projectCode) {
 
-  const requestURL = `http://localhost:8888/api/tasks?projectCode=${projectCode}&backlogCategory=백로그`;
-  const requestURL2 = `http://localhost:8888/api/tasks/onTask?projectCode=${projectCode};`;
+  const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/tasks?projectCode=${projectCode}&backlogCategory=백로그`;
+  const requestURL2 = `http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/tasks/onTask?projectCode=${projectCode};`;
 
   return async function getTasks(dispatch, getState) {
     const backlogs = await fetch(requestURL).then((res) => res.json());
@@ -28,7 +28,7 @@ export function callGetTasksAPI(projectCode) {
 // 개별 일감 조회 API
 export const callGetTaskAPI = (taskCode) => {
   console.log(taskCode);
-  let requestURL = `http://localhost:8888/api/tasks/${taskCode}`;
+  let requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/tasks/${taskCode}`;
   console.log("requestURL:", requestURL);
   return async (dispatch, getState) => {
     const result = await fetch(requestURL).then((res) => res.json());
@@ -49,7 +49,7 @@ export const callPutTaskAPI = (
   issue,
   backlogChargerCode
 ) => {
-  let requestURL = `http://localhost:8888/api/tasks/${taskCode}`;
+  let requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/tasks/${taskCode}`;
 
   return async (dispatch, getState) => {
     const result = await fetch(requestURL, {
@@ -82,7 +82,7 @@ export const callPutTaskAPI = (
 
 // 개별 일감 생성 API
 export const callPostTaskAPI = (paramTask) => {
-  let requestURL = `http://localhost:8888/api/tasks`;
+  let requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/tasks`;
   console.log(requestURL);
   return async (dispatch, getState) => {
     const result = await fetch(requestURL, {
@@ -110,7 +110,7 @@ export const callPostTaskAPI = (paramTask) => {
 
 // 개별 일감 삭제
 export function callDeleteTaskAPI(taskCode, projectCode, category) {
-  const requestURL = "http://localhost:8888/api/tasks";
+  const requestURL = "http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/tasks";
 
   return async function removeTask(dispatch, getState) {
     const result = await fetch(requestURL, {

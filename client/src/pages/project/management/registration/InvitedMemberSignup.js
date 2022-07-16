@@ -83,7 +83,7 @@ function Signup() {
             return;
         }
 
-        requestURL = `http://localhost:8888/api/projects/${ projectCode }/joinedNewMember`;
+        requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/projects/${ projectCode }/joinedNewMember`;
 
         fetch(requestURL, {
             method: "POST",

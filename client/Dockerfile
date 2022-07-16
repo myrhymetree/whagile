@@ -10,9 +10,6 @@ RUN mkdir ./build
 # host pc의 현재 경로의 build 폴더를 work dir 폴더의 build 폴더로 복사
 ADD ./build ./build
 
-# nginx 특정 국가 IP만 허용
-RUN apt-get install nginx-plus-module-geoip
-
 # nginx 의 default.conf 삭제
 RUN rm -rf /etc/nginx/conf.d/default.conf
 
