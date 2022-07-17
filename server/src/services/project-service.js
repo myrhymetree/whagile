@@ -234,6 +234,9 @@ exports.inviteMember = (data) => {
         /* 프로젝트 조회 */
         const registedProject = await ProjectRepository.selectProject(connection, data.projectCode);
 
+        /* 프로젝트 팀원 목록 페이지 갱신을 위한 기존 팀원 데이터 조회  */
+        const projectMembers = await ProjectRepository.selectProjectMembers(connection,  data.projectCode);
+
         /* 기존회원들에게 초대메일 발송 */
         if(registedMember.length > 0) {
             for(let i = 0; registedMember.length > i; i++) {
@@ -276,7 +279,7 @@ exports.inviteMember = (data) => {
 
         connection.end();
 
-        resolve(registedMember);
+        resolve(projectMembers);
     });
 };
 
