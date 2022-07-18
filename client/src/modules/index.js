@@ -19,6 +19,7 @@ import sprintTaskReducer from './SprintTaskModule';
 import sprintsCountReducer from './SprintsCountModule';
 import sprintsReducer from './SprintsModule';
 import sprintReducer from './SprintModule';
+import sprintsForBacklogReducer from './SprintsForBacklogModule';
 
 const rootReducer = combineReducers({
     authsReducer,
@@ -40,7 +41,8 @@ const rootReducer = combineReducers({
     sprintTaskReducer,
     sprintsCountReducer,
     sprintsReducer,
-    sprintReducer
+    sprintReducer,
+    sprintsForBacklogReducer
 });
 
 export default rootReducer;
