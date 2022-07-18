@@ -213,7 +213,7 @@ exports.deleteSprint = (params) => {
 
         try {
             
-            await SprintRepository.updateTaskToBacklogBySprintCode(connection, params.sprintCode);
+            await SprintRepository.updateTaskToBacklogBySprintCode(connection, params.sprintCode);  // 진행 전, 진행 중의 일감들을 백로그로 만듦
 
             const results = await SprintRepository.deleteSprint(connection, params);
 
@@ -239,17 +239,73 @@ exports.viewSprintsCount = (params) => {
         const connection = getConnection();
 
         const sprintsCount = await SprintRepository.selectSprintsCount(connection, params);
-        const tasksCount = await SprintRepository.selectTasksCount(connection, params);
-        const backlogsCount = await SprintRepository.selectBacklogsCount(connection, params);
 
         const results = {
             sprintsCount: sprintsCount[0].COUNT,
-            tasksCount: tasksCount[0].COUNT,
-            backlogsCount: backlogsCount[0].COUNT,
         }
 
         connection.end();
 
         resolve(results);
+    });
+}
+
+exports.editSprintProgress = (params) => {
+
+    return new Promise(async (resolve, reject) => {
+        
+        const connection = getConnection();
+
+        connection.beginTransaction();
+
+        try {
+
+            let results = [];
+
+            if(params.sprintProgressStatus === 'Y') { // 스프린트 중지: progressStatus='N'으로 변경, 일감은 백로그로
+
+                await SprintRepository.updateSprintProgress(connection, {
+                    sprintCode: params.sprintCode,
+                    sprintProgressStatus: 'N'
+                });
+
+                await SprintRepository.updateTaskToBacklogBySprintCode(connection, params.sprintCode);  // 진행 전, 진행 중의 일감들을 백로그로 만듦
+
+            } else { // 스프린트 시작: 진행중인 스프린트 체크해서 있으면 중지하고 progressStatus='Y', 없으면 progressStatus='Y'만
+
+                const sprintOnProgress = await SprintRepository.selectSprints(connection, {
+                    projectCode: params.projectCode,
+                    searchCondition: 'progress_status',
+                    searchValue: 'y'
+                });
+
+                if(sprintOnProgress.length > 0) {
+                    
+                    await SprintRepository.updateSprintProgress(connection, {
+                        sprintCode: sprintOnProgress[0].sprintCode,
+                        sprintProgressStatus: 'N'
+                    });
+
+                    await SprintRepository.updateTaskToBacklogBySprintCode(connection, sprintOnProgress[0].sprintCode);
+                } 
+
+                await SprintRepository.updateSprintProgress(connection, {
+                    sprintCode: params.sprintCode,
+                    sprintProgressStatus: 'Y'
+                });
+            }
+
+            connection.commit();
+
+            resolve(results);
+        } catch (err) {
+
+            connection.rollback();
+
+            reject(err);
+        } finally {
+
+            connection.end();
+        }
     });
 }

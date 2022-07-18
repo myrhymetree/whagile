@@ -236,3 +236,18 @@ exports.selectTaskHistories = () => {
      LIMIT ?, ?
   `;
 };
+
+// 일감(백로그) 히스토리 전체 조회
+exports.updateTaskDate = () => {
+
+  let query = `
+    UPDATE TBL_BACKLOG
+    SET
+        BACKLOG_START_DATE = ?
+      , BACKLOG_END_DATE = ?
+    WHERE
+      BACKLOG_CODE = ?
+  `;
+  
+  return query;
+};

@@ -207,7 +207,7 @@ exports.insertTask = () => {
         ) VALUES (
             ?
             , ?
-            , '진행 중'
+            , '진행 전'
             , ?
             , ?
             , '일감'
@@ -248,6 +248,10 @@ exports.updateTaskToBacklogBySprintCode = () => {
             , SPRINT_CODE = NULL
         WHERE
             SPRINT_CODE = ?
+            AND (
+                BACKLOG_PROGRESS_STATUS = '진행 전'
+                OR BACKLOG_PROGRESS_STATUS = '진행 중'
+            )
     `;
 
     return query;
@@ -268,7 +272,7 @@ exports.updateTaskToBacklogByBacklogCode = () => {
     return query;
 }
 
-exports.selectSprintsCount = () => {
+exports.selectSprintsCount = (params) => {
 
     let query = `
         SELECT COUNT(*) COUNT
@@ -277,31 +281,12 @@ exports.selectSprintsCount = () => {
             AND PROJECT_CODE = ?
     `;
 
-    return query;
-}
-
-exports.selectTasksCount = () => {
-
-    let query = `
-        SELECT COUNT(*) COUNT
-        FROM TBL_BACKLOG
-        WHERE BACKLOG_DELETED_YN = 'N' 
-            AND BACKLOG_CATEGORY = '일감'
-            AND PROJECT_CODE = ?
-    `;
-
-    return query;
-}
-
-exports.selectBacklogsCount = () => {
-
-    let query = `
-        SELECT COUNT(*) COUNT
-        FROM TBL_BACKLOG
-        WHERE BACKLOG_DELETED_YN = 'N' 
-            AND BACKLOG_CATEGORY = '백로그'
-            AND PROJECT_CODE = ?
-    `;
+    if((   params.searchCondition === 'name'
+        || params.searchCondition === 'target' 
+        || params.searchCondition === 'progress_status') 
+        && params.searchValue !== undefined) { // 조건 검색
+        query += `AND ${'SPRINT_' + params.searchCondition.toUpperCase()} LIKE '%${params.searchValue}%'`;
+    }
 
     return query;
 }
@@ -326,5 +311,18 @@ exports.insertSprintHistory = () => {
         )
     `;
 
+    return query;
+}
+
+exports.updateSprintProgress = () => {
+
+    let query = `
+        UPDATE TBL_SPRINT
+        SET
+            SPRINT_PROGRESS_STATUS = ?
+        WHERE
+            SPRINT_CODE = ?
+    `;
+    console.log(111, query);
     return query;
 }
