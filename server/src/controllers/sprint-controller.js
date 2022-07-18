@@ -140,3 +140,23 @@ exports.viewSprintsCount = async (req, res, next) => {
         });
     });
 }
+
+exports.editSprintProgress = async (req, res, next) => {
+    console.log('editSprintProgress...');
+    await SprintService.editSprintProgress(req.body)
+    .then((results) => {
+
+        res.status(HttpStatus.OK).json({ 
+            status: HttpStatus.OK,
+            message: 'successfully edit sprint progress',
+            results: results
+        })
+    })
+    .catch((err) =>{
+
+        res.status(HttpStatus.BAD_REQUEST).json({
+            status: HttpStatus.BAD_REQUEST,
+            message: err
+        });
+    });
+}

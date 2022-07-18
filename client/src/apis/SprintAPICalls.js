@@ -4,13 +4,13 @@ import { GET_BACKLOGS } from '../modules/SprintBacklogsModule';
 import { GET_COUNT } from '../modules/SprintsCountModule';
 import { GET_SPRINT_TASK } from '../modules/SprintTaskModule';
 
-export function callGetSprintsAPI(params) {
+export function callGetSprintsAPI(params, prevSprints) {
     
     let requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/sprints`;
     
     let defaultParams = { 
-        // 'offset': 0,
-        // 'limit': 30,
+        offset: 0,
+        limit: 10,
         orderCondition: 'code',
         orderValue: 'desc',
     };
@@ -25,13 +25,20 @@ export function callGetSprintsAPI(params) {
         
         const result = await fetch(requestURL).then(res => res.json());
         
-        dispatch({ type: GET_SPRINTS, payload: result.results });
+        await dispatch({ 
+            type: GET_SPRINTS, 
+            payload: {
+                result: result.results,
+                prevSprints: prevSprints,
+            }
+        });
 
         await dispatch(callGetSprintsCountAPI({ // 스프린트, 일감, 백로그 갯수 조회
             projectCode: params.projectCode,
             searchCondition: params.searchCondition,
             searchValue: params.searchValue
         }));
+
     }
 }
 
@@ -62,8 +69,8 @@ export function callPostSprintAPI(params, changedTasks, currentInfo) {
             body: JSON.stringify({
                 sprintName: params.sprintName,
                 sprintTarget: params.sprintTarget,
-                sprintStartDate: (params.sprintStartDate)? dateFormat(new Date(params.sprintStartDate), 'start'): '',
-                sprintEndDate: (params.sprintEndDate)? dateFormat(new Date(params.sprintEndDate), 'end'): '',
+                sprintStartDate: (params.sprintStartDate)? dateFormat(new Date(params.sprintStartDate), 'start'): null,
+                sprintEndDate: (params.sprintEndDate)? dateFormat(new Date(params.sprintEndDate), 'end'): null,
                 sprintProgressStatus: 'N',
                 changedTasks: changedTasks,
                 currentInfo: currentInfo,
@@ -72,8 +79,10 @@ export function callPostSprintAPI(params, changedTasks, currentInfo) {
         
         await dispatch(callGetSprintsAPI({	// 스프린트 목록 조회
             projectCode: parseInt(currentInfo.projectCode),
-            isGantt: true	// true일 경우, 진행 중 sprint가 맨위에 오고 진행 중이 아닌 sprint들은 sprintCode로 내림차순 정렬된다
-        }));
+            isGantt: true,	// true일 경우, 진행 중 sprint가 맨위에 오고 진행 중이 아닌 sprint들은 sprintCode로 내림차순 정렬된다
+            offset: currentInfo.offset,
+            limit: currentInfo.limit
+        }, currentInfo.prevSprints));
 
         await dispatch(callGetBacklogsAPI({	// 스프린트 내 백로그 목록 조회
             offset: 0,
@@ -92,7 +101,7 @@ export function callPutSprintAPI(params, changedTasks, currentInfo) {
     let requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/sprints`;
     
     return async (dispatch, getState) => {
-
+        
         const result = await fetch(requestURL, {
             method: 'PUT',
             headers: {
@@ -103,18 +112,20 @@ export function callPutSprintAPI(params, changedTasks, currentInfo) {
                 sprintCode: params.sprintCode,
                 sprintName: params.sprintName,
                 sprintTarget: params.sprintTarget,
-                sprintStartDate: (params.sprintStartDate)? dateFormat(new Date(params.sprintStartDate), 'start'): '',
-                sprintEndDate: (params.sprintEndDate)? dateFormat(new Date(params.sprintEndDate), 'end'): '',
+                sprintStartDate: (params.sprintStartDate)? dateFormat(new Date(params.sprintStartDate), 'start'): null,
+                sprintEndDate: (params.sprintEndDate)? dateFormat(new Date(params.sprintEndDate), 'end'): null,
                 sprintProgressStatus: params.sprintProgressStatus,
                 changedTasks: changedTasks,
                 currentInfo: currentInfo,
             })
         }).then(res => res.json());
-
+        
         await dispatch(callGetSprintsAPI({	// 스프린트 목록 조회
             projectCode: parseInt(currentInfo.projectCode),
-            isGantt: true	// true일 경우, 진행 중 sprint가 맨위에 오고 진행 중이 아닌 sprint들은 sprintCode로 내림차순 정렬된다
-        }));
+            isGantt: true,	// true일 경우, 진행 중 sprint가 맨위에 오고 진행 중이 아닌 sprint들은 sprintCode로 내림차순 정렬된다
+            offset: currentInfo.offset,
+            limit: currentInfo.limit
+        }, currentInfo.prevSprints));
 
         await dispatch(callGetBacklogsAPI({	// 스프린트 내 백로그 목록 조회
             offset: 0,
@@ -128,7 +139,7 @@ export function callPutSprintAPI(params, changedTasks, currentInfo) {
     }
 }
 
-export function callDeleteSprintAPI(sprintCode, projectCode) {
+export function callDeleteSprintAPI(sprintCode, currentInfo) {
     
     let requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/sprints`;
     
@@ -146,18 +157,20 @@ export function callDeleteSprintAPI(sprintCode, projectCode) {
         })
         
         await dispatch(callGetSprintsAPI({	// 스프린트 목록 조회
-            projectCode: parseInt(projectCode),
-            isGantt: true	// true일 경우, 진행 중 sprint가 맨위에 오고 진행 중이 아닌 sprint들은 sprintCode로 내림차순 정렬된다
-        }));
+            projectCode: parseInt(currentInfo.projectCode),
+            isGantt: true,	// true일 경우, 진행 중 sprint가 맨위에 오고 진행 중이 아닌 sprint들은 sprintCode로 내림차순 정렬된다
+            offset: currentInfo.offset,
+            limit: currentInfo.limit
+        }, currentInfo.prevSprints));
 
         await dispatch(callGetBacklogsAPI({	// 스프린트 내 백로그 목록 조회
             offset: 0,
             limit: 1000,
-            projectCode: projectCode
+            projectCode: currentInfo.projectCode
         }));
 
         await dispatch(callGetSprintsCountAPI({ // 스프린트, 일감, 백로그 갯수 조회
-            projectCode: projectCode
+            projectCode: currentInfo.projectCode
         }));
     }
 }
@@ -206,10 +219,10 @@ export function callGetTaskAPI(params) {
     }
 }
 
-export function callUpdateTaskAPI(params, projectCode) {
+export function callUpdateTaskAPI(params, currentInfo) {
     
     let requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/tasks`;
-    
+
     return async (dispatch, getState) => {
         
         const result = await fetch(requestURL, {
@@ -230,23 +243,98 @@ export function callUpdateTaskAPI(params, projectCode) {
                     backlogCode: (params.backlogCode)? params.backlogCode: '',
                     backlogStartDate: (params.backlogStartDate)? dateFormat(new Date(params.backlogStartDate), 'start'): '',
                     backlogEndDate: (params.backlogEndDate)? dateFormat(new Date(params.backlogEndDate), 'end'): '',
+                    sprintCode: params.sprintCode,
                 }
             })
         }).then(res => res.json());
         
         await dispatch(callGetSprintsAPI({	// 스프린트 목록 조회
-            projectCode: projectCode,
-            isGantt: true	// true일 경우, 진행 중 sprint가 맨위에 오고 진행 중이 아닌 sprint들은 sprintCode로 내림차순 정렬된다
-        }));
+            projectCode: currentInfo.projectCode,
+            isGantt: true,	// true일 경우, 진행 중 sprint가 맨위에 오고 진행 중이 아닌 sprint들은 sprintCode로 내림차순 정렬된다
+            offset: currentInfo.offset,
+            limit: currentInfo.limit
+        }, currentInfo.prevSprints));
 
         await dispatch(callGetBacklogsAPI({	// 스프린트 내 백로그 목록 조회
             offset: 0,
             limit: 1000,
-            projectCode: projectCode
+            projectCode: currentInfo.projectCode
         }));
 
         await dispatch(callGetSprintsCountAPI({ // 스프린트, 일감, 백로그 갯수 조회
-            projectCode: projectCode
+            projectCode: currentInfo.projectCode
+        }));
+    }
+}
+
+export function callUpdateTaskForGanttAPI(params, currentInfo) {
+    
+    let requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/tasks/date`;
+
+    return async (dispatch, getState) => {
+        
+        const result = await fetch(requestURL, {
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                taskCode: params.id.substr(1),
+                taskStartDate: (params.start)? dateFormat(new Date(params.start), 'start'): null,
+                taskEndDate: (params.end)? dateFormat(new Date(params.end), 'end'): null,
+            })
+        }).then(res => res.json());
+        
+        await dispatch(callGetSprintsAPI({	// 스프린트 목록 조회
+            projectCode: currentInfo.projectCode,
+            isGantt: true,	// true일 경우, 진행 중 sprint가 맨위에 오고 진행 중이 아닌 sprint들은 sprintCode로 내림차순 정렬된다
+            offset: currentInfo.offset,
+            limit: currentInfo.limit
+        }, currentInfo.prevSprints));
+
+        await dispatch(callGetBacklogsAPI({	// 스프린트 내 백로그 목록 조회
+            offset: 0,
+            limit: 1000,
+            projectCode: currentInfo.projectCode
+        }));
+
+        await dispatch(callGetSprintsCountAPI({ // 스프린트, 일감, 백로그 갯수 조회
+            projectCode: currentInfo.projectCode
+        }));
+    }
+}
+
+export function callUpdateSprintProgressAPI(params, currentInfo) {
+    
+    let requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/sprints/progress`;
+
+    return async (dispatch, getState) => {
+        
+        const result = await fetch(requestURL, {
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(params)
+        }).then(res => res.json());
+        
+        await dispatch(callGetSprintsAPI({	// 스프린트 목록 조회
+            projectCode: currentInfo.projectCode,
+            isGantt: true,	// true일 경우, 진행 중 sprint가 맨위에 오고 진행 중이 아닌 sprint들은 sprintCode로 내림차순 정렬된다
+            offset: currentInfo.offset,
+            limit: currentInfo.limit
+        }, currentInfo.prevSprints));
+
+        await dispatch(callGetBacklogsAPI({	// 스프린트 내 백로그 목록 조회
+            offset: 0,
+            limit: 1000,
+            projectCode: currentInfo.projectCode
+        }));
+
+        await dispatch(callGetSprintsCountAPI({ // 스프린트, 일감, 백로그 갯수 조회
+            projectCode: currentInfo.projectCode
         }));
     }
 }

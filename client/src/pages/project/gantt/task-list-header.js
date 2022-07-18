@@ -58,7 +58,7 @@ export const TaskListHeaderDefault = ({ headerHeight, fontFamily, fontSize, rowW
 						minWidth: rowWidth,
 					}}
 				>
-					<div className={styles.cells}>
+					<div className={styles.cells} title="일감 목록 접기">
 
 						<i className="pi pi-bars" style={{margin: '0 10px 0 20px'}}/>
 						{/* 스프린트 · {sprints.filter(sprint => sprint.type === 'project').length} / */}
