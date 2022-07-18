@@ -39,7 +39,7 @@ exports.selectTasks = (params) => {
 
     query += `\nORDER BY A.BACKLOG_CODE ASC`;
 
-    console.log(query)
+    // console.log("backlogsQuery",query)
 
   return query;
 };
@@ -158,7 +158,7 @@ exports.updateTask = (params) => {
   WHERE BACKLOG_CODE = '${params.backlogCode}'`;
 
 
-  console.log("query",query);
+  // console.log("query",query);
   return query;
     
   };

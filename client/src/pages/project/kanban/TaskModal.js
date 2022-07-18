@@ -51,7 +51,7 @@ export default function TaskModal(props) {
           }
         )
           .then((res) => res.json())
-          .then((json) => setTaskMemberList(json.results));
+          .then((json) => setTaskMemberList(json.results))
       });
   }, [props.currentTaskID]);
 
@@ -126,7 +126,7 @@ export default function TaskModal(props) {
   const onClickDeleteHandler = (taskCode, taskProjectCode, taskCategory) => {
     console.log("Code", taskCode, "ProjectCode", taskProjectCode, "taskCategory", taskCategory);
 
-    fetch(`http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/tasks`, {
+    fetch(`http://localhost:8888/api/tasks`, {
       method: "DELETE",
       headers: {
         Accept: "application/json",

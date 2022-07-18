@@ -21,6 +21,7 @@ export default function TaskTotalScreen(props) {
       
       dispatch(callGetTasksAPI(projectCode));
       dispatch(callGetTasksSprintAPI(projectCode));
+    
     }, []);
 
     const filterBy = (category) => {
@@ -37,18 +38,34 @@ export default function TaskTotalScreen(props) {
     );
     return (
       <div className={KanbanBoardStyle.kanbanContainer}>
-        <div className={KanbanBoardStyle.kanbanColumnBacklog}>
-          {createKanbanColumn(Category.Backlog)}
-        </div>
-        <div className={KanbanBoardStyle.kanbanColumnBefore}>
-          {createKanbanColumn(Category.Before)}
-        </div>
-        <div className={KanbanBoardStyle.kanbanColumnInProgress}>
-          {createKanbanColumn(Category.InProgress)}
-        </div>
-        <div className={KanbanBoardStyle.kanbanColumnDone}>
-          {createKanbanColumn(Category.Done)}
-        </div>
+        {Object.keys(sprint).length > 0 ? (
+          <>
+            <div className={KanbanBoardStyle.kanbanColumnBacklog}>
+              {createKanbanColumn(Category.Backlog)}
+            </div>
+            <div className={KanbanBoardStyle.kanbanColumnBefore}>
+              {createKanbanColumn(Category.Before)}
+            </div>
+            <div className={KanbanBoardStyle.kanbanColumnInProgress}>
+              {createKanbanColumn(Category.InProgress)}
+            </div>
+            <div className={KanbanBoardStyle.kanbanColumnDone}>
+              {createKanbanColumn(Category.Done)}
+            </div>
+          </>
+        ) : (
+          <>
+            <div className={KanbanBoardStyle.emptyOngoingSprint}>
+              <div>
+                <i
+                  className="pi pi-fw pi-th-large"
+                  style={{ fontSize: "10em", transform: "rotate(90deg)" }}
+                />
+                <h1>진행 중인 스프린트가 없습니다.</h1>
+              </div>
+            </div>
+          </>
+        )}
       </div>
     );
   }

@@ -1,5 +1,12 @@
 /* 칸반 스타일 */
 
+.emptyOngoingSprint {
+  width: 96%;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
 .kanbanContainer{
   width: 96%;
@@ -20,7 +27,7 @@
   -ms-overflow-style: none;
   scrollbar-width: none;
   overflow-y: auto; 
-  margin: 50px;
+  margin: 30px;
 }
 
 .kanbanColumn::-webkit-scrollbar {
