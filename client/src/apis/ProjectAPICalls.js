@@ -217,3 +217,8 @@ export const callGetNoticeAPI = (data) => {
         dispatch({ type: GET_PROJECT_NOTICE, payload: result.results});
     }
 }
+
+export const callPostRegistNoticeAPI = (data) => {
+
+    const requestURL = ``;
+} 
