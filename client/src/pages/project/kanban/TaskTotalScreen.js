@@ -7,21 +7,24 @@ import { useParams } from "react-router-dom";
 
 //API, Redux
 import {callGetTasksAPI, callGetTasksSprintAPI} from "../../../apis/TaskAPICalls";
-
+import { callGetProjectAPI } from "../../../apis/ProjectAPICalls";
 
 export default function TaskTotalScreen(props) {
+  
    
     // 일감 목록 
     const tasks = useSelector((state) => state.tasksReducer);
     const sprint = useSelector((state) => state.tasksSprintReducer);
     const dispatch = useDispatch();
     const { projectCode } = useParams();
-
+    
+    //프로젝트 이름
+    const project = useSelector((state) => state.projectsReducer);
+    
     useEffect(() => {
-      
       dispatch(callGetTasksAPI(projectCode));
       dispatch(callGetTasksSprintAPI(projectCode));
-    
+      dispatch(callGetProjectAPI({projectCode: projectCode}));
     }, []);
 
     const filterBy = (category) => {
@@ -40,6 +43,21 @@ export default function TaskTotalScreen(props) {
       <div className={KanbanBoardStyle.kanbanContainer}>
         {Object.keys(sprint).length > 0 ? (
           <>
+            <div className={KanbanBoardStyle.kanbanSprintName}>
+              <h4>
+                [ 프로젝트 (백로그) ] <br />
+                <br />
+                {project.length > 0 && project[0].projectName}
+              </h4>
+              <br />
+              <br />
+              <br />
+              <h4>
+                [ 진행 중인 스프린트 (일감) ] <br />
+                <br />
+                {sprint.sprintName}
+              </h4>
+            </div>
             <div className={KanbanBoardStyle.kanbanColumnBacklog}>
               {createKanbanColumn(Category.Backlog)}
             </div>
@@ -56,12 +74,21 @@ export default function TaskTotalScreen(props) {
         ) : (
           <>
             <div className={KanbanBoardStyle.emptyOngoingSprint}>
+              <div className={KanbanBoardStyle.kanbanColumnOnlyBacklog}>
+                <h3>
+                  {project.length > 0 && project[0].projectName} [ 백로그 ]
+                </h3>
+                {createKanbanColumn(Category.Backlog)}
+              </div>
               <div>
                 <i
                   className="pi pi-fw pi-th-large"
                   style={{ fontSize: "10em", transform: "rotate(90deg)" }}
                 />
                 <h1>진행 중인 스프린트가 없습니다.</h1>
+                <h2>
+                  진행 중인 스프린트가 없을 경우, 일감을 생성하실 수 없습니다.
+                </h2>
               </div>
             </div>
           </>

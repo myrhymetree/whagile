@@ -222,7 +222,7 @@ exports.findTasksOnGoingSprint = (params) => {
     params.searchValue = 'y';
     
     const onGoingSprint = await SprintRepository.selectSprints(connection, params);
-    // console.log("ongoing",onGoingSprint);
+    console.log("ongoing",onGoingSprint);
     let tasks = [];
     if(onGoingSprint.length > 0) {
       tasks = await TasksRepository.selectTasks(connection, {

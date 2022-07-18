@@ -199,10 +199,18 @@ export default function TaskModal(props) {
                 value={taskProgressStatus}
                 onChange={(e) => onProgressStatusChange(e)}
               >
-                <option value={Category.Backlog}>백로그</option>
-                <option value={Category.Before}>진행 전</option>
-                <option value={Category.InProgress}>진행 중</option>
-                <option value={Category.Done}>완료</option>
+                {Object.keys(sprint).length > 0 ? (
+                  <>
+                    <option value={Category.Backlog}>백로그</option>
+                    <option value={Category.Before}>진행 전</option>
+                    <option value={Category.InProgress}>진행 중</option>
+                    <option value={Category.Done}>완료</option>
+                  </>
+                ) : (
+                  <>
+                    <option value={Category.Backlog}>백로그</option>
+                  </>
+                )}
               </select>
               <select
                 className={KanbanBoardStyle.kanbanDetailInputSelection}

@@ -6,6 +6,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: row;
+
 }
 
 .kanbanContainer{
@@ -42,11 +44,6 @@
     background-color:#8B6AFF;
     border-radius: 10px;  
 }
-
-
-
-
-
 
 
 .kanbanColumn {
@@ -145,6 +142,21 @@
 .kanbanColumnDone{color:#F86064;}
 
 
+.kanbanColumnOnlyBacklog{color:#9DDE93; text-align: center;}
+.kanbanSprintName{
+  display: flex; 
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  width: 300px;
+  height: 400px;
+  color: #9DDE93;
+  background-color: #282936;
+  border-radius: 10px;
+  padding: 10px;
+  margin-top: 80px;
+}
 
 /* 칸반 모달 스타일 */
 
