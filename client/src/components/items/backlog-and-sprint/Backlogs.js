@@ -129,7 +129,7 @@ function Backlogs() {
             <div>
                  <DivHeader/>
                  { 
-                    backlogs === [] || backlogs === undefined? 
+                    backlogs.length === 0? 
                     <div className={ BacklogAndSprintCSS.backlogItem }>
                         등록된 백로그가 없습니다.
                     </div> 
@@ -162,6 +162,7 @@ function Backlogs() {
             </div>
             <button id={ BacklogAndSprintCSS.readMoreBtn }
                 onClick={ () => readMoreBacklogs() }
+                style={{ visibility: backlogs.length === 0? 'hidden' : 'visible' }}
             >
                 <i className="pi pi-fw pi-ellipsis-h"/> 더보기 
             </button><br/>
