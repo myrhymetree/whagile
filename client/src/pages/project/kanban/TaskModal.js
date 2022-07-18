@@ -2,6 +2,8 @@ import KanbanBoardStyle from "./KanbanBoard.module.css";
 import React, { useEffect, useState } from "react";
 import { Category, Urgency } from "./Types";
 import { useSelector } from "react-redux";
+import TaskComment from "./TaskComment";
+
 
 // 일감 모달창
 export default function TaskModal(props) {
@@ -279,6 +281,13 @@ export default function TaskModal(props) {
           >
             삭제
           </button>
+          <div className={KanbanBoardStyle.kanbanComment}>
+            <h6>댓글</h6>
+            <TaskComment
+              taskCode={taskCode}
+              taskProjectCode={taskProjectCode}
+            />
+          </div>
         </div>
       </div>
     </>

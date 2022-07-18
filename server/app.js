@@ -40,4 +40,7 @@ app.use("/api/sprints", sprintRouter);
 const tasksRouter = require("./src/routes/tasks-route");
 app.use("/api/tasks", tasksRouter);
 
+const taskCommentRouter = require("./src/routes/task-comment-route");
+app.use("/api/task-comment", taskCommentRouter);
+
 app.listen(8888, () => console.log("listening on port 8888..."));

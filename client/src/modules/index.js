@@ -19,28 +19,32 @@ import sprintTaskReducer from './SprintTaskModule';
 import sprintsCountReducer from './SprintsCountModule';
 import sprintsReducer from './SprintsModule';
 import sprintReducer from './SprintModule';
+import taskTotalCommentReducer from './TaskTotalCommentModule';
+import taskCommentReducer from './TaskCommentModule';
 
 const rootReducer = combineReducers({
-    authsReducer,
-    authReducer,
-    authOrderReducer,
-    memberReducer,
-    backlogReducer,
-    backlogDetailReducer,
-    backlogCommentReducer,
-    backlogCommentDetailReducer,
-    projectsReducer,
-    projectMemberReducer,
-    ProjectNoticeReducer,
-    projectStatisticsReducer,
-    tasksReducer,
-    taskReducer,
-    tasksSprintReducer,
-    sprintBacklogsReducer,
-    sprintTaskReducer,
-    sprintsCountReducer,
-    sprintsReducer,
-    sprintReducer
+  authsReducer,
+  authReducer,
+  authOrderReducer,
+  memberReducer,
+  backlogReducer,
+  backlogDetailReducer,
+  backlogCommentReducer,
+  backlogCommentDetailReducer,
+  projectsReducer,
+  projectMemberReducer,
+  ProjectNoticeReducer,
+  projectStatisticsReducer,
+  tasksReducer,
+  taskReducer,
+  tasksSprintReducer,
+  taskCommentReducer,
+  taskTotalCommentReducer,
+  sprintBacklogsReducer,
+  sprintTaskReducer,
+  sprintsCountReducer,
+  sprintsReducer,
+  sprintReducer,
 });
 
 export default rootReducer;
