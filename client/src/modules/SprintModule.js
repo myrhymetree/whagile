@@ -21,8 +21,8 @@ const sprintReducer = handleActions(
             
             let newState = {
                 ...payload,
-                'sprintStartDate': new Date(payload.sprintStartDate),
-                'sprintEndDate': new Date(payload.sprintEndDate)
+                sprintStartDate: (payload.sprintStartDate)? new Date(payload.sprintStartDate): null,
+                sprintEndDate: (payload.sprintEndDate)? new Date(payload.sprintEndDate): null
             }
             
             return newState;
@@ -33,7 +33,7 @@ const sprintReducer = handleActions(
         },
         [INIT_SPRINT]: (state, { payload }) => {
             
-            return {};
+            return payload;
         }
     },
     initialState

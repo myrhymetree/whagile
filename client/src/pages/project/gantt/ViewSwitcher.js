@@ -23,6 +23,7 @@ export const ViewSwitcher = ({
 	onShowInsert,
 	// onViewListChange,
 	// isChecked,
+	setCurrentLimit,
 }) => {
 	
 	const dispatch = useDispatch();
@@ -35,6 +36,7 @@ export const ViewSwitcher = ({
     const selectCondition = [
         {label: '스프린트 이름', value: 'name'},
         // {label: '담당자 이름', value: 'backlogChargerName'} //TODO: 담당자 검색 만들거야?
+        // {label: '일감 이름', value: 'taskName'} //TODO: 일감 검색 만들거야?
     ];
 	const [searchMessage, setSearchMessage] = useState('모든 스프린트를 조회합니다');
 
@@ -60,8 +62,12 @@ export const ViewSwitcher = ({
 			projectCode: parseInt(projectCode),
 			isGantt: true,	// true일 경우, 진행 중 sprint가 맨위에 오고 진행 중이 아닌 sprint들은 sprintCode로 내림차순 정렬된다
 			searchCondition: condition,
-			searchValue: value
+			searchValue: value,
+			offset: 0,
+			limit: 10
 		}));
+
+		setCurrentLimit(10);
     };
 
 	const onSearchAll = () => {
@@ -73,9 +79,11 @@ export const ViewSwitcher = ({
 		dispatch(callGetSprintsAPI({	// 스프린트 목록 조회
 			projectCode: parseInt(projectCode),
 			isGantt: true,	// true일 경우, 진행 중 sprint가 맨위에 오고 진행 중이 아닌 sprint들은 sprintCode로 내림차순 정렬된다
-			// searchCondition: condition,
-			// searchValue: value
+			offset: 0,
+			limit: 10
 		}));
+
+		setCurrentLimit(10);
 	}
 
 	useEffect(

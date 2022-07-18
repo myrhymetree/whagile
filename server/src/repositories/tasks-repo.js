@@ -237,3 +237,26 @@ exports.selectTasksOnGoingSprint = (connection, params) => {
         // console.log(query.sql);
     });
 };
+
+// 일감 시작일, 종료일만 수정
+exports.updateTaskDate = (connection, params) => {
+
+  return new Promise((resolve, reject) => {
+
+    connection.query(
+      tasksQuery.updateTaskDate(),
+      [
+        params.taskStartDate
+        , params.taskEndDate
+        , params.taskCode
+      ],
+      (err, results, fields) => {
+        if (err) {
+          reject(err);
+        }
+
+        resolve(results);
+      }
+    );
+  });
+}
