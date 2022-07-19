@@ -77,6 +77,32 @@
     margin-top: 10px;
 }
 
+.sprintSummary {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.sprintSummary>:nth-child(1) {
+    width: 5%;
+}
+
+.sprintSummary>:nth-child(2) {
+    width: 45%;
+}
+
+.sprintSummary>:nth-child(3) {
+    width: 25%;
+}
+
+.sprintSummary>:nth-child(4) {
+    width: 10%;
+}
+
+.sprintSummary>:nth-child(5) {
+    width: 15%;
+}
+
 .sprintItemHeader {
     display: flex;
     flex-direction: row;
@@ -251,7 +277,46 @@
     background-color: #1D1E27;
 }
 
-#createNewSprintBtn {
+.editSprintBtn {
+    border: none;
+    background: none;
     color: #fff;
-    float: right;
+    font-size: 12px;
+}
+
+.editSprintBtn>i {
+    height: 12px;
+    margin-right: 5px;
+}
+
+.sprintStartBtn, 
+.sprintEndBtn {
+    border: none;
+    border-radius: 6px;
+    width: 100%;
+    padding: 10px;
+    color: #fff;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.sprintStartBtn:disabled,
+.sprintEndBtn:disabled {
+    background-color: rgba(255, 255, 255, 0.25);
+}
+
+.sprintStartBtn {
+    background-color: #5A8FF6;
+}
+
+.sprintEndBtn {
+    background-color: #F86064;
+}
+
+.sprintTarget {
+    margin-top: 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    color: #A2A2A6;
+    font-size: 12px;
+    padding: 10px;
 }
