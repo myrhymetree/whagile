@@ -1,7 +1,9 @@
 import KanbanBoardStyle from "./KanbanBoard.module.css";
 import React, { useEffect, useState } from "react";
 import { Category, Urgency } from "./Types";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import TaskComment from "./TaskComment";
+import callGetTaskAllCommentsAPI from "../../../apis/TaskCommentAPICalls";
 
 // 일감 모달창
 export default function TaskModal(props) {
@@ -16,7 +18,12 @@ export default function TaskModal(props) {
   const [taskProjectCode, setTaskProjectCode] = useState("");
   const [taskCategory, setTaskCategory] = useState("");
   const sprint = useSelector((state) => state.tasksSprintReducer);
+  const taskComments = useSelector((state) => state.taskTotalCommentReducer);
+  const dispatch = useDispatch();
 
+
+  
+  
   useEffect(() => {
     console.log("Task", props.currentTaskID);
     // 개별 일감 상세 조회
@@ -27,20 +34,23 @@ export default function TaskModal(props) {
         Access_token: window.localStorage.getItem("access_token"),
       },
     })
-      .then((response) => response.json())
-      .then((json) => {
-        const result = json.results[0];
-        setTaskCode(result.backlogCode || "");
-        setTaskTitle(result.backlogTitle || "");
-        setTaskDescription(result.backlogDescription || "");
-        setTaskProgressStatus(result.progressStatus || "");
-        setTaskIssue(result.issue);
-        setTaskUrgency(result.urgency || "");
-        setTaskCharger(result.backlogChargerCode || "");
-        setTaskProjectCode(result.projectCode || "");
-        setTaskCategory(result.category || "");
-
-        fetch(
+    .then((response) => response.json())
+    .then((json) => {
+      const result = json.results[0];
+      console.log("result", result)
+      setTaskCode(result.backlogCode || "");
+      setTaskTitle(result.backlogTitle || "");
+      setTaskDescription(result.backlogDescription || "");
+      setTaskProgressStatus(result.progressStatus || "");
+      setTaskIssue(result.issue);
+      setTaskUrgency(result.urgency || "");
+      setTaskCharger(result.backlogChargerCode || "");
+      setTaskProjectCode(result.projectCode || "");
+      setTaskCategory(result.category || "");
+      
+      dispatch(callGetTaskAllCommentsAPI(result.backlogCode));
+      
+      fetch(
           `http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/projects/${result.projectCode}/member`,
           {
             method: "GET",
@@ -51,7 +61,7 @@ export default function TaskModal(props) {
           }
         )
           .then((res) => res.json())
-          .then((json) => setTaskMemberList(json.results));
+          .then((json) => setTaskMemberList(json.results))
       });
   }, [props.currentTaskID]);
 
@@ -199,10 +209,18 @@ export default function TaskModal(props) {
                 value={taskProgressStatus}
                 onChange={(e) => onProgressStatusChange(e)}
               >
-                <option value={Category.Backlog}>백로그</option>
-                <option value={Category.Before}>진행 전</option>
-                <option value={Category.InProgress}>진행 중</option>
-                <option value={Category.Done}>완료</option>
+                {Object.keys(sprint).length > 0 ? (
+                  <>
+                    <option value={Category.Backlog}>백로그</option>
+                    <option value={Category.Before}>진행 전</option>
+                    <option value={Category.InProgress}>진행 중</option>
+                    <option value={Category.Done}>완료</option>
+                  </>
+                ) : (
+                  <>
+                    <option value={Category.Backlog}>백로그</option>
+                  </>
+                )}
               </select>
               <select
                 className={KanbanBoardStyle.kanbanDetailInputSelection}
@@ -271,6 +289,16 @@ export default function TaskModal(props) {
           >
             삭제
           </button>
+          <div className={KanbanBoardStyle.kanbanCommentBox}>
+            <div className={KanbanBoardStyle.kanbanComment}>
+              <TaskComment
+                taskCode={taskCode}
+                taskProjectCode={taskProjectCode}
+                taskTitle={taskTitle}
+                taskCategory={taskCategory}
+              />
+            </div>
+          </div>
         </div>
       </div>
     </>

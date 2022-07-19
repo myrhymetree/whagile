@@ -16,8 +16,8 @@ export function callGetTasksAPI(projectCode) {
     const backlogs = await fetch(requestURL).then((res) => res.json());
     const tasks = await fetch(requestURL2).then((res) => res.json());
 
-    console.log('backlogs', backlogs)
-    console.log('tasks', tasks)
+    // console.log('backlogs', backlogs)
+    // console.log('tasks', tasks)
     console.log('backlogs&tasks', backlogs.results.concat(tasks.results))
 
     dispatch({ type: GET_TASKS, payload: backlogs.results.concat(tasks.results) });
@@ -27,9 +27,9 @@ export function callGetTasksAPI(projectCode) {
 
 // 개별 일감 조회 API
 export const callGetTaskAPI = (taskCode) => {
-  console.log(taskCode);
+  // console.log(taskCode);
   let requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/tasks/${taskCode}`;
-  console.log("requestURL:", requestURL);
+  // console.log("requestURL:", requestURL);
   return async (dispatch, getState) => {
     const result = await fetch(requestURL).then((res) => res.json());
 
@@ -138,7 +138,10 @@ export function callGetTasksSprintAPI(projectCode) {
   return async function getTasks(dispatch, getState) {
 
     const result = await fetch(requestURL).then((res) => res.json());
-
-    dispatch({ type: GET_SPRINT, payload: result.results[0] });
+    if (result.results.length !== 0){
+      dispatch({ type: GET_SPRINT, payload: result.results[0] });
+    } else {
+      dispatch({ type: GET_SPRINT, payload: {} });
+    }
   };
 }

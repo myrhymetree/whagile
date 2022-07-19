@@ -4,7 +4,6 @@ const initialState = [];
 
 export const GET_SPRINT = "tasksSprint/GET_SPRINT";
 
-
 const actions = createActions({
   [GET_SPRINT]: () => {}
 });
@@ -12,8 +11,12 @@ const actions = createActions({
 const tasksSprintReducer = handleActions(
   {
     [GET_SPRINT]: (state, { payload }) => {
-        
-      return payload;
+      if(payload !== undefined){
+          return payload;
+      } 
+      else{
+        return state;
+      }
     },
   },
   initialState
