@@ -14,6 +14,7 @@ const actions = createActions({
 const taskTotalCommentReducer = handleActions(
   {
    [GET_TASK_COMMENTS]: (state, { payload }) => {
+    console.log("payload", payload);
       return payload;
     },
   },

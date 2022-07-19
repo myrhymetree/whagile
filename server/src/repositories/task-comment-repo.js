@@ -45,7 +45,7 @@ exports.selectTaskComment = (connection, taskCommentCode) => {
         resolve(taskComment);
       }
     );
-    console.log("taskComment",query.sql);
+    // console.log("taskComment",query.sql);
   });
 };
 
@@ -57,7 +57,7 @@ exports.insertComment = (connection, taskNewComment) => {
            taskCommentQuery.registTaskComment(),
            [
              taskNewComment.taskCommentContent,
-             taskNewComment.taskCommentCreatedDate,
+            //  taskNewComment.taskCommentCreatedDate,
              taskNewComment.taskCode,
              taskNewComment.projectCode,
              taskNewComment.memberCode,
@@ -71,7 +71,7 @@ exports.insertComment = (connection, taskNewComment) => {
            }
          );
 
-         console.log("insertComment",query.sql);
+        //  console.log("insertComment",query.sql);
        });
 
 };
@@ -83,7 +83,7 @@ exports.updateTaskComment = (connection, updateTaskCommentContent) => {
       taskCommentQuery.updateTaskComment(),
       [
         updateTaskCommentContent.taskCommentContent,
-        updateTaskCommentContent.taskCommentModifiedDate,
+        // updateTaskCommentContent.taskCommentModifiedDate,
         updateTaskCommentContent.taskCommentCode,
       ],
       (err, result, fields) => {
@@ -111,6 +111,6 @@ exports.deleteTaskComment = (connection, removeTaskCommentRequest) => {
         resolve(result);
       }
     );
-    console.log("deleteTaskComment", query.sql);
+    // console.log("deleteTaskComment", query.sql);
   });
 };
