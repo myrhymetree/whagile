@@ -27,7 +27,6 @@ exports.registComment = async (req, res, next) => {
     
     const newComment = {
         content: req.body.content,
-        createdDate: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString(),
         backlogCode: Number(req.body.backlogCode),
         projectCode: Number(req.body.projectCode),
         memberCode: user.usercode
@@ -50,7 +49,6 @@ exports.editComment = async (req, res, next) => {
     const modifyingContent = {
         backlogCommentCode: Number(req.body.backlogCommentCode),
         content: req.body.modifiedComment,
-        modifiedDate: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString(),
         projectCode : Number(req.body.projectCode),
         memberCode: user.usercode
     };
@@ -70,7 +68,6 @@ exports.removeComment = async (req, res, next) => {
 
     const removeRequest = {
         backlogCommentCode: Number(req.body.backlogCommentCode),
-        deletedDate: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString(),
         projectCode: Number(req.body.projectCode),
         memberCode: user.usercode
     };

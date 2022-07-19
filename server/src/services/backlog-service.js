@@ -7,17 +7,11 @@ createNewHistory = () => {
     const newHistory = {
         historyItem: '',    
         historyContent: '',  
-        historyDate: '',  
         backlogCode: 0,   
         projectCode: 0,   
         memberCode: 0
     };
     
-    /* 히스토리 발생일 정보 생성 */
-    const insertDate = new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString();    //히스토리 발생일
-
-    newHistory.historyDate = insertDate;
-
     return newHistory;
 };
 
