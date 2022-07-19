@@ -255,3 +255,29 @@ exports.findSprint = (params) => {
 
   });
 };
+
+exports.editTaskDate = (params) => {
+
+  return new Promise(async (resolve, reject) => {
+
+    const connection = getConnection();
+    connection.beginTransaction();
+
+    try {
+
+      const results = await TasksRepository.updateTaskDate(connection, params);
+      
+      connection.commit();
+
+      resolve(results);
+    } catch (err) {
+
+      connection.rollback();
+
+      reject(err);
+    } finally {
+
+      connection.end();
+    }
+  });
+};

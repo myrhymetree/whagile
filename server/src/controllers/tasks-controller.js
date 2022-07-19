@@ -155,4 +155,23 @@ exports.findSprint = async (req, res, next) =>{
             });
         });
 }
+// 일감 시작일, 종료일만 수정(필수 값: taskCode)
+exports.editTaskDate = async (req, res, next) =>{
+    console.log('editTaskDate...')
+    await TasksService.editTaskDate(req.body)
+    .then((result) => {
+        res.status(HttpStatus.OK).json({
+            status: HttpStatus.OK,
+            message: "일감의 시작일과 종료일을 성공적으로 수정했습니다.",
+            results: result,
+        });
+
+    })
+    .catch((err) =>{
+            res.status(HttpStatus.BAD_REQUEST).json({
+                status: HttpStatus.BAD_REQUEST,
+                message: err
+            });
+        });
+}
 

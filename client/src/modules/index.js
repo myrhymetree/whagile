@@ -19,6 +19,7 @@ import sprintTaskReducer from './SprintTaskModule';
 import sprintsCountReducer from './SprintsCountModule';
 import sprintsReducer from './SprintsModule';
 import sprintReducer from './SprintModule';
+import sprintsForBacklogReducer from './SprintsForBacklogModule';
 import taskTotalCommentReducer from './TaskTotalCommentModule';
 import taskCommentReducer from './TaskCommentModule';
 
@@ -45,6 +46,7 @@ const rootReducer = combineReducers({
   sprintsCountReducer,
   sprintsReducer,
   sprintReducer,
+  sprintsForBacklogReducer
 });
 
 export default rootReducer;

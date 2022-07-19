@@ -28,7 +28,7 @@ exports.insertSprint = (connection, params) => {
 }
 
 exports.selectSprints = (connection, params) => {
-    console.log('repo', params)
+    
     return new Promise((resolve, reject) => {
         
         connection.query(
@@ -273,49 +273,8 @@ exports.selectSprintsCount = (connection, params) => {
     })
 }
 
-exports.selectTasksCount = (connection, params) => {
-    
-    return new Promise((resolve, reject) => {
-        console.log('여기', params)
-        connection.query(
-
-            sprintQuery.selectTasksCount(params),
-            [
-                parseInt(params.projectCode)
-            ],
-            (err, results, fields) => {
-                if(err) {
-                    reject(err);
-                }
-
-                resolve(results);
-            }
-        );
-    })
-}
-
-exports.selectBacklogsCount = (connection, params) => {
-    
-    return new Promise((resolve, reject) => {
-        
-        connection.query(
-
-            sprintQuery.selectBacklogsCount(),
-            [parseInt(params.projectCode)],
-            (err, results, fields) => {
-                if(err) {
-                    reject(err);
-                }
-
-                resolve(results);
-            }
-        );
-    })
-}
-
 exports.insertSprintHistory = (connection, sprintHistory, currentInfo) => {
-    console.log(111, sprintHistory)
-    console.log(222, currentInfo)
+    
     return new Promise((resolve, reject) => {
         
         connection.query(
@@ -338,3 +297,26 @@ exports.insertSprintHistory = (connection, sprintHistory, currentInfo) => {
         );
     })
 }
+
+exports.updateSprintProgress = (connection, params) => {
+    
+    return new Promise((resolve, reject) => {
+        console.log(999, params)
+        connection.query(
+
+            sprintQuery.updateSprintProgress(),
+            [
+                params.sprintProgressStatus,
+                params.sprintCode
+            ],
+            (err, results, fields) => {
+                if(err) {
+                    reject(err);
+                }
+
+                resolve(results);
+            }
+        );
+    })
+}
+
