@@ -88,6 +88,7 @@ exports.insertProject = () => {
     `;
 }
 
+/* 프로젝트 멤버 추가 */
 exports.insertProjectMember = () => {
   return `
       INSERT
@@ -104,6 +105,15 @@ exports.insertProjectMember = () => {
       , ?
       )
   `;
+}
+
+exports.restoreProjectMember = (params) => {
+  return `
+      UPDATE TBL_PROJECT_MEMBER A
+         SET A.PROJECT_MEMBER_DELETED_YN = 'N'
+       WHERE A.PROJECT_CODE = ${params.projectCode}
+         AND A.MEMBER_CODE = ${params.memberCode}
+`
 }
 
 
@@ -165,32 +175,6 @@ exports.selectProjectMembers = (projectCode) => {
        AND A.PROJECT_MEMBER_DELETED_YN = 'N'
   `
 }
-
-// exports.selectProjectMember = (projectCode) => {
-  
-//   let query =
-//     `
-//     SELECT
-//            A.MEMBER_CODE
-//          , B.MEMBER_ID
-//          , B.MEMBER_NAME
-//          , B.MEMBER_EMAIL
-//          , C.AUTHORITY_NAME
-//       FROM TBL_PROJECT_MEMBER A
-//       JOIN TBL_MEMBER B ON (A.MEMBER_CODE = B.MEMBER_CODE)
-//       JOIN TBL_AUTHORITY C ON (A.AUTHORITY_CODE = C.AUTHORITY_CODE)
-//      WHERE A.PROJECT_CODE = ${ projectCode }
-     
-//   `
-
-//   if(params.searchValue !== undefined) {
-//     query += ` AND ${'B.MEMBER_ID'} LIKE '%${params.searchValue}%'`;
-//  }
-
-//  query += `ORDER BY A.PROJECT_CODE DESC`;
-
-//  return query;
-// }
 
 /* 프로젝트 멤버 삭제 */
 exports.deleteProjectMember = (params) => {
@@ -296,5 +280,16 @@ exports.isRegistedMember = (data) => {
         , ?
         , ?
         )
+    `;
+  }
+
+  exports.modifyNoticeToProject = (noticeInfo) => {
+
+    return `
+        UPDATE TBL_NOTICE
+           SET
+               NOTICE_CONTENT = '${ noticeInfo.content }'
+             , MODIFIER = ${ noticeInfo.modifier }
+         WHERE NOTICE_CODE = ${ noticeInfo.noticeCode }
     `;
   }

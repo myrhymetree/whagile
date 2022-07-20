@@ -122,12 +122,7 @@ exports.findProjectMembers = async (req, res, next) => {
 exports.registProjectMember = async (req, res, next) => {
 
     await ProjectService.registProjectMember(req.params)
-        .then((result) => {
-            // res.status(HttpStatus.CREATED).json({
-            //     status: HttpStatus.CREATED,
-            //     message: '성공적으로 프로젝트에 참여했습니다.',
-            //     results: result
-            // });
+        .then(() => {
             res.redirect('http://localhost:3000/');
         }).catch((err) => {
 
@@ -236,19 +231,20 @@ exports.findNotice = async (req, res, next) => {
         });
 };
 
-exports.registNoticeToProject = async (req, res, next) => {
+exports.modifyNoticeToProject = async (req, res, next) => {
 
     const noticeInfo = {
         projectCode : req.params.projectCode,
-        memberCode : req.body.loginMemberCode,
-        content : req.body.content
+        modifier : req.body.modifier,
+        content : req.body.content,
+        noticeCode: req.body.noticeCode
     }
 
-    await ProjectService.registNoticeToProject(noticeInfo)
+    await ProjectService.modifyNoticeToProject(noticeInfo)
         .then((result) => {
             res.status(HttpStatus.CREATED).json({
                 status: HttpStatus.CREATED,
-                message: '해당 프로젝트 공지사항을 등록했습니다.',
+                message: '해당 프로젝트 공지사항을 수정했습니다.',
                 results: result
             });
         }).catch((err) => {

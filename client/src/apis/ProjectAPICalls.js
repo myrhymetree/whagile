@@ -1,7 +1,7 @@
 import { GET_PROJECT, GET_PROJECTS, POST_PROJECT, PUT_PROJECT,  DELETE_PROJECT } from "../modules/ProjectModule";
 import { GET_PROJECT_MEMBER } from "../modules/ProjectMemberModule";
 import { GET_INVITED_MEMBER, PUT_MODIFY_AUTHORITY, DELETE_PROJECT_MEMBER } from "../modules/ProjectMemberModule";
-import { GET_PROJECT_NOTICE } from "../modules/ProjectNoticeModule";
+import { GET_PROJECT_NOTICE, PUT_PROJECT_NOTICE } from "../modules/ProjectNoticeModule";
 import { decodeJwt } from '../utils/tokenUtils';
 
 export function callGetProjectsAPI(params) {
@@ -218,7 +218,30 @@ export const callGetNoticeAPI = (data) => {
     }
 }
 
-export const callPostRegistNoticeAPI = (data) => {
+export const callPutModifyNoticeAPI = (data) => {
 
-    const requestURL = ``;
+    console.log('data는 ', data);
+    const decoded = decodeJwt(window.localStorage.getItem("access_token"));
+    const requestURL = `http://localhost:8888/api/projects/${ data.projectCode }/notice`;
+
+    return async function registNotice(dispatch, getState) {
+
+        const result = await fetch(requestURL, {
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                projectCode: data.projectCode,
+                noticeCode : data.noticeCode,
+                content: data.content,
+                modifier: (decoded !== 'undefined')? decoded.code: ''
+            })
+        }).then(res => res.json());
+
+        dispatch({ type : PUT_PROJECT_NOTICE, payload : result.results});
+    }
+
+
 } 

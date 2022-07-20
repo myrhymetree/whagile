@@ -5,7 +5,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import DashboardCSS from './Dashboard.module.css';
 import { callGetProjectStatisticsAPI } from '../../../apis/ProjectStatisticsAPICalls';
-import { callGetNoticeAPI, callGetProjectMemberAPI } from '../../../apis/ProjectAPICalls';
+import { callGetNoticeAPI, callGetProjectMemberAPI, callPutModifyNoticeAPI } from '../../../apis/ProjectAPICalls';
+import { decodeJwt } from '../../../utils/tokenUtils';
 import { Chart } from 'primereact/chart';
 import { Editor } from 'primereact/editor';
 import { Button } from 'primereact/button';
@@ -21,6 +22,8 @@ function Dashboard() {
     const [ taskInfo, setTaskInfo ] = useState(false);
     const [text, setText] = useState('');
     const [isNotice, setIsNotice] = useState(true);
+    const [noticeComponent, SetNoticeComponent] = useState(notice.content);
+    const decoded = decodeJwt(window.localStorage.getItem("access_token"));
     // console.log('통계', taskCounts);
     console.log('공지', notice);
     console.log('멤버목록', members);
@@ -68,7 +71,8 @@ function Dashboard() {
 
                 setTaskInfo(true);
                 setText(`<div>${ notice.content }</div>`);
-
+                SetNoticeComponent(<div><p>{ notice.content }</p></div>)
+                // document.getElementById("notice");
                 
         },
         [completedTaskCntToProject]
@@ -156,9 +160,16 @@ function Dashboard() {
                 </div>
                 <div className="flex align-items-center justify-content-center bg-black-alpha-10 font-bold text-white m-2 border-round" style={{minWidth: 1000 + 'px', minHeight: 100 + 'px'}} onClick={ editNotice }>
                     {/* <label style={{ position: 'relative', width: '100%', height: '100%' }}>공지사항</label> */}
-                    { (isNotice) && <p style={{ width: '150%', height: '10%', fontWeight: 'lighter' }}  >{ notice.content}</p>}
+                    { (isNotice) && <div style={{ width: '150%', height: '10%', fontWeight: 'lighter' }} dangerouslySetInnerHTML={ {__html: notice.content } }></div>}
+                    <div id="notice" style={{ width: '150%', height: '10%', fontWeight: 'lighter' }}  ></div>
                     { (!isNotice) && <Editor style={{ width: '100%', height: '100px' }} value={ text } onTextChange={(e) => setText(e.htmlValue)}  />}
-                    { (!isNotice) && <Button>제출</Button>}
+                    { (!isNotice) && <Button onClick={ () => { dispatch(callPutModifyNoticeAPI({
+                                             'projectCode' : projectCode,
+                                             'noticeCode' : notice.noticeCode,
+                                             'content' : text,
+                                             'modifier' : (decoded !== 'undefined')? decoded.code: ''
+                                             })) }}>제출
+                                    </Button>}
                 </div>
                 {/* <div className="flex align-items-center justify-content-center bg-blue-500 font-bold text-white m-2 border-round" style={{minWidth: 200 + 'px', minHeight: 100 + 'px'}}>
                     팀원목록

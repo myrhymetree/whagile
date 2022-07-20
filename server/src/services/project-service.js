@@ -44,10 +44,19 @@ exports.registProject = (projectInfo) => {
         try {
             /* 프로젝트 등록 */
             const result = await ProjectRepository.registProject(connection, projectInfo);
-
+ 
             /* 프로젝트 소유자 등록 */
             await ProjectRepository.registProjectMember(connection, result.insertId, projectInfo);
+
+            const noticeInfo = {
+                content: '',
+                memberCode: projectInfo.loginMember,
+                projectCode: result.insertId
+            }
             
+            /* 프로젝트 공지사항 등록 */
+            await ProjectRepository.insertNoticeToProject(connection, noticeInfo);
+
             /* 프로젝트 조회 */
             const registedProject = await ProjectRepository.selectProject(connection, result.insertId);
 
@@ -179,10 +188,23 @@ exports.registProjectMember = (data) => {
 
         const connection = getConnection();
         connection.beginTransaction();
-        
+
         try {
-            const result = await ProjectRepository.insertProjectMember(connection, data);
-            
+
+            const registedMember = await ProjectRepository.selectProjectMember(connection, data);
+
+            console.log('등록된 회원 : ', registedMember);
+
+            let result;
+
+            if(registedMember !== undefined) {
+                result = await ProjectRepository.restoreProjectMember(connection, data);
+            }
+
+            if(registedMember === undefined) {
+                result = await ProjectRepository.insertProjectMember(connection, data);
+            }
+
             connection.commit();
 
             resolve(result);
@@ -372,14 +394,14 @@ exports.findNotice = (projectCode) => {
     })
 }
 
-exports.registNoticeToProject = (noticeInfo) => {
+exports.modifyNoticeToProject = (noticeInfo) => {
     return new Promise( async(resolve, reject) => {
         
         const connection = getConnection();
         connection.beginTransaction();
 
         try {
-            const result = await ProjectRepository.insertNoticeToProject(connection, noticeInfo);
+            const result = await ProjectRepository.modifyNoticeToProject(connection, noticeInfo);
             await ProjectRepository.selectNotice(connection, noticeInfo.projectCode);
             
             connection.commit();
