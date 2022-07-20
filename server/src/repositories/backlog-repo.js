@@ -83,6 +83,7 @@ exports.insertBacklogHistory = (connection, newHistory) => {
     
     return new Promise((resolve, reject) => {
 
+        const query = 
         connection.query(
             backlogQuery.insertBacklogHistory(), 
             [newHistory.historyItem, newHistory.historyContent, newHistory.backlogCode, newHistory.projectCode, newHistory.memberCode],
@@ -96,6 +97,7 @@ exports.insertBacklogHistory = (connection, newHistory) => {
                 resolve(results);
             }
         );
+        console.log(query.sql);
     });
 };
 
@@ -123,6 +125,7 @@ exports.selectHistoryByHistoryCode = (connection, historyCode) => {
 exports.editBacklog = (connection, modifyingContent) => {
 
     return new Promise((resolve, reject) => {
+        const query = 
         connection.query(
             backlogQuery.editBacklog(modifyingContent),
             (err, results, fields) => {
@@ -134,6 +137,8 @@ exports.editBacklog = (connection, modifyingContent) => {
                 resolve(results);
             }
         );
+
+        console.log(query.sql);
     });
 };
 
