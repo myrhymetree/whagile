@@ -136,7 +136,9 @@ function SprintEditModal({ sprint }) {
                 <div>
                     <label className={ BacklogModalsCSS.inputTags }>스프린트 시작일</label>
                     <Calendar
-                        dateFormat="yy-mm-dd" 
+                        dateFormat="yy-mm-dd"
+                        showTime hourFormat="24" 
+                        showMillisec
                         value={ new Date(sprintStartDate) } 
                         onChange={ (e) => setSprintStartDate(e.value) }
                         />
@@ -144,7 +146,9 @@ function SprintEditModal({ sprint }) {
                 <div>
                     <label className={ BacklogModalsCSS.inputTags }>스프린트 종료일</label>
                     <Calendar
-                        dateFormat="yy-mm-dd" 
+                        dateFormat="yy-mm-dd"
+                        showTime hourFormat="24" 
+                        showMillisec
                         value={ new Date(sprintEndDate) } 
                         minDate={ new Date(sprint.sprintStartDate) }
                         onChange={ (e) => setSprintEndDate(e.value) }
