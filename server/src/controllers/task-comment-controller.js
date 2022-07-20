@@ -5,7 +5,6 @@ const TaskCommentService = require("../services/task-comment-service");
 
 //일감 댓글 조회
 exports.findTaskAllComments = async (req, res, next) => {
-     console.log("reqdsa", req.params)
     const params = {
       taskCode: Number(req.params.taskCode)
     };
