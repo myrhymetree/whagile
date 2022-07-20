@@ -1,20 +1,14 @@
 import BacklogAndSprintCSS from './BacklogAndSprint.module.css';
 
-import { useEffect, useState } from 'react';
-import { useParams } from 'react-router';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 
-import { callGetSprintsAPI, callCleanSprints } from '../../../apis/SprintsForBacklogAPICalls';
-
-import { Button } from 'primereact/button';
+import SprintEditModal from './SprintEditModal';
 import SprintStartModal from './SprintStartModal';
 import SprintEndModal from './SprintEndModal';
 
 function SprintItem() {
 
-    const { projectCode } =  useParams();
     const sprints = useSelector(state => state.sprintsForBacklogReducer);
-    const dispatch = useDispatch();
 
     /* 스프린트 펼치기 */
     const setVisible = (sprintCode) => {
@@ -29,12 +23,6 @@ function SprintItem() {
         document.getElementById('toggleOn' + sprintCode).style.display = 'block';
         document.getElementById('toggleOff' + sprintCode).style.display = 'none';
     }
-
-    /* 스프린트 종료 */
-    const sprintEnd= () => {}
-
-    /* 스프린트 편집 */
-    const editSprint = () => {}
 
     return (
         <>{
@@ -71,13 +59,7 @@ function SprintItem() {
                             }
                         </div>
                         <div>
-                            <button
-                                className={ BacklogAndSprintCSS.editSprintBtn }
-                                onClick={ editSprint }
-                            >
-                                <i className='pi pi-pencil'/>
-                                편집
-                            </button>
+                            <SprintEditModal sprint={ sprint }/>
                         </div>
                         <div  style={{ display: sprint.sprintProgressStatus === 'N'? 'block' : 'none' }}>
                             <SprintStartModal sprint={ sprint }/>
