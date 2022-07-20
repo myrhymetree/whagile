@@ -47,7 +47,8 @@ export const callPutTaskAPI = (
   urgency,
   memberName,
   issue,
-  backlogChargerCode
+  backlogChargerCode,
+  projectCode,
 ) => {
   let requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/tasks/${taskCode}`;
 
@@ -66,7 +67,8 @@ export const callPutTaskAPI = (
         urgency: urgency,
         memberName: memberName,
         issue: issue,
-        backlogChargerCode: Number(backlogChargerCode)
+        backlogChargerCode: Number(backlogChargerCode),
+        projectCode: Number(projectCode)
       }),
     }).then((res) => res.json());
 

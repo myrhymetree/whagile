@@ -6,7 +6,6 @@ const TasksHistoryDTO = require("../dto/tasks/tasks-history-response-dto");
 //전체 일감 목록 조회
 exports.selectTasks = (connection, params) => {
   return new Promise((resolve, reject) => {
-    // console.log("params", params);
     const query = connection.query(
       tasksQuery.selectTasks(params),
       (err, results, fields) => {
@@ -143,17 +142,17 @@ exports.removeTask = (connection, taskCode) => {
 };
 
 
-
 // 일감(백로그) 히스토리 생성
 exports.insertTaskHistory = (connection, params) => {
+  // console.log("params",params)
+  // console.log("memberCode", params.backlogCreatorCode);
   return new Promise((resolve, reject) => {
     connection.query(
       tasksQuery.insertTaskHistory(),
       [
-        params.historyItem,
+        params.historyItem.toString(),
         params.historyContent,
-        params.historyDate,
-        params.backlogCode,
+        params.taskCode,
         params.projectCode,
         params.memberCode,
       ],
@@ -169,32 +168,14 @@ exports.insertTaskHistory = (connection, params) => {
 };
 
 
-// 개별 일감(백로그) 히스토리 조회
-exports.selectTaskHistorybyHistoryCode = (connection, historyCode) => {
-  return new Promise((resolve, reject) => {
-    connection.query(
-      tasksQuery.selectTaskHistorybyHistoryCode(),
-      historyCode,
-      (err, results, fields) => {
-        if (err) {
-          reject(err);
-        }
 
-        resolve(results);
-      }
-    );
-  });
-};
-
-
-// 일감 (백로그) 히스토리 조회
+// 전체 일감 (백로그) 히스토리 조회
 exports.selectTaskHistories = (connection, params) => {
 
     return new Promise((resolve, reject) => {
 
         const query = connection.query(
           tasksQuery.selectTaskHistories(),
-          [params.offset, params.limit],
           (err, results, fields) => {
             if (err) {
               reject(err);
@@ -212,29 +193,26 @@ exports.selectTaskHistories = (connection, params) => {
     });
 };
 
-// 일감 (백로그) 히스토리 조회
-exports.selectTasksOnGoingSprint = (connection, params) => {
 
-    return new Promise((resolve, reject) => {
+// 개별 일감(백로그) 히스토리 조회
+exports.selectTaskHistorybyHistoryCode = (connection, historyCode) => {
+  // console.log("historyCode", historyCode);
+  return new Promise((resolve, reject) => {
+    connection.query(
+      tasksQuery.selectTaskHistorybyHistoryCode(),
+      historyCode,
+      (err, results, fields) => {
+        if (err) {
+          reject(err);
+        }
 
-        // const query = connection.query(
-        //   tasksQuery.selectTasksOnGoingSprint(),
-        //   (err, results, fields) => {
-        //     if (err) {
-        //       reject(err);
-        //     }
-
-        //     const tasks = [];
-        //     for (let i = 0; i < results.length; i++) {
-        //       tasks.push(new TasksDTO(results[i]));
-        //     }
-    
-        //     resolve(tasks);
-        //   }
-        // );
-        // console.log(query.sql);
-    });
+        resolve(results);
+      }
+    );
+  });
 };
+
+
 
 // 일감 시작일, 종료일만 수정
 exports.updateTaskDate = (connection, params) => {
