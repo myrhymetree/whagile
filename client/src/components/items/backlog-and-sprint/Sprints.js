@@ -4,17 +4,17 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { callGetSprintsAPI } from '../../../apis/SprintForBacklogAPICalls';
+import { callGetSprintsAPI } from '../../../apis/SprintsForBacklogAPICalls';
 
+import SprintCreationModal from './SprintCreationModal';
 import { Button } from 'primereact/button';
 
 function Sprints() {
 
     const { projectCode } = useParams();
     const sprints = useSelector(state => state.sprintsForBacklogReducer);
+    const sprint = useSelector(state => state.sprintForBacklogReducer);
     const dispatch = useDispatch();
-
-    const [sprintList, setSprintList] = useState([]);
 
     /* 스프린트 목록 조회 */
     useEffect(
@@ -27,26 +27,21 @@ function Sprints() {
             }));
         },
         []
-        );
+    );
 
     useEffect(
         () => {
-            setSprintList(sprints);
+            if(sprint.status === 200 || sprint.status === 201) {
+                alert(sprint.message);
+            }
         },
-        [sprints]
+        [sprint]
     );
-
-    /* 스프린트 생성 */
-    const createNewSprint = () => alert('스프린트 생성');
     
     return (
         <>
             <span className={ BacklogAndSprintCSS.divTitle }>스프린트</span>
-            <Button
-                label="스프린트 생성"
-                id={ BacklogAndSprintCSS.createNewSprintBtn }
-                onClick={ createNewSprint }
-            />
+            <SprintCreationModal/>
             <hr className={ BacklogAndSprintCSS.divisionLine }/>
             {  
                 sprints.length > 0

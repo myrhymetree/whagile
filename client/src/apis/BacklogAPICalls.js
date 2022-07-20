@@ -135,7 +135,7 @@ export function callPutBacklogAPI(modifiedBacklog) {
         }).then(res => res.json());
 
         dispatch({ type: MODIFY_BACKLOG, payload: result.message });
-        console.log('얍!!!! ', result.message)
+        console.log('얍!!!! ', result)
         // await dispatch({ type: FIND_BACKLOG_DETAILS, payload: result.results });
     }
 }

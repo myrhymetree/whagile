@@ -85,7 +85,7 @@ exports.insertBacklogHistory = (connection, newHistory) => {
 
         connection.query(
             backlogQuery.insertBacklogHistory(), 
-            [newHistory.historyItem, newHistory.historyContent, newHistory.historyDate, newHistory.backlogCode, newHistory.projectCode, newHistory.memberCode],
+            [newHistory.historyItem, newHistory.historyContent, newHistory.backlogCode, newHistory.projectCode, newHistory.memberCode],
             (err, results, fields) => {
 
                 if(err) {
