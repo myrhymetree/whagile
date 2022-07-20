@@ -1,9 +1,11 @@
 import BacklogModalsCSS from './BacklogModals.module.css';
 
 import { useState } from 'react';
+import { useParams } from 'react-router';
 import { useDispatch } from 'react-redux';
 
 import { callPutSprintAPI, callDeleteSprintAPI } from '../../../apis/SprintsForBacklogAPICalls';
+import { decodeJwt } from '../../../utils/tokenUtils';
 
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 import { Button } from 'primereact/button';
@@ -15,6 +17,8 @@ import { InputTextarea } from 'primereact/inputtextarea';
 function SprintEditModal({ sprint }) {
 
     const dispatch = useDispatch();
+    const { projectCode } = useParams();
+    const loginUser = decodeJwt(window.localStorage.getItem('access_token'));
 
     /* 다이얼로그 표시 상태 */
     const [displayDialog, setDisplayDialog] = useState(false);
@@ -77,7 +81,11 @@ function SprintEditModal({ sprint }) {
                 sprintStartDate: sprintStartDate,
                 sprintEndDate: sprintEndDate,
                 sprintProgressStatus: sprint.sprintProgressStatus,
-                sprintCode: sprint.sprintCode
+                sprintCode: sprint.sprintCode,
+                currentInfo: {
+                    projectCode: projectCode,
+                    memberCode: loginUser.code
+                }
             }));
             await window.location.replace(window.location.href);
         });
@@ -90,10 +98,14 @@ function SprintEditModal({ sprint }) {
 
     const accept = async () => {
         await dispatch(callDeleteSprintAPI({
-            sprintCode: sprint.sprintCode
+            currentInfo: {
+                sprintCode: sprint.sprintCode,
+                projectCode: projectCode,
+                memberCode: loginUser.code
+            }
         }));
         await onHide();
-        await window.location.replace(window.location.href);
+        // await window.location.replace(window.location.href);
     }
 
     const reject = async () => { setVisible(false) }
@@ -136,7 +148,9 @@ function SprintEditModal({ sprint }) {
                 <div>
                     <label className={ BacklogModalsCSS.inputTags }>스프린트 시작일</label>
                     <Calendar
-                        dateFormat="yy-mm-dd" 
+                        dateFormat="yy-mm-dd"
+                        showTime hourFormat="24" 
+                        showMillisec
                         value={ new Date(sprintStartDate) } 
                         onChange={ (e) => setSprintStartDate(e.value) }
                         />
@@ -144,7 +158,9 @@ function SprintEditModal({ sprint }) {
                 <div>
                     <label className={ BacklogModalsCSS.inputTags }>스프린트 종료일</label>
                     <Calendar
-                        dateFormat="yy-mm-dd" 
+                        dateFormat="yy-mm-dd"
+                        showTime hourFormat="24" 
+                        showMillisec
                         value={ new Date(sprintEndDate) } 
                         minDate={ new Date(sprint.sprintStartDate) }
                         onChange={ (e) => setSprintEndDate(e.value) }

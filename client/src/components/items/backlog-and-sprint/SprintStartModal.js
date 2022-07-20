@@ -1,9 +1,8 @@
 import BacklogModalsCSS from './BacklogModals.module.css';
 
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
-// import { decodeJwt } from '../../../utils/tokenUtils';
 import { callChangeSprintStatusAPI } from '../../../apis/SprintsForBacklogAPICalls';
 
 import { Button } from 'primereact/button';
@@ -12,8 +11,8 @@ import { Dialog } from 'primereact/dialog';
 function SprintStartModal({ sprint }) {
 
     const dispatch = useDispatch();
-    // const { projectCode } = useParams();
-    // const loginUser = decodeJwt(window.localStorage.getItem('access_token'));
+    const sprints = useSelector(state => state.sprintsForBacklogReducer);
+    const sprintInprogress = sprints.filter(sprint => sprint.sprintProgressStatus === 'Y');
 
     /* 다이얼로그 표시 상태 */
     const [displayDialog, setDisplayDialog] = useState(false);
@@ -23,15 +22,21 @@ function SprintStartModal({ sprint }) {
     const [sprintStartDate, setSprintStartDate] = useState(sprint.sprintStartDate);
     const [sprintEndDate, setSprintEndDate] = useState(sprint.sprintEndDate);
 
-    const onShow = () => {
-        if(sprintStartDate === null || sprintEndDate === null) {
-            alert('스프린트 기간을 지정해주세요.');
-        } else {
-            setSprintStartDate(sprintStartDate.slice(0, 10));
-            setSprintEndDate(sprintEndDate.slice(0, 10));
 
-            setDisplayDialog(true);
-            setPosition('center');
+    const onShow = () => {
+
+        if(sprintInprogress.length > 0) {
+            alert('진행 중인 스프린트가 있는 경우 새 스프린트를 시작할 수 없습니다.');
+        } else {
+            if(sprintStartDate === null || sprintEndDate === null) {
+                alert('스프린트 기간을 지정해주세요.');
+            } else {
+                setSprintStartDate(sprintStartDate.slice(0, 10));
+                setSprintEndDate(sprintEndDate.slice(0, 10));
+
+                setDisplayDialog(true);
+                setPosition('center');
+            }
         }
     };
 
