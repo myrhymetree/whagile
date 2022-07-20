@@ -4,11 +4,11 @@ const SprintRepository = require("../repositories/sprint-repo");
 
 // 전체 일감 목록 조회
 exports.getTasks = (params) => {
-  return new Promise((resolve, reject) => {
+  return new Promise( async(resolve, reject) => {
     const connection = getConnection();
 
-    const results = TasksRepository.selectTasks(connection, params);
-
+    const results = await TasksRepository.selectTasks(connection, params);
+    // console.log("results: ", results);
     connection.end();
 
     resolve(results);
@@ -42,7 +42,7 @@ exports.registNewTask = (task) => {
 
       try {
         const insertedNewTask = await TasksRepository.insertNewTask(connection, task);
-        console.log(insertedNewTask)
+        // console.log(insertedNewTask)
 
 				// const taskHistory = createTaskHistory();
 
@@ -84,13 +84,13 @@ exports.editTask = (params) => {
 			// taskHistory.memberCode = params.memberCode;
 			// await TasksRepository.insertTaskHistory(connection, taskHistory);
       
-      console.log("수정result", results)
+      // console.log("수정result", results)
       connection.commit();
 
       resolve(results);
     } catch (err) {
       connection.rollback();
-      console.log('error', err)
+      // console.log('error', err)
       reject(err);
     } finally {
       connection.end();
@@ -107,7 +107,7 @@ exports.removeTask = (params) => {
     connection.beginTransaction();
 
     try {
-      console.log("params",params)
+      // console.log("params",params)
       if (params.taskCategory === "백로그") {
         await TasksRepository.deleteTask(connection, params.taskCode);
 
@@ -220,9 +220,9 @@ exports.findTasksOnGoingSprint = (params) => {
 
     params.searchCondition = 'progress_status';
     params.searchValue = 'y';
-
-    const onGoingSprint = await SprintRepository.selectSprints(connection, params);
     
+    const onGoingSprint = await SprintRepository.selectSprints(connection, params);
+    console.log("ongoing",onGoingSprint);
     let tasks = [];
     if(onGoingSprint.length > 0) {
       tasks = await TasksRepository.selectTasks(connection, {
@@ -230,7 +230,7 @@ exports.findTasksOnGoingSprint = (params) => {
         backlogCategory: '일감'
       });
     }
-
+    // console.log("tasks",tasks)
     connection.end();
 
     resolve(tasks);
@@ -248,7 +248,7 @@ exports.findSprint = (params) => {
     params.searchValue = 'y';
 
     const sprints = await SprintRepository.selectSprints(connection, params);
-    console.log(1313, sprints)
+    // console.log("findSprint", sprints);
     connection.end();
 
     resolve(sprints);
