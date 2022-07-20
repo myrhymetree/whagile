@@ -15,5 +15,6 @@ router.post('/:projectCode/joinedNewMember', ProjectController.signUpProjectMemb
 router.put('/:projectCode/member/:memberCode/', ProjectController.modifyAuthorityOfMember);
 router.get('/:projectCode/notice', ProjectController.findNotice);
 router.put('/:projectCode/notice', ProjectController.modifyNoticeToProject);
+router.get('/:projectCode/member/:memberCode', ProjectController.findProjectMemberInfo);
 
 module.exports = router;

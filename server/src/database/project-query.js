@@ -150,6 +150,26 @@ exports.updateProjectOwner2 = () => {
   `;
 }
 
+/* 프로젝트 매니저 변경 */
+exports.updateProjectOwner = (projectInfo) => {
+  return `
+      INSERT
+        INTO TBL_PROJECT_MEMBER
+      (
+        PROJECT_CODE
+      , MEMBER_CODE
+      , AUTHORITY_CODE
+      )
+      VALUES
+        (${ projectInfo.projectCode }, (SELECT A.MEMBER_CODE FROM TBL_PROJECT_MEMBER WHERE A.PROJECT_CODE = ${projectInfo.projectCode} AND A.AUTHORITY_CODE = 1), 1)
+      , (${ projectInfo.projectCode }, ${ projectInfo.projectOwner }, 2)
+      ON DUPLICATE KEY UPDATE
+        PROJECT_CODE = VALUES(PROJECT_CODE)
+      , MEMBER_CODE = VALUES(MEMBER_CODE)
+      , AUTHORITY_CODE = VALUES( AUTHORITY_CODE)
+  `;
+}
+
 exports.deleteProject = () => {
   return `
     UPDATE TBL_PROJECT A
@@ -291,5 +311,28 @@ exports.isRegistedMember = (data) => {
                NOTICE_CONTENT = '${ noticeInfo.content }'
              , MODIFIER = ${ noticeInfo.modifier }
          WHERE NOTICE_CODE = ${ noticeInfo.noticeCode }
+    `;
+  }
+
+  exports.insertProjectHistory = () => {
+
+    return `
+        INSERT
+          INTO TBL_PROJECT_HISTORY A 
+        (
+          A.PROJECT_HISTORY_NAME
+        , A.PROJECT_HISTORY_CONTENT
+        , A.PROJECT_HISTORY_DATE
+        , A.PROJECT_CODE
+        , A.MEMBER_CODE
+        )
+         VALUES
+        (
+          ?
+        , ?
+        , NOW()
+        , ?
+        , ?
+        )
     `;
   }

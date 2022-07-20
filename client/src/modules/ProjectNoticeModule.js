@@ -16,10 +16,18 @@ const actions = createActions({
 const ProjectNoticeReducer = handleActions(
     {
         [GET_PROJECT_NOTICE]: (state, { payload }) => {
-            return payload;
+            if (payload !== undefined) {
+                return payload;
+            } else {
+                return state;
+            }
         },
         [PUT_PROJECT_NOTICE]: (state, { payload }) => {
-            return payload;
+            if (payload !== undefined) {
+                return payload;
+            } else {
+                return state;
+            }
         }
     },
     initialState

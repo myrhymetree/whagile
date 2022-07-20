@@ -140,6 +140,23 @@ exports.updateManager2 = (connection, projectCode, projectOwner ) => {
     });
 }
 
+exports.updateProjectOwner = (connection, projectInfo) => {
+
+    return new Promise((resolve, reject) => {
+        connection.query(projectQuery.updateProjectOwner(projectInfo),
+
+        (err, results, fields) => {
+
+            if(err) {
+                console.log(err);
+                reject(err);
+            }
+
+            resolve(results);
+        });
+    });
+}
+
 exports.deleteProject = (connection, projectCode) => {
 
     return new Promise((resolve, reject) => {
@@ -367,4 +384,26 @@ exports.modifyNoticeToProject = (connection, noticeInfo) => {
             resolve(results);
         });
     });
+}
+
+exports.insertProjectHistory = (connection, projectInfo, projectCode) => {
+
+    return new Promise((resolve, reject) => {
+        
+        connection.query(projectQuery.insertProjectHistory(),
+            [
+                '신규 프로젝트',
+                '생성',
+                projectCode,
+                projectInfo.loginMember
+            ],
+            (err, results, fields) => {
+                if(err) {
+                    reject(err);
+                }
+
+                resolve(results);
+            }
+        );
+    })
 }

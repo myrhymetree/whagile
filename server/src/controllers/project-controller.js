@@ -119,6 +119,25 @@ exports.findProjectMembers = async (req, res, next) => {
         });
 }
 
+exports.findProjectMemberInfo = async (req, res, next) => {
+
+    await ProjectService.findProjectMemberInfo(req.params)
+    .then((results) => {
+
+        res.status(HttpStatus.OK).json({
+            status: HttpStatus.OK,
+            message: '프로젝트 팀원을 조회했습니다.',
+            results: results
+        });
+    }).catch((err) => {
+
+        res.status(HttpStatus.OK).json({
+            status: HttpStatus.OK,
+            message: err
+        });
+    });
+}
+
 exports.registProjectMember = async (req, res, next) => {
 
     await ProjectService.registProjectMember(req.params)

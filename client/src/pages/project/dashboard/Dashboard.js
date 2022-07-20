@@ -17,6 +17,7 @@ function Dashboard() {
     const {  completedTaskCntToProject, pendingTaskCntToProject, progressingTaskCntToProject, totalTaskCntToProject } = useSelector(state => state.projectStatisticsReducer);
     const notice = useSelector(state => state.ProjectNoticeReducer);
     const members = useSelector(state => state.projectMemberReducer);
+    console.log('members', members);
     const [ state, setState ] = useState({});
     const { projectCode } = useParams();
     const [ taskInfo, setTaskInfo ] = useState(false);
@@ -27,6 +28,7 @@ function Dashboard() {
     // console.log('통계', taskCounts);
     console.log('공지', notice);
     console.log('멤버목록', members);
+    console.log('멤버권한 : ', decoded.role);
 
     useEffect(
         () =>
@@ -144,7 +146,16 @@ function Dashboard() {
         }
 
         const offNotice = () => {
+            
             setIsNotice(true);
+
+            dispatch(callPutModifyNoticeAPI({
+                'projectCode' : projectCode,
+                'noticeCode' : notice.noticeCode,
+                'content' : text,
+                'modifier' : (decoded !== 'undefined')? decoded.code: ''
+            }))
+
         }
 
     return (
@@ -153,24 +164,22 @@ function Dashboard() {
                 icon={ <i className="pi pi-fw pi-chart-pie"></i> }
                 text="대시보드"
             />
-            <div className="flex flex-wrap card-container blue-container" style={{maxWidth: 100 + '%'}}>
-                <div className="flex align-items-center justify-content-center bg-black-alpha-10 font-bold text-white m-2 border-round" style={{minWidth: 1000 + 'px', minHeight: 100 + 'px'}} onClick={ offNotice }>
-                    {/* <label style={{  }}>업무리포트</label> */}
-                    { (taskInfo) && <Chart type="doughnut" data={chartData} options={lightOptions} />}
+            <div className="flex flex-wrap card-container blue-container" style={{maxWidth: 70 + '%'}}>
+                <div  style={{minWidth: 1000 + 'px', minHeight: 100 + 'px'}}>
+                    <div className="flex align-items-center justify-content-center bg-black-alpha-10 font-bold text-white m-2 border-round">
+                        {/* <label style={{  }}>업무리포트</label> */}
+                        { (taskInfo) && <Chart type="doughnut" data={chartData} options={lightOptions} />}    
+                    </div>
+                    {/* <div className="flex align-items-center justify-content-center bg-black-alpha-10 font-bold text-white m-2 border-round"> */}
+                        {/* <label style={{ position: 'relative', width: '100%', height: '100%' }}>공지사항</label> */}
+                        {/* { (isNotice) && <div style={{ width: '150%', height: '10%', fontWeight: 'lighter' }} dangerouslySetInnerHTML={ {__html: notice.content } } onClick={ editNotice }></div>}
+                        { (!isNotice) && <Editor style={{ width: '100%', height: '100px' }} value={ text } onTextChange={(e) => setText(e.htmlValue)}  />}
+                        { (!isNotice) && <Button onClick={ offNotice }>제출</Button>}
+                    </div> */}
                 </div>
-                <div className="flex align-items-center justify-content-center bg-black-alpha-10 font-bold text-white m-2 border-round" style={{minWidth: 1000 + 'px', minHeight: 100 + 'px'}} onClick={ editNotice }>
-                    {/* <label style={{ position: 'relative', width: '100%', height: '100%' }}>공지사항</label> */}
-                    { (isNotice) && <div style={{ width: '150%', height: '10%', fontWeight: 'lighter' }} dangerouslySetInnerHTML={ {__html: notice.content } }></div>}
-                    <div id="notice" style={{ width: '150%', height: '10%', fontWeight: 'lighter' }}  ></div>
-                    { (!isNotice) && <Editor style={{ width: '100%', height: '100px' }} value={ text } onTextChange={(e) => setText(e.htmlValue)}  />}
-                    { (!isNotice) && <Button onClick={ () => { dispatch(callPutModifyNoticeAPI({
-                                             'projectCode' : projectCode,
-                                             'noticeCode' : notice.noticeCode,
-                                             'content' : text,
-                                             'modifier' : (decoded !== 'undefined')? decoded.code: ''
-                                             })) }}>제출
-                                    </Button>}
-                </div>
+                {/* <div className="flex align-items-center justify-content-center bg-black-alpha-10 text-lg text-white m-2 border-round" style={{minWidth: 25 + '%', minHeight: 30 + '%'}} onClick={ editNotice }>
+                    <ul className="text-2xl m-3" style={{ listStyle: "none" }}>팀원목록 { members.map(member => <li className="text-lg m-2" key={ member.memberCode }><i className="pi pi-fw pi-user"></i> { member.memberName } : { member.authorityName }</li>)}</ul>
+                </div> */}
                 {/* <div className="flex align-items-center justify-content-center bg-blue-500 font-bold text-white m-2 border-round" style={{minWidth: 200 + 'px', minHeight: 100 + 'px'}}>
                     팀원목록
                 </div>

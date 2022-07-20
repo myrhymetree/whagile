@@ -56,6 +56,10 @@ exports.registProject = (projectInfo) => {
             
             /* 프로젝트 공지사항 등록 */
             await ProjectRepository.insertNoticeToProject(connection, noticeInfo);
+            
+            /* 프로젝트 히스토리 등록 */
+            // await ProjectRepository.insertProjectHistory(connection, projectInfo, result.insertId);
+
 
             /* 프로젝트 조회 */
             const registedProject = await ProjectRepository.selectProject(connection, result.insertId);
@@ -127,6 +131,7 @@ exports.modifyProject = (projectInfo) => {
             await ProjectRepository.updateProject(connection, projectInfo);
             await ProjectRepository.updateManager1(connection, projectInfo.projectCode);
             await ProjectRepository.updateManager2(connection, projectInfo.projectCode, projectInfo.projectOwner);
+            // await ProjectRepository.updateProjectOwner(connection, projectInfo);
             const updatedProject = await ProjectRepository.selectProject(connection, projectInfo.projectCode);
 
             connection.commit();
@@ -182,6 +187,21 @@ exports.findProjectMember = (projectCode) => {
     });
 }
 
+exports.findProjectMemberInfo = (projectMemberInfo) => {
+
+    return new Promise(async (resolve, reject) => {
+
+        const connection = getConnection();
+
+        const results = ProjectRepository.selectProjectMember(connection, projectMemberInfo);
+
+        connection.end();
+
+        resolve(results);
+
+    });
+}
+
 exports.registProjectMember = (data) => {
     
     return new Promise(async (resolve, reject) => {
@@ -196,11 +216,13 @@ exports.registProjectMember = (data) => {
             console.log('등록된 회원 : ', registedMember);
 
             let result;
-
+            
+            /* 기존에 프로젝트에 가입한 적 있는 회원일 경우 상태값만 변경해서 해당 프로젝트에 재가입 시킴 */
             if(registedMember !== undefined) {
                 result = await ProjectRepository.restoreProjectMember(connection, data);
             }
 
+            /* 프로젝트에 가입한 적 없는 회원은 프로젝트에 신규 가입 */
             if(registedMember === undefined) {
                 result = await ProjectRepository.insertProjectMember(connection, data);
             }
