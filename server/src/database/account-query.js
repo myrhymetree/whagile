@@ -8,7 +8,7 @@ exports.selectMemberHistoryWithMemberCode = (memberCode) => {
             , M.MEMBER_NAME AS 'MEMBER_NAME'
         FROM TBL_SPRINT_HISTORY H
         JOIN TBL_MEMBER M ON (H.MEMBER_CODE = M.MEMBER_CODE) 
-       WHERE H.MEMBER_CODE = ${ memberCode }
+       WHERE M.MEMBER_CODE = ${ memberCode }
 
         UNION ALL
 
@@ -20,7 +20,7 @@ exports.selectMemberHistoryWithMemberCode = (memberCode) => {
              , M.MEMBER_NAME AS 'MEMBER_NAME'
          FROM TBL_BACKLOG_COMMENT_HISTORY H
          JOIN TBL_MEMBER M ON (H.MEMBER_CODE = M.MEMBER_CODE)  
-        WHERE H.MEMBER_CODE = ${ memberCode }
+        WHERE M.MEMBER_CODE = ${ memberCode }
         ORDER BY MODIFY_DATE DESC;
   `;
 }
