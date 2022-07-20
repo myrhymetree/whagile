@@ -18,9 +18,8 @@
 }
 
 #dropdownArea>:nth-child(1),
-#dropdownArea>:nth-child(2),
-#dropdownArea>:nth-child(3) {
-    width: 30%;
+#dropdownArea>:nth-child(2) {
+    width: 40%;
 }
 
 #createBtn {
@@ -36,6 +35,7 @@
     height: 40px;
     border: none;
     color: #fff;
+    font-size: 12px;
 }
 
 #removeBtn {
@@ -75,4 +75,38 @@
     background-color: #F86064;
     color: #fff;
     border: none;
+}
+
+#createNewSprintBtn {
+    color: #fff;
+    float: right;
+}
+
+#sprintCreationDialog {
+    /* height: 600px; */
+    background-color: #282936;
+}
+
+#sprintCreationDialog>:nth-child(2)>div {
+    margin-bottom: 20px;
+}
+
+.inputTags {
+    display: block !important;
+    margin-bottom: 10px;
+}
+
+#infoBox {
+    border: none;
+    border-radius: 10px;
+    background-color: #333544;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+#infoBox>label,
+#infoBox>i,
+#infoBox>li {
+    margin-left: 30px;
+    margin-bottom: 5px;
 }

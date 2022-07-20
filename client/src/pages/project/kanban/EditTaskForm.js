@@ -3,10 +3,12 @@ import React, { useState, useEffect } from "react";
 import { Category, Urgency } from "./Types";
 import KanbanBoardStyle from "./KanbanBoard.module.css";
 import { useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
+
 
 // 일감 생성 모달 창
 export default function EditTaskForm({onChangeTask, taskAll, onFormSubmit, onClose, category}) {
-
+  const sprint = useSelector((state) => state.tasksSprintReducer);
   const { projectCode } = useParams();
 
   const [taskMemberList, setTaskMemberList] = useState([]);
@@ -33,7 +35,7 @@ export default function EditTaskForm({onChangeTask, taskAll, onFormSubmit, onClo
     <div className={KanbanBoardStyle.kanbanModalContent}>
       <form onSubmit={onFormSubmit || ""}>
         <div className={KanbanBoardStyle.kanbanTitles}>
-          {category}&nbsp; 생성
+          {category}&nbsp; 만들기
         </div>
         <div>
           <label
@@ -75,10 +77,18 @@ export default function EditTaskForm({onChangeTask, taskAll, onFormSubmit, onClo
             value={taskAll.taskProgressStatus || ""}
             onChange={(event) => onChangeTask(event)}
           >
-            <option value={Category.Backlog}>백로그</option>
-            <option value={Category.Before}>진행 전</option>
-            <option value={Category.InProgress}>진행 중</option>
-            <option value={Category.Done}>완료</option>
+            {Object.keys(sprint).length > 0 ? (
+              <>
+                <option value={Category.Backlog}>백로그</option>
+                <option value={Category.Before}>진행 전</option>
+                <option value={Category.InProgress}>진행 중</option>
+                <option value={Category.Done}>완료</option>
+              </>
+            ) : (
+              <>
+                <option value={Category.Backlog}>백로그</option>
+              </>
+            )}
           </select>
           <select
             name="taskIssue"

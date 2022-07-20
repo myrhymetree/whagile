@@ -6,6 +6,7 @@ const TasksHistoryDTO = require("../dto/tasks/tasks-history-response-dto");
 //전체 일감 목록 조회
 exports.selectTasks = (connection, params) => {
   return new Promise((resolve, reject) => {
+    // console.log("params", params);
     const query = connection.query(
       tasksQuery.selectTasks(params),
       (err, results, fields) => {
@@ -17,7 +18,6 @@ exports.selectTasks = (connection, params) => {
         for (let i = 0; i < results.length; i++) {
           tasks.push(new TasksDTO(results[i]));
         }
-
         resolve(tasks);
       }
     );

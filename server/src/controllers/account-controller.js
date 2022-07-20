@@ -158,7 +158,7 @@ exports.emailAuth = async (req, res, next) => {
 
     await AccountService.emailAuthWithToken(req.query)
     .then((result) => {
-        res.redirect(`http://whagile.shop/`);
+        res.redirect(`http://localhost:3000/`);
     })
     .catch((err) =>{
         console.log(err);

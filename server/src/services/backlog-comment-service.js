@@ -7,7 +7,6 @@ createNewHistory = () => {
 
     const newHistory = {
         historyType: '',
-        historyDate: '',
         modifiedComment: null,
         backlogCommentCode: 0,
         projectCode: 0,
@@ -47,7 +46,6 @@ exports.registComment = (newComment) => {
             /* 백로그 댓글 히스토리 데이터 생성 */
             const newHistory = createNewHistory();
             newHistory.historyType = '생성';
-            newHistory.historyDate = newComment.createdDate;
             newHistory.modifiedComment = newComment.content;
             newHistory.backlogCommentCode = insertNewCommentResult.insertId;
             newHistory.projectCode = newComment.projectCode;
@@ -92,7 +90,6 @@ exports.editComment = (modifyingContent) => {
             /* 백로그 댓글 히스토리 데이터 생성 */
             const newHistory = createNewHistory();
             newHistory.historyType = '수정';
-            newHistory.historyDate = modifyingContent.modifiedDate;
             newHistory.modifiedComment = modifyingContent.content;
             newHistory.backlogCommentCode = modifyingContent.backlogCommentCode;
             newHistory.projectCode = modifyingContent.projectCode;
@@ -142,7 +139,6 @@ exports.removeComment = (removeRequest) => {
            /* 백로그 댓글 히스토리 데이터 생성 */
            const newHistory = createNewHistory();
            newHistory.historyType = '삭제';
-           newHistory.historyDate = removeRequest.deletedDate;
            newHistory.backlogCommentCode = removeRequest.backlogCommentCode;
            newHistory.projectCode = removeRequest.projectCode;
            newHistory.memberCode = removeRequest.memberCode;

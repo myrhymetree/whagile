@@ -86,7 +86,7 @@ exports.insertBacklogHistory = () => {
     INSERT INTO TBL_BACKLOG_HISTORY
     (BACKLOG_HISTORY_ITEM, BACKLOG_HISTORY_CONTENT, BACKLOG_HISTORY_DATE, BACKLOG_CODE, PROJECT_CODE, MEMBER_CODE)
     VALUES
-    (?, ?, ?, ?, ?, ?)
+    (?, ?, DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'), ?, ?, ?)
   `;
 };
 
@@ -133,9 +133,9 @@ exports.editBacklog = (modifyingContent) => {
      A.BACKLOG_URGENCY = '${ target.urgency }',`;
   }
   if(target.sprint) {
-    console.log('요건 좀 나중에 ')
     query += `
-     A.BACKLOG_CATEGORY = '일감',`;
+     A.BACKLOG_CATEGORY = '일감',
+     A.SPRINT_CODE = ${ Number(target.sprint) },`;
   }
 
   query = query.slice(0, -1);
