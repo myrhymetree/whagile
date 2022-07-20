@@ -95,7 +95,7 @@ function SprintItem() {
                                         <div>{ task.backlogTitle }</div>
                                         <div>{ task.progressStatus }</div>
                                         <div>{ task.urgency }</div>
-                                        <div>{ task.memberName }</div>
+                                        <div>{ task.memberName? task.memberName : '담당자 없음' }</div>
                                         <div 
                                             id={ BacklogAndSprintCSS.moreDetailsBtn } 
                                             onClick={ () => alert('뿅')}
