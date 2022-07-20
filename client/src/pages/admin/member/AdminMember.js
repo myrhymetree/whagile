@@ -20,6 +20,10 @@ function AdminMember() {
     const [rows, setRows] = useState(10);
     const [memberDetail, setMemberDetail] = useState({});
     const [memberDetailShow, setMemberDetailShow] = useState(false); // 상세보기 모달창 ON/OFF
+    const [tempPwdBtn, setTempPwdBtn] = useState(false);
+
+    const [memberHistory, setMemberHistory] = useState([]);
+    const [memberHistoryShow, setMemberHistoryShow] = useState(false);
 
     const [condition, setCondition] = useState(''); // 조건검색 카테고리    
     const [value, setValue] = useState(''); // 조건검색 키워드
@@ -28,6 +32,10 @@ function AdminMember() {
         {label: '아이디 검색', value: 'memberId'},
         {label: '이름 검색', value: 'name'}
     ];
+
+    const showSuccess = (msg) => {
+        toast.current.show({severity:'success', summary: 'Success Message', detail:msg, life: 3000});
+    }
 
     /* 검색 */
     const onClickSearch = () => { // 검색 버튼 클릭
@@ -131,6 +139,28 @@ function AdminMember() {
 
     }
 
+    const onClickMemberHistoryHandler = (memberCode) => {
+        console.log('history', memberCode);
+
+        fetch(`http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/account/memberhistory/${memberCode}`, {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              "Access-Control-Allow-Origin": "*",
+              "Access_token": window.localStorage.getItem("access_token")
+            }
+        })
+        .then(response => response.json())
+        .then(json => {
+            console.log(json);
+            setMemberHistory(json.result);
+            setMemberHistoryShow(true);
+        })
+        .catch((err) => {
+            showError('히스토리 조회 실패하였습니다');            
+        });
+    }
+
     const actionBodyTemplate = (rowData) => {
         const memberCode = rowData.memberCode;
         return (
@@ -140,7 +170,12 @@ function AdminMember() {
                 icon="pi pi-search" 
                 onClick={ () => onClickMemberDetailHandler(memberCode) }
             />
-            <Button type="button" icon="pi pi-history" value={ rowData.memberCode }></Button>
+            <Button 
+                type="button" 
+                icon="pi pi-history" 
+                //value={ rowData.memberCode }
+                onClick={ () => onClickMemberHistoryHandler(memberCode) }
+            />
             <Button type="button" icon="pi pi-dollar" value={ rowData.memberCode }></Button>
         </div>
         );
@@ -171,9 +206,12 @@ function AdminMember() {
         }
     };
 
+    const dismissHistory = () => {
+
+        setMemberHistoryShow(false);
+    }
 
     const dismissDetail = () => { 
-
         
         setMemberDetailShow(false);
     }
@@ -181,6 +219,23 @@ function AdminMember() {
     const onClickTempPwdHandler = () => {
         
         console.log('임시비밀번호발급');
+        setTempPwdBtn(true);
+        fetch(`http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/account/temppwd?id=${memberDetail.memberId}&email=${memberDetail.email}`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              "Access-Control-Allow-Origin": "*"
+            }
+        })
+        .then(response => response.json())
+        .then(json => {
+            showSuccess('임시 비밀번호 발급에 성공하였습니다');
+            setTempPwdBtn(false);
+        })
+        .catch((err) => {
+            showError('임시 비밀번호 발급에 실패하였습니다.');
+            setTempPwdBtn(false);
+        });
     }
 
     return (
@@ -269,6 +324,7 @@ function AdminMember() {
                                         id={AdminMemberCSS.pwdBtn} 
                                         className="p-button-rounded p-button-danger p-button-sm"
                                         onClick={ onClickTempPwdHandler}
+                                        disabled={ tempPwdBtn }
                                     >
                                         임시 비밀번호 발급
                                     </Button>
@@ -294,6 +350,48 @@ function AdminMember() {
                                 <th >사용중인 요금제</th>
                                 <td>'요금제'</td>
                             </tr>
+                        </tbody>
+                    </table>
+                    </div>
+            </Dialog>
+
+
+
+            {/* 회원 히스토리 모달창 */}
+            <Dialog 
+                    visible={ memberHistoryShow } 
+                    style={{ width: '30vw', height: '75vh' }}
+                    onHide={dismissHistory}
+                    header={ 
+                        <h4>회원 히스토리 조회</h4>
+                    }
+                    footer={
+                        <div style={{marginTop: '20px'}}>
+                            <Button 
+                                label="확인"
+                                icon="pi pi-check"
+                                onClick={dismissHistory}
+                                autoFocus 
+                            />
+                        </div>
+                    }
+                >
+                    <div style={{width: '100%', height: '100%'}}>
+                    <table id={AdminMemberCSS.vertical}>    
+                        <tbody>
+                            <tr>
+                                <th>히스토리 항목</th>
+                                <th>내용</th>
+                                <th>발생일</th>                                
+                            </tr>
+                            { memberHistory.map((history, index) => 
+                                <tr key={index}>
+                                    <td>{history.item || '없음' }</td>
+                                    <td>{history.index || '없음' }</td>
+                                    <td>{history.modifyDate || '없음' }</td>
+                                </tr>
+                            ) }
+                            
                         </tbody>
                     </table>
                     </div>
