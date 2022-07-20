@@ -352,3 +352,18 @@ exports.emailAuthWithToken = (authInfo) => {
     });
 
 }
+
+exports.getMemberHistory = (memberCode) => {
+
+    return new Promise((resolve, reject) => {
+
+        const connection = getConnection();
+
+        const results = AccountRepository.selectMemberHistoryWithMemberCode(connection, memberCode);
+
+        connection.end();
+
+        resolve(results);
+    });
+
+}

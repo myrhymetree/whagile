@@ -285,3 +285,28 @@ exports.updatePwd = async (req, res, next) => {
             });
         });   
 }
+
+exports.memberHistory = async (req, res, next) => {
+
+    console.log(req.params);
+
+    const memberCode = req.params.membercode;
+
+    await AccountService.getMemberHistory(memberCode)
+        .then((resData) => {
+            console.log(resData);
+            res.status(HttpStatus.OK).json({
+                status: HttpStatus.OK,
+                message: 'successfully History!!',
+                result: resData
+            });
+
+        })
+        .catch((err) =>{
+            res.status(HttpStatus.BAD_REQUEST).json({
+                status: HttpStatus.BAD_REQUEST,
+                message: err
+            });
+
+        });
+}
