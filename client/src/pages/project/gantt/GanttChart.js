@@ -65,7 +65,7 @@ function GanttChart() {
 	const [dialogMode, setDialogMode] = useState('');   // 모달창 스프린트 생성/수정인지(insert, update)
 	const [dialogTaskMode, setDialogTaskMode] = useState('');   // 모달창 스프린트 생성/수정인지(insert, update)
 	const [alertShowDeleteSprint, setAlertShowDeleteSprint] = useState(false); // 스프린트 삭제 alert창 ON/OFF
-	const [alertShowStopSprint, setAlertShowStopSprint] = useState(false); // 스프린트 중지하기 alert창 ON/OFF
+	const [alertShowStopSprint, setAlertShowStopSprint] = useState(false); // 스프린트 완료하기 alert창 ON/OFF
 	const [alertShowStartSprint, setAlertShowStartSprint] = useState(false); // 스프린트 시작하기 alert창 ON/OFF
 	const [tasksShow, setTasksShow] = useState(false);
 	const [taskShow, setTaskShow] = useState(false);
@@ -100,7 +100,7 @@ function GanttChart() {
 		],
 	};
 
-	useEffect(
+	useEffect( // 간트차트 페이지 최초 로드 시
 		() => {
 			dispatch(callGetSprintsAPI({ // 스프린트 목록 조회
 				projectCode: projectCode,
@@ -151,7 +151,7 @@ function GanttChart() {
 		[backlogs]
 	);
 
-	useEffect( // 일감, 기존백로그, 신규백로그가 변화할 때 생성/수정 모달의 일감목록을 변화시킴
+	useEffect( // 일감, 기존백로그, 신규백로그가 변화할 때 생성/수정 모달의 전체 일감 목록을 변화시킴
 		() => {
 			let allTasks = [];
 			
@@ -162,7 +162,7 @@ function GanttChart() {
 		[tasks, selectedOldBacklogs, selectedNewBacklogs]
 	);
 	
-	useEffect(
+	useEffect( // 일감 수정 모달이 열릴 때 일감의 상세 내용을 가져옴
 		() => {
 			
 			setNewBacklog({
@@ -206,6 +206,7 @@ function GanttChart() {
 
 		const currentInfo = {
 			projectCode: projectCode,
+			memberCode: decodeJwt(window.localStorage.getItem("access_token")).code,
 			offset: 0,
 			limit: currentLimit,
 			prevSprints: sprints
@@ -278,8 +279,7 @@ function GanttChart() {
 		setSelectedNewBacklogs([]);
 	}
 
-	// 스프린트 생성 - 생성 버튼 
-	const confirmInsertSprint = () => {
+	const confirmInsertSprint = () => { // 스프린트 생성 - 생성 버튼 
 
 		const changedTasks = {
 			oldBacklogs: simpleArrToObjectArr(selectedOldBacklogs, backlogs),
@@ -301,8 +301,7 @@ function GanttChart() {
 		setDialogShow(false);
 	};
 
-	// 스프린트 수정 - 수정 버튼 
-	const confirmUpdateSprint = async () => {
+	const confirmUpdateSprint = async () => { // 스프린트 수정 - 수정 버튼 
 		
 		const changedTasks = {
 			// tasks: simpleArrToObjectArr(tasks, sprint.tasks),
@@ -326,11 +325,11 @@ function GanttChart() {
 		setDialogShow(false);
 	};
 
-	// 스프린트 삭제 alert창 - Yes 버튼 
-	const confirmDeleteSprint = () => {
+	const confirmDeleteSprint = () => { // 스프린트 삭제 alert창 - Yes 버튼 
 
 		const currentInfo = {
 			projectCode: projectCode,
+			memberCode: decodeJwt(window.localStorage.getItem("access_token")).code,
 			offset: 0,
 			limit: currentLimit,
 			sprints: sprints
@@ -344,8 +343,7 @@ function GanttChart() {
 		setDialogShow(false);
 	}
 
-	// 스프린트 생성/수정 - 취소 버튼 
-	const cancelSprint = () => {
+	const cancelSprint = () => { // 스프린트 생성/수정 - 취소 버튼 
 
 		dispatch({type: INIT_SPRINT, payload: {}});
 		initBacklogs();
@@ -359,14 +357,12 @@ function GanttChart() {
 		setTasksShow(true);
 	}
 
-	// 일감 목록 수정 확인 버튼
-	const confirmTasks = () => {
+	const confirmTasks = () => { // 일감 목록 수정 확인 버튼
 
 		setTasksShow(false);
 	};
 
-	// 일감 목록 수정 취소 버튼
-	const cancelTasks = () => {
+	const cancelTasks = () => { // 일감 목록 수정 취소 버튼
 
 		setTasksShow(false);
 	};
@@ -432,8 +428,8 @@ function GanttChart() {
 	}
 
 
-	/* 신규 백로그 추가 모달창(taskShow) */
-	const onShowInsertTask = () => {
+	/* 신규 백로그 추가/일감 수정 모달창(taskShow) */
+	const onShowInsertTask = () => { // 신규 백로그 모달 열릴 때
 
 		setNewBacklog({
 			backlogTitle: '',
@@ -450,15 +446,14 @@ function GanttChart() {
 		setTaskShow(true);
 	}
 
-	const onShowUpdateTask = () => {
+	const onShowUpdateTask = () => { // 일감 수정 모달 열릴 때
 		
 		setDialogTaskMode('update');
 
 		setTaskShow(true);
 	}
 
-	// 신규 백로그 추가 확인 버튼
-	const confirmInsertTask = () => {
+	const confirmInsertTask = () => { // 신규 백로그 추가 확인 버튼
 		
 		let changedBacklogs = [...selectedNewBacklogs];
 		changedBacklogs.push({
@@ -480,7 +475,7 @@ function GanttChart() {
 		initTask();
 	};
 
-	const confirmUpdateTask = () => {
+	const confirmUpdateTask = () => { // 일감 수정 - 확인 버튼
 
 		let changedBacklog = { // 일감 수정 완료 시 API로 보내기 위해
 			...newBacklog,
@@ -488,8 +483,9 @@ function GanttChart() {
 			backlogEndDate: (newBacklog.backlogEndDate)? newBacklog.backlogEndDate: null,
 		};
 
-	const currentInfo = {
+		const currentInfo = {
 			projectCode: projectCode,
+			memberCode: decodeJwt(window.localStorage.getItem("access_token")).code,
 			offset: 0,
 			limit: currentLimit,
 			prevSprints: sprints
@@ -502,8 +498,7 @@ function GanttChart() {
 		initTask();
 	};
 
-	// 신규 백로그 추가 취소 버튼
-	const cancelTask = () => {
+	const cancelTask = () => { // 신규 백로그 추가/일감 수정 취소 버튼
 
 		setTaskShow(false);
 
@@ -573,10 +568,12 @@ function GanttChart() {
 		return result;
 	}
 
-	const onSprintProgressChange = () => {
+	const onSprintProgressChange = () => { // 스프린트 완료하기/스프린트 시작하기 버튼
 		
 		const currentInfo = {
 			projectCode: projectCode,
+			memberCode: decodeJwt(window.localStorage.getItem("access_token")).code,
+			sprintCode: sprint.sprintCode,
 			offset: 0,
 			limit: currentLimit,
 			prevSprints: sprints
@@ -721,7 +718,7 @@ function GanttChart() {
 							{
 								(sprint.sprintProgressStatus === 'Y')
 								? <Button 
-									label="스프린트 중지하기"
+									label="스프린트 완료하기"
 									style={{height: '20px', marginLeft: '20px', backgroundColor: 'rgba(248, 96, 100, .16)', border: '1px solid #333544', color: '#F86064'}}
 									onClick={() => setAlertShowStopSprint(true)}
 								/>
@@ -783,6 +780,16 @@ function GanttChart() {
 						<div style={{paddingBottom: '10px'}}>
 							<label>
 								전체 일감 목록
+								<Tooltip target=".allTasks" />
+								<i 
+									className="allTasks pi pi-info-circle"
+									data-pr-tooltip={`${(dialogMode === 'update')? '기존 일감 목록과 ': ''}기존 백로그, 신규 백로그에서 
+														\n선택하여 해당 스프린트에 포함시킵니다.`}
+									data-pr-position="right" 
+									data-pr-at="right+10 top" 
+									data-pr-my="left center-2" 
+									style={{ marginLeft: '10px', cursor: 'pointer' }}
+								/>
 							</label>
 							<Button 
 								label="수정하기"
@@ -1104,6 +1111,7 @@ function GanttChart() {
 }
 
 function dateFormat(date, when) { // Fri Jul 01 2022 00:00:00 GMT+0900 (한국 표준시) 형식을 '2022-07-01 00:00:00'으로 바꿔줌
+	
     let month = date.getMonth() + 1;
     let day = date.getDate();
     let hour = date.getHours();
@@ -1117,11 +1125,11 @@ function dateFormat(date, when) { // Fri Jul 01 2022 00:00:00 GMT+0900 (한국 �
     second = second >= 10 ? second : '0' + second;
 
     if(when === 'start') {
-        return date.getFullYear() + '-' + month + '-' + day  + 'T00:00:00.000Z';
+        return date.getFullYear() + '-' + month + '-' + day  + ' 00:00:00';
     }
 
     if(when === 'end') {
-        return date.getFullYear() + '-' + month + '-' + day  + 'T23:59:59.000Z';
+        return date.getFullYear() + '-' + month + '-' + day  + ' 23:59:59';
     }
 }
 

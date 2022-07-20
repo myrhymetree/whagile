@@ -323,6 +323,6 @@ exports.updateSprintProgress = () => {
         WHERE
             SPRINT_CODE = ?
     `;
-    console.log(111, query);
+    
     return query;
 }

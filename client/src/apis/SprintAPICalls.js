@@ -152,7 +152,8 @@ export function callDeleteSprintAPI(sprintCode, currentInfo) {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                sprintCode: sprintCode
+                sprintCode: sprintCode,
+                currentInfo: currentInfo
             })
         })
         
@@ -317,7 +318,10 @@ export function callUpdateSprintProgressAPI(params, currentInfo) {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(params)
+            body: JSON.stringify({
+                ...params,
+                currentInfo: currentInfo
+            })
         }).then(res => res.json());
         
         await dispatch(callGetSprintsAPI({	// 스프린트 목록 조회
@@ -353,10 +357,10 @@ function dateFormat(date, when) { // Fri Jul 01 2022 00:00:00 GMT+0900 (한국 �
     second = second >= 10 ? second : '0' + second;
 
     if(when === 'start') {
-        return date.getFullYear() + '-' + month + '-' + day  + 'T00:00:00.000Z';
+        return date.getFullYear() + '-' + month + '-' + day  + ' 00:00:00';
     }
 
     if(when === 'end') {
-        return date.getFullYear() + '-' + month + '-' + day  + 'T23:59:59.000Z';
+        return date.getFullYear() + '-' + month + '-' + day  + ' 23:59:59';
     }
 }

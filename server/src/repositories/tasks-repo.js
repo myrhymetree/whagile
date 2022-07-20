@@ -21,8 +21,6 @@ exports.selectTasks = (connection, params) => {
         resolve(tasks);
       }
     );
-
-    console.log(9999, query.sql);
   });
 };
 
