@@ -34,7 +34,7 @@ const sprintsReducer = handleActions(
                 } else {
                     endDate.setDate(new Date().getDate() + 1);
                 }
-            
+                
                 newState.push({
                     id: p.sprintCode,
                     name: p.sprintName,

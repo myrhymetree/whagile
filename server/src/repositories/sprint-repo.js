@@ -284,7 +284,7 @@ exports.insertSprintHistory = (connection, sprintHistory, currentInfo) => {
                 sprintHistory.sprintHitoryItem.toString(),
                 sprintHistory.sprintHistoryContent,
                 currentInfo.sprintCode,
-                currentInfo.backlogCreatorCode,
+                currentInfo.memberCode,
                 parseInt(currentInfo.projectCode),
             ],
             (err, results, fields) => {
@@ -301,7 +301,7 @@ exports.insertSprintHistory = (connection, sprintHistory, currentInfo) => {
 exports.updateSprintProgress = (connection, params) => {
     
     return new Promise((resolve, reject) => {
-        console.log(999, params)
+        
         connection.query(
 
             sprintQuery.updateSprintProgress(),
