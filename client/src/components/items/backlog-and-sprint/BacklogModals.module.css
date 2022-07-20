@@ -22,7 +22,7 @@
     width: 40%;
 }
 
-#createBtn {
+#createBtn, #saveBtn {
     background-color: #00AA9C;
 }
 
@@ -30,12 +30,12 @@
     background-color: rgba(255, 255, 255, 0.25);
 }
 
-#createBtn, #cancelBtn, #startBtn, #endBtn {
-    width: 25%;
+#createBtn, #cancelBtn, #startBtn, #endBtn, #saveBtn {
+    width: 22%;
     height: 40px;
     border: none;
     color: #fff;
-    font-size: 12px;
+    font-size: 15px;
 }
 
 #removeBtn {
@@ -80,6 +80,8 @@
 #createNewSprintBtn {
     color: #fff;
     float: right;
+    width: 200px;
+    font-size: 17px !important;
 }
 
 #sprintCreationDialog {
@@ -109,4 +111,20 @@
 #infoBox>li {
     margin-left: 30px;
     margin-bottom: 5px;
+}
+
+#editSprintBtn {
+    border: none;
+    background: none;
+    color: #fff;
+    font-size: 12px;
+}
+
+#modalFooter>:nth-child(1),
+#modalFooter>:nth-child(2) {
+    float: left;
+}
+
+#modalFooter>:nth-child(3) {
+    float: right;
 }
