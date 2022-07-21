@@ -15,6 +15,7 @@ exports.insertHistory = () => {
 }
 
 exports.selectMemberHistoryWithMemberCode = (memberCode) => {
+  
   return `
         SELECT 
               H.SPRINT_HISTORY_ITEM AS 'ITEM'

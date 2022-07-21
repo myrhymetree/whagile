@@ -282,6 +282,7 @@ exports.updatePwd = (connection, tempInfo) => {
 
 exports.insertAccountHistory = (connection, memberCode) => {
     console.log('insertAccountHistory', memberCode);
+    
     return new Promise((resolve, reject) => {
 
         connection.query(accountQuery.insertHistory(), 
