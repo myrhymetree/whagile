@@ -9,6 +9,47 @@ exports.insertInquiry = () => {
     `;
 }
 
+/* 1:1 문의 목록 조회 요청 SQL */
+exports.selectInquiries = (memberCode, filter, searchValue, memberRole) => {
+
+    let query = `
+        SELECT
+               A.INQUIRY_CODE
+             , A.INQUIRY_TITLE
+             , A.INQUIRY_CONTENT
+             , A.INQUIRY_CREATED_DATE
+             , A.INQUIRY_ANSWER_YN
+             , A.INQUIRY_CATEGORY_CODE
+             , B.INQUIRY_CATEGORY_NAME
+             , A.MEMBER_CODE
+             , C.MEMBER_NAME
+          FROM TBL_INQUIRY A
+          JOIN TBL_INQUIRY_CATEGORY B ON (A.INQUIRY_CATEGORY_CODE = B.INQUIRY_CATEGORY_CODE)
+          JOIN TBL_MEMBER C ON (A.MEMBER_CODE = C.MEMBER_CODE)
+         WHERE A.INQUIRY_DELETED_YN = 'N'
+    `;
+
+    if (memberRole === 'ROLE_USER') {
+        query += `     AND A.MEMBER_CODE = ${ memberCode }
+        `;
+    }
+
+    if (filter && filter !== undefined) {
+        query += `     AND A.INQUIRY_ANSWER_YN = '${ filter }'
+        `;
+    }
+    
+    if (searchValue && searchValue !== undefined) {
+        query += `     AND A.INQUIRY_TITLE LIKE '%${ searchValue }%'
+        `;
+    }
+
+    query += `ORDER BY A.INQUIRY_CODE DESC
+         LIMIT ?, ?`;
+
+    return query;
+}
+
 /* 1:1 문의히스토리 행 삽입 요청 SQL */
 exports.insertInquiryHistory = () => {
 

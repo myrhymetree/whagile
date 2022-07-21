@@ -1,5 +1,5 @@
 const inquiryQuery = require('../database/inquiry-query');
-// const InquiryDTO = require('../dto/inquiry/inquiry-response-dto');
+const InquiryDTO = require('../dto/inquiry/inquiry-response-dto');
 // const InquiryHistoryDTO = require('../dto/inquiry/inquiry-history-response-dto');
 
 /* 1:1 문의 등록 */
@@ -21,6 +21,40 @@ exports.insertInquiry = (connection, newInquiry) => {
                 resolve(results);
             }
         );
+    });
+};
+
+/* 1:1 문의 목록 조회 */
+exports.selectInquiries = (connection, params) => {
+
+    return new Promise((resolve, reject) => {
+        const query = 
+        connection.query(
+            inquiryQuery.selectInquiries(
+                params.memberCode, 
+                params.filter, 
+                params.searchValue,
+                params.memberRole
+            ),
+            [
+                params.offset,
+                params.limit
+            ],
+            (err, results, fields) => {
+                if (err) {
+                    reject(err);
+                }
+                
+                const inquiries = [];
+                for(let i = 0; i < results.length; i++) {
+                    inquiries.push(new InquiryDTO(results[i]));
+                }
+                
+                resolve(inquiries);
+            }
+        );
+
+        console.log(query.sql)
     });
 };
 

@@ -6,7 +6,7 @@ const InquiryController = require('../controllers/inquiry-controller');
 router.post('/', InquiryController.registInquiry);
 
 /* 1:1 문의 목록 조회 */
-// router.get('/', InquiryController.findInquiries);
+router.get('/', InquiryController.findInquiries);
 
 /* 1:1 문의 수 조회 */
 

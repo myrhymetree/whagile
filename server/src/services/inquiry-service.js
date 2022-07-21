@@ -60,3 +60,18 @@ exports.registInquiry = (newInquiry) => {
         }
     });
 }
+
+/* 1:1 문의 목록 조회 */
+exports.findInquiries = (params) => {
+
+    return new Promise(async (resolve, reject) => {
+
+        const connection = getConnection();
+
+        const results = await InquiryRepository.selectInquiries(connection, params);
+
+        connection.end();
+
+        resolve(results);
+    });
+}

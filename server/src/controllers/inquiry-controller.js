@@ -12,14 +12,13 @@ getUserInfo = (accessToken) => {
 exports.registInquiry = async (req, res, next) => {
 
     const user = getUserInfo(req.get('Access-Token'));
-
+    
     const newInquiry = {
         title: req.body.title,
         content: req.body.content,
         memberCode: user.usercode,
         categoryCode: req.body.categoryCode
     }
-    console.log('regist inquiry...', user)
 
     const results = await InquiryService.registInquiry(newInquiry);
 
@@ -38,6 +37,34 @@ exports.registInquiry = async (req, res, next) => {
 };
 
 /* 1:1 문의 목록 조회 */
+exports.findInquiries = async (req, res, next) => {
+
+    const user = getUserInfo(req.get('Access-Token'));
+
+    const params = {
+        offset: Number(req.query.offset),
+        limit: Number(req.query.limit),
+        filter: req.query.filter,
+        searchValue: req.query.searchValue,
+        memberRole: user.role,
+        memberCode: user.usercode
+    };
+    const results = await InquiryService.findInquiries(params);
+
+    try {
+        res.status(HttpStatus.OK).json({
+            status: HttpStatus.OK,
+            message: '1:1문의 목록을 조회하였습니다.',
+            results: results
+        });
+    } catch (err) {
+        res.status(HttpStatus.BAD_REQUEST).json({
+            status: HttpStatus.BAD_REQUEST,
+            message: err
+        });
+    }
+
+};
 
 /* 답변 대기 중인 1:1 문의 수 조회 */
 
