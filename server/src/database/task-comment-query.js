@@ -70,3 +70,50 @@ exports.deleteTaskComment = () => {
         WHERE A.BACKLOG_COMMENT_CODE = ?  
     `;
 };
+
+
+// 댓글 히스토리 생성
+exports.insertTaskCommentHistory = (taskCommentHistory) => {
+
+    let query = '';
+
+    if (taskCommentHistory.modifiedComment != null) {
+      query = `
+            INSERT INTO TBL_BACKLOG_COMMENT_HISTORY
+            (BACKLOG_COMMENT_HISTORY_CONTENT, BACKLOG_HISTORY_DATE, BACKLOG_MODIFIED_COMMENT_DETAIL, 
+            BACKLOG_COMMENT_CODE, PROJECT_CODE, MEMBER_CODE)
+            VALUES
+            ('${taskCommentHistory.historyType}',  DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'), '${taskCommentHistory.modifiedComment}', 
+             ${taskCommentHistory.taskCommentCode}, ${taskCommentHistory.projectCode}, ${taskCommentHistory.memberCode})
+             `;
+    } else {
+      query = `
+            INSERT INTO TBL_BACKLOG_COMMENT_HISTORY
+            (BACKLOG_COMMENT_HISTORY_CONTENT, BACKLOG_HISTORY_DATE,  
+             BACKLOG_COMMENT_CODE, PROJECT_CODE, MEMBER_CODE)
+            VALUES
+            ('${taskCommentHistory.historyType}',  DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'), 
+             ${taskCommentHistory.taskCommentCode}, ${taskCommentHistory.projectCode}, ${taskCommentHistory.memberCode})
+        `;
+    }
+    
+    return query;
+};
+
+
+// 댓글 히스토리 조회
+exports.selectTaskCommentHistory = () => {
+
+    return `
+        SELECT 
+               A.BACKLOG_COMMENT_HISTORY_CODE
+             , A.BACKLOG_COMMENT_HISTORY_CONTENT
+             , A.BACKLOG_HISTORY_DATE
+             , A.BACKLOG_MODIFIED_COMMENT_DETAIL
+             , A.BACKLOG_COMMENT_CODE
+             , A.PROJECT_CODE
+             , A.MEMBER_CODE
+          FROM TBL_BACKLOG_COMMENT_HISTORY A
+         WHERE A.BACKLOG_COMMENT_HISTORY_CODE = ?
+    `;
+};

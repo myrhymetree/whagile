@@ -34,7 +34,7 @@ export default function TaskComment({
     const newTaskComment = {
       taskCommentContent: taskCommentContent,
       taskCode: taskCode,
-      taskProjectCode: taskProjectCode,
+      taskProjectCode: parseInt(taskProjectCode),
     };
 
     return new Promise(async (resolve, reject) => {
@@ -74,9 +74,6 @@ export default function TaskComment({
           <div key={taskComment.taskCommentCode}>
             <TaskEditComment
               taskComment={taskComment}
-              taskCode={taskCode}
-              taskProjectCode={taskProjectCode}
-              taskCategory={taskCategory}
             />
           </div>
         ))}

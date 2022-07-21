@@ -1,6 +1,6 @@
 import { decodeJwt } from "../../../utils/tokenUtils";
 
-
+import { useParams } from "react-router-dom";
 import { Button } from "primereact/button";
 import { ConfirmDialog } from "primereact/confirmdialog";
 import { Toast } from "primereact/toast";
@@ -21,16 +21,13 @@ import taskCommentStyle from "./TaskComment.module.css";
 
 export default function TaskEditComment({
   taskComment,
-  taskCode,
-  taskProjectCode,
 }) {
-
-
+  const { projectCode } = useParams();
   const [editComment, setEditComment] = useState("");
 
   useEffect(() => {
     setEditComment(taskComment.taskCommentContent);
-    console.log("taskComment", taskComment);
+    // console.log("taskComment", taskComment);
   }, [taskComment]);
 
 
@@ -44,7 +41,7 @@ export default function TaskEditComment({
 
   const updateTaskCommentRequest = {
     taskCommentCode: 0,
-    taskProjectCode: taskProjectCode,
+    projectCode: Number(projectCode),
     modifiedTaskComment: modifiedTaskComment,
   };
   const [removeTaskCommentRequest, setRemoveTaskCommentRequest] = useState({});
@@ -68,7 +65,8 @@ export default function TaskEditComment({
   // 삭제
   const removeTaskComment = (taskCommentCode) => {
     setRemoveTaskCommentRequest({
-      taskCommentCode: taskCommentCode
+      taskCommentCode: taskCommentCode,
+      projectCode: projectCode,
     });
 
     setDeleteVisible(true);
@@ -153,7 +151,8 @@ export default function TaskEditComment({
               onClick={() =>
                 removeTaskComment(
                   taskComment.taskCommentCode,
-                  taskComment.memberCode
+                  taskComment.memberCode,
+                  taskComment.projectCode
                 )
               }
             >
