@@ -18,7 +18,7 @@ export function callGetTasksAPI(projectCode) {
 
     // console.log('backlogs', backlogs)
     // console.log('tasks', tasks)
-    console.log('backlogs&tasks', backlogs.results.concat(tasks.results))
+    // console.log('backlogs&tasks', backlogs.results.concat(tasks.results))
 
     dispatch({ type: GET_TASKS, payload: backlogs.results.concat(tasks.results) });
   };

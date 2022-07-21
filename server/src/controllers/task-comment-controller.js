@@ -20,7 +20,7 @@ exports.findTaskAllComments = async (req, res, next) => {
 //일감 댓글 생성
 exports.createTaskComment = async (req, res, next) => {
     const user = decodedToken(req.get("Access-Token"));
-    console.log("req.body", req.body);
+    // console.log("req.body", req.body);
     const taskNewComment = {
       taskCommentContent: req.body.taskCommentContent,
       taskCommentCreatedDate: new Date().toLocaleDateString() + " " + new Date().toLocaleTimeString(),
