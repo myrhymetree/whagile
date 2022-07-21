@@ -95,3 +95,35 @@ exports.selectDeletedSprintCount = (connection, params) => {
         });
     });
 };
+
+exports.selectLoginCount = (connection, params) => {
+
+    return new Promise((resolve, reject) => {
+
+        connection.query(adminStatisticsQuery.selectLoginCount(params), 
+        (err, results, fields) => {
+
+            if(err) {
+                reject(err);
+            }
+
+            resolve(results);
+        });
+    });
+};
+
+exports.selectVisitorCount = (connection, params) => {
+
+    return new Promise((resolve, reject) => {
+
+        connection.query(adminStatisticsQuery.selectVisitorCount(params), 
+        (err, results, fields) => {
+
+            if(err) {
+                reject(err);
+            }
+
+            resolve(results);
+        });
+    });
+};

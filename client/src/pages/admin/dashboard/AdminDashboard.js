@@ -24,22 +24,7 @@ function AdminDashboard() {
 	const [userCount, setUserCount] = useState({});
 	const [projectCount, setProjectCount] = useState({});
 	const [sprintCount, setSprintCount] = useState({});
-
-	// const [basicData] = useState({
-    //     labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-    //     datasets: [
-    //         {
-    //             label: 'My First dataset',
-    //             backgroundColor: '#42A5F5',
-    //             data: [65, 59, 80, 81, 56, 55, 40]
-    //         },
-    //         {
-    //             label: 'My Second dataset',
-    //             backgroundColor: '#FFA726',
-    //             data: [28, 48, 40, 19, 86, 27, 90]
-    //         }
-    //     ]
-    // });
+	const [visitorCount, setVisitorCount] = useState({});
 
 	const onChangeDate = (e) => {
 
@@ -96,6 +81,8 @@ function AdminDashboard() {
 			let newProjectCount = [];
 			let newSprintCount = [];
 			let deletedSprintCount = [];
+			let loginCount = [];
+			let visitorCount = [];
 			
 			if(Object.keys(chartCounts).length > 0) {
 
@@ -160,6 +147,30 @@ function AdminDashboard() {
 						}
 					})
 					if(!rsFlag) deletedSprintCount.push(0);
+
+					// 사이트 로그인 횟수
+					let lFlag = false;
+					chartCounts.loginCount.map(el => {
+
+						if(parseInt(el.day) === labels[i]) {
+
+							loginCount.push(el.count);
+							lFlag = true;
+						}
+					})
+					if(!lFlag) loginCount.push(0);
+
+					// 사이트 방문자 수
+					let vFlag = false;
+					chartCounts.visitorCount.map(el => {
+
+						if(parseInt(el.day) === labels[i]) {
+
+							visitorCount.push(el.count);
+							vFlag = true;
+						}
+					})
+					if(!vFlag) visitorCount.push(0);
 				}
 			}
 			
@@ -176,7 +187,7 @@ function AdminDashboard() {
 						type: 'bar',
 						label: '탈퇴 회원 수',
 						backgroundColor: 'grey',
-						// data: resignedUserCount //TODO: 탈퇴 회원에 대한 히스토리가 없어 노출을 막아둠(주석 풀면 신규회원 수와 같은 수가 들어감)
+						data: resignedUserCount
 					},
 				],
 			});
@@ -186,7 +197,7 @@ function AdminDashboard() {
 				datasets: [
 					{
 						type: 'bar',
-						label: '신규 프로젝트 수',
+						label: '생성된 프로젝트 수',
 						backgroundColor: '#42A5F5',
 						data: newProjectCount
 					},
@@ -207,6 +218,24 @@ function AdminDashboard() {
 						label: '삭제된 스프린트 수',
 						backgroundColor: 'grey',
 						data: deletedSprintCount
+					},
+				],
+			});
+
+			setVisitorCount({ 
+				labels: labels,
+				datasets: [
+					{
+						type: 'bar',
+						label: '로그인 횟수',
+						backgroundColor: '#00AA9C',
+						data: loginCount
+					},
+					{
+						type: 'bar',
+						label: '실제 방문자 수',
+						backgroundColor: 'grey',
+						data: visitorCount
 					},
 				],
 			});
@@ -358,10 +387,21 @@ function AdminDashboard() {
 				</div>
             </div>
 
-            {/* content */}
+            {/* content(chart) */}
             <div id={styles.contentContainer}>
 
 				<div className={styles.row}>
+
+					<div className={styles.cell}>
+						<div className="card">
+							<h5>로그인 횟수/실제 방문자 수</h5>
+							<Chart 
+								type="bar" 
+								data={visitorCount} 
+								options={stackedOptions} 
+							/>
+						</div>
+					</div>
 
 					<div className={styles.cell}>
 						<div className="card">
@@ -373,10 +413,14 @@ function AdminDashboard() {
 							/>
 						</div>
 					</div>
+					
+				</div>
 
+				<div className={styles.row}>
+					
 					<div className={styles.cell}>
 						<div className="card">
-							<h5>신규 프로젝트 수</h5>
+							<h5>생생된 프로젝트 수</h5>
 							<Chart 
 								type="bar" 
 								data={projectCount} 
@@ -384,58 +428,19 @@ function AdminDashboard() {
 							/>
 						</div>
 					</div>
-					
+
+					<div className={styles.cell}>
+						<div className="card">
+							<h5>생성/삭제된 스프린트 수</h5>
+							<Chart 
+								type="bar" 
+								data={sprintCount} 
+								options={stackedOptions} 
+							/>
+						</div>
+					</div>
+
 				</div>
-
-				<div className={styles.row}>
-
-					<div className={styles.cell}>
-						<div className="card">
-							<h5>생성/삭제된 스프린트 수</h5>
-							<Chart 
-								type="bar" 
-								data={sprintCount} 
-								options={stackedOptions} 
-							/>
-						</div>
-					</div>
-
-					{/* <div className={styles.cell}>
-						<div className="card">
-							<h5>생성/삭제된 스프린트 수</h5>
-							<Chart 
-								type="bar" 
-								data={sprintCount} 
-								options={stackedOptions} 
-							/>
-						</div>
-					</div> */}
-				</div>
-
-				{/* <div className={styles.row}>
-
-					<div className={styles.cell}>
-						<div className="card">
-							<h5>생성/삭제된 스프린트 수</h5>
-							<Chart 
-								type="bar" 
-								data={sprintCount} 
-								options={stackedOptions} 
-							/>
-						</div>
-					</div>
-
-					<div className={styles.cell}>
-						<div className="card">
-							<h5>생성/삭제된 스프린트 수</h5>
-							<Chart 
-								type="bar" 
-								data={sprintCount} 
-								options={stackedOptions} 
-							/>
-						</div>
-					</div>
-				</div> */}
 			</div>
 
         </section>

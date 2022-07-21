@@ -30,13 +30,17 @@ exports.viewChartCounts = (params) => {
         const newProjectCount = await AdminStatisticRepository.selectNewProjectCount(connection, params);
         const newSprintCount = await AdminStatisticRepository.selectNewSprintCount(connection, params);
         const deletedSprintCount = await AdminStatisticRepository.selectDeletedSprintCount(connection, params);
+        const loginCount = await AdminStatisticRepository.selectLoginCount(connection, params);
+        const visitorCount = await AdminStatisticRepository.selectVisitorCount(connection, params);
         
         const result = {
             newUserCount: newUserCount,
             resignedUserCount: resignedUserCount,
             newProjectCount: newProjectCount,
             newSprintCount: newSprintCount,
-            deletedSprintCount: deletedSprintCount
+            deletedSprintCount: deletedSprintCount,
+            loginCount: loginCount,
+            visitorCount: visitorCount
         }
         
         connection.end();
