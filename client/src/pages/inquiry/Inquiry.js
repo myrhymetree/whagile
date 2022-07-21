@@ -1,7 +1,7 @@
 import InquiryCSS from './Inquiry.module.css';
 
 import { useEffect, useState } from 'react';
-import { callGetInquiriesAPI, callCleanInquiries } from '../../apis/InquiryAPICalls';
+import { callGetInquiriesAPI, callGetInquiryDetailAPI } from '../../apis/InquiryAPICalls';
 
 import MainHeader from '../../components/commons/MainHeader';
 import PageTitle from '../../components/items/PageTitle';
@@ -60,7 +60,8 @@ function Inquiry() {
     }
 
     /* 문의 내용 상세조회 다이얼로그 표시 */
-    const seeInquiryDetail = () => {
+    const seeInquiryDetail = (inquiryCode) => {
+        dispatch(callGetInquiryDetailAPI(inquiryCode));
         setVisibleDetail(true);
     }
 
@@ -117,7 +118,7 @@ function Inquiry() {
                                 <div>{ inquiry.inquiryCode }</div>
                                 <div 
                                     className={ InquiryCSS.inquiryDetail }
-                                    onClick={ seeInquiryDetail }    
+                                    onClick={ () => seeInquiryDetail(inquiry.inquiryCode) }    
                                 >
                                     { inquiry.title }
                                 </div>
@@ -125,11 +126,6 @@ function Inquiry() {
                                 <div>{ inquiry.memberName }</div>
                                 <div>{ inquiry.categoryName }</div>
                                 <div>{ inquiry.answeredYN === 'N'? '미답변' : '답변완료' }</div>
-                                <InquiryDetailModal
-                                    inquiryCode={ inquiry.inquiryCode }
-                                    visibleDetail={ visibleDetail }
-                                    setVisibleDetail={ setVisibleDetail }
-                                />
                             </div>
                         ) 
                         : <div id={ InquiryCSS.noInquiry }>등록된 문의 글이 없습니다.</div>
@@ -138,6 +134,10 @@ function Inquiry() {
                 <InquiryCreationModal 
                     visibleCreation={ visibleCreation }
                     setVisibleCreation={ setVisibleCreation }
+                />
+                <InquiryDetailModal
+                    visibleDetail={ visibleDetail }
+                    setVisibleDetail={ setVisibleDetail }
                 />
             </div>
         </>

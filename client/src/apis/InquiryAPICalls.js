@@ -1,5 +1,5 @@
 import { FIND_INQUIRIES, INIT_INQUIRIES } from "../modules/InquiriesModule";
-import { REGIST_INQUIRY } from "../modules/InquiryModule";
+import { REGIST_INQUIRY, FIND_INQUIRY } from "../modules/InquiryModule";
 
 /* 1:1 문의 목록 조회 API 호출 */
 export function callGetInquiriesAPI(params) {
@@ -53,6 +53,20 @@ export function callPostInquiryAPI(newInquiry) {
         }).then(res => res.json());
 
         await dispatch({ type: REGIST_INQUIRY, payload: result });
+    }
+}
+
+/* 1:1 문의 상세 조회 API 호출 */
+export function callGetInquiryDetailAPI(inquiryCode) {
+
+    const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/inquiries/${ inquiryCode }`;
+
+    return async function findInquiry(dispatch, getState) {
+
+        const result = await fetch(requestURL).then(res => res.json());
+
+        await dispatch({ type: FIND_INQUIRY, payload: result.results[0] });
+        console.log('InquiryDetail : ', result.results[0])
     }
 }
 
