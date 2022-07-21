@@ -64,6 +64,7 @@ exports.decodedToken = (token) => {
         email: result.email,
         role: result.role
     };
+    
 
     return decodedToken;
 };
