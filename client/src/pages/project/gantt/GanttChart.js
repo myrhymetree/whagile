@@ -312,7 +312,7 @@ function GanttChart() {
 		
 		const currentInfo = {
 			projectCode: projectCode,
-			backlogCreatorCode: decodeJwt(window.localStorage.getItem("access_token")).code,
+			memberCode: decodeJwt(window.localStorage.getItem("access_token")).code,
 			offset: 0,
 			limit: currentLimit,
 			sprints: sprints
@@ -623,7 +623,7 @@ function GanttChart() {
 								onDoubleClick={handleDblClick}
 								onExpanderClick={handleExpanderClick}
 								barCornerRadius="5"
-								barProgressColor="#BBBBBB"
+								barProgressColor="grey"
 								barProgressSelectedColor="#808080"
 								headerHeight={36}
 								rowHeight={32}
@@ -746,8 +746,10 @@ function GanttChart() {
 								<Calendar 
 									id="startDate" 
 									name="sprintStartDate"
-									value={sprint.sprintStartDate} 
+									value={sprint.sprintStartDate}
+									placeholder="선택하지 않음"
 									showIcon
+									dateFormat="yy-mm-dd"
 									onChange={(e) => onChangeSprint(e)}
 								/>
 							</div>
@@ -756,8 +758,10 @@ function GanttChart() {
 								<Calendar 
 									id="endDate"
 									name="sprintEndDate"
-									value={sprint.sprintEndDate} 
+									value={sprint.sprintEndDate}
+									placeholder="선택하지 않음"
 									showIcon
+									dateFormat="yy-mm-dd"
 									onChange={(e) => onChangeSprint(e)}
 								/>
 							</div>
@@ -996,16 +1000,18 @@ function GanttChart() {
 								<Calendar 
 									name="backlogStartDate"
 									value={(newBacklog.backlogStartDate)? newBacklog.backlogStartDate: ''} 
-									onChange={(e) => onChangeNewBacklog(e)}
 									placeholder="선택하지 않음"
 									showIcon
+									dateFormat="yy-mm-dd"
+									onChange={(e) => onChangeNewBacklog(e)}
 								/>
 								<Calendar 
 									name="backlogEndDate"
 									value={(newBacklog.backlogEndDate)? newBacklog.backlogEndDate: ''} 
-									onChange={(e) => onChangeNewBacklog(e)}
 									placeholder="선택하지 않음"
 									showIcon
+									dateFormat="yy-mm-dd"
+									onChange={(e) => onChangeNewBacklog(e)}
 								/>
 								<Dropdown 
 									name="backlogUrgency"

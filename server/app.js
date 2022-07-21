@@ -16,6 +16,9 @@ app.use(cors());
 const accountRouter = require("./src/routes/account-route");
 app.use("/api/account", accountRouter);
 
+const adminStatisticsRouter = require("./src/routes/admin-statistics-route");
+app.use("/api/admin-statistics", adminStatisticsRouter);
+
 const projectRouter = require("./src/routes/project-route");
 app.use("/api/projects", projectRouter);
 

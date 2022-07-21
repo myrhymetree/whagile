@@ -73,11 +73,15 @@ const sprintsReducer = handleActions(
                         } else {
                             taskEndDate.setDate(taskStartDate.getDate() + 1);
                         }
-
+                        
                         newState.push({
                             id: `t${t.backlogCode}`, //sprint의 id와 구분하기위해 앞에 't'를 붙임
                             name: t.backlogTitle,
-                            progress: 100,
+                            progress: (t.progressStatus === '진행 전')
+                                        ? 0
+                                        : (t.progressStatus === '진행 중')
+                                            ? 50
+                                            : 100,
                             type: "task",
                             start: new Date(taskStartDate.getFullYear(), taskStartDate.getMonth(), taskStartDate.getDate()),
                             end: new Date(taskEndDate.getFullYear(), taskEndDate.getMonth(), taskEndDate.getDate()),
