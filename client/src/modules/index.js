@@ -23,6 +23,7 @@ import sprintsReducer from './SprintsModule';
 import sprintReducer from './SprintModule';
 import sprintsForBacklogReducer from './SprintsForBacklogModule';
 import sprintForBacklogReducer from './SprintForBacklogModule';
+import inquiriesReducer from './InquiriesModule';
 import inquiryReducer from './InquiryModule';
 
 const rootReducer = combineReducers({
@@ -50,6 +51,7 @@ const rootReducer = combineReducers({
     sprintReducer,
     sprintsForBacklogReducer,
     sprintForBacklogReducer,
+    inquiriesReducer,
     inquiryReducer
 });
 

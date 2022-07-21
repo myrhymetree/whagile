@@ -1,20 +1,31 @@
 import InquiryCSS from './Inquiry.module.css';
 
 import { useEffect, useState } from 'react';
+import { callGetInquiriesAPI, callCleanInquiries } from '../../apis/InquiryAPICalls';
 
 import MainHeader from '../../components/commons/MainHeader';
 import PageTitle from '../../components/items/PageTitle';
 import { InputText } from 'primereact/inputtext';
 import InquiryCreationModal from './InquiryCreationModal';
-import { useSelector } from 'react-redux';
-import inquiryReducer from '../../modules/InquiryModule';
+import InquiryDetailModal from './InquiryDetailModal';
+import { useDispatch, useSelector } from 'react-redux';
+import { Navigate } from 'react-router';
 
 function Inquiry() {
 
-    const [searchValue, setSearchValue] = useState('');
-    const [visible, setVisible] = useState(false);
+    const dispatch = useDispatch();
+    const inquiries = useSelector(state => state.inquiriesReducer);
     const inquiry = useSelector(state => state.inquiryReducer);
 
+    /* 페이징 및 검색 조건 */
+    const [offset, setOffset] = useState(0);
+    const [filter, setFilter] = useState('');
+    const [searchValue, setSearchValue] = useState('');
+
+    const [visibleCreation, setVisibleCreation] = useState(false);
+    const [visibleDetail, setVisibleDetail] = useState(false);
+
+    /* 1:1문의 등록, 수정, 삭제 확인 메시지 표시 */
     useEffect(
         () => {
             if(inquiry.status === 200 || inquiry.status === 201) {
@@ -23,6 +34,35 @@ function Inquiry() {
         },
         [inquiry]
     );
+
+    useEffect(
+        () => {
+            dispatch(callGetInquiriesAPI({
+                offset: 0,
+                limit: 10
+            }));
+        },
+        []
+    );
+
+    /* 필터 조건 부여하여 목록 조회 */
+    const getFilteredList = (filteredValue) => {
+        setFilter(filteredValue);
+
+        const params = {
+            offset: 0,
+            limit: 10,
+            filter: filter
+        }
+
+        console.log(params)
+        dispatch(callGetInquiriesAPI(params));
+    }
+
+    /* 문의 내용 상세조회 다이얼로그 표시 */
+    const seeInquiryDetail = () => {
+        setVisibleDetail(true);
+    }
 
     return (
         <>
@@ -46,9 +86,21 @@ function Inquiry() {
                         </div> */}
                     <div id={ InquiryCSS.filter }>
                         필터 
-                        <button>전체</button>
-                        <button>미답변</button>
-                        <button>답변완료</button>
+                        <button
+                            onClick={ () => getFilteredList('') }
+                            >
+                            전체
+                        </button>
+                        <button
+                            onClick={ () => getFilteredList('N') }
+                            >
+                            미답변
+                        </button>
+                        <button
+                            onClick={ () => getFilteredList('Y') }
+                        >
+                            답변완료
+                        </button>
                     </div>
                     <div id={ InquiryCSS.tableHeader }>
                         <div>번호</div>
@@ -58,22 +110,34 @@ function Inquiry() {
                         <div>문의유형</div>
                         <div>답변상태</div>
                     </div>
-                    {/* { 
-                        inquiries.map(inquiry =>  */}
-                            <div className={ InquiryCSS.tableRow }>
-                                <div>번호</div>
-                                <div>제목</div>
-                                <div>작성시간</div>
-                                <div>작성자</div>
-                                <div>문의유형</div>
-                                <div>답변상태</div>
+                    { 
+                        inquiries.length > 0
+                        ? inquiries.map(inquiry => 
+                            <div key={ inquiry.inquiryCode } className={ InquiryCSS.tableRow }>
+                                <div>{ inquiry.inquiryCode }</div>
+                                <div 
+                                    className={ InquiryCSS.inquiryDetail }
+                                    onClick={ seeInquiryDetail }    
+                                >
+                                    { inquiry.title }
+                                </div>
+                                <div>{ inquiry.createdDate }</div>
+                                <div>{ inquiry.memberName }</div>
+                                <div>{ inquiry.categoryName }</div>
+                                <div>{ inquiry.answeredYN === 'N'? '미답변' : '답변완료' }</div>
+                                <InquiryDetailModal
+                                    inquiryCode={ inquiry.inquiryCode }
+                                    visibleDetail={ visibleDetail }
+                                    setVisibleDetail={ setVisibleDetail }
+                                />
                             </div>
-                        {/* ) 
-                    } */}
+                        ) 
+                        : <div id={ InquiryCSS.noInquiry }>등록된 문의 글이 없습니다.</div>
+                    }
                 </div>
                 <InquiryCreationModal 
-                    visible={ visible }
-                    setVisible={ setVisible }
+                    visibleCreation={ visibleCreation }
+                    setVisibleCreation={ setVisibleCreation }
                 />
             </div>
         </>

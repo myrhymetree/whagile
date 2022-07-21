@@ -57,9 +57,12 @@
     float: right;
 }
 
-#tableHeader, .tableRow {
+#tableHeader, 
+.tableRow,
+#noInquiry {
     display: flex;
     flex-direction: row;
+    justify-content: center;
     align-items: center;
     text-align: center;
     padding: 10px;
@@ -73,7 +76,8 @@
     margin-top: 10px;
 }
 
-.tableRow {
+.tableRow, 
+#noInquiry {
     background-color: #1D1E27;
 }
 
@@ -101,7 +105,15 @@
     width: 10%;
 }
 
-/* 1:1문의 등록 다이얼로그 창 */
+.inquiryDetail {
+    cursor: pointer;
+}
+
+.inquiryDetail:hover {
+    color: #ffcf91;
+}
+
+/* 1:1문의 다이얼로그 창 */
 #newInquiryBtn {
     color: #fff;
     margin-top: 10px;
@@ -139,16 +151,17 @@
     justify-content: center;
 }
 
-#createBtn, #cancelBtn {
+#createBtn, 
+#cancelBtn,
+#removeBtn {
     border: none;
     border-radius: 5px;
     width: 60px;
-    font-size: 12px;
     color: #fff;
     margin-top: 20px;
     margin-left: 5px;
     margin-right: 5px;
-    padding: 5px;
+    padding: 10px;
 }
 
 #createBtn {
@@ -157,4 +170,8 @@
 
 #cancelBtn {
     background-color: rgba(255, 255, 255, 0.25);
+}
+
+#removeBtn {
+    background-color: #F86064;
 }
