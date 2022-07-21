@@ -277,12 +277,12 @@ exports.updatePwd = (connection, tempInfo) => {
                 resolve(results);
             });
     });
-    
+
 };
 
 exports.insertAccountHistory = (connection, memberCode) => {
     console.log('insertAccountHistory', memberCode);
-    
+
     return new Promise((resolve, reject) => {
 
         connection.query(accountQuery.insertHistory(), 
