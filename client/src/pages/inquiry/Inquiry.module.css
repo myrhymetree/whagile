@@ -1,0 +1,160 @@
+#pageLayout {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#main {
+    width: 96%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-radius: 10px;
+    background-color: #282936;
+    padding: 20px;
+}
+
+#main>:first-child {
+    padding: 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+    margin-bottom: 10px;
+    font-size: 20px;
+}
+
+#filter {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    text-align: center;
+    float: left;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+#filter>button {
+    width: 80px;
+    height: 30px;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    margin-left: 5px;
+    background-color: rgba(255, 255, 255, 0.25);
+}
+
+#filter>button:hover,
+#filter>button:focus {
+    background-color: #8B6AFF;
+}
+
+
+
+#searchBar {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    text-align: center;
+    float: right;
+}
+
+#tableHeader, .tableRow {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    text-align: center;
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+#tableHeader {
+    background-color: rgba(255, 255, 255, 0.05);
+    font-size: 12px;
+    margin-top: 10px;
+}
+
+.tableRow {
+    background-color: #1D1E27;
+}
+
+#tableHeader>:nth-child(1),
+.tableRow>:nth-child(1) {
+    width: 5%;
+}
+
+#tableHeader>:nth-child(2),
+.tableRow>:nth-child(2) {
+    width: 40%;
+}
+
+#tableHeader>:nth-child(3),
+#tableHeader>:nth-child(4),
+#tableHeader>:nth-child(5),
+.tableRow>:nth-child(3),
+.tableRow>:nth-child(4),
+.tableRow>:nth-child(5) {
+    width: 15%;
+}
+
+#tableHeader>:nth-child(6),
+.tableRow>:nth-child(6) {
+    width: 10%;
+}
+
+/* 1:1문의 등록 다이얼로그 창 */
+#newInquiryBtn {
+    color: #fff;
+    margin-top: 10px;
+}
+
+#inquiryDataInput {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    padding: 10px;
+}
+
+#inquiryDataInput>h5 {
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+#smallInfo {
+    color: #F86064;
+    font-size: 10px;
+    margin-bottom: 20px;
+}
+
+#inputTitle, 
+#inputOption, 
+#inputContent {
+    margin-top: 10px;
+    margin-bottom: 30px;
+}
+
+#inquiryDataInput>div {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+#createBtn, #cancelBtn {
+    border: none;
+    border-radius: 5px;
+    width: 60px;
+    font-size: 12px;
+    color: #fff;
+    margin-top: 20px;
+    margin-left: 5px;
+    margin-right: 5px;
+    padding: 5px;
+}
+
+#createBtn {
+    background-color: #00AA9C;
+}
+
+#cancelBtn {
+    background-color: rgba(255, 255, 255, 0.25);
+}

@@ -1,24 +1,25 @@
 const HttpStatus = require('http-status');
 const InquiryService = require('../services/inquiry-service');
-// const { decodedToken } = require('../util/account-utils');
+const { decodedToken } = require('../util/account-utils');
 
 /* 토큰에서 사용자 정보 꺼내기 */
-// getUserInfo = (accessToken) => {
+getUserInfo = (accessToken) => {
     
-//    return decodedToken(accessToken);
-// }
+   return decodedToken(accessToken);
+}
 
 /* 1:1 문의 등록 */
 exports.registInquiry = async (req, res, next) => {
 
-    // const user = getUserInfo(req.get('Access-Token'));
+    const user = getUserInfo(req.get('Access-Token'));
 
     const newInquiry = {
         title: req.body.title,
         content: req.body.content,
-        memberCode: req.body.memberCode,
+        memberCode: user.usercode,
         categoryCode: req.body.categoryCode
     }
+    console.log('regist inquiry...', user)
 
     const results = await InquiryService.registInquiry(newInquiry);
 

@@ -12,6 +12,7 @@ import Signup from './pages/login/Signup';
 import ProjectLayout from './layouts/ProjectLayout';
 import Main from './pages/main/Main';
 import Profile from "./pages/profile/Profile";
+import Inquiry from "./pages/inquiry/Inquiry.js";
 
 import Dashboard from './pages/project/dashboard/Dashboard';
 import BacklogAndSprint from './pages/project/backlog-and-sprint/BacklogAndSprint';
@@ -53,6 +54,7 @@ function App() {
           element={<InvitedMemberSignup />}
         />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/inquiry" element={<Inquiry />} />
         <Route path="/project/:projectCode" element={<ProjectLayout />}>
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="backlog-and-sprint" element={<BacklogAndSprint />} />

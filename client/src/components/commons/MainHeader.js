@@ -27,6 +27,10 @@ function MainHeader() {
     navigate('/', { replace: true })
   }
 
+  const onClickInquiry = () => {
+    navigate("/inquiry");
+  }
+
   useEffect(() => {    
     if(!isLogin){
       console.log('MainHeader isLogin?', isLogin);
@@ -88,6 +92,7 @@ function MainHeader() {
           <OverlayPanel ref={op} id="overlay_panel" style={{width: '150px'}} className="overlaypanel">              
               <Button label="Profile" className="p-button-text p-button-plain" icon="pi pi-user" onClick={ onClickProfile }/>               
               <Button label="Logout" className="p-button-text p-button-plain" icon="pi pi-power-off" onClick={ onClickLogout }/>             
+              <Button label="1:1 문의" className="p-button-text p-button-plain" icon="pi pi-envelope" onClick={ onClickInquiry }/>             
           </OverlayPanel>          
       </div>
       
