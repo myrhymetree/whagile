@@ -179,7 +179,7 @@ exports.selectTasks = () => {
             , B.BACKLOG_END_DATE
             , M.MEMBER_NAME
         FROM TBL_BACKLOG B
-        LEFT JOIN TBL_MEMBER M ON (B.BACKLOG_CREATOR_CODE = M.MEMBER_CODE)
+        LEFT JOIN TBL_MEMBER M ON (B.BACKLOG_CHARGER_CODE = M.MEMBER_CODE)
         WHERE SPRINT_CODE = ?
             AND B.BACKLOG_DELETED_YN = 'N'
             AND B.BACKLOG_CATEGORY = '일감'

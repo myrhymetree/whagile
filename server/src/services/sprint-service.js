@@ -154,7 +154,6 @@ exports.editSprint = (params) => {
             const prevSprint = prevSprints[0];
 
             params.currentInfo.sprintCode = params.sprintCode;
-            params.currentInfo.memberCode = params.currentInfo.backlogCreatorCode;
             
             // 스프린트 히스토리(스프린트 수정)
             let sprintHitoryItem = [];

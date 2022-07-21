@@ -1,4 +1,6 @@
 import { combineReducers } from 'redux';
+import adminStatisticsReducer from './AdminStatisticsModule';
+import adminStatisticsChartReducer from './AdminStatisticsChartModule';
 import authsReducer from './AuthsModule';
 import authReducer from './AuthModule';
 import authOrderReducer from './AuthOrderModule';
@@ -25,6 +27,8 @@ import sprintsForBacklogReducer from './SprintsForBacklogModule';
 import sprintForBacklogReducer from './SprintForBacklogModule';
 
 const rootReducer = combineReducers({
+    adminStatisticsReducer,
+    adminStatisticsChartReducer,
     authsReducer,
     authReducer,
     authOrderReducer,
