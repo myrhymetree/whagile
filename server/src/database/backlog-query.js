@@ -132,9 +132,10 @@ exports.editBacklog = (modifyingContent) => {
     query += `
      A.BACKLOG_URGENCY = '${ target.urgency }',`;
   }
-  if(target.sprint) {
+  if(typeof(target.sprint) == 'number') {
     query += `
      A.BACKLOG_CATEGORY = '일감',
+     A.BACKLOG_PROGRESS_STATUS = '진행 전',
      A.SPRINT_CODE = ${ Number(target.sprint) },`;
   }
 

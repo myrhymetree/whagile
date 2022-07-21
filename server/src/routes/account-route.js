@@ -15,5 +15,6 @@ router.put('/temppwd', AccountController.updateTempPwd);
 router.put('/updatepwd', [authJwt.verifyToken], AccountController.updatePwd);
 router.post('/authsend', [authJwt.verifyToken], AccountController.authNumberSend);
 router.put('/email', [authJwt.verifyToken], AccountController.updateEmail);
+router.get('/memberhistory/:membercode', [authJwt.verifyToken], AccountController.memberHistory);
 
 module.exports = router;

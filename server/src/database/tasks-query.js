@@ -130,9 +130,9 @@ exports.updateTask = (params) => {
     BACKLOG_CATEGORY = '${params.backlogCategory}',`;
   }
   
-  if (params.backlogChargerCode) {
+  if (params.backlogChargerCode !== undefined) {
     query += `
-    BACKLOG_CHARGER_CODE = '${params.backlogChargerCode}',`;
+    BACKLOG_CHARGER_CODE = ${params.backlogChargerCode},`;
   }
   
   if (
@@ -155,7 +155,7 @@ exports.updateTask = (params) => {
   }
 
   query += `
-  WHERE BACKLOG_CODE = '${params.backlogCode}'`;
+  WHERE BACKLOG_CODE = ${params.backlogCode}`;
 
 
   // console.log("query",query);
@@ -194,7 +194,7 @@ exports.insertTaskHistory = () => {
     INSERT INTO TBL_BACKLOG_HISTORY
     (BACKLOG_HISTORY_ITEM, BACKLOG_HISTORY_CONTENT, BACKLOG_HISTORY_DATE, BACKLOG_CODE, PROJECT_CODE, MEMBER_CODE)
     VALUES
-    (?, ?, ?, ?, ?, ?)
+    (?, ?, DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'), ?, ?, ?)
   `;
 };
 
@@ -233,7 +233,6 @@ exports.selectTaskHistories = () => {
          , A.MEMBER_CODE
       FROM TBL_BACKLOG_HISTORY A
      ORDER BY A.BACKLOG_HISTORY_CODE DESC
-     LIMIT ?, ?
   `;
 };
 

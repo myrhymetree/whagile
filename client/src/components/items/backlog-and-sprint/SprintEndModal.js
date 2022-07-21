@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 
 // import { decodeJwt } from '../../../utils/tokenUtils';
-import { callPutSprintAPI } from '../../../apis/SprintsForBacklogAPICalls';
+import { callChangeSprintStatusAPI } from '../../../apis/SprintsForBacklogAPICalls';
 
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
@@ -54,7 +54,7 @@ function SprintEndModal({ sprint }) {
     const confirmEnd = () => {
         
         return new Promise(async (resolve, reject) => {
-            await dispatch(callPutSprintAPI({
+            await dispatch(callChangeSprintStatusAPI({
                 sprintCode: sprint.sprintCode,
                 sprintProgressStatus: sprint.sprintProgressStatus
             }));

@@ -3,7 +3,11 @@ import React, { useEffect, useState } from "react";
 import { Category, Urgency } from "./Types";
 import { useSelector, useDispatch } from "react-redux";
 import TaskComment from "./TaskComment";
+import { useParams } from "react-router-dom";
 import callGetTaskAllCommentsAPI from "../../../apis/TaskCommentAPICalls";
+import { decodeJwt } from "../../../utils/tokenUtils";
+
+
 
 // 일감 모달창
 export default function TaskModal(props) {
@@ -20,8 +24,8 @@ export default function TaskModal(props) {
   const sprint = useSelector((state) => state.tasksSprintReducer);
   const taskComments = useSelector((state) => state.taskTotalCommentReducer);
   const dispatch = useDispatch();
-
-
+  const { projectCode } = useParams();
+  const user = decodeJwt(window.localStorage.getItem("access_token"));
   
   
   useEffect(() => {
@@ -96,6 +100,7 @@ export default function TaskModal(props) {
 
   // 개별 일감 수정
   const onClickSubmitHandler = async () => {
+    // console.log("taskCharger", taskCharger);
     const kanbanInfo = {
       backlogCode: props.currentTaskID,
       backlogTitle: taskTitle,
@@ -104,8 +109,10 @@ export default function TaskModal(props) {
       issue: taskIssue,
       urgency: taskUrgency,
       backlogCategory: (taskProgressStatus === "백로그" )? "백로그" : "일감",
-      backlogChargerCode: taskCharger,
-      sprintCode: (taskProgressStatus === "백로그" )? null: sprint.sprintCode
+      backlogChargerCode: parseInt(taskCharger),
+      sprintCode: (taskProgressStatus === "백로그" )? null: sprint.sprintCode,
+      projectCode: parseInt(projectCode),
+      memberCode: user.code
     };
 
     console.log("kanban", kanbanInfo);
@@ -134,8 +141,6 @@ export default function TaskModal(props) {
   // 개별 일감 삭제
 
   const onClickDeleteHandler = (taskCode, taskProjectCode, taskCategory) => {
-    console.log("Code", taskCode, "ProjectCode", taskProjectCode, "taskCategory", taskCategory);
-
     fetch(`http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/tasks`, {
       method: "DELETE",
       headers: {
@@ -147,6 +152,7 @@ export default function TaskModal(props) {
         taskCode: taskCode,
         taskProjectCode: taskProjectCode,
         taskCategory: taskCategory,
+        memberCode: user.code,
       }),
     })
       .then((res) => res.json())

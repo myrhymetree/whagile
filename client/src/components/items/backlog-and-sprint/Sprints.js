@@ -19,7 +19,6 @@ function Sprints() {
     /* 스프린트 목록 조회 */
     useEffect(
         () => {
-            // dispatch(callCleanSprints());
             dispatch(callGetSprintsAPI({
                 projectCode: projectCode,
                 offset: 0,
@@ -40,9 +39,14 @@ function Sprints() {
     
     return (
         <>
-            <span className={ BacklogAndSprintCSS.divTitle }>스프린트</span>
-            <SprintCreationModal/>
-            <hr className={ BacklogAndSprintCSS.divisionLine }/>
+            <div id={ BacklogAndSprintCSS.sprintBox }>
+                <div>
+                    <span className={ BacklogAndSprintCSS.divTitle }>스프린트</span>
+                </div>
+                <div>
+                    <SprintCreationModal/>
+                </div>
+            </div>
             {  
                 sprints.length > 0
                 ? <SprintItem/>
