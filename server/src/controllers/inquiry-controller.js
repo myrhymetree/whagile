@@ -69,6 +69,25 @@ exports.findInquiries = async (req, res, next) => {
 /* 답변 대기 중인 1:1 문의 수 조회 */
 
 /* 1:1 문의 상세 조회 */
+exports.findInquiryByInquiryCode = async (req, res, next) => {
+
+    const inquiryCode = Number(req.params.inquiryCode);
+
+    const results = await InquiryService.findInquiryByInquiryCode(inquiryCode);
+
+    try {
+        res.status(HttpStatus.OK).json({
+            status: HttpStatus.OK,
+            message: '1:1문의 상세 내용을 조회하였습니다.',
+            results: results
+        });
+    } catch (err) {
+        res.status(HttpStatus.BAD_REQUEST).json({
+            status: HttpStatus.BAD_REQUEST,
+            message: err
+        });
+    }
+};
 
 /* 1:1 문의 수정 */
 

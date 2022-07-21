@@ -50,6 +50,27 @@ exports.selectInquiries = (memberCode, filter, searchValue, memberRole) => {
     return query;
 }
 
+/* 1:1 문의 상세조회 요청 SQL */
+exports.selectInquiry = () => {
+
+    return `
+        SELECT
+               A.INQUIRY_CODE
+             , A.INQUIRY_TITLE
+             , A.INQUIRY_CONTENT
+             , A.INQUIRY_CREATED_DATE
+             , A.INQUIRY_ANSWER_YN
+             , A.INQUIRY_CATEGORY_CODE
+             , B.INQUIRY_CATEGORY_NAME
+             , A.MEMBER_CODE
+             , C.MEMBER_NAME
+          FROM TBL_INQUIRY A
+          JOIN TBL_INQUIRY_CATEGORY B ON (A.INQUIRY_CATEGORY_CODE = B.INQUIRY_CATEGORY_CODE)
+          JOIN TBL_MEMBER C ON (A.MEMBER_CODE = C.MEMBER_CODE)
+         WHERE A.INQUIRY_CODE = ?
+    `;
+};
+
 /* 1:1 문의히스토리 행 삽입 요청 SQL */
 exports.insertInquiryHistory = () => {
 

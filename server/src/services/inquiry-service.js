@@ -75,3 +75,18 @@ exports.findInquiries = (params) => {
         resolve(results);
     });
 }
+
+/* 1:1 문의 상세 조회 */
+exports.findInquiryByInquiryCode = (inquiryCode) => {
+
+    return new Promise(async (resolve, reject) => {
+
+        const connection = getConnection();
+
+        const results = await InquiryRepository.selectInquiry(connection, inquiryCode);
+
+        connection.end();
+
+        resolve(results);
+    });
+};

@@ -58,6 +58,29 @@ exports.selectInquiries = (connection, params) => {
     });
 };
 
+/* 1:1 문의 상세 조회 */
+exports.selectInquiry = (connection, inquiryCode) => {
+
+    return new Promise((resolve, reject) => {
+        connection.query(
+            inquiryQuery.selectInquiry(),
+            [inquiryCode],
+            (err, results, fields) => {
+                if (err) {
+                    reject(err);
+                }
+
+                const inquiries = [];
+                for(let i = 0; i < results.length; i++) {
+                    inquiries.push(new InquiryDTO(results[i]));
+                }
+                
+                resolve(inquiries);
+            }
+        );
+    });
+};
+
 /* 1:1 문의 히스토리 생성 */
 exports.insertInquiryHistory = (connection, newHistory) => {
 

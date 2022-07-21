@@ -11,6 +11,7 @@ router.get('/', InquiryController.findInquiries);
 /* 1:1 문의 수 조회 */
 
 /* 1:1 문의 상세 조회 */
+router.get('/:inquiryCode', InquiryController.findInquiryByInquiryCode);
 
 /* 1:1 문의 수정 */
 
