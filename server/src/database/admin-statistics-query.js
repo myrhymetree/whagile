@@ -73,24 +73,24 @@ exports.selectResignedUserCount = (params) => {
     if(params.searchCondition === 'day') {
         
         query = `
-            SELECT SUBSTR(MEMBER_CREATED_DATE, 1, 2) day, COUNT(*) count
-            FROM TBL_MEMBER 
-            WHERE MEMBER_ID NOT IN ('admin')
-                AND MEMBER_SECESSION_YN = 'N'
-                AND MEMBER_CREATED_DATE LIKE '%${params.searchValue.toString().substr(3, 5)}%'
-            GROUP BY SUBSTR(MEMBER_CREATED_DATE, 1, 2)
+            SELECT SUBSTR(MEMBER_HISTORY_INDEX, 9, 2) day, COUNT(DISTINCT MEMBER_CODE) count
+            FROM TBL_MEMBER_HISTORY
+            WHERE MEMBER_HISTORY_INDEX LIKE '%${params.searchValue2.toString().substr(0, 7)}%'
+                AND MEMBER_CODE != 6
+                AND MEMBER_HISTORY_ITEM = '탈퇴'
+            GROUP BY SUBSTR(MEMBER_HISTORY_INDEX, 9, 2);
         `;
     }
 
     if(params.searchCondition === 'month') {
 
         query = `
-            SELECT SUBSTR(MEMBER_CREATED_DATE, 4, 2) day, COUNT(*) count
-            FROM TBL_MEMBER 
-            WHERE MEMBER_ID NOT IN ('admin')
-                AND MEMBER_SECESSION_YN = 'N'
-                AND MEMBER_CREATED_DATE LIKE '%${params.searchValue.toString().substr(5, 3)}%'
-            GROUP BY SUBSTR(MEMBER_CREATED_DATE, 4, 2)
+            SELECT SUBSTR(MEMBER_HISTORY_INDEX, 6, 2) day, COUNT(DISTINCT MEMBER_CODE) count
+            FROM TBL_MEMBER_HISTORY
+            WHERE MEMBER_HISTORY_INDEX LIKE '%${params.searchValue2.toString().substr(0, 4)}%'
+                AND MEMBER_CODE != 6
+                AND MEMBER_HISTORY_ITEM = '탈퇴'
+            GROUP BY SUBSTR(MEMBER_HISTORY_INDEX, 6, 2);
         `;
     }
             
@@ -190,6 +190,66 @@ exports.selectDeletedSprintCount = (params) => {
                 AND HI.SPRINT_HISTORY_CONTENT = '삭제'
                 AND SPRINT_HISTORY_DATE LIKE '%${params.searchValue2.toString().substr(0, 4)}%'
             GROUP BY SUBSTR(SPRINT_HISTORY_DATE, 6, 2)
+        `;
+    }
+            
+    return query;
+}
+
+exports.selectLoginCount = (params) => {
+
+    let query = '';
+
+    if(params.searchCondition === 'day') {
+        
+        query = `
+            SELECT SUBSTR(MEMBER_HISTORY_INDEX, 9, 2) day, COUNT(*) count
+            FROM TBL_MEMBER_HISTORY
+            WHERE MEMBER_HISTORY_INDEX LIKE '%${params.searchValue2.toString().substr(0, 7)}%'
+                AND MEMBER_CODE != 6
+            GROUP BY SUBSTR(MEMBER_HISTORY_INDEX, 9, 2);
+        `;
+    }
+
+    if(params.searchCondition === 'month') {
+
+        query = `
+            SELECT SUBSTR(MEMBER_HISTORY_INDEX, 6, 2) day, COUNT(*) count
+            FROM TBL_MEMBER_HISTORY
+            WHERE MEMBER_HISTORY_INDEX LIKE '%${params.searchValue2.toString().substr(0, 4)}%'
+                AND MEMBER_CODE != 6
+            GROUP BY SUBSTR(MEMBER_HISTORY_INDEX, 6, 2);
+        `;
+    }
+            
+    return query;
+}
+
+exports.selectVisitorCount = (params) => {
+
+    let query = '';
+
+    if(params.searchCondition === 'day') {
+        
+        query = `
+            SELECT SUBSTR(MEMBER_HISTORY_INDEX, 9, 2) day, COUNT(DISTINCT MEMBER_CODE) count
+            FROM TBL_MEMBER_HISTORY
+            WHERE MEMBER_HISTORY_INDEX LIKE '%${params.searchValue2.toString().substr(0, 7)}%'
+                AND MEMBER_CODE != 6
+                AND MEMBER_HISTORY_ITEM = '로그인'
+            GROUP BY SUBSTR(MEMBER_HISTORY_INDEX, 9, 2);
+        `;
+    }
+
+    if(params.searchCondition === 'month') {
+
+        query = `
+            SELECT SUBSTR(MEMBER_HISTORY_INDEX, 6, 2) day, COUNT(DISTINCT MEMBER_CODE) count
+            FROM TBL_MEMBER_HISTORY
+            WHERE MEMBER_HISTORY_INDEX LIKE '%${params.searchValue2.toString().substr(0, 4)}%'
+                AND MEMBER_CODE != 6
+                AND MEMBER_HISTORY_ITEM = '로그인'
+            GROUP BY SUBSTR(MEMBER_HISTORY_INDEX, 6, 2);
         `;
     }
             
