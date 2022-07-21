@@ -279,3 +279,19 @@ exports.updatePwd = (connection, tempInfo) => {
     });
     
 };
+
+exports.insertAccountHistory = (connection, memberCode) => {
+    console.log('insertAccountHistory', memberCode);
+    return new Promise((resolve, reject) => {
+
+        connection.query(accountQuery.insertHistory(), 
+        [memberCode],        
+        (err, results, fields) => {                
+            if(err) {
+                console.log(err);
+                reject(err);
+            }
+            resolve(results);
+        });
+    });
+};

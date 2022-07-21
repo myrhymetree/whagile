@@ -304,6 +304,9 @@ exports.loginAccount = (loginInfo) => {
                 token
             }
             
+            const historyResult = await AccountRepository.insertAccountHistory(connection, results[0].memberCode);
+            console.log('history result', historyResult);
+
             connection.commit();
 
             return resolve(resData);
