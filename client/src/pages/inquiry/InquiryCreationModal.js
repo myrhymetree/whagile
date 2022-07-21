@@ -10,7 +10,7 @@ import { InputText } from 'primereact/inputtext';
 import { InputTextarea } from 'primereact/inputtextarea';
 import { Dropdown } from 'primereact/dropdown';
 
-function InquiryCreationModal({ visible, setVisible }) {
+function InquiryCreationModal({ visibleCreation, setVisibleCreation }) {
 
     const dispatch = useDispatch();
 
@@ -40,6 +40,7 @@ function InquiryCreationModal({ visible, setVisible }) {
             return new Promise(async (resolve, reject) => {
                 await dispatch(callPostInquiryAPI(newInquiry));
                 await onHide();
+                await window.location.replace(window.location.href);
             });
         } else {
             alert('필수 입력사항을 모두 입력해주세요.');
@@ -48,7 +49,7 @@ function InquiryCreationModal({ visible, setVisible }) {
 
     /* 다이얼로그 닫기 */
     const onHide = () => {
-        setVisible(false);
+        setVisibleCreation(false);
         /* 임시저장 데이터 초기화 */
         setTitle('');
         setContent('');
@@ -60,13 +61,13 @@ function InquiryCreationModal({ visible, setVisible }) {
             <Button 
                 id={ InquiryCSS.newInquiryBtn }
                 label='문의하기'
-                onClick={ () => setVisible(true) }
+                onClick={ () => setVisibleCreation(true) }
             />
             <Sidebar 
                 style={{ width: '40%'}}
                 position='right'
                 className='p-sidebar-lg'
-                visible={ visible }
+                visible={ visibleCreation }
                 onHide={ onHide }
             >
                 <div id={ InquiryCSS.inquiryDataInput }>
