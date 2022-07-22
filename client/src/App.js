@@ -32,7 +32,7 @@ import AdminDashboard from './pages/admin/dashboard/AdminDashboard';
 import AdminMember from './pages/admin/member/AdminMember';
 import AdminAuth from './pages/admin/auth/AdminAuth';
 import AdminProduct from './pages/admin/product/AdminProduct';
-import AdminInquiry from './pages/admin/inquery/AdminInquiry';
+import AdminInquiry from './pages/admin/inquiry/AdminInquiry';
 import AdminStatistics from './pages/admin/statistics/AdminStatistics';
 
 // NotFound

@@ -46,4 +46,7 @@ app.use("/api/task-comment", taskCommentRouter);
 const inquiryRouter = require("./src/routes/inquiry-route");
 app.use("/api/inquiries", inquiryRouter);
 
+const inquiryCommentRouter = require("./src/routes/inquiry-comment-route");
+app.use("/api/inquiry-comment", inquiryCommentRouter);
+
 app.listen(8888, () => console.log("listening on port 8888..."));

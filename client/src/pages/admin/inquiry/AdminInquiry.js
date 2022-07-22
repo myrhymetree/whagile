@@ -11,6 +11,7 @@ function AdminInquery() {
     
     const dispatch = useDispatch();
     const inquiries = useSelector(state => state.inquiriesReducer);
+    const inquiryComment = useSelector(state => state.inquiryCommentReducer);
 
     useEffect(
         () => {
@@ -20,6 +21,15 @@ function AdminInquery() {
             }));
         },
         []
+    );
+
+    useEffect(
+        () => {
+            if(inquiryComment.status === 200 || inquiryComment.status === 201) {
+                alert(inquiryComment.message);
+            }
+        },
+        [inquiryComment]
     );
 
     return (

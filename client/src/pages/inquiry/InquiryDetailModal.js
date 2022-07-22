@@ -1,9 +1,16 @@
 import InquiryCSS from './Inquiry.module.css';
 
-import { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import { callPutInquiryAPI, callDeleteInquiryAPI } from '../../apis/InquiryAPICalls';
+import { useState, useEffect, useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { decodeJwt } from '../../utils/tokenUtils';
+import { callPutInquiryAPI, callDeleteInquiryAPI } from '../../apis/InquiryAPICalls';
+import { 
+    callGetInquiryCommentAPI, 
+    callPostInquiryCommentAPI, 
+    callPutInquiryCommentAPI,
+    callDeleteInquiryCommentAPI, 
+    callCleanInquiryComment 
+} from '../../apis/InquiryCommentAPICalls.js';
 
 import { Dialog } from 'primereact/dialog';
 import { ConfirmDialog } from 'primereact/confirmdialog';
@@ -17,6 +24,7 @@ function InquiryDetailModal({ inquiry }) {
     const loginUser = decodeJwt(window.localStorage.getItem('access_token'));
 
     const dispatch = useDispatch();
+    const inquiryComment = useSelector(state => state.inquiryCommentReducer);
 
     const [visible, setVisible] = useState(false);
     const [editable, setEditable] = useState(false);
@@ -25,9 +33,19 @@ function InquiryDetailModal({ inquiry }) {
     const [title, setTitle] = useState(inquiry.title);
     const [content, setContent] = useState(inquiry.content);
     const [categoryCode, setCategoryCode] = useState(inquiry.categoryCode);
-
+    
     /* 문의 삭제 확인 confirm dialog state */
     const [visibleConfirmDelete, setVisibleConfirmDelete ] = useState(false);
+    
+    /* 1:1 문의 답변 데이터 임시 저장용 state */
+    const [comment, setComment] = useState('');
+    
+    /* 1:1 문의 답변 데이터 수정용 state */
+    const [modificationMode, setModificationMode] = useState(false);
+    const [modifyingComment, setModifyingComment] = useState('');
+    
+    /* 문의 답변 삭제 확인 confirm dialog state */
+    const [visibleConfirmDelete2, setVisibleConfirmDelete2 ] = useState(false);
 
     /* 문의 유형 */
     const categories = [
@@ -36,7 +54,7 @@ function InquiryDetailModal({ inquiry }) {
         { label: '결제 및 환불', value: 3 },
         { label: '건의 사항', value: 4 },
     ];
-
+    
     /* 관리자로 로그인 한 경우, 상세조회 데이터 수정할 수 없도록 한다 */
     useEffect(
         () => {
@@ -45,6 +63,15 @@ function InquiryDetailModal({ inquiry }) {
             }
         },
         []
+    );
+
+    /* 상세조회 다이얼로그 표시할 때, 문의 답변 조회 */
+    const onShowDialog = useCallback(
+        () => {
+            dispatch(callGetInquiryCommentAPI(inquiry.inquiryCode));
+            setVisible(true);
+        },
+        [inquiry]
     );
 
     /* 문의 수정 요청 */
@@ -87,6 +114,52 @@ function InquiryDetailModal({ inquiry }) {
 
     const reject = async () => { setVisibleConfirmDelete(false) }
 
+    /* 문의 답변 등록 요청 */
+    const registComment = async () => {
+        if (!comment) {
+            alert('작성 내용이 없습니다.');
+        } else {
+            const newComment = {
+                content: comment,
+                inquiryCode: inquiry.inquiryCode
+            }
+            
+            await dispatch(callPostInquiryCommentAPI(newComment));
+            await window.location.replace(window.location.href);
+        }
+    }
+    
+    /* 문의 답변 수정 요청 */
+    const modifyComment = async () => {
+        setModifyingComment(inquiryComment.content);
+        setModificationMode(true);
+    };
+    
+    const confirmModify = async () => {
+        await dispatch(callPutInquiryCommentAPI({
+            inquiryCommentCode: inquiryComment.inquiryCommentCode,
+            inquiryCode : inquiryComment.inquiryCode,
+            content: content,
+        }));
+        await window.location.replace(window.location.href);
+    }
+
+    /* 문의 답변 삭제 요청 */
+    const removeComment = () => {
+        setVisibleConfirmDelete2(true);
+    };
+        
+    const accept2 = async () => {
+        await dispatch(callDeleteInquiryCommentAPI({
+            inquiryCommentCode: inquiryComment.inquiryCommentCode,
+            inquiryCode: inquiry.inquiryCode
+        }));
+        await onHide();
+        await window.location.replace(window.location.href);
+    }
+
+    const reject2 = async () => { setVisibleConfirmDelete2(false) }
+
     /* 다이얼로그 닫기 */
     const onHide = () => { 
         setVisible(false);
@@ -94,13 +167,14 @@ function InquiryDetailModal({ inquiry }) {
         setTitle(inquiry.title);
         setContent(inquiry.content);
         setCategoryCode(inquiry.categoryCode);
+        dispatch(callCleanInquiryComment());
     }
 
     return (
         <>
             <button
                 className={ InquiryCSS.inquiryDetail }
-                onClick={ setVisible }    
+                onClick={ onShowDialog }    
             >
                자세히 
             </button>
@@ -154,23 +228,60 @@ function InquiryDetailModal({ inquiry }) {
                         />
                         <br/><br/><br/><br/>
                         <label>답변</label>
-                            <InputTextarea
-                                id={ InquiryCSS.answer }
-                                rows={ 3 }
-                                autoResize
-                                value={ null }
-                                placeholder='답변이 없습니다.'
-                                readOnly={ editable }
+                        <span
+                            id={ InquiryCSS.comment }
+                        >
+                            { inquiryComment.content? inquiryComment.content : '답변이 없습니다.' }
+                        </span>
+                        <span id={ InquiryCSS.commentInfo }>
+                            { inquiryComment.modifiedDate }
+                            { (inquiryComment.modifiedYN === 'Y')? ' 수정됨' : '' }
+                        </span>
+                        <InputTextarea
+                            id={ InquiryCSS.answer }
+                            rows={ 3 }
+                            autoResize
+                            value={ comment }
+                            onChange={ (e) => setComment(e.target.value) }
+                            style={{ display:(inquiry.answeredYN === 'N')? 'block' : 'none' }}
+                        />
+                        <InputTextarea
+                            id={ InquiryCSS.answer }
+                            rows={ 3 }
+                            autoResize
+                            value={ modifyingComment }
+                            onChange={ (e) => setModifyingComment(e.target.value) }
+                            style={{ display: modificationMode? 'block' : 'none' }}
                             />
-                            <span id={ InquiryCSS.answerInfo }>
-                                2020-20-20 20:20:20 등록됨
-                            </span>
-                            <div id={ InquiryCSS.adminUses }>
-                                <Button 
-                                    id={ InquiryCSS.answerRegistBtn }
-                                    label={ inquiry.answeredYN === 'N'? '답변 등록' : '답변 수정' }
-                                />
-                            </div>
+                        <div
+                            style={{ display: modificationMode? 'block' : 'none' }}
+                        >
+                            <Button 
+                                id={ InquiryCSS.answerRegistBtn }
+                                label='저장'
+                                onClick={ confirmModify }
+                            />
+                            <Button 
+                                id={ InquiryCSS.answerRemoveBtn }
+                                label='취소'
+                                onClick={ () => setModificationMode(false) }
+                            />
+                        </div>
+                        <div id={ InquiryCSS.adminUses }
+                            style={{ display: !modificationMode? 'block' : 'none' }}
+                        >
+                            <Button 
+                                id={ InquiryCSS.answerRegistBtn }
+                                label={ (inquiry.answeredYN === 'N')? '답변 등록' : '답변 수정' }
+                                onClick={ (inquiry.answeredYN === 'N')? registComment : modifyComment }
+                            />
+                            <Button 
+                                id={ InquiryCSS.answerRemoveBtn }
+                                label='답변 삭제'
+                                onClick={ removeComment }
+                                style={{ display:(inquiry.answeredYN === 'Y')? 'block' : 'none' }}
+                            />
+                        </div>
                         <div
                             style={{ display: editable ? 'block' : 'none' }}
                         >
@@ -206,6 +317,16 @@ function InquiryDetailModal({ inquiry }) {
                 acceptClassName='p-button-danger'
                 accept={async () => await accept()} 
                 reject={async () => await reject()} 
+            />
+            <ConfirmDialog
+                visible={ visibleConfirmDelete2 } 
+                onHide={ () => setVisibleConfirmDelete2(false) } 
+                header='1:1 문의 답변을 삭제하시겠습니까?' 
+                message='삭제하면 복구할 수 없습니다.'
+                icon='pi pi-info-circle' 
+                acceptClassName='p-button-danger'
+                accept={async () => await accept2()} 
+                reject={async () => await reject2()} 
             />
         </>
     );
