@@ -81,7 +81,7 @@ export default function TaskTotalScreen(props) {
             <div className={KanbanBoardStyle.emptyOngoingSprint}>
               <div className={KanbanBoardStyle.kanbanColumnOnlyBacklog}>
                 <h3>
-                  {project.length > 0 && project[0].projectName} [ 백로그 ]
+                  {project.length > 0 && project[0].projectName}
                 </h3>
                 {createKanbanColumn(Category.Backlog)}
               </div>
@@ -99,7 +99,7 @@ export default function TaskTotalScreen(props) {
                     진행 중인 스프린트가 없을 경우, 일감을 생성하실 수 없습니다.
                   </h2>
                 </div>
-                <Link to={`/project/${projectCode}/backlog-and-sprint`}>
+                <Link to={`/project/${projectCode}/gantt`}>
                   <button className={KanbanBoardStyle.kanbanColumnNoSprintBtn}>
                     스프린트 만들러 가기
                   </button>

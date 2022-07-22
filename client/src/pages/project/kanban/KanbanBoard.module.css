@@ -17,6 +17,11 @@
   margin: 10px;
 }
 
+.columnTitle {
+  display: flex;
+  margin: 0 25px;
+}
+
 .kanbanColumn {
   background: #282936;
   padding: 10px;
@@ -29,7 +34,7 @@
   -ms-overflow-style: none;
   scrollbar-width: none;
   overflow-y: auto; 
-  margin: 25px;
+  margin: 20px;
 }
 
 .kanbanColumn::-webkit-scrollbar {
@@ -155,13 +160,40 @@
 
 
 /* 칸반 카테고리 별 색상 스타일*/
-.kanbanColumnBacklog{color:#9DDE93;}
-.kanbanColumnBefore{color:#FFB95F;}
-.kanbanColumnInProgress{color:#E676E2;}
-.kanbanColumnDone{color:#F86064;}
+.kanbanColumnBacklog{
+  color:#9DDE93;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.kanbanColumnBefore{
+  color:#FFB95F;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.kanbanColumnInProgress{
+  color:#E676E2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.kanbanColumnDone{
+  color:#F86064;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 
 
-.kanbanColumnOnlyBacklog{color:#9DDE93; text-align: center;}
+.kanbanColumnOnlyBacklog{
+  color:#9DDE93; 
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+}
 
 
 /* 스프린트 및 프로젝트 명 (카드 뒤집기) */
@@ -450,15 +482,15 @@
 
 @keyframes updown {
   0% {
-    transform: translateY(-3%);
+    transform: translateY(-5%);
   }
 
   50% {
-    transform: translateY(-15%);
+    transform: translateY(-25%);
   }
 
   100% {
-    transform: translateY(-3%);
+    transform: translateY(-5%);
   }
 }
 
