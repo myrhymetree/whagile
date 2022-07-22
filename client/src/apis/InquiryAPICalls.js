@@ -1,4 +1,4 @@
-import { FIND_INQUIRIES, INIT_INQUIRIES } from "../modules/InquiriesModule";
+import { FIND_INQUIRIES, MORE_INQUIRIES, INIT_INQUIRIES } from "../modules/InquiriesModule";
 import { REGIST_INQUIRY, FIND_INQUIRY, MODIFY_INQUIRY, REMOVE_INQUIRY } from "../modules/InquiryModule";
 
 /* 1:1 문의 목록 조회 API 호출 */
@@ -31,7 +31,11 @@ export function callGetInquiriesAPI(params) {
             }
         }).then(res => res.json());
 
-        await dispatch({ type: FIND_INQUIRIES,  payload: result.results });
+        if (params.offset > 0) {
+            await dispatch({ type: MORE_INQUIRIES,  payload: result.results });
+        } else {
+            await dispatch({ type: FIND_INQUIRIES,  payload: result.results });
+        }
     };
 }
 

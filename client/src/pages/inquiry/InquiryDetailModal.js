@@ -1,20 +1,25 @@
 import InquiryCSS from './Inquiry.module.css';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { callPutInquiryAPI, callDeleteInquiryAPI } from '../../apis/InquiryAPICalls';
+import { decodeJwt } from '../../utils/tokenUtils';
 
 import { Dialog } from 'primereact/dialog';
 import { ConfirmDialog } from 'primereact/confirmdialog';
 import { InputText } from 'primereact/inputtext';
 import { InputTextarea } from 'primereact/inputtextarea';
 import { Dropdown } from 'primereact/dropdown';
+import { Button } from 'primereact/button';
 
 function InquiryDetailModal({ inquiry }) {
+
+    const loginUser = decodeJwt(window.localStorage.getItem('access_token'));
 
     const dispatch = useDispatch();
 
     const [visible, setVisible] = useState(false);
+    const [editable, setEditable] = useState(false);
 
     /* 1:1 문의 등록 데이터 임시 저장용 state */
     const [title, setTitle] = useState(inquiry.title);
@@ -31,6 +36,16 @@ function InquiryDetailModal({ inquiry }) {
         { label: '결제 및 환불', value: 3 },
         { label: '건의 사항', value: 4 },
     ];
+
+    /* 관리자로 로그인 한 경우, 상세조회 데이터 수정할 수 없도록 한다 */
+    useEffect(
+        () => {
+            if (loginUser.role === 'ROLE_USER') {
+                setEditable(true);
+            }
+        },
+        []
+    );
 
     /* 문의 수정 요청 */
     const editInquiry = async () => {
@@ -102,6 +117,7 @@ function InquiryDetailModal({ inquiry }) {
                             id={ InquiryCSS.inputTitle }
                             value={ title }
                             onChange={ (e) => setTitle(e.target.value) }
+                            readOnly={ !editable }
                             />
                         <label>문의 유형</label>
                         <Dropdown
@@ -112,13 +128,13 @@ function InquiryDetailModal({ inquiry }) {
                             options={ categories }
                             onChange={ (e) => setCategoryCode(e.target.value) }
                             placeholder='문의 유형'
+                            disabled={ !editable }
                         />
                         <label>작성자</label>
                         <InputText
                             id={ InquiryCSS.inputTitle }
                             value={ inquiry.memberName }
                             onChange={ (e) => setContent(e.target.value) }
-
                             readOnly
                         />
                         <label>작성일시</label>
@@ -130,24 +146,34 @@ function InquiryDetailModal({ inquiry }) {
                         <label>내용</label>
                         <InputTextarea
                             id={ InquiryCSS.inputContent }
-                            rows={ 10 }
+                            rows={ 6 }
                             autoResize
                             value={ content }
                             onChange={ (e) => setContent(e.target.value) }
+                            readOnly={ !editable }
                         />
+                        <br/><br/><br/><br/>
                         <label>답변</label>
                             <InputTextarea
                                 id={ InquiryCSS.answer }
-                                rows={ 5 }
+                                rows={ 3 }
                                 autoResize
                                 value={ null }
                                 placeholder='답변이 없습니다.'
-                                readOnly
+                                readOnly={ editable }
                             />
                             <span id={ InquiryCSS.answerInfo }>
                                 2020-20-20 20:20:20 등록됨
                             </span>
-                        <div>
+                            <div id={ InquiryCSS.adminUses }>
+                                <Button 
+                                    id={ InquiryCSS.answerRegistBtn }
+                                    label={ inquiry.answeredYN === 'N'? '답변 등록' : '답변 수정' }
+                                />
+                            </div>
+                        <div
+                            style={{ display: editable ? 'block' : 'none' }}
+                        >
                             <button 
                                 id={ InquiryCSS.createBtn }
                                 onClick={ editInquiry }

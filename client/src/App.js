@@ -32,7 +32,7 @@ import AdminDashboard from './pages/admin/dashboard/AdminDashboard';
 import AdminMember from './pages/admin/member/AdminMember';
 import AdminAuth from './pages/admin/auth/AdminAuth';
 import AdminProduct from './pages/admin/product/AdminProduct';
-import AdminInquery from './pages/admin/inquery/AdminInquery';
+import AdminInquiry from './pages/admin/inquery/AdminInquiry';
 import AdminStatistics from './pages/admin/statistics/AdminStatistics';
 
 // NotFound
@@ -74,7 +74,7 @@ function App() {
           <Route path="member" element={<AdminMember />} />
           <Route path="auth" element={<AdminAuth />} />
           <Route path="product" element={<AdminProduct />} />
-          <Route path="inquery" element={<AdminInquery />} />
+          <Route path="inquery" element={<AdminInquiry />} />
           <Route path="statistics" element={<AdminStatistics />} />
         </Route>
 
