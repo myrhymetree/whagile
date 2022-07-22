@@ -47,7 +47,24 @@
     background-color: #8B6AFF;
 }
 
+#searchBtn {
+    background-color: rgba(255, 255, 255, 0.25);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 10px;
+}
 
+#searchBtn:hover {
+    background-color: #00AA9C;
+}
+
+#readMoreBtn {
+    border: none;
+    padding-top: 5px;
+    background: none;
+    color: #ffcf91;
+}
 
 #searchBar {
     display: flex;
@@ -55,6 +72,11 @@
     align-items: center;
     text-align: center;
     float: right;
+}
+
+#searchBar, 
+#filter {
+    margin-left: 10px;
 }
 
 #tableHeader, 
@@ -153,8 +175,8 @@
 #inputTitle, 
 #inputOption, 
 #inputContent {
-    margin-top: 10px;
-    margin-bottom: 30px;
+    margin-top: 5px;
+    margin-bottom: 20px;
 }
 
 #answer {
@@ -196,4 +218,17 @@
 
 #removeBtn {
     background-color: #F86064;
+}
+
+#adminUses {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+#answerRegistBtn {
+    margin-top: 20px;
+    width: 100px;
+    border: none;
+    color: #fff;
 }
