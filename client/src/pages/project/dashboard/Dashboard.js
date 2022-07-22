@@ -164,22 +164,22 @@ function Dashboard() {
                 icon={ <i className="pi pi-fw pi-chart-pie"></i> }
                 text="대시보드"
             />
-            <div className="flex flex-wrap card-container blue-container" style={{maxWidth: 70 + '%'}}>
-                <div  style={{minWidth: 1000 + 'px', minHeight: 100 + 'px'}}>
+            <div className="flex flex-wrap card-container blue-container" style={{minWidth: 100 + '%'}}>
+                <div style={{minWidth: 70 + '%', minHeight: 100 + 'px'}}>
                     <div className="flex align-items-center justify-content-center bg-black-alpha-10 font-bold text-white m-2 border-round">
                         {/* <label style={{  }}>업무리포트</label> */}
                         { (taskInfo) && <Chart type="doughnut" data={chartData} options={lightOptions} />}    
                     </div>
-                    {/* <div className="flex align-items-center justify-content-center bg-black-alpha-10 font-bold text-white m-2 border-round"> */}
-                        {/* <label style={{ position: 'relative', width: '100%', height: '100%' }}>공지사항</label> */}
-                        {/* { (isNotice) && <div style={{ width: '150%', height: '10%', fontWeight: 'lighter' }} dangerouslySetInnerHTML={ {__html: notice.content } } onClick={ editNotice }></div>}
+                    <div style={{minWidth: 70 + '%', minHeight: 25 + '%', maxHeight: 100 + '%'}} className="flex align-items-center justify-content-center bg-black-alpha-10 font-bold text-white m-2 border-round">
+                        <label style={{ position: 'relative', width: '10%', height: '20%' }}>공지사항</label>
+                        { (isNotice) && <div style={{ width: '150%', height: '10%', fontWeight: 'lighter' }} dangerouslySetInnerHTML={ {__html: notice.content } } onClick={ editNotice }></div>}
                         { (!isNotice) && <Editor style={{ width: '100%', height: '100px' }} value={ text } onTextChange={(e) => setText(e.htmlValue)}  />}
                         { (!isNotice) && <Button onClick={ offNotice }>제출</Button>}
-                    </div> */}
+                    </div>
                 </div>
-                {/* <div className="flex align-items-center justify-content-center bg-black-alpha-10 text-lg text-white m-2 border-round" style={{minWidth: 25 + '%', minHeight: 30 + '%'}} onClick={ editNotice }>
+                <div className="flex align-items-center justify-content-center bg-black-alpha-10 text-lg text-white m-2 border-round" style={{minWidth: 20 + '%', minHeight: 20 + '%'}} onClick={ editNotice }>
                     <ul className="text-2xl m-3" style={{ listStyle: "none" }}>팀원목록 { members.map(member => <li className="text-lg m-2" key={ member.memberCode }><i className="pi pi-fw pi-user"></i> { member.memberName } : { member.authorityName }</li>)}</ul>
-                </div> */}
+                </div>
                 {/* <div className="flex align-items-center justify-content-center bg-blue-500 font-bold text-white m-2 border-round" style={{minWidth: 200 + 'px', minHeight: 100 + 'px'}}>
                     팀원목록
                 </div>
