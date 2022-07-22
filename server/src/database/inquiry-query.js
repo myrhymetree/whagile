@@ -118,3 +118,13 @@ exports.insertInquiryHistory = () => {
         (DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'), ?, ?, ?, ?)
     `;
 }
+
+/* 1:1 문의 답변 등록 여부 변경 요청 SQL */
+exports.updateAnsweredStatus = () => {
+
+    return `
+        UPDATE TBL_INQUIRY A
+           SET A.INQUIRY_ANSWER_YN = ?
+         WHERE A.INQUIRY_CODE = ?
+    `;
+};

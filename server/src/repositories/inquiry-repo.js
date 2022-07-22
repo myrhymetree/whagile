@@ -114,6 +114,23 @@ exports.deleteInquiry = (connection, inquiryCode) => {
     });
 };
 
+/* 1:1 문의 답변 등록 여부 변경 */
+exports.updateAnsweredStatus = (connection, answeredYN, inquiryCode) => {
+
+    return new Promise((resolve, reject) => {
+        connection.query(
+            inquiryQuery.updateAnsweredStatus(),
+            [answeredYN, inquiryCode],
+            (err, results, fields) => {
+                if(err) {
+                    reject(err);
+                }
+                resolve(results);
+            }
+        );
+    });
+};
+
 /* 1:1 문의 히스토리 생성 */
 exports.insertInquiryHistory = (connection, newHistory) => {
 
