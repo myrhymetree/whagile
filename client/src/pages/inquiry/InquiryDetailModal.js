@@ -139,7 +139,7 @@ function InquiryDetailModal({ inquiry }) {
         await dispatch(callPutInquiryCommentAPI({
             inquiryCommentCode: inquiryComment.inquiryCommentCode,
             inquiryCode : inquiryComment.inquiryCode,
-            content: content,
+            content: modifyingComment,
         }));
         await window.location.replace(window.location.href);
     }
