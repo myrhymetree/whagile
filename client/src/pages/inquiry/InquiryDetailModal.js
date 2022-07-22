@@ -1,32 +1,28 @@
 import InquiryCSS from './Inquiry.module.css';
 
-import { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { callGetInquiryDetailAPI } from '../../apis/InquiryAPICalls';
+import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { callPutInquiryAPI, callDeleteInquiryAPI } from '../../apis/InquiryAPICalls';
 
 import { Dialog } from 'primereact/dialog';
+import { ConfirmDialog } from 'primereact/confirmdialog';
 import { InputText } from 'primereact/inputtext';
 import { InputTextarea } from 'primereact/inputtextarea';
 import { Dropdown } from 'primereact/dropdown';
 
-function InquiryDetailModal({ visibleDetail, setVisibleDetail }) {
+function InquiryDetailModal({ inquiry }) {
 
     const dispatch = useDispatch();
-    const inquiry = useSelector(state => state.inquiryReducer);
 
-    useEffect(
-        () => {
-            setTitle(inquiry.title);
-            setContent(inquiry.content);
-            setCategoryCode(inquiry.categoryCode);
-        },
-        []
-    );
+    const [visible, setVisible] = useState(false);
 
     /* 1:1 문의 등록 데이터 임시 저장용 state */
-    const [title, setTitle] = useState('');
-    const [content, setContent] = useState('');
-    const [categoryCode, setCategoryCode] = useState(0);
+    const [title, setTitle] = useState(inquiry.title);
+    const [content, setContent] = useState(inquiry.content);
+    const [categoryCode, setCategoryCode] = useState(inquiry.categoryCode);
+
+    /* 문의 삭제 확인 confirm dialog state */
+    const [visibleConfirmDelete, setVisibleConfirmDelete ] = useState(false);
 
     /* 문의 유형 */
     const categories = [
@@ -37,20 +33,48 @@ function InquiryDetailModal({ visibleDetail, setVisibleDetail }) {
     ];
 
     /* 문의 수정 요청 */
-    const editInquiry = () => {
-        console.log('*********')
+    const editInquiry = async () => {
+        if (inquiry.answeredYN === 'Y') {
+            alert('답변이 완료된 문의글은 수정할 수 없습니다.');
+        } else if (
+            title === inquiry.title &&
+            content === inquiry.content &&
+            categoryCode === inquiry.categoryCode
+        ) {
+            alert('변경된 내용이 없습니다.');
+        } else {
+            const modifiedInquiry = {
+                inquiryCode: inquiry.inquiryCode,
+                title: (title === inquiry.title)? null : title,
+                content: (content === inquiry.content)? null : content,
+                categoryCode: (categoryCode === inquiry.categoryCode)? null : categoryCode
+            }
+
+            await dispatch(callPutInquiryAPI(modifiedInquiry));
+            await window.location.replace(window.location.href);
+        }
     };
 
     /* 문의 삭제 요청 */
     const removeInquiry = () => {
-        /* 답변 완료 상태의 문의글은 삭제할 수 없다. */
+        if (inquiry.answeredYN === 'Y') {
+            alert('답변이 완료된 문의글은 삭제할 수 없습니다.');
+        } else {
+            setVisibleConfirmDelete(true);
+        }
     };
+    
+    const accept = async () => {
+        await dispatch(callDeleteInquiryAPI(inquiry.inquiryCode));
+        await onHide();
+        await window.location.replace(window.location.href);
+    }
+
+    const reject = async () => { setVisibleConfirmDelete(false) }
 
     /* 다이얼로그 닫기 */
     const onHide = () => { 
-        console.log('????????????', inquiry);
-
-        setVisibleDetail(false);
+        setVisible(false);
         /* 임시저장 데이터 초기화 */
         setTitle(inquiry.title);
         setContent(inquiry.content);
@@ -59,9 +83,15 @@ function InquiryDetailModal({ visibleDetail, setVisibleDetail }) {
 
     return (
         <>
+            <button
+                className={ InquiryCSS.inquiryDetail }
+                onClick={ setVisible }    
+            >
+               자세히 
+            </button>
             <Dialog
                 header="문의 내용"
-                visible={ visibleDetail }
+                visible={ visible }
                 style={{ width: '50vw' }}
                 onHide={ onHide }
             >
@@ -78,12 +108,10 @@ function InquiryDetailModal({ visibleDetail, setVisibleDetail }) {
                             id={ InquiryCSS.inputOption }
                             optionLabel='label'
                             optionValue='value'
-                            valueTemplate={ inquiry.categoryName }
                             value={ categoryCode }
                             options={ categories }
                             onChange={ (e) => setCategoryCode(e.target.value) }
                             placeholder='문의 유형'
-                            disabled
                         />
                         <label>작성자</label>
                         <InputText
@@ -102,11 +130,23 @@ function InquiryDetailModal({ visibleDetail, setVisibleDetail }) {
                         <label>내용</label>
                         <InputTextarea
                             id={ InquiryCSS.inputContent }
-                            rows={ 15 }
+                            rows={ 10 }
                             autoResize
                             value={ content }
                             onChange={ (e) => setContent(e.target.value) }
                         />
+                        <label>답변</label>
+                            <InputTextarea
+                                id={ InquiryCSS.answer }
+                                rows={ 5 }
+                                autoResize
+                                value={ null }
+                                placeholder='답변이 없습니다.'
+                                readOnly
+                            />
+                            <span id={ InquiryCSS.answerInfo }>
+                                2020-20-20 20:20:20 등록됨
+                            </span>
                         <div>
                             <button 
                                 id={ InquiryCSS.createBtn }
@@ -131,6 +171,16 @@ function InquiryDetailModal({ visibleDetail, setVisibleDetail }) {
                   : <div>상세 내용이 없습니다.</div>
                 }
             </Dialog>
+            <ConfirmDialog
+                visible={ visibleConfirmDelete } 
+                onHide={ () => setVisibleConfirmDelete(false) } 
+                header='1:1 문의 삭제' 
+                message='문의글을 삭제하시겠습니까?'
+                icon='pi pi-info-circle' 
+                acceptClassName='p-button-danger'
+                accept={async () => await accept()} 
+                reject={async () => await reject()} 
+            />
         </>
     );
 }

@@ -72,7 +72,7 @@ function InquiryCreationModal({ visibleCreation, setVisibleCreation }) {
             >
                 <div id={ InquiryCSS.inquiryDataInput }>
                     <h5>문의하기</h5>
-                    <label id={ InquiryCSS.smallInfo }>*은 필수 입력 사항입니다.</label>
+                    <span id={ InquiryCSS.smallInfo }>*은 필수 입력 사항입니다.</span>
                     <label>제목*</label>
                     <InputText
                         id={ InquiryCSS.inputTitle }

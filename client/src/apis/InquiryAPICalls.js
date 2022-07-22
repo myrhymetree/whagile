@@ -1,5 +1,5 @@
 import { FIND_INQUIRIES, INIT_INQUIRIES } from "../modules/InquiriesModule";
-import { REGIST_INQUIRY, FIND_INQUIRY } from "../modules/InquiryModule";
+import { REGIST_INQUIRY, FIND_INQUIRY, MODIFY_INQUIRY, REMOVE_INQUIRY } from "../modules/InquiryModule";
 
 /* 1:1 문의 목록 조회 API 호출 */
 export function callGetInquiriesAPI(params) {
@@ -67,6 +67,50 @@ export function callGetInquiryDetailAPI(inquiryCode) {
 
         await dispatch({ type: FIND_INQUIRY, payload: result.results[0] });
         console.log('InquiryDetail : ', result.results[0])
+    }
+}
+
+/* 1:1 문의 수정 API 호출 */
+export function callPutInquiryAPI(modifiedInquiry) {
+
+    const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/inquiries`;
+
+    return async function modifyInquiry(dispatch, getState) {
+
+        const result = await fetch(requestURL, {
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Access-Token': window.localStorage.getItem('access_token')
+            },
+            body: JSON.stringify(modifiedInquiry)
+        }).then(res => res.json());
+
+        await dispatch({ type: MODIFY_INQUIRY, payload: result });
+    }
+}
+
+/* 1:1 문의 삭제 API 호출 */
+export function callDeleteInquiryAPI(inquiryCode) {
+
+    const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/inquiries`;
+
+    return async function removeInquiry(dispatch, getState) {
+
+        const result = await fetch(requestURL, {
+            method: 'DELETE',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Access-Token': window.localStorage.getItem('access_token')
+            },
+            body: JSON.stringify({
+                'inquiryCode': inquiryCode
+            })
+        }).then(res => res.json());
+
+        await dispatch({ type: REMOVE_INQUIRY, payload: result });
     }
 }
 

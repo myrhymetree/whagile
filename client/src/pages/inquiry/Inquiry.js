@@ -23,7 +23,6 @@ function Inquiry() {
     const [searchValue, setSearchValue] = useState('');
 
     const [visibleCreation, setVisibleCreation] = useState(false);
-    const [visibleDetail, setVisibleDetail] = useState(false);
 
     /* 1:1문의 등록, 수정, 삭제 확인 메시지 표시 */
     useEffect(
@@ -59,12 +58,6 @@ function Inquiry() {
         dispatch(callGetInquiriesAPI(params));
     }
 
-    /* 문의 내용 상세조회 다이얼로그 표시 */
-    const seeInquiryDetail = (inquiryCode) => {
-        dispatch(callGetInquiryDetailAPI(inquiryCode));
-        setVisibleDetail(true);
-    }
-
     return (
         <>
             <MainHeader/>
@@ -89,12 +82,12 @@ function Inquiry() {
                         필터 
                         <button
                             onClick={ () => getFilteredList('') }
-                            >
+                        >
                             전체
                         </button>
                         <button
                             onClick={ () => getFilteredList('N') }
-                            >
+                        >
                             미답변
                         </button>
                         <button
@@ -110,22 +103,21 @@ function Inquiry() {
                         <div>작성자</div>
                         <div>문의유형</div>
                         <div>답변상태</div>
+                        <div>자세히</div>
                     </div>
                     { 
                         inquiries.length > 0
                         ? inquiries.map(inquiry => 
                             <div key={ inquiry.inquiryCode } className={ InquiryCSS.tableRow }>
                                 <div>{ inquiry.inquiryCode }</div>
-                                <div 
-                                    className={ InquiryCSS.inquiryDetail }
-                                    onClick={ () => seeInquiryDetail(inquiry.inquiryCode) }    
-                                >
-                                    { inquiry.title }
-                                </div>
+                                <div>{ inquiry.title }</div>
                                 <div>{ inquiry.createdDate }</div>
                                 <div>{ inquiry.memberName }</div>
                                 <div>{ inquiry.categoryName }</div>
                                 <div>{ inquiry.answeredYN === 'N'? '미답변' : '답변완료' }</div>
+                                <div>
+                                    <InquiryDetailModal inquiry={ inquiry }/>
+                                </div>
                             </div>
                         ) 
                         : <div id={ InquiryCSS.noInquiry }>등록된 문의 글이 없습니다.</div>
@@ -134,10 +126,6 @@ function Inquiry() {
                 <InquiryCreationModal 
                     visibleCreation={ visibleCreation }
                     setVisibleCreation={ setVisibleCreation }
-                />
-                <InquiryDetailModal
-                    visibleDetail={ visibleDetail }
-                    setVisibleDetail={ setVisibleDetail }
                 />
             </div>
         </>

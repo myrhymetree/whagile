@@ -6,13 +6,13 @@ const initialState = [];
 /* 액션 */
 export const FIND_INQUIRY = 'inquiry/FIND_INQUIRY';
 export const REGIST_INQUIRY = 'inquiry/REGIST_INQUIRY';
-export const UPDATE_INQUIRY = 'inquiry/UPDATE_INQUIRY';
+export const MODIFY_INQUIRY = 'inquiry/MODIFY_INQUIRY';
 export const REMOVE_INQUIRY = 'inquiry/REMOVE_INQUIRY';
 
 const actions = createActions({
     [FIND_INQUIRY]: () => {},
     [REGIST_INQUIRY]: () => {},
-    [UPDATE_INQUIRY]: () => {},
+    [MODIFY_INQUIRY]: () => {},
     [REMOVE_INQUIRY]: () => {},
 });
 
@@ -25,7 +25,7 @@ const inquiryReducer = handleActions(
         [REGIST_INQUIRY]: (state, { payload }) => {
             return payload;
         },
-        [UPDATE_INQUIRY]: (state, { payload }) => {
+        [MODIFY_INQUIRY]: (state, { payload }) => {
             return payload;
         },
         [REMOVE_INQUIRY]: (state, { payload }) => {
