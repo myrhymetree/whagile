@@ -81,6 +81,39 @@ exports.selectInquiry = (connection, inquiryCode) => {
     });
 };
 
+/* 1:1 문의 수정 */
+exports.updateInquiry = (connection, modifiedInquiry) => {
+
+    return new Promise((resolve, reject) => {
+        connection.query(
+            inquiryQuery.updateInquiry(modifiedInquiry),
+            (err, results, fields) => {
+                if(err) {
+                    reject(err);
+                }
+                resolve(results);
+            }
+        );
+    });
+};
+
+/* 1:1 문의 삭제 */
+exports.deleteInquiry = (connection, inquiryCode) => {
+
+    return new Promise((resolve, reject) => {
+        connection.query(
+            inquiryQuery.deleteInquiry(),
+            [inquiryCode],
+            (err, results, fields) => {
+                if(err) {
+                    reject(err);
+                }
+                resolve(results);
+            }
+        );
+    });
+};
+
 /* 1:1 문의 히스토리 생성 */
 exports.insertInquiryHistory = (connection, newHistory) => {
 
@@ -88,7 +121,7 @@ exports.insertInquiryHistory = (connection, newHistory) => {
         connection.query(
             inquiryQuery.insertInquiryHistory(),
             [
-                newHistory.historyContent,   
+                newHistory.historyContent.toString(),   
                 newHistory.contentSnapshot.toString(),
                 newHistory.inquiryCode,
                 newHistory.memberCode

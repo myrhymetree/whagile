@@ -28,7 +28,7 @@ exports.registInquiry = async (req, res, next) => {
             message: '문의 글이 등록되었습니다.',
             results: results
         });
-    } catch(err) {
+    } catch (err) {
         res.status(HttpStatus.BAD_REQUEST).json({
             status: HttpStatus.BAD_REQUEST,
             message: err,
@@ -63,10 +63,7 @@ exports.findInquiries = async (req, res, next) => {
             message: err
         });
     }
-
 };
-
-/* 답변 대기 중인 1:1 문의 수 조회 */
 
 /* 1:1 문의 상세 조회 */
 exports.findInquiryByInquiryCode = async (req, res, next) => {
@@ -90,5 +87,56 @@ exports.findInquiryByInquiryCode = async (req, res, next) => {
 };
 
 /* 1:1 문의 수정 */
+exports.modifyInquiry = async (req, res, next) => {
+
+    const user = getUserInfo(req.get('Access-Token'));
+
+    const modifiedInquiry = {
+        inquiryCode: req.body.inquiryCode,
+        title: req.body.title,
+        content: req.body.content,
+        memberCode: user.usercode,
+        categoryCode: req.body.categoryCode
+    }
+
+    const results = await InquiryService.modifyInquiry(modifiedInquiry);
+
+    try {
+        res.status(HttpStatus.OK).json({
+            status: HttpStatus.OK,
+            message: '문의 글이 수정되었습니다.',
+            results: results
+        });
+    } catch (err) {
+        res.status(HttpStatus.BAD_REQUEST).json({
+            status: HttpStatus.BAD_REQUEST,
+            message: err,
+        });
+    }
+};
 
 /* 1:1 문의 삭제 */
+exports.removeInquiry = async (req, res, next) => {
+
+    const user = getUserInfo(req.get('Access-Token'));
+
+    const params = {
+        inquiryCode: req.body.inquiryCode,
+        memberCode: user.usercode
+    }
+
+    const results = await InquiryService.removeInquiry(params);
+
+    try {
+        res.status(HttpStatus.OK).json({
+            status: HttpStatus.OK,
+            message: '문의 삭제가 완료되었습니다.',
+            results: results
+        });
+    } catch (err) {
+        res.status(HttpStatus.BAD_REQUEST).json({
+            status: HttpStatus.BAD_REQUEST,
+            message: err
+        });
+    }
+};

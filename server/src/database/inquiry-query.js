@@ -71,6 +71,43 @@ exports.selectInquiry = () => {
     `;
 };
 
+/* 1:1 문의 수정 요청 SQL */
+exports.updateInquiry = (modifiedInquiry) => {
+    
+    let query = `
+        UPDATE TBL_INQUIRY A
+           SET
+    `;
+    if (modifiedInquiry.title) {
+        query += `
+         A.INQUIRY_TITLE = '${ modifiedInquiry.title }',`;
+        }
+    if (modifiedInquiry.content) {
+        query += `
+         A.INQUIRY_CONTENT = '${ modifiedInquiry.content }',`;
+    }
+    if (typeof(modifiedInquiry.categoryCode) == 'number') {
+        query += `
+         A.INQUIRY_CATEGORY_CODE = '${ modifiedInquiry.categoryCode }',`;
+    }
+    query = query.slice(0, -1);
+    query += `
+     WHERE A.INQUIRY_CODE = ${ modifiedInquiry.inquiryCode }
+    `;
+
+    return query;
+}
+
+/* 1:1 문의 삭제상태 변경 요청 SQL */
+exports.deleteInquiry = () => {
+
+    return `
+        UPDATE TBL_INQUIRY A
+           SET A.INQUIRY_DELETED_YN = 'Y'
+         WHERE A.INQUIRY_CODE = ?
+    `;
+};
+
 /* 1:1 문의히스토리 행 삽입 요청 SQL */
 exports.insertInquiryHistory = () => {
 
