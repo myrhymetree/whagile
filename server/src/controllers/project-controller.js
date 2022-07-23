@@ -65,13 +65,10 @@ console.log('이메일 들어오나?',req.body);
 
 exports.modifyProject = async (req, res, next) => {
     await ProjectService.modifyProject(req.body)
-        .then((result) => {
+        .then(() => {
 
-            res.status(HttpStatus.OK).json({
-                status: HttpStatus.OK,
-                message: 'successfully updatedProject!!',
-                results: result
-            });
+            res.redirect(`http://${process.env.REACT_APP_RESTAPI_IP}:3000/`);
+            
         }).catch((err) => {
             
             res.status(HttpStatus.BAD_REQUEST).json({
@@ -144,7 +141,7 @@ exports.registProjectMember = async (req, res, next) => {
 
     await ProjectService.registProjectMember(req.params)
         .then(() => {
-            res.redirect('http://localhost:3000/');
+            res.redirect(`http://${process.env.REACT_APP_RESTAPI_IP}:3000/`);
 
         }).catch((err) => {
 
