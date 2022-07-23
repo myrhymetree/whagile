@@ -144,7 +144,7 @@ exports.registProjectMember = async (req, res, next) => {
 
     await ProjectService.registProjectMember(req.params)
         .then(() => {
-            res.redirect('http://localhost:3000/');
+            res.redirect(`http://${process.env.REACT_APP_RESTAPI_IP}/`);
 
         }).catch((err) => {
 
@@ -198,7 +198,7 @@ exports.signUpProjectMember = async (req, res, next) => {
             // res.redirect('http://whagile.shop:3000/login');
             res.status(HttpStatus.OK).json({
                 status: HttpStatus.OK,
-                message: 'successfully register Account!!',
+                message: 'successfully regist Account!!',
                 results: result
             });
         }).catch((err) => {
