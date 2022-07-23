@@ -1,11 +1,25 @@
 /* 칸반 스타일 */
 
+.emptyOngoingSprint {
+  width: 96%;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+
+}
 
 .kanbanContainer{
   width: 96%;
   display: flex;
   flex-direction: row;
   margin: 10px;
+}
+
+.columnTitle {
+  display: flex;
+  margin: 0 25px;
 }
 
 .kanbanColumn {
@@ -20,7 +34,7 @@
   -ms-overflow-style: none;
   scrollbar-width: none;
   overflow-y: auto; 
-  margin: 50px;
+  margin: 20px;
 }
 
 .kanbanColumn::-webkit-scrollbar {
@@ -35,11 +49,6 @@
     background-color:#8B6AFF;
     border-radius: 10px;  
 }
-
-
-
-
-
 
 
 .kanbanColumn {
@@ -71,13 +80,17 @@
   border: 0px solid;
   border-radius: 20px;
   border-left-width: 8px;
-  font-size: 14px;
+  font-size: 12.5px;
   display: flex;
   align-items: center;
   justify-content: center;
   margin: 11px 7px 11px 7px;
+  white-space: nowrap;
 }
 
+ .kanbanBox:hover {
+  transform: scale(1.05);
+ }
 
 
 
@@ -94,21 +107,31 @@
   height: 30px;
 }
 
+.kanbanBoxAddButton:hover {
+  transform: scale(1.15);
+ }
+
 
 .kanbanBoxDeleteButton {
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
+  margin-left: auto;
   color: #fff;
   font-weight: bold;
   background-color:#F86064;
   border-radius: 5px;
   border: none;
-  width: 100%;
-  height: 10px;
+  width: 28%;
+  height: 15px;
   padding: 10px;
+  margin-right: 10px;
 }
+
+.kanbanBoxDeleteButton:hover {
+  transform: scale(1.05);
+ }
 
 
 
@@ -117,6 +140,11 @@
   font-size: 15px;
   margin:10px;
 }
+
+.kanbanEditAndDetailButton:hover {
+  transform: scale(1.3);
+ }
+
 
 .kanbanNewTaskButtonDiv{
   display: flex;
@@ -132,12 +160,87 @@
 
 
 /* 칸반 카테고리 별 색상 스타일*/
-.kanbanColumnBacklog{color:#00aa9c;}
-.kanbanColumnBefore{color:#FFB95F;}
-.kanbanColumnInProgress{color:#E676E2;}
-.kanbanColumnDone{color:#F86064;}
+.kanbanColumnBacklog{
+  color:#9DDE93;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.kanbanColumnBefore{
+  color:#FFB95F;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.kanbanColumnInProgress{
+  color:#E676E2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.kanbanColumnDone{
+  color:#F86064;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 
 
+.kanbanColumnOnlyBacklog{
+  color:#9DDE93; 
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+}
+
+
+/* 스프린트 및 프로젝트 명 (카드 뒤집기) */
+
+.kanbanSprintName{
+  display: flex; 
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  background-color: #282936;
+  width: 300px;
+  height: 350px;
+  border-radius: 10px;
+  padding: 40px;
+  padding-top: 100px;
+  margin-top: 110px;
+  margin-right: 20px;
+}
+
+.kanbanSprintNameCard {
+  width: 100%; 
+  height: 100%; 
+  position: relative;
+  transition: 1s;
+  transform-style: preserve-3d;
+}	
+
+.kanbanSprintNameFront, .kanbanSprintNameBack {
+  position: absolute;
+  width: 100%; 
+  height: 100%;
+  backface-visibility: hidden;
+}
+
+.kanbanSprintNameFront{
+  color: #FFB95F;
+}
+
+.kanbanSprintNameBack { 
+  color: #9DDE93;
+  transform: rotateY(180deg);
+}
+
+.kanbanSprintName:hover .kanbanSprintNameCard {
+  transform: rotateY(180deg);
+}
 
 /* 칸반 모달 스타일 */
 
@@ -283,9 +386,15 @@
   border: none;
   border-radius: 10px;
   width: 100px;
-  height: 30px;
+  height: 20px;
   background-color: #696a71;
 }
+
+
+.cancelButton:hover {
+  transform: scale(1.1);
+ }
+
 
 .saveButton {
   margin: 10px;
@@ -293,9 +402,14 @@
   border: none;
   border-radius: 10px;
   width: 100px;
-  height: 30px;
+  height: 20px;
   background-color: #00aa9c;
 }
+
+.saveButton:hover {
+  transform: scale(1.1);
+ }
+
 
 .kanbanDetailButton{
   display: flex;
@@ -303,3 +417,91 @@
   align-items: right;
   
 }
+
+
+/* 댓글 스타일 */
+
+.kanbanCommentBox{
+  width: 90%;
+  height: 250px;
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  overflow-y: auto; 
+}
+
+
+.kanbanCommentBox::-webkit-scrollbar {
+  /* display: none; */
+  width:3px;
+}
+
+
+/* 스크롤바 막대 설정*/
+.kanbanCommentBox::-webkit-scrollbar-thumb{
+    height: 15%;
+    background-color:#8B6AFF;
+    border-radius: 10px;  
+}
+
+
+.kanbanComment{
+  background: #333544;
+  padding: 10px;
+  width: 95%;
+  height: 2000px;
+  border-radius: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+  margin: 0 auto;
+}
+
+
+.kanbanColumnNoSprint {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+
+.kanbanColumnNoSprint h1{ margin:10; color:#fff; }
+.kanbanColumnNoSprint h2{ margin:10; color:#9DDE93; }
+
+
+.kanbanColumnLogo{
+  font-family: sans-serif;
+  text-align: center;
+  animation: updown 6s ease infinite;
+  margin: 10px;
+  color:#00aa9c;
+}
+
+@keyframes updown {
+  0% {
+    transform: translateY(-5%);
+  }
+
+  50% {
+    transform: translateY(-25%);
+  }
+
+  100% {
+    transform: translateY(-5%);
+  }
+}
+
+.kanbanColumnNoSprintBtn{
+  background:#00aa9c;
+  color:#fff;
+	border:none;
+	padding:20px;
+	border-radius:5px;
+	font-size:13pt;
+  margin: 10px;
+}
+
+.kanbanColumnNoSprintBtn:hover{ background:#9DDE93; }

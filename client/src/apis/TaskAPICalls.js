@@ -3,30 +3,33 @@ import { GET_TASK } from "../modules/TaskModule";
 import { PUT_TASK } from "../modules/TaskModule";
 import { POST_TASK } from "../modules/TaskModule";
 import { DELETE_TASK } from "../modules/TaskModule";
+import { GET_SPRINT } from "../modules/TasksSprintModule";
 
 
 //전체 일감 목록 조회 API
-function callGetTasksAPI(projectCode) {
+export function callGetTasksAPI(projectCode) {
 
-  const requestURL = `http://localhost:8888/api/tasks?projectcode=${projectCode}`;
+  const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/tasks?projectCode=${projectCode}&backlogCategory=백로그`;
+  const requestURL2 = `http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/tasks/onTask?projectCode=${projectCode};`;
 
   return async function getTasks(dispatch, getState) {
-    const result = await fetch(requestURL).then((res) => res.json());
+    const backlogs = await fetch(requestURL).then((res) => res.json());
+    const tasks = await fetch(requestURL2).then((res) => res.json());
 
-    dispatch({ type: GET_TASKS, payload: result.results });
+    // console.log('backlogs', backlogs)
+    // console.log('tasks', tasks)
+    // console.log('backlogs&tasks', backlogs.results.concat(tasks.results))
+
+    dispatch({ type: GET_TASKS, payload: backlogs.results.concat(tasks.results) });
   };
 }
-export default callGetTasksAPI;
-
-
-
 
 
 // 개별 일감 조회 API
 export const callGetTaskAPI = (taskCode) => {
-  console.log(taskCode);
-  let requestURL = `http://localhost:8888/api/tasks/${taskCode}`;
-  console.log("requestURL:", requestURL);
+  // console.log(taskCode);
+  let requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/tasks/${taskCode}`;
+  // console.log("requestURL:", requestURL);
   return async (dispatch, getState) => {
     const result = await fetch(requestURL).then((res) => res.json());
 
@@ -44,9 +47,10 @@ export const callPutTaskAPI = (
   urgency,
   memberName,
   issue,
-  backlogChargerCode
+  backlogChargerCode,
+  projectCode,
 ) => {
-  let requestURL = `http://localhost:8888/api/tasks/${taskCode}`;
+  let requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/tasks/${taskCode}`;
 
   return async (dispatch, getState) => {
     const result = await fetch(requestURL, {
@@ -63,7 +67,8 @@ export const callPutTaskAPI = (
         urgency: urgency,
         memberName: memberName,
         issue: issue,
-        backlogChargerCode: Number(backlogChargerCode)
+        backlogChargerCode: Number(backlogChargerCode),
+        projectCode: Number(projectCode)
       }),
     }).then((res) => res.json());
 
@@ -79,8 +84,8 @@ export const callPutTaskAPI = (
 
 // 개별 일감 생성 API
 export const callPostTaskAPI = (paramTask) => {
-  let requestURL = `http://localhost:8888/api/tasks`;
-  console.log(requestURL);
+  let requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/tasks`;
+  
   return async (dispatch, getState) => {
     const result = await fetch(requestURL, {
       method: "POST",
@@ -107,7 +112,7 @@ export const callPostTaskAPI = (paramTask) => {
 
 // 개별 일감 삭제
 export function callDeleteTaskAPI(taskCode, projectCode, category) {
-  const requestURL = "http://localhost:8888/api/tasks";
+  const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/tasks`;
 
   return async function removeTask(dispatch, getState) {
     const result = await fetch(requestURL, {
@@ -125,5 +130,20 @@ export function callDeleteTaskAPI(taskCode, projectCode, category) {
     }).then((res) => res.json());
 
     await dispatch({ type: DELETE_TASK, payload: result.results });
+  };
+}
+
+export function callGetTasksSprintAPI(projectCode) {
+
+  const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/tasks/sprint?projectCode=${projectCode}`;
+
+  return async function getTasks(dispatch, getState) {
+
+    const result = await fetch(requestURL).then((res) => res.json());
+    if (result.results.length !== 0){
+      dispatch({ type: GET_SPRINT, payload: result.results[0] });
+    } else {
+      dispatch({ type: GET_SPRINT, payload: {} });
+    }
   };
 }

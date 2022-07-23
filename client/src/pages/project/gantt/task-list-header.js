@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { callGetBacklogsAPI } from '../../../apis/SprintAPICalls';
+import { SET_COLLAPSED_ALL_SPRINTS } from "../../../modules/SprintsModule";
 
 export const TaskListHeaderDefault = ({ headerHeight, fontFamily, fontSize, rowWidth, isChecked }) => {
 
@@ -12,6 +13,14 @@ export const TaskListHeaderDefault = ({ headerHeight, fontFamily, fontSize, rowW
 	const counts = useSelector(state => state.sprintsCountReducer);
 	const { projectCode } = useParams();
 	const dispatch = useDispatch();
+
+	const collapseGantt = () => {
+
+		dispatch({ 
+            type: SET_COLLAPSED_ALL_SPRINTS,
+			payload: sprints
+		});
+	}
 
 	useEffect(
 		() => {
@@ -31,10 +40,11 @@ export const TaskListHeaderDefault = ({ headerHeight, fontFamily, fontSize, rowW
 				fontFamily: fontFamily,
 				fontSize: fontSize,
 				minWidth: '360px',
-				height: '44px',
+				height: '36px',
 				border: '1px solid grey',
 				backgroundColor: '#282936',
 			}}
+			onClick={collapseGantt}
 		>
 			<div
 				className={styles.ganttTable_Header}
@@ -48,20 +58,11 @@ export const TaskListHeaderDefault = ({ headerHeight, fontFamily, fontSize, rowW
 						minWidth: rowWidth,
 					}}
 				>
-					<div className={styles.cells}>
+					<div className={styles.cells} title="일감 목록 접기">
 
-						<i className="pi pi-folder" style={{marginRight: '5px'}}/>
-						{/* 스프린트 · {sprints.filter(sprint => sprint.type === 'project').length} / */}
-						스프린트 · {counts.sprintsCount} /
-						
-						<i className="pi pi-file" style={{margin: '0 5px'}}/>
-						{/* 일감 · {sprints.filter(sprint => sprint.type === 'task').length} / */}
-						일감 · {counts.tasksCount} /
-
-						<i className="pi pi-file-excel" style={{margin: '0 5px'}}/>
-						{/* 백로그 · {backlogs.length} */}
-						백로그 · {counts.backlogsCount}
-
+						<i className="pi pi-list" style={{margin: '0 10px 0 20px'}}/>
+						<span>스프린트</span>
+						<span style={{fontSize: '12px', marginLeft: '10px'}}>[{counts.sprintsCount}]</span>
 					</div>
 				</div>
 			</div>

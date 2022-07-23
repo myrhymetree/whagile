@@ -61,7 +61,7 @@ exports.insertComment = (connection, newComment) => {
 
         const query = connection.query(
             backlogCommentQuery.insertComment(),
-            [newComment.content, newComment.createdDate, newComment.backlogCode, 
+            [newComment.content, newComment.backlogCode, 
              newComment.projectCode, newComment.memberCode],
             (err, result, fields) => {
 
@@ -84,7 +84,7 @@ exports.updateComment = (connection, modifyingContent) => {
 
         const query = connection.query(
             backlogCommentQuery.updateComment(),
-            [modifyingContent.content, modifyingContent.modifiedDate, modifyingContent.backlogCommentCode],
+            [modifyingContent.content, modifyingContent.backlogCommentCode],
             (err, result, fields) => {
 
                 if(err) {

@@ -8,6 +8,7 @@ import { Toast } from 'primereact/toast';
 import { Password } from 'primereact/password';
 import { useNavigate, NavLink } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
+import CryptoJS from 'react-native-crypto-js';
 import MainHeader from '../../components/commons/MainHeader';
 
 import { 
@@ -39,6 +40,8 @@ function Profile() {
     const [memberInfoClick, setMemberInfoClick] = useState(false);
     const [passwordFormClick, setPasswordFormClick] = useState(false);
     const [emailFormClick, setEmailFormClick] = useState(false);
+
+    const secretKey = process.env.REACT_APP_KEY;
 
     const member = useSelector(state => state.memberReducer);
     const dispatch = useDispatch();
@@ -192,11 +195,16 @@ function Profile() {
         
         setPasswordFormClick(true);
         console.log('pass');
+        const originPasswordEncrypted = CryptoJS.AES.encrypt(originPassword , secretKey).toString();
+        const passwordEncrypted = CryptoJS.AES.encrypt(password , secretKey).toString();
+
+        console.log('origin', originPasswordEncrypted);
+        console.log('password', passwordEncrypted);
 
         const pwdUpdateData = {
             memberCode: decoded.code,
-            originPassword: originPassword,
-            password: password
+            originPassword: originPasswordEncrypted,
+            password: passwordEncrypted
         };
 
         console.log(pwdUpdateData);

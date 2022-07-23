@@ -5,7 +5,7 @@ const ProjectNoticeDTO = require('../dto/project/project-notice-response-dto');
 
 exports.selectProjects = (connection, params) => {
     return new Promise((resolve, reject) => {
-        console.log('repo',params);
+        // console.log('repo',params);
         connection.query(projectQuery.selectProjects(params), 
         (err, results, fields) => {
 
@@ -19,7 +19,7 @@ exports.selectProjects = (connection, params) => {
                 project.push(new ProjectDTO(results[i]));
             }
 
-            console.log('project', project);
+            // console.log('project', project);
 
             resolve(project);
         });

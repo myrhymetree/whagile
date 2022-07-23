@@ -122,13 +122,33 @@ exports.deleteSprint = async (req, res, next) => {
 }
 
 exports.viewSprintsCount = async (req, res, next) => {
-    console.log('viewSprintsCount...', req.query);
+    console.log('viewSprintsCount...');
     await SprintService.viewSprintsCount(req.query)
     .then((results) => {
 
         res.status(HttpStatus.OK).json({ 
             status: HttpStatus.OK,
             message: 'successfully view sprints count',
+            results: results
+        })
+    })
+    .catch((err) =>{
+
+        res.status(HttpStatus.BAD_REQUEST).json({
+            status: HttpStatus.BAD_REQUEST,
+            message: err
+        });
+    });
+}
+
+exports.editSprintProgress = async (req, res, next) => {
+    console.log('editSprintProgress...');
+    await SprintService.editSprintProgress(req.body)
+    .then((results) => {
+
+        res.status(HttpStatus.OK).json({ 
+            status: HttpStatus.OK,
+            message: 'successfully edit sprint progress',
             results: results
         })
     })

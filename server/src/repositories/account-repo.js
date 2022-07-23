@@ -1,5 +1,6 @@
 const accountQuery = require('../database/account-query');
 const MemberDTO = require('../dto/account/account-response-dto');
+const MemberHistoryDTO = require('../dto/account/accountHistory-response-dto');
 
 exports.searchAccounts = (connection, searchInfo) => {
 
@@ -20,6 +21,28 @@ exports.searchAccounts = (connection, searchInfo) => {
 
 
             resolve(member);
+        });
+    });
+}
+
+exports.selectMemberHistoryWithMemberCode = (connection, memberCode) => {
+
+    return new Promise((resolve, reject) => {
+        connection.query(accountQuery.selectMemberHistoryWithMemberCode(memberCode), 
+        (err, results, fields) => {
+            if(err) {
+                console.log(err);
+                reject(err);
+            }
+            const memberHistory = [];
+            for(let i = 0; i < results.length; i++) {
+                memberHistory.push(new MemberHistoryDTO(results[i]));
+            }
+
+            console.log('history', memberHistory);
+
+
+            resolve(memberHistory);
         });
     });
 }
@@ -254,5 +277,22 @@ exports.updatePwd = (connection, tempInfo) => {
                 resolve(results);
             });
     });
-    
+
+};
+
+exports.insertAccountHistory = (connection, memberCode) => {
+    console.log('insertAccountHistory', memberCode);
+
+    return new Promise((resolve, reject) => {
+
+        connection.query(accountQuery.insertHistory(), 
+        [memberCode],        
+        (err, results, fields) => {                
+            if(err) {
+                console.log(err);
+                reject(err);
+            }
+            resolve(results);
+        });
+    });
 };

@@ -82,8 +82,8 @@ function AdminAuth() {
             severity: 'success', 
             summary: `검색완료`, 
             detail: value
-            ? `${selectCondition.find(x => x.value === condition).label}에 '${value}'을(를) 포함한 검색결과입니다.`
-                    : `모든 권한을 조회합니다.`, 
+                ? `${selectCondition.find(x => x.value === condition).label}에 '${value}'을(를) 포함한 검색결과입니다.`
+                : `모든 권한을 조회합니다.`, 
             life: 3000
         });
     };
@@ -338,7 +338,7 @@ function AdminAuth() {
                     <Column field="authorityActivatedYn" header="활성화 여부" body={activatedStyle} sortable></Column>
                 </DataTable>
             </div>
-            
+                
             {/* 권한 등록/수정 모달창 */}
             <Dialog 
                 visible={dialogShow} 
@@ -497,46 +497,6 @@ function AdminAuth() {
                 reject={() => setAlertVisible(false)} 
             />
             
-            {/* 테스트창 auth/authorder/snapshotAuth/snapshotOrder */}
-            {/* <div style={{display: 'flex', flexDirection: 'row'}}>
-                <div
-                    style={{width: '20vw', height: '200px', backgroundColor: 'coral', padding: '10px', color: 'black'}}
-                >
-                    <ul>
-                        <li>{auth.authorityCode}</li>
-                        <li>{auth.authorityName}</li>
-                        <li>{auth.authorityExposureOrder}</li>
-                        <li>{auth.authorityActivatedYn}</li>
-                        <li>{auth.authorityDescription}</li>
-                    </ul>
-            
-                </div>
-                <div 
-                    style={{width: '20vw', height: '200px', backgroundColor: 'lightgreen', padding: '10px', color: 'black'}}
-                >
-                    <ul>
-                        {authOrder.map((item, index) => <li key={index}>{item.authorityCode}</li>)}
-                    </ul>
-                </div>
-                <div 
-                    style={{width: '20vw', height: '200px', backgroundColor: 'lightyellow', padding: '10px', color: 'black'}}
-                >
-                    <ul>
-                        <li>{snapshotAuth.authorityCode}</li>
-                        <li>{snapshotAuth.authorityName}</li>
-                        <li>{snapshotAuth.authorityExposureOrder}</li>
-                        <li>{snapshotAuth.authorityActivatedYn}</li>
-                        <li>{snapshotAuth.authorityDescription}</li>
-                    </ul>
-                </div>
-                <div 
-                    style={{width: '20vw', height: '200px', backgroundColor: 'skyblue', padding: '10px', color: 'black'}}
-                >
-                    <ul>
-                        {snapshotOrder.map((item, index) => <li key={index}>{item.authorityCode}</li>)}
-                    </ul>
-                </div>
-            </div> */}
         </section>
     );
 }

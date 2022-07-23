@@ -1,6 +1,8 @@
 const HttpStatus = require('http-status');
 const AccountService = require('../services/account-service');
 const AccountUtils = require('../util/account-utils');
+require('dotenv').config();
+const { REACT_APP_RESTAPI_IP } = process.env;
 
 exports.updateAccount = async (req, res, next) => {
     console.log('updateAccount');
@@ -156,7 +158,7 @@ exports.emailAuth = async (req, res, next) => {
 
     await AccountService.emailAuthWithToken(req.query)
     .then((result) => {
-        res.redirect('http://localhost:3000/');
+        res.redirect(`http://localhost:3000/`);
     })
     .catch((err) =>{
         console.log(err);
@@ -284,4 +286,29 @@ exports.updatePwd = async (req, res, next) => {
                 message: err
             });
         });   
+}
+
+exports.memberHistory = async (req, res, next) => {
+
+    console.log(req.params);
+
+    const memberCode = req.params.membercode;
+
+    await AccountService.getMemberHistory(memberCode)
+        .then((resData) => {
+            console.log(resData);
+            res.status(HttpStatus.OK).json({
+                status: HttpStatus.OK,
+                message: 'successfully History!!',
+                result: resData
+            });
+
+        })
+        .catch((err) =>{
+            res.status(HttpStatus.BAD_REQUEST).json({
+                status: HttpStatus.BAD_REQUEST,
+                message: err
+            });
+
+        });
 }

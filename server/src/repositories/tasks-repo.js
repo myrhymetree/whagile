@@ -4,26 +4,22 @@ const TasksHistoryDTO = require("../dto/tasks/tasks-history-response-dto");
 
 
 //전체 일감 목록 조회
-exports.selectTasks = (connection, projectCode) => {
+exports.selectTasks = (connection, params) => {
   return new Promise((resolve, reject) => {
     const query = connection.query(
-      tasksQuery.selectTasks(),[projectCode],
+      tasksQuery.selectTasks(params),
       (err, results, fields) => {
         if (err) {
           reject(err);
-          console.log("selectTasks error: ", err);
         }
 
         const tasks = [];
         for (let i = 0; i < results.length; i++) {
           tasks.push(new TasksDTO(results[i]));
         }
-
         resolve(tasks);
       }
     );
-
-    // console.log(query.sql);
   });
 };
 
@@ -53,7 +49,7 @@ exports.selectTaskbyTaskCode = (connection, taskCode) => {
 exports.insertNewTask = (connection, params) => {
 
     return new Promise((resolve, reject) => {
-      console.log(params);
+      
         connection.query(
           tasksQuery.insertNewTask(),
           [
@@ -70,7 +66,6 @@ exports.insertNewTask = (connection, params) => {
           ],
           (err, results, fields) => {
             if (err) {
-              console.log(err);
               reject(err);
             }
             resolve(results);
@@ -84,9 +79,9 @@ exports.insertNewTask = (connection, params) => {
 // 개별 일감 수정
 exports.updateTask = (connection, params) => {
   return new Promise((resolve, reject) => {
-    console.log("as", params)
+    
     connection.query(
-      tasksQuery.updateTask(),
+      tasksQuery.updateTask(params),
       [
         params.backlogTitle,
         params.backlogDescription,
@@ -147,17 +142,17 @@ exports.removeTask = (connection, taskCode) => {
 };
 
 
-
 // 일감(백로그) 히스토리 생성
 exports.insertTaskHistory = (connection, params) => {
+  // console.log("params",params)
+  // console.log("memberCode", params.backlogCreatorCode);
   return new Promise((resolve, reject) => {
     connection.query(
       tasksQuery.insertTaskHistory(),
       [
-        params.historyItem,
+        params.historyItem.toString(),
         params.historyContent,
-        params.historyDate,
-        params.backlogCode,
+        params.taskCode,
         params.projectCode,
         params.memberCode,
       ],
@@ -173,8 +168,35 @@ exports.insertTaskHistory = (connection, params) => {
 };
 
 
+
+// 전체 일감 (백로그) 히스토리 조회
+exports.selectTaskHistories = (connection, params) => {
+
+    return new Promise((resolve, reject) => {
+
+        const query = connection.query(
+          tasksQuery.selectTaskHistories(),
+          (err, results, fields) => {
+            if (err) {
+              reject(err);
+            }
+
+            const tasksHistories = [];
+            for (let i = 0; i < results.length; i++) {
+              tasksHistories.push(new TasksHistoryDTO(results[i]));
+            }
+
+            resolve(tasksHistories);
+          }
+        );
+        
+    });
+};
+
+
 // 개별 일감(백로그) 히스토리 조회
 exports.selectTaskHistorybyHistoryCode = (connection, historyCode) => {
+  // console.log("historyCode", historyCode);
   return new Promise((resolve, reject) => {
     connection.query(
       tasksQuery.selectTaskHistorybyHistoryCode(),
@@ -191,27 +213,26 @@ exports.selectTaskHistorybyHistoryCode = (connection, historyCode) => {
 };
 
 
-// 일감 (백로그) 히스토리 조회
-exports.selectTaskHistories = (connection, params) => {
 
-    return new Promise((resolve, reject) => {
+// 일감 시작일, 종료일만 수정
+exports.updateTaskDate = (connection, params) => {
 
-        const query = connection.query(
-          tasksQuery.selectTaskHistories(),
-          [params.offset, params.limit],
-          (err, results, fields) => {
-            if (err) {
-              reject(err);
-            }
+  return new Promise((resolve, reject) => {
 
-            const tasksHistories = [];
-            for (let i = 0; i < results.length; i++) {
-              tasksHistories.push(new TasksHistoryDTO(results[i]));
-            }
+    connection.query(
+      tasksQuery.updateTaskDate(),
+      [
+        params.taskStartDate
+        , params.taskEndDate
+        , params.taskCode
+      ],
+      (err, results, fields) => {
+        if (err) {
+          reject(err);
+        }
 
-            resolve(tasksHistories);
-          }
-        );
-        console.log(query.sql);
-    });
-};
+        resolve(results);
+      }
+    );
+  });
+}

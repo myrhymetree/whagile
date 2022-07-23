@@ -16,9 +16,17 @@ import { TooltipContentDefault } from './tooltip';
 // import { initTasks, getStartEndDateForProject } from './helpers';
 
 // apis, modules
-import { callGetSprintsAPI, callGetSprintAPI, callPostSprintAPI, callPutSprintAPI, callDeleteSprintAPI, callGetTaskAPI, callUpdateTaskAPI } from '../../../apis/SprintAPICalls';
+import { callGetSprintsAPI
+	, callGetSprintAPI
+	, callPostSprintAPI
+	, callPutSprintAPI
+	, callDeleteSprintAPI
+	, callGetTaskAPI
+	, callUpdateTaskAPI 
+	, callUpdateTaskForGanttAPI
+	, callUpdateSprintProgressAPI } from '../../../apis/SprintAPICalls';
 import { callGetProjectMemberAPI } from '../../../apis/ProjectAPICalls';
-import { SET_COLLAPSED_SPRINTS, UPDATE_TASKS_GANTT } from "../../../modules/SprintsModule";
+import { SET_COLLAPSED_SPRINTS } from "../../../modules/SprintsModule";
 import { SET_SPRINT, INIT_SPRINT } from "../../../modules/SprintModule";
 
 // primereact
@@ -38,13 +46,13 @@ function GanttChart() {
 
 	const [view, setView] = useState(ViewMode.Day);
 	const [isChecked, setIsChecked] = useState(true);
-	let columnWidth = 60;
+	let columnWidth = 48;
 	if (view === ViewMode.Month) {
-	  	columnWidth = 300;
+	  	columnWidth = 150;
 	} else if (view === ViewMode.Week) {
-	  	columnWidth = 250;
+	  	columnWidth = 120;
 	}
-	
+
 	const sprints = useSelector(state => state.sprintsReducer);
 	const counts = useSelector(state => state.sprintsCountReducer);
 	const sprint = useSelector(state => state.sprintReducer);
@@ -56,7 +64,9 @@ function GanttChart() {
 	const [dialogShow, setDialogShow] = useState(false); // 모달창 ON/OFF
 	const [dialogMode, setDialogMode] = useState('');   // 모달창 스프린트 생성/수정인지(insert, update)
 	const [dialogTaskMode, setDialogTaskMode] = useState('');   // 모달창 스프린트 생성/수정인지(insert, update)
-	const [alertVisible, setAlertVisible] = useState(false); // 스프린트 삭제 alert창 ON/OFF
+	const [alertShowDeleteSprint, setAlertShowDeleteSprint] = useState(false); // 스프린트 삭제 alert창 ON/OFF
+	const [alertShowStopSprint, setAlertShowStopSprint] = useState(false); // 스프린트 완료하기 alert창 ON/OFF
+	const [alertShowStartSprint, setAlertShowStartSprint] = useState(false); // 스프린트 시작하기 alert창 ON/OFF
 	const [tasksShow, setTasksShow] = useState(false);
 	const [taskShow, setTaskShow] = useState(false);
 	const [tasks, setTasks] = useState([]); // api에서 불러온 일감 목록
@@ -74,6 +84,7 @@ function GanttChart() {
 		backlogUrgency: '보통',
 		backlogIssue: 0,
 		backlogChargerCode: '',
+		backlogCode: '',
 	});
 	const [currentLimit, setCurrentLimit] = useState(10); // 간트차트에 보여줄 sprints 개수
 
@@ -89,7 +100,7 @@ function GanttChart() {
 		],
 	};
 
-	useEffect(
+	useEffect( // 간트차트 페이지 최초 로드 시
 		() => {
 			dispatch(callGetSprintsAPI({ // 스프린트 목록 조회
 				projectCode: projectCode,
@@ -140,7 +151,7 @@ function GanttChart() {
 		[backlogs]
 	);
 
-	useEffect( // 일감, 기존백로그, 신규백로그가 변화할 때 생성/수정 모달의 일감목록을 변화시킴
+	useEffect( // 일감, 기존백로그, 신규백로그가 변화할 때 생성/수정 모달의 전체 일감 목록을 변화시킴
 		() => {
 			let allTasks = [];
 			
@@ -151,95 +162,60 @@ function GanttChart() {
 		[tasks, selectedOldBacklogs, selectedNewBacklogs]
 	);
 	
-	useEffect(
+	useEffect( // 일감 수정 모달이 열릴 때 일감의 상세 내용을 가져옴
 		() => {
 			
 			setNewBacklog({
 				backlogTitle: sprintTask.backlogTitle,
-				backlogDescription: sprintTask.backlogDiscription,
+				backlogDescription: sprintTask.backlogDescription,
 				backlogStartDate: (sprintTask.startDate)? new Date(sprintTask.startDate): '',
 				backlogEndDate: (sprintTask.endDate)? new Date(sprintTask.endDate): '',
 				backlogUrgency: sprintTask.urgency,
 				backlogIssue: sprintTask.issue,
 				backlogChargerCode: sprintTask.backlogChargerCode,
+				backlogProgressStatus: sprintTask.progressStatus,
+				backlogCategory: sprintTask.category,
+				backlogCode: sprintTask.backlogCode,
+				sprintCode: sprintTask.sprintCode,
 			});
 		},
 		[sprintTask]
 	);
 
-	const getSprints = (limit) => {
+	const getMoreSprints = () => { // 스프린트 목록 더보기(페이징, 아래화살표)
+
+		const nextLimit = currentLimit + 10;
+		setCurrentLimit(nextLimit);
 
 		dispatch(callGetSprintsAPI({ // 스프린트 목록 조회
 			projectCode: projectCode,
 			isGantt: true,	// true일 경우, 진행 중 sprint가 맨위에 오고 진행 중이 아닌 sprint들은 sprintCode로 내림차순 정렬된다
 			offset: 0,
-			limit: limit,
-		}));
-	}
-
-	const setBacklogs = () => {
-
-		setOldBacklogs(
-			(Object.keys(backlogs).length > 0)
-			? backlogs.map((backlog) => {
-				return {
-					name: backlog.backlogTitle,
-					code: backlog.backlogCode,
-					type: 'oldBacklog'
-				}
-			})
-			: []
-		);
+			limit: nextLimit,
+		}, sprints));
 	}
 
 	/* Gantt컴포넌트에서 사용되는 메서드들 */
-	const handleTaskChange = (task) => {
-		console.log("On date change Id:" + task.id);
+	const handleTaskChange = (task) => { // 간트차트에서 막대를 이동하거나 늘려서 수정
 
-		dispatch({ 
-            type: UPDATE_TASKS_GANTT,
-			payload: task
-		});
+		const selectedSprint = {
+			id: task.id,
+			start: task.start,
+			end: task.end
+		}
 
-		// let newTasks = tasks.map((t) => (t.id === task.id ? task : t));
-		
-		// if (task.project) {
-		// 	const [start, end] = getStartEndDateForProject(newTasks, task.project);
-		// 	const project = newTasks[newTasks.findIndex((t) => t.id === task.project)];
-		// 	if (
-		// 		project.start.getTime() !== start.getTime() ||
-		// 		project.end.getTime() !== end.getTime()
-		// 	) {
-		// 	const changedProject = { ...project, start, end };
-		// 	newTasks = newTasks.map((t) =>
-		// 		t.id === task.project ? changedProject : t
-		// 	);
-		// 	}
-		// }
-		// setTasks(newTasks);
-	};
-	
-	// const handleTaskDelete = (task) => {
-	// 	const conf = window.confirm("Are you sure about " + task.name + " ?");
-	// 	if (conf) {
-	// 		setTasks(tasks.filter((t) => t.id !== task.id));
-	// 	}
-	// 	return conf;
-	// };
-  
-	const handleProgressChange = async (task) => {
+		const currentInfo = {
+			projectCode: projectCode,
+			memberCode: decodeJwt(window.localStorage.getItem("access_token")).code,
+			offset: 0,
+			limit: currentLimit,
+			prevSprints: sprints
+		}
 
-		dispatch({ 
-            type: SET_COLLAPSED_SPRINTS,
-			payload: task
-		});
-
-	  	// setTasks(tasks.map((t) => (t.id === task.id ? task : t)));
-	 	// console.log("On progress change Id:" + task.id);
-		
+		dispatch(callUpdateTaskForGanttAPI(selectedSprint, currentInfo));
 	};
   
-	const handleDblClick = (task) => { // 간트차트 바 더블클릭 시
+	const handleDblClick = (task) => { // 간트차트 바 더블클릭 시 스프린트/일감 모달창 열림
 		
 		if(task.type === 'project') {
 			dispatch(callGetSprintAPI({	// 스프린트 단일 조회
@@ -256,25 +232,14 @@ function GanttChart() {
 			
 			onShowUpdateTask();
 		}
-		
-		
-	 	// console.log("On Double Click event Id:", task.id);
 	};
   
-	const handleSelect = (task, isSelected) => {
-		console.log(task.name + " has " + (isSelected ? "selected" : "unselected"));
-	};
-  
-	const handleExpanderClick = (task) => { // 간트차트에서 스프린트를 눌러 일감을 펼치기/접기
-
+	const handleExpanderClick = (task) => { // 스프린트를 눌러 일감목록을 접기/펴기
+		
 		dispatch({ 
             type: SET_COLLAPSED_SPRINTS,
 			payload: task
 		});
-
-		// setTasks(tasks.map((t) => (t.id === task.id ? task : t)));
-		// console.log("On expander click Id:" + task.id);
-
 	};
 
 
@@ -314,8 +279,7 @@ function GanttChart() {
 		setSelectedNewBacklogs([]);
 	}
 
-	// 스프린트 생성 - 생성 버튼 
-	const confirmInsertSprint = () => {
+	const confirmInsertSprint = () => { // 스프린트 생성 - 생성 버튼 
 
 		const changedTasks = {
 			oldBacklogs: simpleArrToObjectArr(selectedOldBacklogs, backlogs),
@@ -324,21 +288,21 @@ function GanttChart() {
 		
 		const currentInfo = {
 			projectCode: projectCode,
-			backlogCreatorCode: decodeJwt(window.localStorage.getItem("access_token")).code
+			backlogCreatorCode: decodeJwt(window.localStorage.getItem("access_token")).code,
+			offset: 0,
+			limit: currentLimit,
+			sprints: sprints
 		}
-		
+
 		dispatch(callPostSprintAPI(sprint, changedTasks, currentInfo));
 
 		dispatch({type: INIT_SPRINT, payload: {}});
-
 		initBacklogs();
-
 		setDialogShow(false);
 	};
 
-	// 스프린트 수정 - 수정 버튼 
-	const confirmUpdateSprint = () => {
-
+	const confirmUpdateSprint = async () => { // 스프린트 수정 - 수정 버튼 
+		
 		const changedTasks = {
 			// tasks: simpleArrToObjectArr(tasks, sprint.tasks),
 			deletedTasks: deletedTasks,
@@ -348,38 +312,41 @@ function GanttChart() {
 		
 		const currentInfo = {
 			projectCode: projectCode,
-			backlogCreatorCode: decodeJwt(window.localStorage.getItem("access_token")).code
+			memberCode: decodeJwt(window.localStorage.getItem("access_token")).code,
+			offset: 0,
+			limit: currentLimit,
+			sprints: sprints
 		}
 
-		dispatch(callPutSprintAPI(sprint, changedTasks, currentInfo));
+		await dispatch(callPutSprintAPI(sprint, changedTasks, currentInfo));
 
-		dispatch({type: INIT_SPRINT, payload: {}});
-
+		await dispatch({type: INIT_SPRINT, payload: {}});
 		initBacklogs();
-
 		setDialogShow(false);
 	};
 
-	// 스프린트 삭제 alert창 - Yes 버튼 
-	const confirmDeleteSprint = () => {
+	const confirmDeleteSprint = () => { // 스프린트 삭제 alert창 - Yes 버튼 
 
-		dispatch(callDeleteSprintAPI(sprint.sprintCode, projectCode));
+		const currentInfo = {
+			projectCode: projectCode,
+			memberCode: decodeJwt(window.localStorage.getItem("access_token")).code,
+			offset: 0,
+			limit: currentLimit,
+			sprints: sprints
+		}
+
+		dispatch(callDeleteSprintAPI(sprint.sprintCode, currentInfo));
 
 		dispatch({type: INIT_SPRINT, payload: {}});
-
 		initBacklogs();
-
-		setAlertVisible(false);
+		setAlertShowDeleteSprint(false);
 		setDialogShow(false);
 	}
 
-	// 스프린트 생성/수정 - 취소 버튼 
-	const cancelSprint = () => {
+	const cancelSprint = () => { // 스프린트 생성/수정 - 취소 버튼 
 
 		dispatch({type: INIT_SPRINT, payload: {}});
-
 		initBacklogs();
-
 		setDialogShow(false);
 	};
 
@@ -390,14 +357,12 @@ function GanttChart() {
 		setTasksShow(true);
 	}
 
-	// 일감 목록 수정 확인 버튼
-	const confirmTasks = () => {
+	const confirmTasks = () => { // 일감 목록 수정 확인 버튼
 
 		setTasksShow(false);
 	};
 
-	// 일감 목록 수정 취소 버튼
-	const cancelTasks = () => {
+	const cancelTasks = () => { // 일감 목록 수정 취소 버튼
 
 		setTasksShow(false);
 	};
@@ -463,8 +428,8 @@ function GanttChart() {
 	}
 
 
-	/* 신규 백로그 추가 모달창(taskShow) */
-	const onShowInsertTask = () => {
+	/* 신규 백로그 추가/일감 수정 모달창(taskShow) */
+	const onShowInsertTask = () => { // 신규 백로그 모달 열릴 때
 
 		setNewBacklog({
 			backlogTitle: '',
@@ -481,24 +446,22 @@ function GanttChart() {
 		setTaskShow(true);
 	}
 
-	const onShowUpdateTask = () => {
+	const onShowUpdateTask = () => { // 일감 수정 모달 열릴 때
 		
 		setDialogTaskMode('update');
 
 		setTaskShow(true);
 	}
 
-	// 신규 백로그 추가 확인 버튼
-	const confirmInsertTask = () => {
-		console.log('selectedNewBacklogs', selectedNewBacklogs)
-		console.log('newBacklog', newBacklog)
+	const confirmInsertTask = () => { // 신규 백로그 추가 확인 버튼
+		
 		let changedBacklogs = [...selectedNewBacklogs];
 		changedBacklogs.push({
 			name: newBacklog.backlogTitle,
 			type: 'newBacklog'
 		});
 		setSelectedNewBacklogs(changedBacklogs); // 생성/수정 모달에서 보여주기 위해
-		console.log('newBacklogs:', newBacklogs)
+		
 		let copyNewBacklogs = [...newBacklogs];
 		copyNewBacklogs.push({ // 생성/수정완료 시 API로 보내기 위해
 			...newBacklog,
@@ -506,39 +469,43 @@ function GanttChart() {
 			backlogEndDate: (newBacklog.backlogEndDate)? dateFormat(new Date(newBacklog.backlogEndDate), 'end'): '',
 		});
 		setNewBacklogs(copyNewBacklogs);
-		console.log('copyNewBacklogs:', copyNewBacklogs);
-		initTask();
-
+		
 		setTaskShow(false);
+
+		initTask();
 	};
 
-	const confirmUpdateTask = () => {
+	const confirmUpdateTask = () => { // 일감 수정 - 확인 버튼
 
 		let changedBacklog = { // 일감 수정 완료 시 API로 보내기 위해
 			...newBacklog,
-			backlogStartDate: (newBacklog.backlogStartDate)? newBacklog.backlogStartDate: '',
-			backlogEndDate: (newBacklog.backlogEndDate)? newBacklog.backlogEndDate: '',
+			backlogStartDate: (newBacklog.backlogStartDate)? newBacklog.backlogStartDate: null,
+			backlogEndDate: (newBacklog.backlogEndDate)? newBacklog.backlogEndDate: null,
 		};
 
-		dispatch(callUpdateTaskAPI(changedBacklog, projectCode));
+		const currentInfo = {
+			projectCode: projectCode,
+			memberCode: decodeJwt(window.localStorage.getItem("access_token")).code,
+			offset: 0,
+			limit: currentLimit,
+			prevSprints: sprints
+		}
 
-		initTask();
+		dispatch(callUpdateTaskAPI(changedBacklog, currentInfo));
 
 		setTaskShow(false);
+
+		initTask();
 	};
 
-	// 신규 백로그 추가 취소 버튼
-	const cancelTask = () => {
-
-		initTask();
+	const cancelTask = () => { // 신규 백로그 추가/일감 수정 취소 버튼
 
 		setTaskShow(false);
+
+		initTask();
 	};
 
 	const onChangeNewBacklog = (e) => {
-		console.log('이상해', newBacklog)
-		console.log('저상해', e.target.name)
-		console.log('수상해', e.target.value)
 
 		setNewBacklog({
 			...newBacklog,
@@ -601,6 +568,24 @@ function GanttChart() {
 		return result;
 	}
 
+	const onSprintProgressChange = () => { // 스프린트 완료하기/스프린트 시작하기 버튼
+		
+		const currentInfo = {
+			projectCode: projectCode,
+			memberCode: decodeJwt(window.localStorage.getItem("access_token")).code,
+			sprintCode: sprint.sprintCode,
+			offset: 0,
+			limit: currentLimit,
+			prevSprints: sprints
+		}
+
+		dispatch(callUpdateSprintProgressAPI(sprint, currentInfo));
+
+		dispatch({type: INIT_SPRINT, payload: {}});
+		initBacklogs();
+		setDialogShow(false);
+	}
+
 	return (
 		<>
 			<PageTitle
@@ -613,6 +598,7 @@ function GanttChart() {
 				onViewListChange={setIsChecked}
 				isChecked={isChecked}
 				onShowInsert={onShowInsert}
+				setCurrentLimit={setCurrentLimit}
 			/>		
 
 			<div id={GanttCss.container}>
@@ -634,14 +620,13 @@ function GanttChart() {
 								tasks={sprints}
 								viewMode={view}
 								onDateChange={handleTaskChange}
-								onProgressChange={handleProgressChange}
 								onDoubleClick={handleDblClick}
-								onSelect={handleSelect}
 								onExpanderClick={handleExpanderClick}
 								barCornerRadius="5"
-								barProgressColor="#BBBBBB"
+								barProgressColor="grey"
 								barProgressSelectedColor="#808080"
-								headerHeight="44"
+								headerHeight={36}
+								rowHeight={32}
 								columnWidth={columnWidth}
 								listCellWidth={isChecked ? "155px" : ""}
 								todayColor="rgba(0, 170, 156, .1)"
@@ -654,10 +639,7 @@ function GanttChart() {
 							{
 								(counts.sprintsCount > currentLimit) &&
 								<div id={GanttCss.moreSprints}
-									onClick={() => {
-										setCurrentLimit(currentLimit + 10);
-										getSprints(currentLimit + 10);
-									}}
+									onClick={() => getMoreSprints()}
 								>
 									<i className="pi pi-angle-down" style={{width: '14px', height: '14px'}}/>
 								</div>
@@ -698,7 +680,7 @@ function GanttChart() {
                                     className="p-button-danger" 
                                     label="스프린트 삭제" 
                                     icon="pi pi-check" 
-                                    onClick={() => setAlertVisible(true)} 
+                                    onClick={() => setAlertShowDeleteSprint(true)} 
                                 />
                             }
                         </div>
@@ -731,12 +713,30 @@ function GanttChart() {
             >
                 <div id={GanttCss.dialogBody}>
                     <div>
-                        <label>스프린트 이름</label>
+						<div style={{paddingBottom: '10px'}}>
+                        	<label>스프린트 이름</label>
+							{
+								(sprint.sprintProgressStatus === 'Y')
+								? <Button 
+									label="스프린트 완료하기"
+									style={{height: '20px', marginLeft: '20px', backgroundColor: 'rgba(248, 96, 100, .16)', border: '1px solid #333544', color: '#F86064'}}
+									onClick={() => setAlertShowStopSprint(true)}
+								/>
+								: (sprint.sprintProgressStatus === 'N')
+									? <Button 
+										label="스프린트 시작하기"
+										style={{height: '20px', marginLeft: '20px', backgroundColor: 'rgba(255, 185, 95, .16)', border: '1px solid #333544', color: '#FFB95F'}}
+										onClick={() => setAlertShowStartSprint(true)}
+									/>
+									: <></>
+							}
+						</div>
                         <InputText
                             name="sprintName"
                             value={sprint.sprintName || ''}
                             onChange={(e) => onChangeSprint(e)}
                             placeholder="필수 입력 사항입니다."
+							maxLength="30"
                         />
                     </div>
 					<div>
@@ -746,8 +746,10 @@ function GanttChart() {
 								<Calendar 
 									id="startDate" 
 									name="sprintStartDate"
-									value={sprint.sprintStartDate || ''} 
+									value={sprint.sprintStartDate}
+									placeholder="선택하지 않음"
 									showIcon
+									dateFormat="yy-mm-dd"
 									onChange={(e) => onChangeSprint(e)}
 								/>
 							</div>
@@ -756,8 +758,10 @@ function GanttChart() {
 								<Calendar 
 									id="endDate"
 									name="sprintEndDate"
-									value={sprint.sprintEndDate || ''} 
+									value={sprint.sprintEndDate}
+									placeholder="선택하지 않음"
 									showIcon
+									dateFormat="yy-mm-dd"
 									onChange={(e) => onChangeSprint(e)}
 								/>
 							</div>
@@ -771,19 +775,32 @@ function GanttChart() {
 								rows={2} 
 								cols={30} 
 								style={{minHeight: '140px'}}
+								maxLength="150"
 								autoResize 
 							/>
 						</div>
 					</div>
 					<div>
-						<label>
-							전체 일감 목록
+						<div style={{paddingBottom: '10px'}}>
+							<label>
+								전체 일감 목록
+								<Tooltip target=".allTasks" />
+								<i 
+									className="allTasks pi pi-info-circle"
+									data-pr-tooltip={`${(dialogMode === 'update')? '기존 일감 목록과 ': ''}기존 백로그, 신규 백로그에서 
+														\n선택하여 해당 스프린트에 포함시킵니다.`}
+									data-pr-position="right" 
+									data-pr-at="right+10 top" 
+									data-pr-my="left center-2" 
+									style={{ marginLeft: '10px', cursor: 'pointer' }}
+								/>
+							</label>
 							<Button 
 								label="수정하기"
 								style={{height: '20px', marginLeft: '20px', backgroundColor: 'rgba(0, 170, 156, .16)', border: '1px solid #333544', color: '#00AA9C'}}
 								onClick={onShowTasks}
 							/>
-						</label>
+						</div>
 						<Chips
 							value={tasksSum.map((task) => task.name)}
 							itemTemplate={customChip}
@@ -877,24 +894,26 @@ function GanttChart() {
 					</div>
 
 					<div>
-                        <label>
-							신규 백로그
-							<Tooltip target=".newBacklogs" />
-							<i 
-								className="newBacklogs pi pi-info-circle"
-								data-pr-tooltip="새로운 백로그를 생성하고, 스프린트에 추가합니다" 
-								data-pr-position="right" 
-								data-pr-at="right+10 top" 
-								data-pr-my="left center-2" 
-								style={{ marginLeft: '10px', cursor: 'pointer' }}
-							/>
+						<div style={{padding: '10px 0'}}>
+							<label>
+								신규 백로그
+								<Tooltip target=".newBacklogs" />
+								<i 
+									className="newBacklogs pi pi-info-circle"
+									data-pr-tooltip="새로운 백로그를 생성하고, 스프린트에 추가합니다" 
+									data-pr-position="right" 
+									data-pr-at="right+10 top" 
+									data-pr-my="left center-2" 
+									style={{ marginLeft: '10px', cursor: 'pointer' }}
+								/>
+							</label>
 							<Button 
 								label="추가하기"
 								style={{height: '20px', marginLeft: '20px', backgroundColor: 'rgba(0, 170, 156, 0.16)', border: '1px solid #333544', color: '#00AA9C'}}
 								// style={{height: '20px', marginLeft: '20px', backgroundColor: 'rgba(255, 185, 95, .16)', border: '1px solid #333544', color: '#FFB95F'}}
 								onClick={onShowInsertTask}
 							/>
-						</label>
+						</div>
 						<Chips
 							value={selectedNewBacklogs.map(newBacklog => newBacklog.name)}
 							onChange={(e) => onChangeNewBacklogs(e)}
@@ -906,7 +925,7 @@ function GanttChart() {
                 </div>
             </Dialog>
 
-			{/* 신규 백로그 추가 모달창 */}
+			{/* 신규 백로그 추가/일감 수정 모달창 */}
             <Dialog 
                 visible={taskShow} 
 				position='right'
@@ -981,16 +1000,18 @@ function GanttChart() {
 								<Calendar 
 									name="backlogStartDate"
 									value={(newBacklog.backlogStartDate)? newBacklog.backlogStartDate: ''} 
-									onChange={(e) => onChangeNewBacklog(e)}
 									placeholder="선택하지 않음"
 									showIcon
+									dateFormat="yy-mm-dd"
+									onChange={(e) => onChangeNewBacklog(e)}
 								/>
 								<Calendar 
 									name="backlogEndDate"
 									value={(newBacklog.backlogEndDate)? newBacklog.backlogEndDate: ''} 
-									onChange={(e) => onChangeNewBacklog(e)}
 									placeholder="선택하지 않음"
 									showIcon
+									dateFormat="yy-mm-dd"
+									onChange={(e) => onChangeNewBacklog(e)}
 								/>
 								<Dropdown 
 									name="backlogUrgency"
@@ -1036,55 +1057,67 @@ function GanttChart() {
 
 			{/* 스프린트 삭제 alert창 */}
 			<ConfirmDialog 
-                visible={ alertVisible } 
-                onHide={() => setAlertVisible(false)} 
+                visible={ alertShowDeleteSprint } 
+                onHide={() => setAlertShowDeleteSprint(false)} 
                 header="스프린트 삭제" 
-                message={<span>스프린트 삭제 시 하위 일감들은 백로그가 됩니다. <br/>해당 스프린트를 삭제하시겠습니까?</span>}
+                message={
+					<span>
+						스프린트 삭제 시 진행 전, 진행 중 일감들은 백로그가 되고, <br/>
+						완료상태의 일감들은 조회가 불가능하게 됩니다. <br/>
+						해당 스프린트를 삭제하시겠습니까?
+					</span>
+				}
                 icon="pi pi-exclamation-triangle"
                 style={{width: '24vw'}}
                 accept={() => confirmDeleteSprint()} 
-                reject={() => setAlertVisible(false)}
+                reject={() => setAlertShowDeleteSprint(false)}
 				draggable={false}
             />
 
-			{/* 테스트창 */}
-			{/* <div
-				style={{width: '20vw', height: '200px', backgroundColor: 'lightgreen', padding: '10px', color: 'black'}}
-			>
-				<h2>sprints</h2>
-				<ul>
-					{ sprints.map((sprint, index) => <li key={index}>{sprint.id}</li>)}
-				</ul>
-			</div>
-			<div
-				style={{width: '20vw', height: '200px', backgroundColor: 'lightgreen', padding: '10px', color: 'black'}}
-			>
-				<h2>sprintTask</h2>
-				<ul>
-					<li>{ sprintTask.backlogCode }</li>
-					<li>{ sprintTask.backlogTitle }</li>
-					<li>{ sprintTask.backlogDescription }</li>
-					<li>{ sprintTask.issue }</li>
-					<li>{ sprintTask.urgency }</li>
-				</ul>
-			</div>
-			<div
-				style={{width: '20vw', height: '200px', backgroundColor: 'lightyellow', padding: '10px', color: 'black'}}
-			>
-				<h2>newBacklog</h2>
-				<ul>
-					<li>{ newBacklog.backlogCode }</li>
-					<li>{ newBacklog.backlogTitle }</li>
-					<li>{ newBacklog.backlogDescription }</li>
-					<li>{ newBacklog.issue }</li>
-					<li>{ newBacklog.urgency }</li>
-				</ul>
-			</div> */}
+			{/* 스프린트 완료하기 alert창 */}
+			<ConfirmDialog 
+                visible={ alertShowStopSprint } 
+                onHide={() => setAlertShowStopSprint(false)} 
+                header="스프린트 완료하기" 
+                message={
+					<span>
+						스프린트 완료 시 진행 전, 진행 중 일감들은 백로그가 되고, <br/>
+						완료상태의 일감들은 해당 스프린트에 남게 됩니다. <br/>
+						해당 스프린트를 완료하시겠습니까?
+					</span>
+				}
+                icon="pi pi-exclamation-triangle"
+                style={{width: '24vw'}}
+                accept={() => onSprintProgressChange()} 
+                reject={() => setAlertShowStopSprint(false)}
+				draggable={false}
+            />
+
+			{/* 스프린트 시작하기 alert창 */}
+			<ConfirmDialog 
+                visible={ alertShowStartSprint } 
+                onHide={() => setAlertShowStartSprint(false)} 
+                header="스프린트 시작하기" 
+                message={
+					<span>
+						스프린트 시작 시, 진행 중인 스프린트는 중지되어 <br/>
+						진행 전, 진행 중 일감들은 백로그가 되고, <br/>
+						완료상태의 일감들은 해당 스프린트에 남게 됩니다. <br/>
+						해당 스프린트를 시작하시겠습니까?
+					</span>
+				}
+                icon="pi pi-exclamation-triangle"
+                style={{width: '24vw'}}
+                accept={() => onSprintProgressChange()} 
+                reject={() => setAlertShowStartSprint(false)}
+				draggable={false}
+            />
 		</>
 	);
 }
 
 function dateFormat(date, when) { // Fri Jul 01 2022 00:00:00 GMT+0900 (한국 표준시) 형식을 '2022-07-01 00:00:00'으로 바꿔줌
+	
     let month = date.getMonth() + 1;
     let day = date.getDate();
     let hour = date.getHours();
@@ -1098,11 +1131,11 @@ function dateFormat(date, when) { // Fri Jul 01 2022 00:00:00 GMT+0900 (한국 �
     second = second >= 10 ? second : '0' + second;
 
     if(when === 'start') {
-        return date.getFullYear() + '-' + month + '-' + day  + 'T00:00:00.000Z';
+        return date.getFullYear() + '-' + month + '-' + day  + ' 00:00:00';
     }
 
     if(when === 'end') {
-        return date.getFullYear() + '-' + month + '-' + day  + 'T23:59:59.000Z';
+        return date.getFullYear() + '-' + month + '-' + day  + ' 23:59:59';
     }
 }
 

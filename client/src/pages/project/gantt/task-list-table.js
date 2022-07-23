@@ -34,7 +34,7 @@ export const TaskListTableDefault = ({
 				return (
 					<div
 						className="Gantt-Task-List_Row"
-						style={{ height: rowHeight }}
+						style={{ height: '32px' }}
 						key={`${t.id}row`}
 						onClick={() => {
 							if (selectedTaskId === t.id) setSelectedTask("");
@@ -55,13 +55,13 @@ export const TaskListTableDefault = ({
 							style={{
 								minWidth: rowWidth,
 								maxWidth: "360px",
-								height: "50px",
+								height: "32px",
 								border: "1px solid grey",
 								display: 'flex', 
 								flexDirection: 'row', 
 								alignItems: 'center',
 								padding: "10px",
-								fontSize: "16px",
+								fontSize: "14px",
 								// backgroundColor: expanderSymbol? '#282936': '#333544',
 								color: expanderSymbol? ((t.progressStatus === 'Y')? '#F86064CC': '#FFB95FCC'): 'lightgrey',
 							}}
