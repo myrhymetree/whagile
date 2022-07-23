@@ -46,7 +46,7 @@ function Inquiry() {
                     icon={ <i className="pi pi-fw pi-envelope"></i> }
                     text="1:1 문의"
                 />
-                <InquiryTable inquiries={ inquiries }/>
+                <InquiryTable/>
                 <InquiryCreationModal 
                     visibleCreation={ visibleCreation }
                     setVisibleCreation={ setVisibleCreation }
