@@ -22,6 +22,8 @@ export function callGetInquiriesAPI(params) {
 
         requestURL = requestURL.slice(0, requestURL.length - 1);
     }
+    console.log('params...', params);
+    console.log('requestURL...', requestURL);
 
     return async function findInquiries(dispatch, getState) {
         
