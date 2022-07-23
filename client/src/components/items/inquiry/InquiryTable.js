@@ -16,7 +16,6 @@ function InquiryTable() {
     const [offset, setOffset] = useState(0);
     const [filter, setFilter] = useState('');
     const [searchValue, setSearchValue] = useState('');
-    const [inquiryList, setInquiryList] = useState([]);
 
     useEffect(
         () => {
@@ -28,38 +27,27 @@ function InquiryTable() {
         []
     );
 
-    useEffect(
-        () => {
-            console.log(1212)
-            setInquiryList(inquiries);
-        },
-        [inquiries]
-    );
-
     /* 필터 조건 부여하여 목록 조회 */
     const getFilteredList = (filteredValue) => {
+        alert('준비 중입니다.');
+        // setFilter(filteredValue);
 
-        setFilter(filteredValue);
-        
-        dispatch(callGetInquiriesAPI({
-            offset: 0,
-            limit: 10,
-            filter: filter
-        }));
-
-        setInquiryList(inquiries);
+        // dispatch(callGetInquiriesAPI({
+        //     offset: 0,
+        //     limit: 10,
+        //     filter: filter
+        // }));
     }
     
     /* 목록 더보기 요청 */
     const readMoreInquiries = () => {
         const params = {
             offset: (offset + 1) * 10,
-            limit: 10,
-            filter: filter
+            limit: 10
+            // filter: filter
         }
         setOffset(offset + 1);
         dispatch(callGetInquiriesAPI(params));
-        setInquiryList(inquiries);
     }
 
     return (
@@ -68,24 +56,25 @@ function InquiryTable() {
                 <div>
                     문의 목록
                 </div>
-                    <div id={ InquiryCSS.searchBar }>
-                        <label>제목 검색</label> 
-                        <InputText
-                            style={{ marginLeft: '5px', marginRight: '10px' }}
-                            id="searchValue"
-                            value={searchValue}
-                            onChange={(e) => setSearchValue(e.target.value)}
-                        />
-                        <button
-                            id={ InquiryCSS.searchBtn }
-                        >
-                            <i className='pi pi-search'/>
-                        </button>
-                    </div>
+                <div id={ InquiryCSS.searchBar }>
+                    <label>제목 검색</label> 
+                    <InputText
+                        style={{ marginLeft: '5px', marginRight: '10px' }}
+                        id="searchValue"
+                        value={searchValue}
+                        onChange={(e) => setSearchValue(e.target.value)}
+                    />
+                    <button
+                        id={ InquiryCSS.searchBtn }
+                        onClick={ () => alert('준비 중입니다.') }
+                    >
+                        <i className='pi pi-search'/>
+                    </button>
+                </div>
                 <div id={ InquiryCSS.filter }>
                     필터 
                     <button
-                        onClick={ () => getFilteredList('') }
+                        onClick={ () => {getFilteredList('')} }
                     >
                         전체
                     </button>
@@ -110,8 +99,8 @@ function InquiryTable() {
                     <div>자세히</div>
                 </div>
                 { 
-                    inquiryList.length > 0
-                    ? inquiryList.map(inquiry => 
+                    inquiries.length > 0
+                    ? inquiries.map(inquiry => 
                         <div key={ inquiry.inquiryCode } className={ InquiryCSS.tableRow }>
                             <div>{ inquiry.inquiryCode }</div>
                             <div>{ inquiry.title }</div>
@@ -129,7 +118,7 @@ function InquiryTable() {
                 <button 
                     id={ InquiryCSS.readMoreBtn }
                     onClick={ readMoreInquiries }    
-                    style={{ display: (inquiryList.length > 0)? 'block' : 'none'}}
+                    style={{ display: (inquiries.length > 0)? 'block' : 'none'}}
                 >
                     더보기
                 </button>

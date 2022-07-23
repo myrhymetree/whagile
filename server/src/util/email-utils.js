@@ -198,7 +198,7 @@ exports.sendInvitationMail = async (memberInfo, projectInfo) => {
       ${ projectInfo.projectName }에 초대 되셨습니다.<br/>
       <br/>
       아래 링크를 클릭하시면 초대를 수락합니다.<br/>
-      <a href="http://whagile.shop:8888/api/projects/${ projectInfo.projectCode }/joinedMember/${ memberInfo.memberCode }">초대 수락</a><br/>
+      <a href="http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/projects/${ projectInfo.projectCode }/joinedMember/${ memberInfo.memberCode }">초대 수락</a><br/>
       해당 링크는 48시간동안 유효합니다.<br/>
       <br/>
       <br/>
@@ -242,14 +242,15 @@ exports.sendInvitationMailToNewMember = async (email, projectInfo) => {
       ${ projectInfo.projectName }에 초대 되셨습니다.<br/>
       <br/>
       아래 링크를 클릭하시고 회원 가입을 하시면 해당 프로젝트에 초대됩니다.<br/>
-      <a href="http://whagile.shop/invitedMemberSignup/${ projectInfo.projectCode }/${ email }">초대 수락</a><br/>
+      <a href="http://${process.env.REACT_APP_RESTAPI_IP}:3000/invitedMemberSignup/${ projectInfo.projectCode }/${ email }">초대 수락</a><br/>
       해당 링크는 48시간동안 유효합니다.<br/>
       <br/>
       <br/>
       <br/>
       Whagile Team 올림
       `
-    }, (err, info) => {
+    }
+    , (err, info) => {
       if(err){
         console.log(err);
         reject(err);

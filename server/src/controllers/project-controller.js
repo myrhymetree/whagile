@@ -65,9 +65,13 @@ console.log('이메일 들어오나?',req.body);
 
 exports.modifyProject = async (req, res, next) => {
     await ProjectService.modifyProject(req.body)
-        .then(() => {
-
-            res.redirect(`http://${process.env.REACT_APP_RESTAPI_IP}:3000/`);
+        .then((result) => {
+            
+            res.status(HttpStatus.OK).json({
+                status: HttpStatus.OK,
+                message: 'successfully updatedProject!!',
+                results: result
+            });
             
         }).catch((err) => {
             
@@ -141,8 +145,13 @@ exports.registProjectMember = async (req, res, next) => {
 
     await ProjectService.registProjectMember(req.params)
         .then(() => {
-            res.redirect(`http://${process.env.REACT_APP_RESTAPI_IP}:3000/`);
-
+            
+            if({REACT_APP_RESTAPI_IP} === 'whagile.shop') {
+                res.redirect(`http://${process.env.REACT_APP_RESTAPI_IP}/`);
+            } else {
+                res.redirect(`http://${process.env.REACT_APP_RESTAPI_IP}:3000/`);
+            }
+            
         }).catch((err) => {
 
             res.status(HttpStatus.BAD_REQUEST).json({
@@ -195,7 +204,7 @@ exports.signUpProjectMember = async (req, res, next) => {
             // res.redirect('http://whagile.shop:3000/login');
             res.status(HttpStatus.OK).json({
                 status: HttpStatus.OK,
-                message: 'successfully register Account!!',
+                message: 'successfully regist Account!!',
                 results: result
             });
         }).catch((err) => {
