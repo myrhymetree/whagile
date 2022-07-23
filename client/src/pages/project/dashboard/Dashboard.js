@@ -177,7 +177,7 @@ function Dashboard() {
                         { (!isNotice) && <Button onClick={ offNotice }>제출</Button>}
                     </div>
                 </div>
-                <div className="flex align-items-center justify-content-center bg-black-alpha-10 text-lg text-white m-2 border-round" style={{minWidth: 20 + '%', minHeight: 20 + '%'}} onClick={ editNotice }>
+                <div className="flex align-items-center justify-content-center bg-black-alpha-10 text-lg text-white m-2 border-round" style={{minWidth: 20 + '%', minHeight: 20 + '%'}}>
                     <ul className="text-2xl m-3" style={{ listStyle: "none" }}>팀원목록 { members.map(member => <li className="text-lg m-2" key={ member.memberCode }><i className="pi pi-fw pi-user"></i> { member.memberName } : { member.authorityName }</li>)}</ul>
                 </div>
                 {/* <div className="flex align-items-center justify-content-center bg-blue-500 font-bold text-white m-2 border-round" style={{minWidth: 200 + 'px', minHeight: 100 + 'px'}}>
