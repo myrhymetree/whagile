@@ -2,7 +2,7 @@
 import PageTitle from '../../../components/items/PageTitle';
 import 'gantt-task-react/dist/index.css';
 import GanttCss from './GanttChart.module.css';
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { decodeJwt } from '../../../utils/tokenUtils';
@@ -39,6 +39,7 @@ import { InputText } from 'primereact/inputtext';
 import { InputTextarea } from 'primereact/inputtextarea';
 import { Tooltip } from 'primereact/tooltip';
 import { MultiSelect } from 'primereact/multiselect';
+import { Toast } from 'primereact/toast';
 import 'primeicons/primeicons.css';
 
 function GanttChart() {
@@ -88,6 +89,7 @@ function GanttChart() {
 	const [currentLimit, setCurrentLimit] = useState(10); // 간트차트에 보여줄 sprints 개수
 	const [sprintFormError, setSprintFormError] = useState(false); // 유효성 검사(스프린트)
 	const [taskFormError, setTaskFormError] = useState(false); // 유효성 검사(일감)
+	const toast = useRef(null);
 
 	const options = {
 		urgency: [
@@ -214,6 +216,13 @@ function GanttChart() {
 		}
 
 		dispatch(callUpdateTaskForGanttAPI(selectedSprint, currentInfo));
+
+		toast.current.show({
+            severity: 'success', 
+            summary: `일감 기간 변경 완료`, 
+            detail: '일감의 기간이 변경되었습니다.',
+            life: 3000
+        });
 	};
   
 	const handleDblClick = (task) => { // 간트차트 바 더블클릭 시 스프린트/일감 모달창 열림
@@ -314,6 +323,13 @@ function GanttChart() {
 		initBacklogs();
 		setDialogShow(false);
 		setSprintFormError(false);
+
+		toast.current.show({
+            severity: 'success', 
+            summary: `스프린트 생성 완료`, 
+            detail: '스프린트가 생성되었습니다.',
+            life: 3000
+        });
 	};
 
 	const confirmUpdateSprint = async () => { // 스프린트 수정 - 수정 버튼 
@@ -344,7 +360,14 @@ function GanttChart() {
 		await dispatch({type: INIT_SPRINT, payload: {}});
 		initBacklogs();
 		setDialogShow(false);
-		setSprintFormError(false)
+		setSprintFormError(false);
+
+		toast.current.show({
+            severity: 'success', 
+            summary: `스프린트 수정 완료`, 
+            detail: '스프린트가 수정되었습니다.',
+            life: 3000
+        });
 	};
 
 	const confirmDeleteSprint = () => { // 스프린트 삭제 alert창 - Yes 버튼 
@@ -364,6 +387,13 @@ function GanttChart() {
 		setAlertShowDeleteSprint(false);
 		setDialogShow(false);
 		setSprintFormError(false);
+
+		toast.current.show({
+            severity: 'success', 
+            summary: `스프린트 삭제 완료`, 
+            detail: '스프린트가 삭제되었습니다.',
+            life: 3000
+        });
 	}
 
 	const cancelSprint = () => { // 스프린트 생성/수정 - 취소 버튼 
@@ -532,6 +562,13 @@ function GanttChart() {
 		setTaskFormError(false);
 
 		initTask();
+
+		toast.current.show({
+            severity: 'success', 
+            summary: `일감 수정 완료`, 
+            detail: '일감이 수정되었습니다.',
+            life: 3000
+        });
 	};
 
 	const cancelTask = () => { // 신규 백로그 추가/일감 수정 취소 버튼
@@ -1165,6 +1202,9 @@ function GanttChart() {
                 reject={() => setAlertShowStartSprint(false)}
 				draggable={false}
             />
+
+			{/* toast */}
+			<Toast ref={toast} position="top-right" />
 		</>
 	);
 }
