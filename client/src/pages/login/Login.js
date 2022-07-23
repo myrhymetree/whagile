@@ -6,6 +6,7 @@ import { Button } from 'primereact/button';
 import { Password } from 'primereact/password';
 import { classNames } from 'primereact/utils';
 import { Toast } from 'primereact/toast';
+import CryptoJS from 'react-native-crypto-js';
 import './Login.css';
 
 function Login() {
@@ -17,6 +18,8 @@ function Login() {
     const [loginform, setLoginform] = useState(true);
     const [searchPwForm, setSearchPwForm] = useState(false);
 
+    const secretKey = process.env.REACT_APP_KEY;
+
     useEffect(() => {        
             
         if(isLogin) {
@@ -25,6 +28,8 @@ function Login() {
             setIsLogin(true);
             navigate('/projects', { replace: true });
         }
+        
+
     },
     [isLogin]);
 
@@ -83,6 +88,9 @@ function Login() {
 
     const onSubmitHandler = (data) => {
         
+        // 비밀번호 대칭키 암호화
+        data.password = CryptoJS.AES.encrypt(data.password , secretKey).toString();
+        console.log(data);
         fetch(`http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/account/login`, {
             method: "POST",
             headers: {
