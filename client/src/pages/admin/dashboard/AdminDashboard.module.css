@@ -28,9 +28,13 @@
 }
 
 #summaryContainer>div {
-    /* 항목을 더 늘리려면 width를 만질 것(width를 지워도 됨) */
-    /* width: 20%;  */
-    padding: 0 4%;
+    width: 13.3%; 
+    height: 58px;
+    padding: 0 2%;
+}
+
+#summaryContainer>div:nth-child(3), #summaryContainer>div:nth-child(4) {
+    width: 30%; 
 }
 
 #summaryContainer>div:not(:last-child) {
@@ -45,9 +49,9 @@
 }
 
 .summaryElement>div {
-    width: 100%;
+    /* width: 100%; */
     margin-top: 5px; 
-    padding: 2px 0;
+    padding: 2px 10%;
     background-color: rgba(0, 170, 156, .16);
     border: 1px solid #333544;
     border-radius: 5px;
@@ -55,9 +59,10 @@
     text-align: center;
 }
 
-.summaryElement:nth-child(1)>div {
+.summaryElement:nth-child(1)>div, .summaryElement:nth-last-child(1)>div {
     cursor: pointer;
 }
+
 
 #contentContainer {
     height: 80%;

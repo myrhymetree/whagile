@@ -29,7 +29,13 @@ exports.selectCounts = () => {
                 FROM TBL_BACKLOG 
                 WHERE BACKLOG_DELETED_YN = 'N'
                     AND BACKLOG_CATEGORY = '백로그'
-            ) ALL_BACKLOG_COUNT
+            ) ALL_BACKLOG_COUNT,
+            (
+                SELECT COUNT(*)
+                FROM TBL_INQUIRY  
+                WHERE INQUIRY_DELETED_YN = 'N'
+                    AND INQUIRY_ANSWER_YN = 'N'
+            ) UNANSWERED_INQUIRY_COUNT
     `;
 
     return query;
@@ -138,10 +144,8 @@ exports.selectNewSprintCount = (params) => {
         
         query = `
             SELECT SUBSTR(SPRINT_HISTORY_DATE, 9, 2) day, COUNT(*) count
-            FROM TBL_SPRINT SP
-            LEFT JOIN TBL_SPRINT_HISTORY HI ON SP.SPRINT_CODE = HI.SPRINT_CODE
-            WHERE SPRINT_DELETED_YN = 'N'
-                AND HI.SPRINT_HISTORY_CONTENT = '생성'
+            FROM TBL_SPRINT_HISTORY
+            WHERE SPRINT_HISTORY_CONTENT = '생성'
                 AND SPRINT_HISTORY_DATE LIKE '%${params.searchValue2.toString().substr(0, 7)}%'
             GROUP BY SUBSTR(SPRINT_HISTORY_DATE, 9, 2)
         `;
@@ -151,10 +155,8 @@ exports.selectNewSprintCount = (params) => {
 
         query = `
             SELECT SUBSTR(SPRINT_HISTORY_DATE, 6, 2) day, COUNT(*) count
-            FROM TBL_SPRINT SP
-            LEFT JOIN TBL_SPRINT_HISTORY HI ON SP.SPRINT_CODE = HI.SPRINT_CODE
-            WHERE SPRINT_DELETED_YN = 'N'
-                AND HI.SPRINT_HISTORY_CONTENT = '생성'
+            FROM TBL_SPRINT_HISTORY
+            WHERE SPRINT_HISTORY_CONTENT = '생성'
                 AND SPRINT_HISTORY_DATE LIKE '%${params.searchValue2.toString().substr(0, 4)}%'
             GROUP BY SUBSTR(SPRINT_HISTORY_DATE, 6, 2)
         `;
@@ -171,10 +173,8 @@ exports.selectDeletedSprintCount = (params) => {
         
         query = `
             SELECT SUBSTR(SPRINT_HISTORY_DATE, 9, 2) day, COUNT(*) count
-            FROM TBL_SPRINT SP
-            LEFT JOIN TBL_SPRINT_HISTORY HI ON SP.SPRINT_CODE = HI.SPRINT_CODE
-            WHERE SPRINT_DELETED_YN = 'Y'
-                AND HI.SPRINT_HISTORY_CONTENT = '삭제'
+            FROM TBL_SPRINT_HISTORY
+            WHERE SPRINT_HISTORY_CONTENT = '삭제'
                 AND SPRINT_HISTORY_DATE LIKE '%${params.searchValue2.toString().substr(0, 7)}%'
             GROUP BY SUBSTR(SPRINT_HISTORY_DATE, 9, 2)
         `;
@@ -184,10 +184,8 @@ exports.selectDeletedSprintCount = (params) => {
 
         query = `
             SELECT SUBSTR(SPRINT_HISTORY_DATE, 6, 2) day, COUNT(*) count
-            FROM TBL_SPRINT SP
-            LEFT JOIN TBL_SPRINT_HISTORY HI ON SP.SPRINT_CODE = HI.SPRINT_CODE
-            WHERE SPRINT_DELETED_YN = 'Y'
-                AND HI.SPRINT_HISTORY_CONTENT = '삭제'
+            FROM TBL_SPRINT_HISTORY
+            WHERE SPRINT_HISTORY_CONTENT = '삭제'
                 AND SPRINT_HISTORY_DATE LIKE '%${params.searchValue2.toString().substr(0, 4)}%'
             GROUP BY SUBSTR(SPRINT_HISTORY_DATE, 6, 2)
         `;

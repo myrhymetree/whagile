@@ -46,6 +46,7 @@ function AdminAuth() {
     const authOrder = useSelector(state => state.authOrderReducer); // api에서 가져온 권한목록(순서 수정을 위함)
     const [snapshotAuth, setSnapshotAuth] = useState([]);
     const [snapshotOrder, setSnapshotOrder] = useState([]);
+    const [formError, setFormError] = useState(false); // 유효성 검사
     const dispatch = useDispatch();
     const toast = useRef(null);
 
@@ -131,22 +132,36 @@ function AdminAuth() {
         });
 
         setDialogShow(false);
+        setFormError(false);
     }
 
     /* 권한 등록/수정 모달창(dialogShow) */
     const confirmInsertAuth = () => { // 등록 확인 버튼
         
+        if(!auth.authorityName) {
+
+            setFormError(true);
+            return;
+        }
+
         dispatch(callPostAuthAPI(auth, authOrder));
         
         setSnapshotAuth({});
         setSnapshotOrder([]);
 
         setDialogShow(false);
+        setFormError(false);
 
         toast.current.show({severity: 'success', summary: `새 권한 생성 완료`, detail: `새 권한 '${auth.authorityName}'이(가) 생성되었습니다.`, life: 2400});
     }
 
     const confirmUpdateAuth = () => { // 수정 확인 버튼
+
+        if(!auth.authorityName) {
+
+            setFormError(true);
+            return;
+        }
 
         dispatch(callPutAuthAPI(auth, authOrder));
 
@@ -154,6 +169,7 @@ function AdminAuth() {
         setSnapshotOrder([]);
 
         setDialogShow(false);
+        setFormError(false);
 
         toast.current.show({severity: 'success', summary: `권한 수정 완료`, detail: `'${auth.authorityName}'이(가) 수정되었습니다.`, life: 2400});
     }
@@ -166,11 +182,20 @@ function AdminAuth() {
         setSnapshotOrder([]);
 
         setDialogShow(false);
+        setFormError(false);
 
         toast.current.show({severity: 'success', summary: `권한 삭제 완료`, detail: `'${auth.authorityName}'이(가) 삭제되었습니다.`, life: 2400});
     }
 
     const onChangeAuth = async (e) => { // 모달창 내용 변경시 감지
+
+        if(e.target.name = 'authorityName') {
+            if(e.target.value) {
+                setFormError(false);
+            } else {
+                setFormError(true);
+            }
+        }
 
         let paramAuth = {
             ...auth,
@@ -399,13 +424,17 @@ function AdminAuth() {
                     <div>
                         <label>권한명</label>
                         <InputText
+                            className={(formError)? 'p-invalid': ''}
                             name="authorityName"
                             value={auth.authorityName || ''}
                             onChange={(e) => onChangeAuth(e)}
                             placeholder="필수 입력 사항입니다."
                         />
-                        {/* <InputText className="p-invalid block"/> */}
-                        {/* <small className="p-error block">Username is not available.</small> */}
+                        {
+                            (formError)
+                            ? <small className="p-error block">권한명은 필수 입력사항입니다.</small>
+                            : <></>
+                        }
                     </div>
                     <div>
                         <div>
