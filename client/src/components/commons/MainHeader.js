@@ -28,6 +28,10 @@ function MainHeader() {
     navigate('/', { replace: true })
   }
 
+  const onClickInquiry = () => {
+    navigate("/inquiry");
+  }
+
   useEffect(() => {    
     if(!isLogin){
       console.log('MainHeader isLogin?', isLogin);
@@ -107,7 +111,14 @@ function MainHeader() {
             icon="pi pi-power-off"
             onClick={onClickLogout}
           />
-        </OverlayPanel>
+        
+          <Button
+            label="1:1 문의"
+            className="p-button-text p-button-plain" 
+            icon="pi pi-envelope" 
+            onClick={ onClickInquiry }
+          />             
+        </OverlayPanel>          
       </div>
     </header>
   );

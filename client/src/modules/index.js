@@ -25,6 +25,9 @@ import sprintsReducer from './SprintsModule';
 import sprintReducer from './SprintModule';
 import sprintsForBacklogReducer from './SprintsForBacklogModule';
 import sprintForBacklogReducer from './SprintForBacklogModule';
+import inquiriesReducer from './InquiriesModule';
+import inquiryReducer from './InquiryModule';
+import inquiryCommentReducer from './InquiryCommentModule';
 
 const rootReducer = combineReducers({
     adminStatisticsReducer,
@@ -52,7 +55,10 @@ const rootReducer = combineReducers({
     sprintsReducer,
     sprintReducer,
     sprintsForBacklogReducer,
-    sprintForBacklogReducer
+    sprintForBacklogReducer,
+    inquiriesReducer,
+    inquiryReducer,
+    inquiryCommentReducer
 });
 
 export default rootReducer;
