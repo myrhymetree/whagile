@@ -333,6 +333,7 @@ function GanttChart() {
 		const currentInfo = {
 			projectCode: projectCode,
 			memberCode: decodeJwt(window.localStorage.getItem("access_token")).code,
+			backlogCreatorCode: decodeJwt(window.localStorage.getItem("access_token")).code,
 			offset: 0,
 			limit: currentLimit,
 			prevSprints: sprints
