@@ -146,7 +146,12 @@ exports.registProjectMember = async (req, res, next) => {
     await ProjectService.registProjectMember(req.params)
         .then(() => {
             
-            res.redirect(`http://${process.env.REACT_APP_RESTAPI_IP}/`);
+            if({REACT_APP_RESTAPI_IP} === 'whagile.shop') {
+                res.redirect(`http://${process.env.REACT_APP_RESTAPI_IP}/`);
+            } else {
+                res.redirect(`http://${process.env.REACT_APP_RESTAPI_IP}:3000/`);
+            }
+            
         }).catch((err) => {
 
             res.status(HttpStatus.BAD_REQUEST).json({
