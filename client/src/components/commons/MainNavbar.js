@@ -1,7 +1,7 @@
 import MainNavbarCSS from "./MainNavbar.module.css";
-import { callGetProjectAPI } from "../../apis/ProjectAPICalls";
+import { callGetProjectAPI, callGetProjectMemberInfoAPI } from "../../apis/ProjectAPICalls";
+import { decodeJwt } from '../../utils/tokenUtils';
 
-import { Menu } from "primereact/menu";
 import { TieredMenu } from 'primereact/tieredmenu';
 import { Button } from "primereact/button";
 import Icon from "@mdi/react";
@@ -17,8 +17,11 @@ function MainNavbar({projectCode}) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const project = useSelector(state => state.projectsReducer);
+  const projectMember12 = useSelector(state => state.projectMembersReducer);
+  console.log('projectMember12',projectMember12);
   const [selectedMenu, setSelectedMenu] = useState();
   const [isManagement, setIsmanageMent] = useState(false);
+  const decoded = decodeJwt(window.localStorage.getItem("access_token"));
   const menus = [
     'dashboard',
     'backlog-and-sprint',
@@ -42,7 +45,7 @@ function MainNavbar({projectCode}) {
 
   const number = parseInt(`${projectCode}`);
   
-  let items = [
+   let items = [
     {
       label: "대시보드",
       icon: "pi pi-fw pi-chart-pie",
@@ -83,7 +86,7 @@ function MainNavbar({projectCode}) {
         navigate(`/project/${ projectCode }/history`);
       },
     },
-    {
+    (projectMember12.authorityCode === 1) && {
       label: "프로젝트 관리",
       items: [{label: '프로젝트 세부사항', icon: 'pi pi-fw pi-pencil', command:()=>{ navigate(`/project/${ projectCode }/management/information`); }},
               {label: '팀원 목록', icon: 'pi pi-fw pi-users', command:()=>{ navigate(`/project/${ projectCode }/management/teamMateList`); }},
@@ -93,11 +96,16 @@ function MainNavbar({projectCode}) {
     }
   ];
 
+
   useEffect(
     () => {
          dispatch(callGetProjectAPI({
             'projectCode': number
         }));
+        dispatch(callGetProjectMemberInfoAPI({
+          'projectCode': number,
+          'memberCode' : (decoded !== 'undefined')? decoded.code: '',
+        }))
     },
     []
   );

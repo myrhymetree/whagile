@@ -9,7 +9,6 @@ import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
-import { Row } from 'primereact/row';
 import { Toolbar } from 'primereact/toolbar';
 import { Toast } from 'primereact/toast';
 import { Dialog } from 'primereact/dialog';
@@ -50,16 +49,6 @@ function TeamMateList() {
         'displayPosition': setDisplayPosition,
     }
 
-    // useEffect(
-    //     () => {
-    //         dispatch(callGetProjectsAPI({
-    //             'loginMember': (decoded !== 'undefined')? decoded.code: '',
-    //             'searchValue': searchValue
-    //         }));
-    //     },
-    //     [searchValue]
-    // );
-
     useEffect(
         () => {
             dispatch(callGetProjectMemberAPI({
@@ -68,13 +57,6 @@ function TeamMateList() {
         },
         []
     );
-
-    // useEffect(
-    //     () => {
-    //         setMembers(memberList);
-    //     },
-    //     [memberList]
-    // );
 
     const hideDialog = () => {
         setSubmitted(false);
@@ -94,12 +76,6 @@ function TeamMateList() {
         setMemberDialog(true);
     }
 
-    // const openNew1 = () => {
-    //     setProduct(emptyProduct);
-    //     setSubmitted(false);
-    //     setProductDialog(true);
-    // }
-
     const hideDeleteMemberDialog = () => {
         setDeleteMemberDialog(false);
     }
@@ -107,16 +83,9 @@ function TeamMateList() {
     const paginatorLeft = <Button type="button" icon="pi pi-refresh" className="p-button-text" />;
     const paginatorRight = <Button type="button" icon="pi pi-cloud" className="p-button-text" />;
 
-    // function statusBodyTemplate(data) {
-    //     return ((memberList.length !== 0)? (memberList.map((data) => {return data.authorityName}) !== 'PM'): true) && <Button icon="pi pi-trash" onClick={() => { removeMember(data) }} />;
-    //     // return <Button icon="pi pi-search" />;
-    // }
-
     const deleteMember = () => {
-        // let _members = members.filter(val => val.memberCode !== member.memberCode);
-        // setMembers(_members);
+
         setDeleteMemberDialog(false);
-        // setMember(emptyMember);
         removeMember(member);
         toast.current.show({ severity: 'success', summary: '팀원 제외', detail: '해당 팀원을 제외했습니다.', life: 3000 });
     };
@@ -131,9 +100,7 @@ function TeamMateList() {
         }));
 
         setAuthorityDialog(false);
-        // setProduct(emptyProduct);
         toast.current.show({ severity: 'success', summary: '권한 수정 완료', detail: '해당 회원의 권한을 수정했습니다.', life: 3000 });
-
     }
 
     const authorityDialogFooter = (
@@ -151,7 +118,6 @@ function TeamMateList() {
     );
 
     const onCategoryChange = (e) => {
-        // let _authority = {...authority};
         let _member = {...member};
         _member['authorityCode'] = e.value;
         console.log('_member', _member);
@@ -177,7 +143,6 @@ function TeamMateList() {
         
         setMember(rowData);
         setDeleteMemberDialog(true);
-        // removeMember(rowData);
     }
 
     const actionBodyTemplate = (rowData) => {
@@ -194,7 +159,6 @@ function TeamMateList() {
             <span className="p-input-icon-left">
                 <i className="pi pi-search" />
                 <InputText type="search" onInput={(e) => setGlobalFilter(e.target.value)} placeholder="Search..." />
-                {/* {!globalFilter && <small className="p-error">Name is required.</small>}     //나중에 required 대신 쓰면 용이함 */}
             </span>
         </div>
     );
@@ -212,7 +176,6 @@ function TeamMateList() {
         return (
             <>
                 <Button label="팀원 초대"  icon="pi pi-user-plus" className="p-button-success mr-2" onClick={ () => showModal('displayBasic')}/>
-                {/* <Button label="Delete" icon="pi pi-trash" className="p-button-danger" onClick={confirmDeleteSelected} disabled={!selectedProducts || !selectedProducts.length} /> */}
             </>
         )
     }
@@ -232,10 +195,6 @@ function TeamMateList() {
                     globalFilter={globalFilter}
                     value={memberList} 
                     paginator responsiveLayout="scroll"
-                    // selectionMode="single"
-                    // rowHover={true}
-                    // showGridlines={true}
-                    // cellSelection={true}
                     selection={selectedMember} 
                     dataKey="memberCode"
                     paginatorTemplate="CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
@@ -246,11 +205,7 @@ function TeamMateList() {
                     paginatorRight={paginatorRight}
                     onSelectionChange={e => setSelectedMember(e.value)}
                     header={header}
-                    // onCellUnselect={onRowUnselect}
-                    // footer={footer}
-                    // headerColumnGroup={headerGroup}
                 >
-                    {/* <Column selectionMode="multiple" headerStyle={{ width: '3rem' }} exportable={false}></Column> */}
                     <Column field="memberCode" header="번호" hidden ></Column>
                     <Column field="memberId" header="아이디" style={{ width: '25%' }} align="center" sortable></Column>
                     <Column field="memberName" header="이름" style={{ width: '15%' }} align="center" sortable></Column>
@@ -292,8 +247,6 @@ function TeamMateList() {
                 </div>
             </Dialog>
         </>
-
-        
     );
 }
 

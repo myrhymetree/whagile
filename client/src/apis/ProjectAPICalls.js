@@ -1,7 +1,8 @@
 import { GET_PROJECT, GET_PROJECTS, POST_PROJECT, PUT_PROJECT,  DELETE_PROJECT } from "../modules/ProjectModule";
 import { GET_PROJECT_MEMBER } from "../modules/ProjectMemberModule";
 import { GET_INVITED_MEMBER, PUT_MODIFY_AUTHORITY, DELETE_PROJECT_MEMBER } from "../modules/ProjectMemberModule";
-import { GET_PROJECT_NOTICE } from "../modules/ProjectNoticeModule";
+import { GET_PROJECT_MEMBER_INFO } from "../modules/ProjectMembersModule";
+import { GET_PROJECT_NOTICE, PUT_PROJECT_NOTICE } from "../modules/ProjectNoticeModule";
 import { decodeJwt } from '../utils/tokenUtils';
 
 export function callGetProjectsAPI(params) {
@@ -22,9 +23,10 @@ export function callGetProjectsAPI(params) {
 
 export function callGetProjectAPI(params) {
 
-    let requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/projects/`;
+    // let requestURL = `http://localhost:8888/api/projects/`;
+    // requestURL += `${Object.entries(params).map(param => param.slice(1))}`;
 
-    requestURL += `${Object.entries(params).map(param => param.slice(1))}`;
+    let requestURL = `http:/${process.env.REACT_APP_RESTAPI_IP}:8888/api/projects/${params.projectCode}`;
 
     return async function getProject(dispatch, getState) {
 
@@ -124,12 +126,25 @@ export const callGetProjectMemberAPI = (params) => {
 
     requestURL += `/member`;
 
-    return async function getProject(dispatch, getState) {
+    return async function getProjectMembers(dispatch, getState) {
 
         const result = await fetch(requestURL).then(res => res.json());
 
         dispatch({ type: GET_PROJECT_MEMBER, payload: result.results});
     }
+}
+
+export const callGetProjectMemberInfoAPI = (params) => {
+
+    const requestURL = `http://localhost:8888/api/projects/${ params.projectCode}/member/${ params.memberCode }`;
+
+    return async function getProjectMemberInfo(dispatch, getState) {
+
+        const result = await fetch(requestURL).then(res => res.json());
+
+        dispatch({ type: GET_PROJECT_MEMBER_INFO, payload: result.results});
+    }
+
 }
 
 export const callDeleteProjectMemberAPI = (params) => {
@@ -217,3 +232,31 @@ export const callGetNoticeAPI = (data) => {
         dispatch({ type: GET_PROJECT_NOTICE, payload: result.results});
     }
 }
+
+export const callPutModifyNoticeAPI = (data) => {
+
+    console.log('data는 ', data);
+    const decoded = decodeJwt(window.localStorage.getItem("access_token"));
+    const requestURL = `http://localhost:8888/api/projects/${ data.projectCode }/notice`;
+
+    return async function registNotice(dispatch, getState) {
+
+        const result = await fetch(requestURL, {
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                projectCode: data.projectCode,
+                noticeCode : data.noticeCode,
+                content: data.content,
+                modifier: (decoded !== 'undefined')? decoded.code: ''
+            })
+        }).then(res => res.json());
+
+        dispatch({ type : PUT_PROJECT_NOTICE, payload : result.results});
+    }
+
+
+} 

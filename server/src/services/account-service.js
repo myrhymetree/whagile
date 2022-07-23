@@ -3,6 +3,7 @@ const AccountRepository = require('../repositories/account-repo');
 const AccountUtils = require('../util/account-utils');
 const EmailUtils = require('../util/email-utils');
 const jwt = require('jsonwebtoken');
+const CryptoJS = require("crypto-js");
 const { JWT_SECRET } = process.env;
 
 exports.updateAccount = (memberInfo) => {
@@ -88,7 +89,12 @@ exports.updateAccountWithPwd = (pwInfo) => {
 
         const userInfo = await AccountRepository.selectAccountWithMemberCode(connection, pwInfo.memberCode);
         console.log('userInfo', userInfo);
-        const passwordCompareResult = await AccountUtils.checkPassword(pwInfo.originPassword, userInfo[0].password);
+
+        const originPasswordByte = CryptoJS.AES.decrypt(pwInfo.originPassword , process.env.REACT_APP_KEY);
+        const originPasswordDecrypted = originPasswordByte.toString(CryptoJS.enc.Utf8);
+        console.log('originPasswordDecrypted', originPasswordDecrypted);
+  
+        const passwordCompareResult = await AccountUtils.checkPassword(originPasswordDecrypted, userInfo[0].password);
         console.log('passwordCompareResult',passwordCompareResult);
 
         if(!passwordCompareResult){
@@ -97,7 +103,11 @@ exports.updateAccountWithPwd = (pwInfo) => {
             return reject("Invalid password");
         } 
 
-        pwInfo.password = await AccountUtils.setPassword(pwInfo.password);
+        const passwordByte = CryptoJS.AES.decrypt(pwInfo.password , process.env.REACT_APP_KEY);
+        const passwordDecrypted = passwordByte.toString(CryptoJS.enc.Utf8);
+        console.log('passwordDecrypted',passwordDecrypted);
+
+        pwInfo.password = await AccountUtils.setPassword(passwordDecrypted);
 
         const results = await AccountRepository.updatePwd(connection, pwInfo);
         connection.end();
@@ -278,7 +288,9 @@ exports.loginAccount = (loginInfo) => {
             }
 
             console.log('account', results);
-            const passwordCompareResult = await AccountUtils.checkPassword(loginInfo.password, results[0].password);
+            const passwordByte = CryptoJS.AES.decrypt(loginInfo.password , process.env.REACT_APP_KEY);
+            const password = passwordByte.toString(CryptoJS.enc.Utf8);
+            const passwordCompareResult = await AccountUtils.checkPassword(password, results[0].password);
             console.log('passwordCompareResult',passwordCompareResult);
 
 
@@ -296,6 +308,8 @@ exports.loginAccount = (loginInfo) => {
                 return reject("Invalid Email Auth");
             }
 
+            account[0].password = '';
+
             //로그인 성공시 JWT 토큰 발급 ()emberId, memberName, memberEmail)
             const token = await AccountUtils.generateToken(account[0].memberCode, account[0].memberId, account[0].name, account[0].email, account[0].role);
             
@@ -303,6 +317,7 @@ exports.loginAccount = (loginInfo) => {
                 account,
                 token
             }
+
 
             const historyResult = await AccountRepository.insertAccountHistory(connection, results[0].memberCode);
             console.log('history result', historyResult);

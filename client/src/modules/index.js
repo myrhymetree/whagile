@@ -10,6 +10,7 @@ import backlogCommentReducer from './BacklogCommentModule';
 import backlogCommentDetailReducer from './BacklogCommentDetailModule';
 import projectsReducer from './ProjectModule';
 import projectMemberReducer from './ProjectMemberModule';
+import projectMembersReducer from './ProjectMembersModule';
 import ProjectNoticeReducer from './ProjectNoticeModule';
 import projectStatisticsReducer from './ProjectStatisticsModule';
 import memberReducer from './MemberModule';
@@ -25,6 +26,9 @@ import sprintsReducer from './SprintsModule';
 import sprintReducer from './SprintModule';
 import sprintsForBacklogReducer from './SprintsForBacklogModule';
 import sprintForBacklogReducer from './SprintForBacklogModule';
+import inquiriesReducer from './InquiriesModule';
+import inquiryReducer from './InquiryModule';
+import inquiryCommentReducer from './InquiryCommentModule';
 
 const rootReducer = combineReducers({
     adminStatisticsReducer,
@@ -39,6 +43,7 @@ const rootReducer = combineReducers({
     backlogCommentDetailReducer,
     projectsReducer,
     projectMemberReducer,
+    projectMembersReducer,
     ProjectNoticeReducer,
     projectStatisticsReducer,
     tasksReducer,
@@ -52,7 +57,10 @@ const rootReducer = combineReducers({
     sprintsReducer,
     sprintReducer,
     sprintsForBacklogReducer,
-    sprintForBacklogReducer
+    sprintForBacklogReducer,
+    inquiriesReducer,
+    inquiryReducer,
+    inquiryCommentReducer
 });
 
 export default rootReducer;

@@ -140,6 +140,23 @@ exports.updateManager2 = (connection, projectCode, projectOwner ) => {
     });
 }
 
+exports.updateProjectOwner = (connection, projectInfo) => {
+
+    return new Promise((resolve, reject) => {
+        connection.query(projectQuery.updateProjectOwner(projectInfo),
+
+        (err, results, fields) => {
+
+            if(err) {
+                console.log(err);
+                reject(err);
+            }
+
+            resolve(results);
+        });
+    });
+}
+
 exports.deleteProject = (connection, projectCode) => {
 
     return new Promise((resolve, reject) => {
@@ -176,6 +193,23 @@ exports.selectProjectMembers = (connection, projectCode) => {
         });
     });
 }
+
+exports.restoreProjectMember = (connection, data) => {
+    return new Promise((resolve, reject) => {
+        console.log(data);
+        connection.query(projectQuery.restoreProjectMember(data),
+
+        (err, results, fields) => {
+
+            if(err) {
+                console.log(err);
+                reject(err);
+            }
+
+            resolve(results);
+        });
+    });
+};
 
 exports.insertProjectMember = (connection, data) => {
     console.log('insertProjectMember', data);
@@ -281,11 +315,13 @@ exports.selectProjectMember = (connection, projectMemberInfo) => {
                 reject(err);
             }
 
-            console.log('results : ', results);
             const projectMember = [];
-            projectMember.push(new ProjectMemberDTO(results[0]));
 
-            console.log('projectMember', projectMember);
+            if(results.length > 0) {
+                projectMember.push(new ProjectMemberDTO(results[0]));
+                console.log('projectMember', projectMember);
+            }
+            
             resolve(projectMember[0]);
         });
     });
@@ -332,4 +368,42 @@ exports.insertNoticeToProject = (connection, noticeInfo) => {
             resolve(results);
         });
     });
+}
+
+exports.modifyNoticeToProject = (connection, noticeInfo) => {
+
+    return new Promise((resolve, reject) => {
+        connection.query(projectQuery.modifyNoticeToProject(noticeInfo),
+        (err, results, fields) => {
+
+            if(err) {
+                console.log(err);
+                reject(err);
+            }
+
+            resolve(results);
+        });
+    });
+}
+
+exports.insertProjectHistory = (connection, projectInfo, projectCode) => {
+
+    return new Promise((resolve, reject) => {
+        
+        connection.query(projectQuery.insertProjectHistory(),
+            [
+                '신규 프로젝트',
+                '생성',
+                projectCode,
+                projectInfo.loginMember
+            ],
+            (err, results, fields) => {
+                if(err) {
+                    reject(err);
+                }
+
+                resolve(results);
+            }
+        );
+    })
 }

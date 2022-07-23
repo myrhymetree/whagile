@@ -2,10 +2,12 @@ import React from 'react';
 import NotFoundStyle from './NotFound.module.css';
 import whagileLogo from "./whagile-logo.png";
 import { Link } from 'react-router-dom'
+import { decodeJwt } from "../../utils/tokenUtils";
+
 
 export default function NotFound() {
-
-
+    const user = decodeJwt(window.localStorage.getItem("access_token"));
+    console.log("user", user);
     return (
       <>
         <div className={NotFoundStyle.errorPage}>
@@ -27,11 +29,19 @@ export default function NotFound() {
               Don't worry. Since you're valuable to us we will bring you back to
               safety
             </h5>
-            <Link to="/">
-              <button className={NotFoundStyle.errorPageBtn}>
-                Back to Home
-              </button>
-            </Link>
+            {user.id === "admin" ? (
+              <Link to="/admin/dashboard">
+                <button className={NotFoundStyle.errorPageBtn}>
+                  Back to Admin-Dashboard
+                </button>
+              </Link>
+            ) : (
+              <Link to="/">
+                <button className={NotFoundStyle.errorPageBtn}>
+                  Back to Home
+                </button>
+              </Link>
+            )}
           </div>
         </div>
       </>
