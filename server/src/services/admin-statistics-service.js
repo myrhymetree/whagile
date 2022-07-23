@@ -12,6 +12,7 @@ exports.viewCounts = () => {
         result.AVG_SPRINT_COUNT = Number(result.ALL_SPRINT_COUNT / result.ALL_PROJECT_COUNT).toFixed(2);
         result.AVG_TASK_COUNT = Number(result.ALL_TASK_COUNT / result.ALL_PROJECT_COUNT).toFixed(2);
         result.AVG_BACKLOG_COUNT = Number(result.ALL_BACKLOG_COUNT / result.ALL_PROJECT_COUNT).toFixed(2);
+        result.UNANSWERED_INQUIRY_COUNT = Number(result.UNANSWERED_INQUIRY_COUNT);
 
         connection.end();
 

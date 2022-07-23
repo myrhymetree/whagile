@@ -13,7 +13,6 @@ import { ViewSwitcher } from './ViewSwitcher';
 import { TaskListHeaderDefault } from './task-list-header';
 import { TaskListTableDefault } from './task-list-table';
 import { TooltipContentDefault } from './tooltip';
-// import { initTasks, getStartEndDateForProject } from './helpers';
 
 // apis, modules
 import { callGetSprintsAPI
@@ -61,14 +60,14 @@ function GanttChart() {
 	const sprintTask = useSelector(state => state.sprintTaskReducer);
 	const dispatch = useDispatch();
 	const { projectCode } = useParams();
-	const [dialogShow, setDialogShow] = useState(false); // 모달창 ON/OFF
+	const [dialogShow, setDialogShow] = useState(false); // 스프린트 모달창 ON/OFF
 	const [dialogMode, setDialogMode] = useState('');   // 모달창 스프린트 생성/수정인지(insert, update)
 	const [dialogTaskMode, setDialogTaskMode] = useState('');   // 모달창 스프린트 생성/수정인지(insert, update)
 	const [alertShowDeleteSprint, setAlertShowDeleteSprint] = useState(false); // 스프린트 삭제 alert창 ON/OFF
 	const [alertShowStopSprint, setAlertShowStopSprint] = useState(false); // 스프린트 완료하기 alert창 ON/OFF
 	const [alertShowStartSprint, setAlertShowStartSprint] = useState(false); // 스프린트 시작하기 alert창 ON/OFF
-	const [tasksShow, setTasksShow] = useState(false);
-	const [taskShow, setTaskShow] = useState(false);
+	const [tasksShow, setTasksShow] = useState(false); // 전체 일감 목록 모달창 ON/OFF
+	const [taskShow, setTaskShow] = useState(false); // 신규 백로그 모달창 ON/OFF
 	const [tasks, setTasks] = useState([]); // api에서 불러온 일감 목록
 	const [deletedTasks, setDeletedTasks] = useState([]); // 기존 일감 목록에서 삭제된 일감들
 	const [oldBacklogs, setOldBacklogs] = useState([]); // 기존 백로그([{name, value, type}, ...])
@@ -76,7 +75,7 @@ function GanttChart() {
 	const [selectedOldBacklogs, setSelectedOldBacklogs] = useState([]);	// 선택한 기존 백로그([{name, code, type}, ...])
 	const [selectedNewBacklogs, setSelectedNewBacklogs] = useState([]); // 신규 백로그([{name, type}, ...])
 	const [tasksSum, setTasksSum] = useState([]); // 일감 목록 + 기존 백로그 + 신규 백로그
-	const [newBacklog, setNewBacklog] = useState({
+	const [newBacklog, setNewBacklog] = useState({ // 신규 백로그 or 일감
 		backlogTitle: '',
 		backlogDescription: '',
 		backlogStartDate: '',
@@ -87,6 +86,8 @@ function GanttChart() {
 		backlogCode: '',
 	});
 	const [currentLimit, setCurrentLimit] = useState(10); // 간트차트에 보여줄 sprints 개수
+	const [sprintFormError, setSprintFormError] = useState(false); // 유효성 검사(스프린트)
+	const [taskFormError, setTaskFormError] = useState(false); // 유효성 검사(일감)
 
 	const options = {
 		urgency: [
@@ -260,6 +261,14 @@ function GanttChart() {
 
 	const onChangeSprint = (e) => {
 		
+		if(e.target.name = 'sprintName') {
+            if(e.target.value) {
+                setSprintFormError(false);
+            } else {
+                setSprintFormError(true);
+            }
+        }
+
 		let params = {
             ...sprint,
             [e.target.name]: e.target.value
@@ -281,6 +290,11 @@ function GanttChart() {
 
 	const confirmInsertSprint = () => { // 스프린트 생성 - 생성 버튼 
 
+		if(!sprint.sprintName) {
+            setSprintFormError(true);
+            return;
+        }
+
 		const changedTasks = {
 			oldBacklogs: simpleArrToObjectArr(selectedOldBacklogs, backlogs),
 			newBacklogs: simpleArrToObjectArr(selectedNewBacklogs, newBacklogs),
@@ -299,10 +313,16 @@ function GanttChart() {
 		dispatch({type: INIT_SPRINT, payload: {}});
 		initBacklogs();
 		setDialogShow(false);
+		setSprintFormError(false);
 	};
 
 	const confirmUpdateSprint = async () => { // 스프린트 수정 - 수정 버튼 
 		
+		if(!sprint.sprintName) {
+            setSprintFormError(true);
+            return;
+        }
+
 		const changedTasks = {
 			// tasks: simpleArrToObjectArr(tasks, sprint.tasks),
 			deletedTasks: deletedTasks,
@@ -323,6 +343,7 @@ function GanttChart() {
 		await dispatch({type: INIT_SPRINT, payload: {}});
 		initBacklogs();
 		setDialogShow(false);
+		setSprintFormError(false)
 	};
 
 	const confirmDeleteSprint = () => { // 스프린트 삭제 alert창 - Yes 버튼 
@@ -341,6 +362,7 @@ function GanttChart() {
 		initBacklogs();
 		setAlertShowDeleteSprint(false);
 		setDialogShow(false);
+		setSprintFormError(false);
 	}
 
 	const cancelSprint = () => { // 스프린트 생성/수정 - 취소 버튼 
@@ -348,6 +370,7 @@ function GanttChart() {
 		dispatch({type: INIT_SPRINT, payload: {}});
 		initBacklogs();
 		setDialogShow(false);
+		setSprintFormError(false);
 	};
 
 
@@ -455,6 +478,11 @@ function GanttChart() {
 
 	const confirmInsertTask = () => { // 신규 백로그 추가 확인 버튼
 		
+		if(!newBacklog.backlogTitle) {
+            setTaskFormError(true);
+            return;
+        }
+
 		let changedBacklogs = [...selectedNewBacklogs];
 		changedBacklogs.push({
 			name: newBacklog.backlogTitle,
@@ -471,11 +499,17 @@ function GanttChart() {
 		setNewBacklogs(copyNewBacklogs);
 		
 		setTaskShow(false);
+		setTaskFormError(false);
 
 		initTask();
 	};
 
 	const confirmUpdateTask = () => { // 일감 수정 - 확인 버튼
+
+		if(!newBacklog.backlogTitle) {
+            setTaskFormError(true);
+            return;
+        }
 
 		let changedBacklog = { // 일감 수정 완료 시 API로 보내기 위해
 			...newBacklog,
@@ -494,6 +528,7 @@ function GanttChart() {
 		dispatch(callUpdateTaskAPI(changedBacklog, currentInfo));
 
 		setTaskShow(false);
+		setTaskFormError(false);
 
 		initTask();
 	};
@@ -501,11 +536,20 @@ function GanttChart() {
 	const cancelTask = () => { // 신규 백로그 추가/일감 수정 취소 버튼
 
 		setTaskShow(false);
+		setTaskFormError(false);
 
 		initTask();
 	};
 
 	const onChangeNewBacklog = (e) => {
+
+		if(e.target.name === 'backlogTitle') {
+            if(e.target.value) {
+                setTaskFormError(false);
+            } else {
+                setTaskFormError(true);
+            }
+        }
 
 		setNewBacklog({
 			...newBacklog,
@@ -657,7 +701,7 @@ function GanttChart() {
             <Dialog 
 				id={GanttCss.dialogContainer}
                 visible={dialogShow} 
-                style={{ width: '40vw', height: '75vh' }}
+                style={{ width: '40vw', height: '80vh' }}
                 onHide={() => cancelSprint()}
 				draggable={false}
                 header={
@@ -732,12 +776,18 @@ function GanttChart() {
 							}
 						</div>
                         <InputText
+							className={(sprintFormError)? 'p-invalid': ''}
                             name="sprintName"
                             value={sprint.sprintName || ''}
                             onChange={(e) => onChangeSprint(e)}
                             placeholder="필수 입력 사항입니다."
 							maxLength="30"
                         />
+						{
+                            (sprintFormError)
+                            ? <small className="p-error block">스프린트 이름은 필수 입력사항입니다.</small>
+                            : <></>
+                        }
                     </div>
 					<div>
 						<div>
@@ -814,7 +864,7 @@ function GanttChart() {
             <Dialog
 				id={GanttCss.taskContainer}
                 visible={tasksShow} 
-                style={{ width: '35vw', height: '75vh' }}
+                style={{ width: '35vw', height: '80vh' }}
                 onHide={cancelTasks}
 				draggable={false}
                 header={ 
@@ -929,7 +979,7 @@ function GanttChart() {
             <Dialog 
                 visible={taskShow} 
 				position='right'
-                style={{ width: '31vw', height: '75vh' }}
+                style={{ width: '31vw', height: '80vh' }}
                 onHide={cancelTask}
 				draggable={false}
                 header={ 
@@ -966,13 +1016,17 @@ function GanttChart() {
 					<div>
                         <label>백로그 제목</label>
                         <InputText
+							className={(taskFormError)? 'p-invalid': ''}
                             name="backlogTitle"
                             value={(newBacklog.backlogTitle)? newBacklog.backlogTitle: ''}
                             onChange={(e) => onChangeNewBacklog(e)}
                             placeholder="필수 입력 사항입니다."
                         />
-                        {/* <InputText className="p-invalid block"/> */}
-                        {/* <small className="p-error block">Username is not available.</small> */}
+						{
+                            (taskFormError)
+                            ? <small className="p-error block">제목은 필수 입력사항입니다.</small>
+                            : <></>
+                        }
                     </div>
 					<div>
                         <label>백로그 설명</label>
@@ -982,8 +1036,6 @@ function GanttChart() {
                             onChange={(e) => onChangeNewBacklog(e)}
 							placeholder="백로그에 대한 설명을 입력해주세요."
                         />
-                        {/* <InputText className="p-invalid block"/> */}
-                        {/* <small className="p-error block">Username is not available.</small> */}
                     </div>
 					<div>
                         <label>세부정보</label>

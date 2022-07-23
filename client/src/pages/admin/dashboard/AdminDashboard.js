@@ -26,20 +26,20 @@ function AdminDashboard() {
 	const [sprintCount, setSprintCount] = useState({});
 	const [visitorCount, setVisitorCount] = useState({});
 
-	const onChangeDate = (e) => {
+	const onChangeDate = (value) => {
 
-		setSearchValue(e.value);
+		setSearchValue(value);
 
 		setUserCount({});
 		
 		dispatch(callGetAdminStatisticsChartAPI({
 			searchCondition: viewMode,
-			searchValue: e.value
+			searchValue: value
 		}));
 	}
 
 	const onChangeView = (value) => {
-
+		
 		setViewMode(value);
 
 		setUserCount({});
@@ -64,7 +64,6 @@ function AdminDashboard() {
 
 	useEffect(
 		() => {
-			
 			let searchDate = new Date(searchValue);
 			let monthLastDay = new Date(searchDate.getFullYear(), searchDate.getMonth() + 1, 0).getDate();
 			let lastMonth = 12;
@@ -279,6 +278,14 @@ function AdminDashboard() {
 		}
 	};
 
+	const onClickToday = () => { 
+
+		setSearchValue(new Date());
+
+		onChangeDate(new Date());
+
+	};
+
     return (
         <section className="section">
             {/* title */}
@@ -296,34 +303,32 @@ function AdminDashboard() {
 						{counts.ALL_MEMBER_COUNT}명
 					</div>
 				</div>
+
 				<div className={styles.summaryElement}>
 					전체 프로젝트 수
 					<div>
 						{counts.ALL_PROJECT_COUNT}개
 					</div>
 				</div>
+
 				<div className={styles.summaryElement}>
-					전체 스프린트 수
+					전체 스프린트 / 일감 / 백로그 수
 					<div>
-						{counts.ALL_SPRINT_COUNT}개
+						{counts.ALL_SPRINT_COUNT}개 / {counts.ALL_TASK_COUNT}개 / {counts.ALL_BACKLOG_COUNT}개
 					</div>
 				</div>
+
 				<div className={styles.summaryElement}>
-					전체 일감 / 백로그 수
+					프로젝트 별 평균 스프린트 / 일감 / 백로그 수
 					<div>
-						{counts.ALL_TASK_COUNT}개 / {counts.ALL_BACKLOG_COUNT}개
+						{counts.AVG_SPRINT_COUNT}개 / {counts.AVG_TASK_COUNT}개 / {counts.AVG_BACKLOG_COUNT}개
 					</div>
 				</div>
+				
 				<div className={styles.summaryElement}>
-					프로젝트 별 평균 스프린트 수
-					<div>
-						{counts.AVG_SPRINT_COUNT}개
-					</div>
-				</div>
-				<div className={styles.summaryElement}>
-					프로젝트 별 평균 일감 / 백로그 수
-					<div>
-						{counts.AVG_TASK_COUNT}개 / {counts.AVG_BACKLOG_COUNT}개
+					미답변 문의 
+					<div onClick={() => navigate(`/admin/inquery`)}>
+						{counts.UNANSWERED_INQUIRY_COUNT}개
 					</div>
 				</div>
 			</div>
@@ -336,7 +341,7 @@ function AdminDashboard() {
 					(viewMode === 'day') &&
 					<Calendar 
 						value={searchValue} 
-						onChange={(e) => onChangeDate(e)} 
+						onChange={(e) => onChangeDate(e.value)} 
 						view="month" 
 						dateFormat="yy-mm" 
 						style={{width: '300px'}}
@@ -348,7 +353,7 @@ function AdminDashboard() {
 					(viewMode === 'month') &&
 					<Calendar 
 						value={searchValue} 
-						onChange={(e) => onChangeDate(e)} 
+						onChange={(e) => onChangeDate(e.value)} 
 						view="year" 
 						dateFormat="yy" 
 						style={{width: '300px'}}
@@ -384,6 +389,19 @@ function AdminDashboard() {
 						onClick={() => onChangeView('month')}
 					/>
 					
+					<Button 
+						className="p-button-outlined p-button-custom"  
+						label="Today"
+						style={{
+							width: '80px',
+							height: '40px',
+							backgroundColor: '#F86064',
+							color: '#FFFFFFAA',
+							border: '1px solid #333544',
+							marginLeft: '20px'
+						}}
+						onClick={onClickToday}
+					/>
 				</div>
             </div>
 
