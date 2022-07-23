@@ -1,11 +1,10 @@
 import BacklogModalsCSS from './BacklogModals.module.css';
 
 import { useState } from 'react';
-import { useParams } from 'react-router';
 import { useDispatch } from 'react-redux';
-
-import { callPutSprintAPI, callDeleteSprintAPI } from '../../../apis/SprintsForBacklogAPICalls';
+import { useParams } from 'react-router';
 import { decodeJwt } from '../../../utils/tokenUtils';
+import { callPutSprintAPI, callDeleteSprintAPI } from '../../../apis/SprintsForBacklogAPICalls';
 
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 import { Button } from 'primereact/button';
@@ -83,6 +82,7 @@ function SprintEditModal({ sprint }) {
                 sprintProgressStatus: sprint.sprintProgressStatus,
                 sprintCode: sprint.sprintCode,
                 currentInfo: {
+                    sprintCode: sprint.sprintCode,
                     projectCode: projectCode,
                     memberCode: loginUser.code
                 }
@@ -98,6 +98,7 @@ function SprintEditModal({ sprint }) {
 
     const accept = async () => {
         await dispatch(callDeleteSprintAPI({
+            sprintCode: sprint.sprintCode,
             currentInfo: {
                 sprintCode: sprint.sprintCode,
                 projectCode: projectCode,
@@ -105,7 +106,7 @@ function SprintEditModal({ sprint }) {
             }
         }));
         await onHide();
-        // await window.location.replace(window.location.href);
+        await window.location.replace(window.location.href);
     }
 
     const reject = async () => { setVisible(false) }
