@@ -68,7 +68,7 @@ function ChatBotModal() {
               color: "black",
               fontSize: "0.85em",
             }}
-            placeholder={"WHY-AGILE CHATBOT V 1.0.1"}
+            placeholder={"WHY-AGILE CHATBOT Ver 1.0.2"}
             steps={StepByScript(ChatBotScripts)}
           />
         </ThemeProvider>
