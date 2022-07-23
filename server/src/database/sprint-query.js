@@ -265,6 +265,8 @@ exports.updateTaskToBacklogByBacklogCode = () => {
               BACKLOG_PROGRESS_STATUS = '백로그'
             , BACKLOG_CATEGORY = '백로그'
             , SPRINT_CODE = NULL
+            , BACKLOG_START_DATE = NULL
+            , BACKLOG_END_DATE = NULL
         WHERE
             BACKLOG_CODE = ?
     `;

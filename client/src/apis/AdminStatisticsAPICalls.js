@@ -14,7 +14,7 @@ export function callGetAdminStatisticsAPI() {
 }
 
 export function callGetAdminStatisticsChartAPI(params) {
-    
+   
     if(params.searchValue) {
         params.searchValue2 = dateFormat2(params.searchValue);
         params.searchValue = dateFormat(params.searchValue);

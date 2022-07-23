@@ -136,7 +136,7 @@ export const callGetProjectMemberAPI = (params) => {
 
 export const callGetProjectMemberInfoAPI = (params) => {
 
-    const requestURL = `http://localhost:8888/api/projects/${ params.projectCode}/member/${ params.memberCode }`;
+    const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/projects/${ params.projectCode}/member/${ params.memberCode }`;
 
     return async function getProjectMemberInfo(dispatch, getState) {
 
@@ -237,7 +237,7 @@ export const callPutModifyNoticeAPI = (data) => {
 
     console.log('data는 ', data);
     const decoded = decodeJwt(window.localStorage.getItem("access_token"));
-    const requestURL = `http://localhost:8888/api/projects/${ data.projectCode }/notice`;
+    const requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/projects/${ data.projectCode }/notice`;
 
     return async function registNotice(dispatch, getState) {
 

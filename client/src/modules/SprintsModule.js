@@ -40,8 +40,8 @@ const sprintsReducer = handleActions(
                     name: p.sprintName,
                     progress: 0,
                     type: "project",
-                    start: new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate()),
-                    end: new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate()),
+                    start: new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate(), startDate.getHours(), startDate.getMinutes(), startDate.getSeconds()),
+                    end: new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate(), endDate.getHours(), endDate.getMinutes(), endDate.getSeconds()),
                     hideChildren: (p.sprintProgressStatus === 'Y')? false: true,
                     progressStatus: p.sprintProgressStatus,
                     tasksCount: p.tasks.length
@@ -83,8 +83,8 @@ const sprintsReducer = handleActions(
                                             ? 50
                                             : 100,
                             type: "task",
-                            start: new Date(taskStartDate.getFullYear(), taskStartDate.getMonth(), taskStartDate.getDate()),
-                            end: new Date(taskEndDate.getFullYear(), taskEndDate.getMonth(), taskEndDate.getDate()),
+                            start: new Date(taskStartDate.getFullYear(), taskStartDate.getMonth(), taskStartDate.getDate(), taskStartDate.getHours(), taskStartDate.getMinutes(), taskStartDate.getSeconds()),
+                            end: new Date(taskEndDate.getFullYear(), taskEndDate.getMonth(), taskEndDate.getDate(), taskEndDate.getHours(), taskEndDate.getMinutes(), taskEndDate.getSeconds()),
                             project: p.sprintCode,
                             dependencies: [p.sprintCode]
                         });
@@ -92,7 +92,7 @@ const sprintsReducer = handleActions(
 
                 }
             })
-
+            
             return newState;
         },
         [SET_COLLAPSED_SPRINTS]: (state, { payload }) => {

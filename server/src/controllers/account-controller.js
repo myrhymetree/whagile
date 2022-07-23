@@ -158,7 +158,9 @@ exports.emailAuth = async (req, res, next) => {
 
     await AccountService.emailAuthWithToken(req.query)
     .then((result) => {
-        res.redirect(`http://localhost:3000/`);
+
+        res.redirect(`http://${process.env.REACT_APP_RESTAPI_IP}/`);
+        
     })
     .catch((err) =>{
         console.log(err);
