@@ -1,9 +1,10 @@
 import BacklogModalsCSS from './BacklogModals.module.css';
 
 import { useState } from 'react';
+import { useParams } from 'react-router';
 import { useDispatch } from 'react-redux';
 
-// import { decodeJwt } from '../../../utils/tokenUtils';
+import { decodeJwt } from '../../../utils/tokenUtils';
 import { callChangeSprintStatusAPI } from '../../../apis/SprintsForBacklogAPICalls';
 
 import { Button } from 'primereact/button';
@@ -12,8 +13,8 @@ import { Dialog } from 'primereact/dialog';
 function SprintEndModal({ sprint }) {
 
     const dispatch = useDispatch();
-    // const { projectCode } = useParams();
-    // const loginUser = decodeJwt(window.localStorage.getItem('access_token'));
+    const { projectCode } = useParams();
+    const loginUser = decodeJwt(window.localStorage.getItem('access_token'));
 
     /* 다이얼로그 표시 상태 */
     const [displayDialog, setDisplayDialog] = useState(false);
@@ -55,8 +56,13 @@ function SprintEndModal({ sprint }) {
         
         return new Promise(async (resolve, reject) => {
             await dispatch(callChangeSprintStatusAPI({
+                sprintProgressStatus: sprint.sprintProgressStatus,
                 sprintCode: sprint.sprintCode,
-                sprintProgressStatus: sprint.sprintProgressStatus
+                currentInfo: {
+                    sprintCode: sprint.sprintCode,
+                    projectCode: projectCode,
+                    memberCode: loginUser.code
+                }
             }));
             await window.location.replace(window.location.href);
         });
