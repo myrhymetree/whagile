@@ -189,7 +189,7 @@ function AdminAuth() {
 
     const onChangeAuth = async (e) => { // 모달창 내용 변경시 감지
 
-        if(e.target.name = 'authorityName') {
+        if(e.target.name === 'authorityName') {
             if(e.target.value) {
                 setFormError(false);
             } else {
