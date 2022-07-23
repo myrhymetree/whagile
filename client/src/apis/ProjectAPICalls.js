@@ -26,7 +26,7 @@ export function callGetProjectAPI(params) {
     // let requestURL = `http://localhost:8888/api/projects/`;
     // requestURL += `${Object.entries(params).map(param => param.slice(1))}`;
 
-    let requestURL = `http:/${process.env.REACT_APP_RESTAPI_IP}:8888/api/projects/${params.projectCode}`;
+    let requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/projects/${params.projectCode}`;
 
     return async function getProject(dispatch, getState) {
 
