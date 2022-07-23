@@ -1,27 +1,14 @@
 import '../AdminStyle.css';
 
 import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { callGetInquiriesAPI } from '../../../apis/InquiryAPICalls';
+import { useSelector } from 'react-redux';
 
 import PageTitle from '../../../components/items/PageTitle';
 import InquiryTable from '../../../components/items/inquiry/InquiryTable';
 
 function AdminInquery() {
     
-    const dispatch = useDispatch();
-    const inquiries = useSelector(state => state.inquiriesReducer);
     const inquiryComment = useSelector(state => state.inquiryCommentReducer);
-
-    useEffect(
-        () => {
-            dispatch(callGetInquiriesAPI({
-                offset: 0,
-                limit: 10
-            }));
-        },
-        []
-    );
 
     useEffect(
         () => {
@@ -38,7 +25,7 @@ function AdminInquery() {
                 icon={<i className="pi pi-fw pi-phone"></i>}
                 text="고객센터"
             />
-            <InquiryTable inquiries={ inquiries }/>
+            <InquiryTable/>
         </section>
     );
 }
