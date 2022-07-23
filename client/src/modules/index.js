@@ -10,6 +10,7 @@ import backlogCommentReducer from './BacklogCommentModule';
 import backlogCommentDetailReducer from './BacklogCommentDetailModule';
 import projectsReducer from './ProjectModule';
 import projectMemberReducer from './ProjectMemberModule';
+import projectMembersReducer from './ProjectMembersModule';
 import ProjectNoticeReducer from './ProjectNoticeModule';
 import projectStatisticsReducer from './ProjectStatisticsModule';
 import memberReducer from './MemberModule';
@@ -42,6 +43,7 @@ const rootReducer = combineReducers({
     backlogCommentDetailReducer,
     projectsReducer,
     projectMemberReducer,
+    projectMembersReducer,
     ProjectNoticeReducer,
     projectStatisticsReducer,
     tasksReducer,
