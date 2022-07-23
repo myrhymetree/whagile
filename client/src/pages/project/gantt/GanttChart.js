@@ -261,7 +261,7 @@ function GanttChart() {
 
 	const onChangeSprint = (e) => {
 		
-		if(e.target.name = 'sprintName') {
+		if(e.target.name === 'sprintName') {
             if(e.target.value) {
                 setSprintFormError(false);
             } else {
