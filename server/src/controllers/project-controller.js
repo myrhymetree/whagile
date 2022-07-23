@@ -65,9 +65,13 @@ console.log('이메일 들어오나?',req.body);
 
 exports.modifyProject = async (req, res, next) => {
     await ProjectService.modifyProject(req.body)
-        .then(() => {
-
-            res.redirect(`http://${process.env.REACT_APP_RESTAPI_IP}:3000/`);
+        .then((result) => {
+            
+            res.status(HttpStatus.OK).json({
+                status: HttpStatus.OK,
+                message: 'successfully updatedProject!!',
+                results: result
+            });
             
         }).catch((err) => {
             
