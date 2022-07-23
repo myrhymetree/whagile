@@ -305,7 +305,7 @@ function GanttChart() {
 			backlogCreatorCode: decodeJwt(window.localStorage.getItem("access_token")).code,
 			offset: 0,
 			limit: currentLimit,
-			sprints: sprints
+			prevSprints: sprints
 		}
 
 		dispatch(callPostSprintAPI(sprint, changedTasks, currentInfo));
@@ -335,7 +335,7 @@ function GanttChart() {
 			memberCode: decodeJwt(window.localStorage.getItem("access_token")).code,
 			offset: 0,
 			limit: currentLimit,
-			sprints: sprints
+			prevSprints: sprints
 		}
 
 		await dispatch(callPutSprintAPI(sprint, changedTasks, currentInfo));
@@ -353,7 +353,7 @@ function GanttChart() {
 			memberCode: decodeJwt(window.localStorage.getItem("access_token")).code,
 			offset: 0,
 			limit: currentLimit,
-			sprints: sprints
+			prevSprints: sprints
 		}
 
 		dispatch(callDeleteSprintAPI(sprint.sprintCode, currentInfo));
