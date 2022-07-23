@@ -1,4 +1,6 @@
 import { combineReducers } from 'redux';
+import adminStatisticsReducer from './AdminStatisticsModule';
+import adminStatisticsChartReducer from './AdminStatisticsChartModule';
 import authsReducer from './AuthsModule';
 import authReducer from './AuthModule';
 import authOrderReducer from './AuthOrderModule';
@@ -28,6 +30,8 @@ import inquiryReducer from './InquiryModule';
 import inquiryCommentReducer from './InquiryCommentModule';
 
 const rootReducer = combineReducers({
+    adminStatisticsReducer,
+    adminStatisticsChartReducer,
     authsReducer,
     authReducer,
     authOrderReducer,

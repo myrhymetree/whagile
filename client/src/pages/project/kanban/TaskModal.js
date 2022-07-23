@@ -29,7 +29,7 @@ export default function TaskModal(props) {
   
   
   useEffect(() => {
-    console.log("Task", props.currentTaskID);
+    // console.log("Task", props.currentTaskID);
     // 개별 일감 상세 조회
     fetch(`http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/tasks/${props.currentTaskID}`, {
       method: "GET",

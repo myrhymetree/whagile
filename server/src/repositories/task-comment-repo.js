@@ -1,4 +1,5 @@
 const taskCommentDTO = require("../dto/tasks/task-comment-response-dto");
+const TaskCommentHistoryDTO = require("../dto/tasks/task-comment-history-response-dto");
 const taskCommentQuery = require("../database/task-comment-query")
 
 // 일감 댓글 조회
@@ -112,5 +113,48 @@ exports.deleteTaskComment = (connection, removeTaskCommentRequest) => {
       }
     );
     // console.log("deleteTaskComment", query.sql);
+  });
+};
+
+// 댓글 히스토리 생성
+exports.insertTaskCommentHistory = (connection, taskCommentHistory) => {
+	// console.log("TaskCommentHistory", taskCommentHistory);
+  return new Promise((resolve, reject) => {
+    const query = connection.query(
+      taskCommentQuery.insertTaskCommentHistory(taskCommentHistory),
+      (err, results, fields) => {
+        if (err) {
+          reject(err);
+        }
+
+        resolve(results);
+      }
+    );
+
+    console.log(query.sql);
+  });
+};
+
+
+// 댓글 히스토리 조회 요청
+exports.selectTaskCommentHistory = (connection, historyCode) => {
+  return new Promise((resolve, reject) => {
+    const query = connection.query(
+      taskCommentQuery.selectTaskCommentHistory(),
+      historyCode,
+      (err, result, fields) => {
+        if (err) {
+          reject(err);
+        }
+
+        const taskCommentHistory = [];
+        for (let i = 0; i < result.length; i++) {
+          taskCommentHistory.push(new TaskCommentHistoryDTO(result[i]));
+        }
+
+        resolve(taskCommentHistory);
+      }
+    );
+    // console.log("taskCommentHistory", query.sql);
   });
 };

@@ -20,8 +20,7 @@ exports.generateTempPassword = () => {
             length: 10,
             lowercase: true,
             uppercase: true,
-            numbers: true,
-            symbols: true
+            numbers: true
         }))
     });
 }
@@ -65,6 +64,7 @@ exports.decodedToken = (token) => {
         email: result.email,
         role: result.role
     };
+    
 
     return decodedToken;
 };

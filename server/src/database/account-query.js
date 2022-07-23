@@ -1,4 +1,21 @@
+exports.insertHistory = () => {
+  return `
+        INSERT INTO TBL_MEMBER_HISTORY (
+              MEMBER_CODE
+            , MEMBER_HISTORY_ITEM
+            , MEMBER_HISTORY_DATE
+            , MEMBER_HISTORY_INDEX
+        ) VALUES (
+              ?
+            , '로그인'
+            , '로그인이력추가'
+            , DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s')
+        )    
+    `;
+}
+
 exports.selectMemberHistoryWithMemberCode = (memberCode) => {
+  
   return `
         SELECT 
               H.SPRINT_HISTORY_ITEM AS 'ITEM'

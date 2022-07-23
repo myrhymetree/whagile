@@ -114,8 +114,8 @@ exports.editTask = (task) => {
       const results = await TasksRepository.updateTask(connection, task);
       const prevTask = prevTasks[0];
 
-      console.log("prevTasks: ", prevTask);
-      console.log("task", task);
+      // console.log("prevTasks: ", prevTask);
+      // console.log("task", task);
 
       const taskHistory = createTaskHistory();
 
