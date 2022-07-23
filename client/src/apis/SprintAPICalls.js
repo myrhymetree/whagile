@@ -55,12 +55,12 @@ export function callGetSprintAPI(params) {
 }
 
 export function callPostSprintAPI(params, changedTasks, currentInfo) {
-
+    
     let requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/sprints`;
     
     return async (dispatch, getState) => {
         
-        const result = await fetch(requestURL, {
+        await fetch(requestURL, {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -245,6 +245,8 @@ export function callUpdateTaskAPI(params, currentInfo) {
                     backlogStartDate: (params.backlogStartDate)? dateFormat(new Date(params.backlogStartDate), 'start'): '',
                     backlogEndDate: (params.backlogEndDate)? dateFormat(new Date(params.backlogEndDate), 'end'): '',
                     sprintCode: params.sprintCode,
+                    projectCode: currentInfo.projectCode,
+                    memberCode: currentInfo.memberCode
                 }
             })
         }).then(res => res.json());
