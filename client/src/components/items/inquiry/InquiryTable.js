@@ -7,33 +7,47 @@ import { callGetInquiriesAPI, callGetInquiryDetailAPI } from '../../../apis/Inqu
 import { InputText } from 'primereact/inputtext';
 import InquiryDetailModal from '../../../pages/inquiry/InquiryDetailModal';
 
-function InquiryTable({ inquiries }) {
+function InquiryTable() {
 
     const dispatch = useDispatch();
-    const inquiriesReducer = useSelector(state => state.inquiriesReducer);
+    const inquiries = useSelector(state => state.inquiriesReducer);
 
     /* 페이징 및 검색 조건 */
     const [offset, setOffset] = useState(0);
     const [filter, setFilter] = useState('');
     const [searchValue, setSearchValue] = useState('');
+    const [inquiryList, setInquiryList] = useState([]);
 
     useEffect(
-        () => {},
-        [inquiriesReducer]
+        () => {
+            dispatch(callGetInquiriesAPI({
+                offset: 0,
+                limit: 10,
+            }));
+        },
+        []
+    );
+
+    useEffect(
+        () => {
+            console.log(1212)
+            setInquiryList(inquiries);
+        },
+        [inquiries]
     );
 
     /* 필터 조건 부여하여 목록 조회 */
     const getFilteredList = (filteredValue) => {
-        setFilter(filteredValue);
 
-        const params = {
+        setFilter(filteredValue);
+        
+        dispatch(callGetInquiriesAPI({
             offset: 0,
             limit: 10,
             filter: filter
-        }
+        }));
 
-        console.log(params)
-        dispatch(callGetInquiriesAPI(params));
+        setInquiryList(inquiries);
     }
     
     /* 목록 더보기 요청 */
@@ -41,10 +55,11 @@ function InquiryTable({ inquiries }) {
         const params = {
             offset: (offset + 1) * 10,
             limit: 10,
-            filter: filter,
+            filter: filter
         }
-        
+        setOffset(offset + 1);
         dispatch(callGetInquiriesAPI(params));
+        setInquiryList(inquiries);
     }
 
     return (
@@ -95,8 +110,8 @@ function InquiryTable({ inquiries }) {
                     <div>자세히</div>
                 </div>
                 { 
-                    inquiries.length > 0
-                    ? inquiries.map(inquiry => 
+                    inquiryList.length > 0
+                    ? inquiryList.map(inquiry => 
                         <div key={ inquiry.inquiryCode } className={ InquiryCSS.tableRow }>
                             <div>{ inquiry.inquiryCode }</div>
                             <div>{ inquiry.title }</div>
@@ -114,7 +129,7 @@ function InquiryTable({ inquiries }) {
                 <button 
                     id={ InquiryCSS.readMoreBtn }
                     onClick={ readMoreInquiries }    
-                    style={{ display: (inquiriesReducer.length > 0)? 'block' : 'none'}}
+                    style={{ display: (inquiryList.length > 0)? 'block' : 'none'}}
                 >
                     더보기
                 </button>

@@ -243,7 +243,10 @@ function InquiryDetailModal({ inquiry }) {
                             autoResize
                             value={ comment }
                             onChange={ (e) => setComment(e.target.value) }
-                            style={{ display:(inquiry.answeredYN === 'N')? 'block' : 'none' }}
+                            style={{ 
+                                display:(inquiry.answeredYN === 'N' && loginUser.role === 'ROLE_ADMIN') ?
+                                    'block' : 'none' 
+                            }}
                         />
                         <InputTextarea
                             id={ InquiryCSS.answer }
@@ -268,7 +271,11 @@ function InquiryDetailModal({ inquiry }) {
                             />
                         </div>
                         <div id={ InquiryCSS.adminUses }
-                            style={{ display: !modificationMode? 'block' : 'none' }}
+                            style={{ 
+                                display: 
+                                    (!modificationMode && loginUser.role === 'ROLE_ADMIN')? 
+                                    'block' : 'none' 
+                            }}
                         >
                             <Button 
                                 id={ InquiryCSS.answerRegistBtn }
