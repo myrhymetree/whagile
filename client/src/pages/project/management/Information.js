@@ -19,7 +19,6 @@ function Information() {
     const { projectCode } = useParams();
     const project = useSelector(state => state.projectsReducer);
     const memberList = useSelector(state => state.projectMemberReducer);
-    console.log('project : ', project);
     const [teamMates, setTeamMates] = useState([]);
     const [projectName, setProjectName ] = useState('');
     const [projectDescription, setProjectDescription ] = useState('');

@@ -85,25 +85,18 @@ function KanbanBox(props) {
 export function KanbanColumn(props) {
   return (
     <>
-      <div
-        className={KanbanBoardStyle.kanbanColumn}
-      >
+      <div className={KanbanBoardStyle.columnTitle}>
+        <h2 className={KanbanBoardStyle.kanbanColumnTitle}>{props.category}</h2>
+      </div>
+      <div className={KanbanBoardStyle.kanbanNewTaskButtonDiv}>
+        <NewTaskButton category={props.category} />
+      </div>
+      <div className={KanbanBoardStyle.kanbanColumn}>
         <div>
-          <h2 className={KanbanBoardStyle.kanbanColumnTitle}>
-            {props.category}
-          </h2>
           {props.data &&
             props.data.map((task) => (
-              <KanbanBox
-                key={task.backlogCode}
-                data={task}
-              />
+              <KanbanBox key={task.backlogCode} data={task} />
             ))}
-        </div>
-        <div className={KanbanBoardStyle.kanbanNewTaskButtonDiv}>
-          <NewTaskButton
-            category={props.category}
-          />
         </div>
       </div>
     </>

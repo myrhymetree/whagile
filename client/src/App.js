@@ -12,6 +12,7 @@ import Signup from './pages/login/Signup';
 import ProjectLayout from './layouts/ProjectLayout';
 import Main from './pages/main/Main';
 import Profile from "./pages/profile/Profile";
+import Inquiry from "./pages/inquiry/Inquiry.js";
 
 import Dashboard from './pages/project/dashboard/Dashboard';
 import BacklogAndSprint from './pages/project/backlog-and-sprint/BacklogAndSprint';
@@ -31,7 +32,7 @@ import AdminDashboard from './pages/admin/dashboard/AdminDashboard';
 import AdminMember from './pages/admin/member/AdminMember';
 import AdminAuth from './pages/admin/auth/AdminAuth';
 import AdminProduct from './pages/admin/product/AdminProduct';
-import AdminInquery from './pages/admin/inquery/AdminInquery';
+import AdminInquiry from './pages/admin/inquiry/AdminInquiry';
 import AdminStatistics from './pages/admin/statistics/AdminStatistics';
 
 // NotFound
@@ -53,6 +54,7 @@ function App() {
           element={<InvitedMemberSignup />}
         />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/inquiry" element={<Inquiry />} />
         <Route path="/project/:projectCode" element={<ProjectLayout />}>
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="backlog-and-sprint" element={<BacklogAndSprint />} />
@@ -72,7 +74,7 @@ function App() {
           <Route path="member" element={<AdminMember />} />
           <Route path="auth" element={<AdminAuth />} />
           <Route path="product" element={<AdminProduct />} />
-          <Route path="inquery" element={<AdminInquery />} />
+          <Route path="inquery" element={<AdminInquiry />} />
           <Route path="statistics" element={<AdminStatistics />} />
         </Route>
 

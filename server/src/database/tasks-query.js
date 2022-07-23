@@ -1,6 +1,6 @@
 
 // 전체 일감 목록 조회
-exports.selectTasks = () => {
+exports.selectTasks = (params) => {
 
   let query = `
        SELECT
@@ -18,14 +18,28 @@ exports.selectTasks = () => {
             , A.BACKLOG_CHARGER_CODE
             , E.MEMBER_NAME
          FROM TBL_BACKLOG A
-         JOIN TBL_SPRINT B ON (A.SPRINT_CODE = B.SPRINT_CODE)
-         JOIN TBL_PROJECT C ON (A.PROJECT_CODE = C.PROJECT_CODE)
-         JOIN TBL_PROJECT_MEMBER D ON (A.PROJECT_CODE = D.PROJECT_CODE) AND (A.BACKLOG_CREATOR_CODE = D.MEMBER_CODE)
-         JOIN TBL_MEMBER E ON (D.MEMBER_CODE = E.MEMBER_CODE)
+         LEFT JOIN TBL_SPRINT B ON (A.SPRINT_CODE = B.SPRINT_CODE)
+         LEFT JOIN TBL_PROJECT C ON (A.PROJECT_CODE = C.PROJECT_CODE)
+         LEFT JOIN TBL_PROJECT_MEMBER D ON (A.PROJECT_CODE = D.PROJECT_CODE) AND (A.BACKLOG_CREATOR_CODE = D.MEMBER_CODE)
+         LEFT JOIN TBL_MEMBER E ON (D.MEMBER_CODE = E.MEMBER_CODE)
         WHERE BACKLOG_DELETED_YN = 'N'
-        AND A.PROJECT_CODE = ?
-        ORDER BY BACKLOG_CODE ASC
     `;
+
+    if(params.projectCode !== undefined) {
+      query += `\nAND A.PROJECT_CODE = ${params.projectCode}`;
+    }
+
+    if(params.sprintCode !== undefined) {
+      query += `\nAND A.SPRINT_CODE = ${params.sprintCode}`;
+    }
+
+    if(params.backlogCategory !== undefined) {
+      query += `\nAND A.BACKLOG_CATEGORY = '${params.backlogCategory}'`;
+    }
+
+    query += `\nORDER BY A.BACKLOG_CODE ASC`;
+
+    // console.log("backlogsQuery",query)
 
   return query;
 };
@@ -93,7 +107,8 @@ exports.updateTask = (params) => {
 
   let query = `
     UPDATE TBL_BACKLOG
-    SET`;
+    SET
+      SPRINT_CODE = ${params.sprintCode},`;
     
   if (params.backlogTitle) {
     query += `
@@ -115,9 +130,9 @@ exports.updateTask = (params) => {
     BACKLOG_CATEGORY = '${params.backlogCategory}',`;
   }
   
-  if (params.backlogChargerCode) {
+  if (params.backlogChargerCode !== undefined) {
     query += `
-    BACKLOG_CHARGER_CODE = '${params.backlogChargerCode}',`;
+    BACKLOG_CHARGER_CODE = ${params.backlogChargerCode},`;
   }
   
   if (
@@ -140,10 +155,10 @@ exports.updateTask = (params) => {
   }
 
   query += `
-  WHERE BACKLOG_CODE = '${params.backlogCode}'`;
+  WHERE BACKLOG_CODE = ${params.backlogCode}`;
 
 
-  console.log("query",query);
+  // console.log("query",query);
   return query;
     
   };
@@ -164,7 +179,8 @@ exports.removeTask = () => {
       UPDATE TBL_BACKLOG A
          SET 
             A.BACKLOG_PROGRESS_STATUS = '백로그',
-            A.BACKLOG_CATEGORY = '백로그'
+            A.BACKLOG_CATEGORY = '백로그',
+            A.SPRINT_CODE = NULL
        WHERE A.BACKLOG_CODE = ?
   `;
 };
@@ -178,7 +194,7 @@ exports.insertTaskHistory = () => {
     INSERT INTO TBL_BACKLOG_HISTORY
     (BACKLOG_HISTORY_ITEM, BACKLOG_HISTORY_CONTENT, BACKLOG_HISTORY_DATE, BACKLOG_CODE, PROJECT_CODE, MEMBER_CODE)
     VALUES
-    (?, ?, ?, ?, ?, ?)
+    (?, ?, DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'), ?, ?, ?)
   `;
 };
 
@@ -217,6 +233,20 @@ exports.selectTaskHistories = () => {
          , A.MEMBER_CODE
       FROM TBL_BACKLOG_HISTORY A
      ORDER BY A.BACKLOG_HISTORY_CODE DESC
-     LIMIT ?, ?
   `;
+};
+
+// 일감(백로그) 히스토리 전체 조회
+exports.updateTaskDate = () => {
+
+  let query = `
+    UPDATE TBL_BACKLOG
+    SET
+        BACKLOG_START_DATE = ?
+      , BACKLOG_END_DATE = ?
+    WHERE
+      BACKLOG_CODE = ?
+  `;
+  
+  return query;
 };

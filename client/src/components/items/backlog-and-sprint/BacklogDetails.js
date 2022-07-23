@@ -1,12 +1,14 @@
 import BacklogAndSprintCSS from '../backlog-and-sprint/BacklogAndSprint.module.css';
 
-import BacklogComment from './BacklogComment';
-
 import { useSelector, useDispatch } from 'react-redux';
 import { useState, useRef, useEffect, useMemo, useCallback } from 'react';
+import { useParams } from 'react-router';
+
 import { callPutBacklogAPI, callDeleteBacklogAPI } from '../../../apis/BacklogAPICalls';
 import { callCleanBacklogComments } from '../../../apis/BacklogCommentAPICalls';
+import { callGetSprintsAPI } from '../../../apis/SprintsForBacklogAPICalls';
 
+import BacklogComment from './BacklogComment';
 import { Dropdown } from 'primereact/dropdown';
 import { Button } from 'primereact/button';
 import { Sidebar} from 'primereact/sidebar';
@@ -14,13 +16,14 @@ import { InputTextarea } from 'primereact/inputtextarea';
 import { InputText } from 'primereact/inputtext';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 import { Toast } from 'primereact/toast';
-import _default from 'react-redux/es/components/connect';
 
 function BacklogDetails({visibleRight, setVisibleRight}) {
 
     const dispatch = useDispatch();
     const backlogDetails = useSelector(state => state.backlogDetailReducer);
-    // const sprints = useSelector(state => state.sprintReducer);
+    const sprints = useSelector(state => state.sprintsForBacklogReducer);
+
+    const { projectCode } = useParams();
 
     /* 백로그 편집 상태값 저장 */
     const [editable, setEditable] = useState(false);
@@ -44,6 +47,7 @@ function BacklogDetails({visibleRight, setVisibleRight}) {
         }
     };
 
+    /* dropdown options */
     const urgencyOptions = [
         { name: '낮음', value: '낮음' },
         { name: '보통', value: '보통' },
@@ -55,10 +59,10 @@ function BacklogDetails({visibleRight, setVisibleRight}) {
         { name: '이슈', value: 1 }
     ];
 
-    const sprintOptions = [
-        { name: '스프린트1', value: 1 }, 
-        { name: '스프린트2', value: 2 }
-    ];
+    const sprintOptions = [];
+    for(let i = 0; i < sprints.length; i++) {
+        sprintOptions.push({ name: sprints[i].sprintName, value: sprints[i].sprintCode });
+    }
 
     useEffect(
         () => {
@@ -68,7 +72,16 @@ function BacklogDetails({visibleRight, setVisibleRight}) {
             setEditable(false)
         },
         [backlogDetails]
-    )
+    );
+
+    useEffect(
+        () => {
+            dispatch(callGetSprintsAPI({
+                projectCode: projectCode
+            }));
+        },
+        []
+    );
 
     /* 백로그 수정 요청 */
     const modifyBacklog = (backlogCode, projectCode) => {
@@ -133,12 +146,7 @@ function BacklogDetails({visibleRight, setVisibleRight}) {
     const changeEditableState = useCallback(
         () => {
             setEditable(!editable);
-
-            if(editable === false) {
-                // 스프린트 조회 API 요청
-                // dispatch(callGetSprintsAPI());
-                // sprintOptions.push() 리덕스에서 가져온 목록을 드롭다운 옵션에 넣어주어야함
-            }
+            reset();
         },
         [editable]
     );
@@ -334,7 +342,15 @@ function BacklogDetails({visibleRight, setVisibleRight}) {
                         id={ BacklogAndSprintCSS.editConfirmBtn }
                         style={ toggleOn }
                         onClick={ () => modifyBacklog(backlogDetails[0].backlogCode, backlogDetails[0].projectCode) }
-                        disabled={ (title === null || title === '') && (description === null || description === '') && urgency === null && issue === null? true : false }
+                        disabled={ 
+                            (title === null || title === '') && 
+                            (description === null || description === '') && 
+                            (sprint === null || sprint === 0) &&
+                            (urgency === null) && 
+                            (issue === null)
+                            ? true 
+                            : false 
+                        }
                         >
                         적용
                     </button>  

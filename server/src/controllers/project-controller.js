@@ -1,5 +1,7 @@
 const HttpStatus = require('http-status');
 const ProjectService = require('../services/project-service');
+require('dotenv').config();
+const { REACT_APP_RESTAPI_IP } = process.env;
 
 exports.selectProjects = async (req, res, next) => {
 
@@ -64,12 +66,13 @@ console.log('이메일 들어오나?',req.body);
 exports.modifyProject = async (req, res, next) => {
     await ProjectService.modifyProject(req.body)
         .then((result) => {
-
+            
             res.status(HttpStatus.OK).json({
                 status: HttpStatus.OK,
                 message: 'successfully updatedProject!!',
                 results: result
             });
+            
         }).catch((err) => {
             
             res.status(HttpStatus.BAD_REQUEST).json({
@@ -119,16 +122,31 @@ exports.findProjectMembers = async (req, res, next) => {
         });
 }
 
+exports.findProjectMemberInfo = async (req, res, next) => {
+
+    await ProjectService.findProjectMemberInfo(req.params)
+    .then((results) => {
+
+        res.status(HttpStatus.OK).json({
+            status: HttpStatus.OK,
+            message: '프로젝트 팀원을 조회했습니다.',
+            results: results
+        });
+    }).catch((err) => {
+
+        res.status(HttpStatus.OK).json({
+            status: HttpStatus.OK,
+            message: err
+        });
+    });
+}
+
 exports.registProjectMember = async (req, res, next) => {
 
     await ProjectService.registProjectMember(req.params)
-        .then((result) => {
-            // res.status(HttpStatus.CREATED).json({
-            //     status: HttpStatus.CREATED,
-            //     message: '성공적으로 프로젝트에 참여했습니다.',
-            //     results: result
-            // });
-            res.redirect('http://localhost:3000/');
+        .then(() => {
+            
+            res.redirect(`http://${process.env.REACT_APP_RESTAPI_IP}/`);
         }).catch((err) => {
 
             res.status(HttpStatus.BAD_REQUEST).json({
@@ -178,10 +196,10 @@ exports.signUpProjectMember = async (req, res, next) => {
 
     await ProjectService.signUpProjectMember(req.body)
         .then((result) => {
-            // res.redirect('http://localhost:3000/login');
+            // res.redirect('http://whagile.shop:3000/login');
             res.status(HttpStatus.OK).json({
                 status: HttpStatus.OK,
-                message: 'successfully register Account!!',
+                message: 'successfully regist Account!!',
                 results: result
             });
         }).catch((err) => {
@@ -236,19 +254,20 @@ exports.findNotice = async (req, res, next) => {
         });
 };
 
-exports.registNoticeToProject = async (req, res, next) => {
+exports.modifyNoticeToProject = async (req, res, next) => {
 
     const noticeInfo = {
         projectCode : req.params.projectCode,
-        memberCode : req.body.loginMemberCode,
-        content : req.body.content
+        modifier : req.body.modifier,
+        content : req.body.content,
+        noticeCode: req.body.noticeCode
     }
 
-    await ProjectService.registNoticeToProject(noticeInfo)
+    await ProjectService.modifyNoticeToProject(noticeInfo)
         .then((result) => {
             res.status(HttpStatus.CREATED).json({
                 status: HttpStatus.CREATED,
-                message: '해당 프로젝트 공지사항을 등록했습니다.',
+                message: '해당 프로젝트 공지사항을 수정했습니다.',
                 results: result
             });
         }).catch((err) => {

@@ -1,9 +1,11 @@
 import KanbanBoardStyle from "./KanbanBoard.module.css";
-
 import React, { useEffect, useState } from "react";
-
 import { Category, Urgency } from "./Types";
-
+import { useSelector, useDispatch } from "react-redux";
+import TaskComment from "./TaskComment";
+import { useParams } from "react-router-dom";
+import callGetTaskAllCommentsAPI from "../../../apis/TaskCommentAPICalls";
+import { decodeJwt } from "../../../utils/tokenUtils";
 
 
 
@@ -19,35 +21,41 @@ export default function TaskModal(props) {
   const [taskCode, setTaskCode] = useState("");
   const [taskProjectCode, setTaskProjectCode] = useState("");
   const [taskCategory, setTaskCategory] = useState("");
-
-
+  const sprint = useSelector((state) => state.tasksSprintReducer);
+  const taskComments = useSelector((state) => state.taskTotalCommentReducer);
+  const dispatch = useDispatch();
+  const { projectCode } = useParams();
+  const user = decodeJwt(window.localStorage.getItem("access_token"));
+  
+  
   useEffect(() => {
-    console.log("Task", props.currentTaskID);
+    // console.log("Task", props.currentTaskID);
     // 개별 일감 상세 조회
-    fetch(`http://localhost:8888/api/tasks/${props.currentTaskID}`, {
+    fetch(`http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/tasks/${props.currentTaskID}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
         Access_token: window.localStorage.getItem("access_token"),
       },
     })
-      .then((response) => response.json())
-      .then((json) => {
-        console.log("상세", json);
-        const result = json.results[0];
-        setTaskCode(result.backlogCode || "");
-        setTaskTitle(result.backlogTitle || "");
-        setTaskDescription(result.backlogDescription || "");
-        setTaskProgressStatus(result.progressStatus || "");
-        setTaskIssue(result.issue);
-        setTaskUrgency(result.urgency || "");
-        setTaskCharger(result.backlogChargerCode || "");
-        setTaskProjectCode(result.projectCode || "");
-        setTaskCategory(result.category || "");
-        console.log("카테고리", result.category);
-
-        fetch(
-          `http://localhost:8888/api/projects/${result.projectCode}/member`,
+    .then((response) => response.json())
+    .then((json) => {
+      const result = json.results[0];
+      console.log("result", result)
+      setTaskCode(result.backlogCode || "");
+      setTaskTitle(result.backlogTitle || "");
+      setTaskDescription(result.backlogDescription || "");
+      setTaskProgressStatus(result.progressStatus || "");
+      setTaskIssue(result.issue);
+      setTaskUrgency(result.urgency || "");
+      setTaskCharger(result.backlogChargerCode || "");
+      setTaskProjectCode(result.projectCode || "");
+      setTaskCategory(result.category || "");
+      
+      dispatch(callGetTaskAllCommentsAPI(result.backlogCode));
+      
+      fetch(
+          `http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/projects/${result.projectCode}/member`,
           {
             method: "GET",
             headers: {
@@ -57,7 +65,7 @@ export default function TaskModal(props) {
           }
         )
           .then((res) => res.json())
-          .then((json) => setTaskMemberList(json.results));
+          .then((json) => setTaskMemberList(json.results))
       });
   }, [props.currentTaskID]);
 
@@ -92,6 +100,7 @@ export default function TaskModal(props) {
 
   // 개별 일감 수정
   const onClickSubmitHandler = async () => {
+    // console.log("taskCharger", taskCharger);
     const kanbanInfo = {
       backlogCode: props.currentTaskID,
       backlogTitle: taskTitle,
@@ -100,11 +109,14 @@ export default function TaskModal(props) {
       issue: taskIssue,
       urgency: taskUrgency,
       backlogCategory: (taskProgressStatus === "백로그" )? "백로그" : "일감",
-      backlogChargerCode: taskCharger,
+      backlogChargerCode: parseInt(taskCharger),
+      sprintCode: (taskProgressStatus === "백로그" )? null: sprint.sprintCode,
+      projectCode: parseInt(projectCode),
+      memberCode: user.code
     };
 
     console.log("kanban", kanbanInfo);
-    await fetch(`http://localhost:8888/api/tasks`, {
+    await fetch(`http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/tasks`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -129,9 +141,7 @@ export default function TaskModal(props) {
   // 개별 일감 삭제
 
   const onClickDeleteHandler = (taskCode, taskProjectCode, taskCategory) => {
-    console.log("Code", taskCode, "ProjectCode", taskProjectCode, "taskCategory", taskCategory);
-
-    fetch(`http://localhost:8888/api/tasks`, {
+    fetch(`http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/tasks`, {
       method: "DELETE",
       headers: {
         Accept: "application/json",
@@ -142,6 +152,7 @@ export default function TaskModal(props) {
         taskCode: taskCode,
         taskProjectCode: taskProjectCode,
         taskCategory: taskCategory,
+        memberCode: user.code,
       }),
     })
       .then((res) => res.json())
@@ -204,10 +215,18 @@ export default function TaskModal(props) {
                 value={taskProgressStatus}
                 onChange={(e) => onProgressStatusChange(e)}
               >
-                <option value={Category.Backlog}>백로그</option>
-                <option value={Category.Before}>진행 전</option>
-                <option value={Category.InProgress}>진행 중</option>
-                <option value={Category.Done}>완료</option>
+                {Object.keys(sprint).length > 0 ? (
+                  <>
+                    <option value={Category.Backlog}>백로그</option>
+                    <option value={Category.Before}>진행 전</option>
+                    <option value={Category.InProgress}>진행 중</option>
+                    <option value={Category.Done}>완료</option>
+                  </>
+                ) : (
+                  <>
+                    <option value={Category.Backlog}>백로그</option>
+                  </>
+                )}
               </select>
               <select
                 className={KanbanBoardStyle.kanbanDetailInputSelection}
@@ -276,6 +295,16 @@ export default function TaskModal(props) {
           >
             삭제
           </button>
+          <div className={KanbanBoardStyle.kanbanCommentBox}>
+            <div className={KanbanBoardStyle.kanbanComment}>
+              <TaskComment
+                taskCode={taskCode}
+                taskProjectCode={taskProjectCode}
+                taskTitle={taskTitle}
+                taskCategory={taskCategory}
+              />
+            </div>
+          </div>
         </div>
       </div>
     </>

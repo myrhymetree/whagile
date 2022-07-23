@@ -1,3 +1,7 @@
+#backlogCreationBtn {
+    color: #fff;
+}
+
 #inputTitle, #inputDescription {
     width: 100%;
     margin-top: 5px;
@@ -14,12 +18,11 @@
 }
 
 #dropdownArea>:nth-child(1),
-#dropdownArea>:nth-child(2),
-#dropdownArea>:nth-child(3) {
-    width: 30%;
+#dropdownArea>:nth-child(2) {
+    width: 40%;
 }
 
-#createBtn {
+#createBtn, #saveBtn {
     background-color: #00AA9C;
 }
 
@@ -27,11 +30,12 @@
     background-color: rgba(255, 255, 255, 0.25);
 }
 
-#createBtn, #cancelBtn, #startBtn, #endBtn {
-    width: 25%;
+#createBtn, #cancelBtn, #startBtn, #endBtn, #saveBtn {
+    width: 22%;
     height: 40px;
     border: none;
     color: #fff;
+    font-size: 15px;
 }
 
 #removeBtn {
@@ -71,4 +75,56 @@
     background-color: #F86064;
     color: #fff;
     border: none;
+}
+
+#createNewSprintBtn {
+    color: #fff;
+    float: right;
+    width: 200px;
+    font-size: 17px !important;
+}
+
+#sprintCreationDialog {
+    /* height: 600px; */
+    background-color: #282936;
+}
+
+#sprintCreationDialog>:nth-child(2)>div {
+    margin-bottom: 20px;
+}
+
+.inputTags {
+    display: block !important;
+    margin-bottom: 10px;
+}
+
+#infoBox {
+    border: none;
+    border-radius: 10px;
+    background-color: #333544;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+#infoBox>label,
+#infoBox>i,
+#infoBox>li {
+    margin-left: 30px;
+    margin-bottom: 5px;
+}
+
+#editSprintBtn {
+    border: none;
+    background: none;
+    color: #fff;
+    font-size: 12px;
+}
+
+#modalFooter>:nth-child(1),
+#modalFooter>:nth-child(2) {
+    float: left;
+}
+
+#modalFooter>:nth-child(3) {
+    float: right;
 }

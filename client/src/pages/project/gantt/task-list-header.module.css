@@ -23,7 +23,7 @@ div.cells {
 	font-size: 14px;
 	display: flex;
 	flex-direction: row;
-	justify-content: center;
+	justify-content: left;
 	align-items: center;
 	text-align: center;
 	-ms-user-select: none; 
@@ -31,4 +31,5 @@ div.cells {
     -khtml-user-select: none;
     -webkit-user-select: none;
     user-select: none;
+	cursor: pointer;
 }

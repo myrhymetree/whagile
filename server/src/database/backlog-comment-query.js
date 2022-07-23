@@ -51,7 +51,7 @@ exports.insertComment = () => {
         INSERT INTO TBL_BACKLOG_COMMENT
         (BACKLOG_COMMENT_CONTENT, BACKLOG_COMMENT_CREATED_DATE, BACKLOG_CODE, PROJECT_CODE, MEMBER_CODE)
         VALUES
-        (?, ?, ?, ?, ?)
+        (?, DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'), ?, ?, ?)
     `;
 };
 
@@ -61,7 +61,7 @@ exports.updateComment = () => {
     return `
         UPDATE TBL_BACKLOG_COMMENT A
            SET A.BACKLOG_COMMENT_CONTENT = ?
-             , A.BACKLOG_COMMENT_MODIFIED_DATE = ?
+             , A.BACKLOG_COMMENT_MODIFIED_DATE = DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s')
              , A.BACKLOG_COMMENT_MODIFIED_YN = 'Y'
          WHERE A.BACKLOG_COMMENT_CODE = ?
     `;
@@ -88,7 +88,7 @@ exports.insertBacklogCommentHistory = (newHistory) => {
             (BACKLOG_COMMENT_HISTORY_CONTENT, BACKLOG_HISTORY_DATE, BACKLOG_MODIFIED_COMMENT_DETAIL, 
             BACKLOG_COMMENT_CODE, PROJECT_CODE, MEMBER_CODE)
             VALUES
-            ('${newHistory.historyType}', '${newHistory.historyDate}', '${newHistory.modifiedComment}', 
+            ('${newHistory.historyType}',  DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'), '${newHistory.modifiedComment}', 
              ${newHistory.backlogCommentCode}, ${newHistory.projectCode}, ${newHistory.memberCode})
              `;
     } else {
@@ -97,7 +97,7 @@ exports.insertBacklogCommentHistory = (newHistory) => {
             (BACKLOG_COMMENT_HISTORY_CONTENT, BACKLOG_HISTORY_DATE,  
              BACKLOG_COMMENT_CODE, PROJECT_CODE, MEMBER_CODE)
             VALUES
-            ('${newHistory.historyType}', '${newHistory.historyDate}', 
+            ('${newHistory.historyType}',  DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'), 
              ${newHistory.backlogCommentCode}, ${newHistory.projectCode}, ${newHistory.memberCode})
         `;
     }

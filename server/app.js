@@ -3,6 +3,8 @@ const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
+const dotenv = require('dotenv');
+dotenv.config();
 
 const app = express();
 
@@ -13,6 +15,9 @@ app.use(cors());
 
 const accountRouter = require("./src/routes/account-route");
 app.use("/api/account", accountRouter);
+
+const adminStatisticsRouter = require("./src/routes/admin-statistics-route");
+app.use("/api/admin-statistics", adminStatisticsRouter);
 
 const projectRouter = require("./src/routes/project-route");
 app.use("/api/projects", projectRouter);
@@ -37,5 +42,14 @@ app.use("/api/sprints", sprintRouter);
 
 const tasksRouter = require("./src/routes/tasks-route");
 app.use("/api/tasks", tasksRouter);
+
+const taskCommentRouter = require("./src/routes/task-comment-route");
+app.use("/api/task-comment", taskCommentRouter);
+
+const inquiryRouter = require("./src/routes/inquiry-route");
+app.use("/api/inquiries", inquiryRouter);
+
+const inquiryCommentRouter = require("./src/routes/inquiry-comment-route");
+app.use("/api/inquiry-comment", inquiryCommentRouter);
 
 app.listen(8888, () => console.log("listening on port 8888..."));

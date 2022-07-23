@@ -27,7 +27,6 @@ exports.registComment = async (req, res, next) => {
     
     const newComment = {
         content: req.body.content,
-        createdDate: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString(),
         backlogCode: Number(req.body.backlogCode),
         projectCode: Number(req.body.projectCode),
         memberCode: user.usercode
@@ -39,8 +38,7 @@ exports.registComment = async (req, res, next) => {
     res.status(HttpStatus.CREATED).json({
         status: HttpStatus.CREATED,
         message: '댓글 추가에 성공했습니다.',
-        results: results,
-        url: 'localhost:8888/api/backlog-comments/:backlogCode?offset=0&limit=5'
+        results: results
     });
 };
 
@@ -51,7 +49,6 @@ exports.editComment = async (req, res, next) => {
     const modifyingContent = {
         backlogCommentCode: Number(req.body.backlogCommentCode),
         content: req.body.modifiedComment,
-        modifiedDate: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString(),
         projectCode : Number(req.body.projectCode),
         memberCode: user.usercode
     };
@@ -71,7 +68,6 @@ exports.removeComment = async (req, res, next) => {
 
     const removeRequest = {
         backlogCommentCode: Number(req.body.backlogCommentCode),
-        deletedDate: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString(),
         projectCode: Number(req.body.projectCode),
         memberCode: user.usercode
     };
@@ -81,7 +77,6 @@ exports.removeComment = async (req, res, next) => {
     res.status(HttpStatus.OK).json({
         status: HttpStatus.OK,
         message: '댓글 삭제에 성공했습니다.',
-        results: results,
-        url: 'localhost:8888/api/backlog-comments/:backlogCode?offset=0&limit=5'
+        results: results
     });
 };

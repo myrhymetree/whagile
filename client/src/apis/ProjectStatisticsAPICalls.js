@@ -3,7 +3,7 @@ import { decodeJwt } from '../utils/tokenUtils';
 
 export function callGetProjectStatisticsAPI(data) {
     
-    let requestURL = `http://localhost:8888/api/project-statistics/${ data.projectCode }/counting-tasks`;
+    let requestURL = `http://${process.env.REACT_APP_RESTAPI_IP}:8888/api/project-statistics/${ data.projectCode }/counting-tasks`;
 
     return async function getProjectStatistics(dispatch, getState) {
         

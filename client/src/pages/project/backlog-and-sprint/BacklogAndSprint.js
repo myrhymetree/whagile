@@ -2,7 +2,6 @@ import BacklogAndSprintCSS from '../../../components/items/backlog-and-sprint/Ba
 import PageTitle from '../../../components/items/PageTitle';
 import Backlogs from '../../../components/items/backlog-and-sprint/Backlogs';
 import Sprints from '../../../components/items/backlog-and-sprint/Sprints';
-import EndSprints from '../../../components/items/backlog-and-sprint/EndSprints';
 
 function BacklogAndSprint() {
 
@@ -15,12 +14,9 @@ function BacklogAndSprint() {
             <div className={ BacklogAndSprintCSS.pageDivision }>
                 <Backlogs/>
             </div>
-            {/* <div className={ BacklogAndSprintCSS.pageDivision }>
+            <div className={ BacklogAndSprintCSS.pageDivision }>
                 <Sprints/>
             </div>
-            <div className={ BacklogAndSprintCSS.pageDivision }>
-                <EndSprints/>
-            </div> */}
         </>
     );
 }

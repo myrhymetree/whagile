@@ -1,3 +1,47 @@
+exports.insertHistory = () => {
+  return `
+        INSERT INTO TBL_MEMBER_HISTORY (
+              MEMBER_CODE
+            , MEMBER_HISTORY_ITEM
+            , MEMBER_HISTORY_DATE
+            , MEMBER_HISTORY_INDEX
+        ) VALUES (
+              ?
+            , '로그인'
+            , '로그인이력추가'
+            , DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s')
+        )    
+    `;
+}
+
+exports.selectMemberHistoryWithMemberCode = (memberCode) => {
+  
+  return `
+        SELECT 
+              H.SPRINT_HISTORY_ITEM AS 'ITEM'
+            , H.SPRINT_HISTORY_CONTENT AS 'INDEX'     
+            , DATE_FORMAT(H.SPRINT_HISTORY_DATE, '%Y-%m-%d %H:%i:%s') AS 'MODIFY_DATE'
+            , H.MEMBER_CODE AS 'MEMBER_CODE'
+            , M.MEMBER_NAME AS 'MEMBER_NAME'
+        FROM TBL_SPRINT_HISTORY H
+        JOIN TBL_MEMBER M ON (H.MEMBER_CODE = M.MEMBER_CODE) 
+       WHERE M.MEMBER_CODE = ${ memberCode }
+
+        UNION ALL
+
+        SELECT 
+               '백로그 댓글' AS 'ITEM'
+             , H.BACKLOG_COMMENT_HISTORY_CONTENT AS 'INDEX'     
+             , DATE_FORMAT(H.BACKLOG_HISTORY_DATE, '%Y-%m-%d %H:%i:%s') AS 'MODIFY_DATE'
+             , H.MEMBER_CODE AS 'MEMBER_CODE'
+             , M.MEMBER_NAME AS 'MEMBER_NAME'
+         FROM TBL_BACKLOG_COMMENT_HISTORY H
+         JOIN TBL_MEMBER M ON (H.MEMBER_CODE = M.MEMBER_CODE)  
+        WHERE M.MEMBER_CODE = ${ memberCode }
+        ORDER BY MODIFY_DATE DESC;
+  `;
+}
+
 exports.selectMembers = () => {
 
     return `
