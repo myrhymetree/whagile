@@ -98,7 +98,7 @@ function SprintItem() {
                                         <div>{ task.memberName? task.memberName : '담당자 없음' }</div>
                                         <div 
                                             id={ BacklogAndSprintCSS.moreDetailsBtn } 
-                                            onClick={ () => alert('뿅')}
+                                            onClick={ () => alert('준비 중 입니다. \n일감 상세 보기는 칸반보드 또는 간트차트로 이동해주세요.')}
                                         >
                                             자세히
                                         </div>
