@@ -239,7 +239,7 @@ export function callUpdateTaskAPI(params, currentInfo) {
                     progressStatus: (params.backlogProgressStatus)? params.backlogProgressStatus: '',
                     urgency: (params.backlogUrgency)? params.backlogUrgency: '',
                     backlogCategory: (params.backlogCategory)? params.backlogCategory: '',
-                    backlogChargerCode: (params.backlogChargerCode)? params.backlogChargerCode: '',
+                    backlogChargerCode: (params.backlogChargerCode)? params.backlogChargerCode: null,
                     issue: (params.backlogIssue)? params.backlogIssue: 0,
                     backlogCode: (params.backlogCode)? params.backlogCode: '',
                     backlogStartDate: (params.backlogStartDate)? dateFormat(new Date(params.backlogStartDate), 'start'): '',

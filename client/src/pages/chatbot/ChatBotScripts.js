@@ -1,3 +1,6 @@
+import { Link } from "react-router-dom";
+import ChatBotStyle from "./ChatBot.module.css";
+
 const ChatBotScripts = [
   {
     id: "Intro",
@@ -19,6 +22,20 @@ const ChatBotScripts = [
       {
         label: "프로젝트 세부 기능에는 무엇이 있나요?",
         trigger: "whAgile-detail",
+      },
+      {
+        label: "1:1 문의",
+        component: (
+          <>
+            <div className={ChatBotStyle.inqueryLinkBox}>
+              <Link to={`/inquiry`}>
+                <button className={ChatBotStyle.inqueryLinkBtn}>
+                  1:1 문의 페이지로 이동하기
+                </button>
+              </Link>
+            </div>
+          </>
+        ),
       },
     ],
   },
@@ -157,6 +174,5 @@ const ChatBotScripts = [
     trigger: "Again-Intro",
   },
 ];
-
 
 export default ChatBotScripts;
