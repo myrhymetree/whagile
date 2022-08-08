@@ -134,14 +134,6 @@ function BacklogCreationModal() {
                     <br/><br/>
                 </div>
                 <div id={ BacklogModalsCSS.dropdownArea }>
-                    {/* <Dropdown 
-                        value={ selectedProgressStatus } 
-                        options={ progressStatusOptions } 
-                        optionLabel="name" 
-                        optionValue="value" 
-                        onChange={ (e) => setSelectedProgressStatus(e.target.value) }  
-                        placeholder="진행상태*" 
-                    />   */}
                     <Dropdown 
                         value={ selectedUrgency } 
                         options={ urgencyOptions } 

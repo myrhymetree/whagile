@@ -120,18 +120,22 @@ exports.editBacklog = (modifyingContent) => {
     query += `
      A.BACKLOG_TITLE = '${ target.title }',`;
   }
+
   if(target.description) {
     query += `
      A.BACKLOG_DESCRIPTION = '${ target.description }',`;
   }
+  
   if(typeof(target.issue) == 'number') {
     query += `
      A.BACKLOG_ISSUE = '${ Number(target.issue) }',`;
   }
+
   if(target.urgency) {
     query += `
      A.BACKLOG_URGENCY = '${ target.urgency }',`;
   }
+
   if(typeof(target.sprint) == 'number') {
     query += `
      A.BACKLOG_CATEGORY = '일감',

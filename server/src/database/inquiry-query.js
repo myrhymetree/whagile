@@ -78,18 +78,22 @@ exports.updateInquiry = (modifiedInquiry) => {
         UPDATE TBL_INQUIRY A
            SET
     `;
+    
     if (modifiedInquiry.title) {
         query += `
          A.INQUIRY_TITLE = '${ modifiedInquiry.title }',`;
-        }
+    }
+
     if (modifiedInquiry.content) {
         query += `
          A.INQUIRY_CONTENT = '${ modifiedInquiry.content }',`;
     }
+
     if (typeof(modifiedInquiry.categoryCode) == 'number') {
         query += `
          A.INQUIRY_CATEGORY_CODE = '${ modifiedInquiry.categoryCode }',`;
     }
+
     query = query.slice(0, -1);
     query += `
      WHERE A.INQUIRY_CODE = ${ modifiedInquiry.inquiryCode }
