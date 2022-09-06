@@ -1,4 +1,3 @@
-const httpStatus = require('http-status');
 const HttpStatus = require('http-status');
 const express = require('express');
 const app = express();
@@ -40,8 +39,8 @@ exports.findBacklogsByBacklogCode = async (req, res, next) => {
 
     const results = await BacklogService.findBacklogsByBacklogCode(backlogCode);
 
-    res.status(httpStatus.OK).json({
-        status: httpStatus.OK,
+    res.status(HttpStatus.OK).json({
+        status: HttpStatus.OK,
         message: '정상적으로 개별 백로그를 조회했습니다.',
         results: results
     });
@@ -67,8 +66,8 @@ exports.registNewBacklog = async (req, res, next) => {
 
     const results = await BacklogService.registNewBacklog(backlog);
     
-    res.status(httpStatus.CREATED).json({
-        status: httpStatus.CREATED,
+    res.status(HttpStatus.CREATED).json({
+        status: HttpStatus.CREATED,
         message: '백로그가 생성되었습니다.',
         results: results
     });
@@ -90,8 +89,8 @@ exports.editBacklog = async (req, res, next) => {
     const results = 
     await BacklogService.editBacklog(modifyingContent);
 
-    res.status(httpStatus.OK).json({
-        status: httpStatus.OK,
+    res.status(HttpStatus.OK).json({
+        status: HttpStatus.OK,
         message: '정상적으로 개별 백로그 목록을 수정했습니다.',
         // results: results
     });
@@ -108,10 +107,10 @@ exports.removeBacklog = async (req, res, next) => {
         memberCode: user.usercode
     };
 
-    const results = await BacklogService.removeRequest(removeRequest);
+    const results = await BacklogService.removeBacklog(removeRequest);
 
-    res.status(httpStatus.OK).json({
-        status: httpStatus.OK,
+    res.status(HttpStatus.OK).json({
+        status: HttpStatus.OK,
         message: '정상적으로 개별 백로그를 삭제했습니다.',
         results: results
     });

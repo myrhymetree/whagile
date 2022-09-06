@@ -56,7 +56,7 @@ exports.registNewBacklog = (backlog) => {
         try {
             /* 백로그 데이터 삽입 */
             const insertNewBacklogResult = await BacklogRepository.insertNewBacklog(connection, backlog);
-            console.log(`insertNewBacklogResult 확인 : ${insertNewBacklogResult.insertId}`)
+            console.log(`insertNewBacklogResult 확인 : ${insertNewBacklogResult}`)
             
             /* 백로그 히스토리 데이터 생성 */
             const newHistory = createNewHistory();
@@ -65,25 +65,20 @@ exports.registNewBacklog = (backlog) => {
             newHistory.backlogCode = insertNewBacklogResult.insertId;
             newHistory.projectCode = backlog.projectCode;
             newHistory.memberCode = backlog.creatorCode;
-            
-            /* 추가한 백로그 행 조회 */
-            const insertedBacklog = await BacklogRepository.selectBacklogByBacklogCode(connection, insertNewBacklogResult.insertId);
 
             /* 백로그 히스토리 데이터 삽입 */
             const insertNewHistoryResult = await BacklogRepository.insertBacklogHistory(connection, newHistory);
 
-            /* 추가한 백로그 히스토리 행 조회 */
-            const insertedHistory = await BacklogRepository.selectHistoryByHistoryCode(connection, insertNewHistoryResult.insertId);
-            
             connection.commit();
 
             /* 삽입한 백로그, 백로그 히스토리를 result 객체에 담아 반환한다 */
-            const results = {
-                insertedBacklog: insertedBacklog, 
-                insertedHistory: insertedHistory
-            };
+            // const results = {
+            //     insertedBacklog: insertedBacklog, 
+            //     insertedHistory: insertedHistory
+            // };
 
-            resolve(results);
+            // resolve(results);
+            resolve(insertNewBacklogResult);
 
         } catch(err) {
             console.log(`service에서 err확인 : ${err}`)
@@ -176,7 +171,7 @@ exports.editBacklog = (modifyingContent) => {
 };
 
 /* 백로그 삭제 요청 */
-exports.removeRequest = (removeRequest) => {
+exports.removeBacklog = (removeRequest) => {
 
     return new Promise(async (resolve, reject) => {
 
