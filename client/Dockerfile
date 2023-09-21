@@ -13,6 +13,9 @@ ADD ./build ./build
 # nginx 의 default.conf 삭제
 RUN rm -rf /etc/nginx/conf.d/default.conf
 
+RUN cd /app
+RUN chown nginx:nginx /app/build/*
+
 # host pc의 nginx.conf 파일을 아래 경로에 복사
 COPY ./nginx.conf /etc/nginx
 
