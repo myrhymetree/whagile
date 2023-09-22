@@ -9,34 +9,19 @@
   ## 2. 팀원 소개
 <table>
   <tr>
-    <td align="center"><a href="" width="150px;" alt="">
-    <td align="center"><a href="" width="150px;" alt="">
-    <td align="center"><a href=""><img src="" width="150px;" alt="">
-    <td align="center"><a href=""><img src=" width="150px;" alt="">
-    <td align="center"><a href="https://github.com/myrhymetree"><img src="https://avatars.githubusercontent.com/myrhymetree" width="150px;" alt="">
-    </td>
-  </tr>
-  <tr>
-    <td align="center"><a href=""><b></b></td>
-    <td align="center"><a href=""><b></b></td>
-    <td align="center"><a href=""><b></b></td>
-    <td align="center"><a href=""><b></b></td>
+    <td align="center">장민주<a href=""><b></b></td>
+    <td align="center">이호성<a href=""><b></b></td>
+    <td align="center">장한솔<a href=""><b></b></td>
+    <td align="center">차우진<a href=""><b></b></td>
     <td align="center"><a href="https://github.com/myrhymetree"><b>박성준</b></td>
   </tr>
 
-  <tr>
-    <td align="center"></td>
-    <td align="center"></td>
-    <td align="center"></td>
-    <td align="center"></td>
-    <td align="center">Park Seong Joon</td>
-  </tr>
     <tr>
-    <td align="center"><strong></strong></td>
-    <td align="center"><strong></strong></td>
-    <td align="center"><strong></strong></td>
-    <td align="center"><strong></strong></td>
-    <td align="center"><strong>프로젝트 관리 기능</strong></td>
+    <td align="center"><strong>백로그 관리 기능, 고객 관리 기능, PM, 일정관리</strong></td>
+    <td align="center">회원 관리 기능, DB관리<strong></strong></td>
+    <td align="center"><strong>스프린트 관리 기능, 권한 관리 기능, 형상관리</strong></td>
+    <td align="center"><strong>일감 관리, DB관리</strong></td>
+    <td align="center"><strong>프로젝트 관리 기능, 형상관리</strong></td>
   </tr>
 </table>
 
