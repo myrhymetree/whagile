@@ -69,7 +69,10 @@
 ### 5-7. 권한 관리 
     - 권한 생성, 조회, 수정, 삭제 
 
-### 6. 형상관리
+### 6. 프로토타입
+https://www.figma.com/embed?embed_host=notion&url=https%3A%2F%2Fwww.figma.com%2Fproto%2FzF0Evdq0a6BR6pkcwSbBHi%2F%25ED%2594%2584%25EB%25A1%259C%25ED%2586%25A0%25ED%2583%2580%25EC%259D%25B4%25ED%2595%2591-v1%3Fnode-id%3D67%253A702%26scaling%3Dscale-down-width%26page-id%3D0%253A1%26starting-point-node-id%3D67%253A702%26show-proto-sidebar%3D1
+
+### 7. 형상관리
 
 * 형상관리 문서 : https://www.notion.so/da27da3bcce74bc4b66f447c73401291
 
