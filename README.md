@@ -3,7 +3,7 @@
 **Agile 개발 방법론에 적응할 수 있게 도와주는 협업 툴**
 ### 1-1. 프로젝트 산출물
 
-<img width="787" alt="산출물" src="https://github.com/myrhymetree/whagile/assets/94158097/66ba04ad-905d-4e54-8fad-72bd89fa90b9">
+<img width="786" alt="산출물11" src="https://github.com/myrhymetree/whagile/assets/94158097/1b83fbad-4345-4bf6-917e-a8e1241314a1">
 
 * 노션 링크 : [https://www.notion.so/hammang/Goal-apa-3662c97974f54b93b62adf62e506bf38](https://www.notion.so/WHY-AGILE-a9a8bca9f63846e08c662bf71090765e)https://www.notion.so/WHY-AGILE-a9a8bca9f63846e08c662bf71090765e
 
