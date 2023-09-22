@@ -6,7 +6,7 @@
 
 * 노션 링크 : [https://www.notion.so/hammang/Goal-apa-3662c97974f54b93b62adf62e506bf38](https://www.notion.so/WHY-AGILE-a9a8bca9f63846e08c662bf71090765e)https://www.notion.so/WHY-AGILE-a9a8bca9f63846e08c662bf71090765e
 
-  ## 👋 2. 팀원 소개
+  ## 2. 팀원 소개
 <table>
   <tr>
     <td align="center"><a href="" width="150px;" alt="">
@@ -25,7 +25,7 @@
   </tr>
 
   <tr>
-    <td align="center">k</td>
+    <td align="center"></td>
     <td align="center"></td>
     <td align="center"></td>
     <td align="center"></td>
@@ -39,4 +39,10 @@
     <td align="center"><strong>프로젝트 관리 기능</strong></td>
   </tr>
 </table>
+
+## 3. 개발 환경
+![image](https://github.com/myrhymetree/whagile/assets/94158097/f2628832-410e-4684-923a-1c6f3ebb88e8)
+
+## 4. ERD
+![image](https://github.com/myrhymetree/whagile/assets/94158097/5d455d1a-9539-4485-a386-4eaf541f1d36)
 
