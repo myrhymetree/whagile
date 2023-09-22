@@ -16,7 +16,7 @@
     <td align="center"><a href="https://github.com/myrhymetree"><b>박성준</b></td>
   </tr>
 
-    <tr>
+  <tr>
     <td align="center"><strong>백로그 관리 기능, 고객 관리 기능, PM, 일정관리</strong></td>
     <td align="center">회원 관리 기능, DB관리<strong></strong></td>
     <td align="center"><strong>스프린트 관리 기능, 권한 관리 기능, 형상관리</strong></td>
