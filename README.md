@@ -27,10 +27,10 @@
 </table>
 
 ## 3. 개발 환경
-![image](https://github.com/myrhymetree/whagile/assets/94158097/f2628832-410e-4684-923a-1c6f3ebb88e8)
+![개발환경](https://github.com/myrhymetree/whagile/assets/94158097/a74631b0-129d-4abe-baf7-25cfb3ee26ff)
 
 ## 4. ERD
-![image](https://github.com/myrhymetree/whagile/assets/94158097/5d455d1a-9539-4485-a386-4eaf541f1d36)
+![ERD](https://github.com/myrhymetree/whagile/assets/94158097/3160e0ae-801d-4ccf-ae2d-525ffabad4cb)
 
 ## 5. 기능소개
 ### 5-1. 프로젝트 관리
