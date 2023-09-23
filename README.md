@@ -5,7 +5,7 @@
 
 <img width="786" alt="산출물11" src="https://github.com/myrhymetree/whagile/assets/94158097/1b83fbad-4345-4bf6-917e-a8e1241314a1">
 
-* 노션 링크 : [https://www.notion.so/WHY-AGILE-a9a8bca9f63846e08c662bf71090765e?pvs=4]([https://ember-event-d5a.notion.site/WHY-AGILE-a9a8bca9f63846e08c662bf71090765e?pvs=4])
+* 노션 링크 : [[https://www.notion.so/WHY-AGILE-a9a8bca9f63846e08c662bf71090765e?pvs=4]([https://ember-event-d5a.notion.site/WHY-AGILE-a9a8bca9f63846e08c662bf71090765e?pvs=4])]
 
 ## 2. 팀원 소개
 <table>
