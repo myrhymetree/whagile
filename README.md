@@ -1,5 +1,5 @@
 # whagile
-## 프로젝트 소개 
+## 1. 프로젝트 소개 
 **Agile 개발 방법론에 적응할 수 있게 도와주는 협업 툴**
 ### 1-1. 프로젝트 산출물
 
@@ -7,7 +7,7 @@
 
 * 노션 링크 : [https://www.notion.so/hammang/Goal-apa-3662c97974f54b93b62adf62e506bf38](https://www.notion.so/WHY-AGILE-a9a8bca9f63846e08c662bf71090765e)https://www.notion.so/WHY-AGILE-a9a8bca9f63846e08c662bf71090765e
 
-  ## 2. 팀원 소개
+## 2. 팀원 소개
 <table>
   <tr>
     <td align="center">장민주<a href=""><b></b></td>
