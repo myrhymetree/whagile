@@ -62,7 +62,7 @@ https://www.figma.com/embed?embed_host=notion&url=https%3A%2F%2Fwww.figma.com%2F
 
 ### 7. 형상관리
 
-* 형상관리 문서 : [https://www.notion.so/da27da3bcce74bc4b66f447c73401291](https://ember-event-d5a.notion.site/da27da3bcce74bc4b66f447c73401291?pvs=4)
+* 형상관리 문서 : https://ember-event-d5a.notion.site/da27da3bcce74bc4b66f447c73401291?pvs=4
 
 #### 🏷️ Git Convention
 | **Convention**  | **내용**                                                         |
